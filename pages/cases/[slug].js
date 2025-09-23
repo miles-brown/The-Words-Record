@@ -294,23 +294,16 @@ export async function getStaticPaths() {
 
 export async function getStaticProps({ params }) {
   const caseData = getCaseBySlug(params.slug)
-  
   if (!caseData) {
-    return {
-      notFound: true
-    }
+    return { notFound: true }
   }
-
-  // Convert markdown to HTML
   const processedContent = await remark().use(html).process(caseData.content)
   const content = processedContent.toString()
-
+  // Destructure to fully remove content from caseData
+  const { content: _, ...caseDataWithoutContent } = caseData
   return {
     props: {
-      caseData: {
-        ...caseData,
-        content: undefined // Remove content from caseData since we're passing it separately
-      },
+      caseData: caseDataWithoutContent,
       content
     }
   }
