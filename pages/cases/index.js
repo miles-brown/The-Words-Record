@@ -1,8 +1,8 @@
 import Head from 'next/head'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { getAllCases } from '../lib/cases'
-import Layout from '../components/Layout'
+import { getAllCases } from '../../lib/cases'
+import Layout from '../../components/Layout'
 
 export default function CasesPage({ allCases }) {
   return (
@@ -66,13 +66,13 @@ export default function CasesPage({ allCases }) {
         
         .cases-page h1 {
           font-size: 2.5rem;
-          color: #2c3e50;
+          color: var(--text-primary);
           margin-bottom: 1rem;
         }
         
         .page-description {
           font-size: 1.1rem;
-          color: #7f8c8d;
+          color: var(--text-secondary);
           line-height: 1.6;
           margin-bottom: 3rem;
         }
@@ -84,10 +84,10 @@ export default function CasesPage({ allCases }) {
         }
         
         .case-item {
-          border: 1px solid #e0e6ed;
+          border: 1px solid var(--border-primary);
           border-radius: 8px;
           padding: 2rem;
-          background: white;
+          background: var(--background-primary);
           cursor: pointer;
           transition: transform 0.2s, box-shadow 0.2s;
           text-decoration: none;
@@ -105,7 +105,7 @@ export default function CasesPage({ allCases }) {
         
         .case-header h2 {
           font-size: 1.5rem;
-          color: #2c3e50;
+          color: var(--text-primary);
           margin-bottom: 0.8rem;
         }
         
@@ -117,11 +117,11 @@ export default function CasesPage({ allCases }) {
         }
         
         .case-meta span {
-          background: #ecf0f1;
+          background: var(--background-secondary);
           padding: 0.3rem 0.8rem;
           border-radius: 4px;
           font-size: 0.9rem;
-          color: #7f8c8d;
+          color: var(--text-secondary);
         }
         
         .status-documented {
@@ -135,7 +135,7 @@ export default function CasesPage({ allCases }) {
         }
         
         .case-excerpt {
-          color: #5a6c7d;
+          color: var(--text-secondary);
           line-height: 1.6;
           margin-bottom: 1rem;
         }
@@ -147,7 +147,7 @@ export default function CasesPage({ allCases }) {
         }
         
         .tag {
-          background: #3498db;
+          background: var(--accent-primary);
           color: white;
           padding: 0.3rem 0.8rem;
           border-radius: 4px;
@@ -160,12 +160,12 @@ export default function CasesPage({ allCases }) {
         }
         
         .no-cases h2 {
-          color: #7f8c8d;
+          color: var(--text-secondary);
           margin-bottom: 1rem;
         }
         
         .no-cases p {
-          color: #95a5a6;
+          color: var(--text-secondary);
         }
         
         @media (max-width: 768px) {

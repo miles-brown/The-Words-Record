@@ -2,6 +2,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { getAllCases } from '../lib/cases'
 import Layout from '../components/Layout'
+import { format } from 'date-fns'
 
 export default function Home({ allCases }) {
   return (
@@ -29,7 +30,9 @@ export default function Home({ allCases }) {
             <Link href={`/cases/${caseStudy.slug}`} key={caseStudy.slug}>
               <div className="case-card">
                 <h3>{caseStudy.title}</h3>
-                <p className="case-date">{caseStudy.date}</p>
+                <p className="case-date">
+                  {format(new Date(caseStudy.date), 'MMMM d, yyyy')}
+                </p>
                 <p className="case-excerpt">{caseStudy.excerpt}</p>
                 <div className="case-tags">
                   {caseStudy.tags.map(tag => (

@@ -7,18 +7,6 @@ import { remark } from 'remark'
 import html from 'remark-html'
 
 export default function CasePage({ caseData, content }) {
-  if (!caseData) {
-    return (
-      <Layout>
-        <div className="error-page">
-          <h1>Case Not Found</h1>
-          <p>The requested case study could not be found.</p>
-          <Link href="/cases">← Back to Cases</Link>
-        </div>
-      </Layout>
-    )
-  }
-
   return (
     <Layout>
       <Head>
@@ -98,7 +86,7 @@ export default function CasePage({ caseData, content }) {
         }
         
         .back-link {
-          color: #3498db;
+          color: var(--accent-primary);
           text-decoration: none;
           margin-bottom: 2rem;
           display: inline-block;
@@ -114,7 +102,7 @@ export default function CasePage({ caseData, content }) {
         
         .case-meta h1 {
           font-size: 2.5rem;
-          color: #2c3e50;
+          color: var(--text-primary);
           margin-bottom: 1rem;
           line-height: 1.2;
         }
@@ -124,11 +112,11 @@ export default function CasePage({ caseData, content }) {
           flex-wrap: wrap;
           gap: 1rem;
           margin-bottom: 1rem;
-          color: #7f8c8d;
+          color: var(--text-secondary);
         }
         
         .meta-info span {
-          background: #ecf0f1;
+          background: var(--background-secondary);
           padding: 0.3rem 0.8rem;
           border-radius: 4px;
           font-size: 0.9rem;
@@ -151,7 +139,7 @@ export default function CasePage({ caseData, content }) {
         }
         
         .tag {
-          background: #3498db;
+          background: var(--accent-primary);
           color: white;
           padding: 0.3rem 0.8rem;
           border-radius: 4px;
@@ -159,32 +147,32 @@ export default function CasePage({ caseData, content }) {
         }
         
         .case-summary {
-          background: #f8f9fa;
+          background: var(--background-secondary);
           padding: 1.5rem;
           border-radius: 8px;
           margin-bottom: 3rem;
-          border-left: 4px solid #3498db;
+          border-left: 4px solid var(--accent-primary);
         }
         
         .case-summary h2 {
           margin-bottom: 1rem;
-          color: #2c3e50;
+          color: var(--text-primary);
         }
         
         .case-content {
           line-height: 1.8;
-          color: #2c3e50;
+          color: var(--text-primary);
         }
         
         .case-content :global(h2) {
-          color: #2c3e50;
+          color: var(--text-primary);
           margin: 2rem 0 1rem 0;
           padding-bottom: 0.5rem;
-          border-bottom: 2px solid #ecf0f1;
+          border-bottom: 2px solid var(--border-primary);
         }
         
         .case-content :global(h3) {
-          color: #34495e;
+          color: var(--text-primary);
           margin: 1.5rem 0 0.8rem 0;
         }
         
@@ -198,27 +186,27 @@ export default function CasePage({ caseData, content }) {
         }
         
         .case-content :global(blockquote) {
-          border-left: 4px solid #95a5a6;
+          border-left: 4px solid var(--text-secondary);
           padding-left: 1rem;
           margin: 1.5rem 0;
           font-style: italic;
-          color: #7f8c8d;
+          color: var(--text-secondary);
         }
         
         .sources-section {
           margin: 3rem 0;
           padding: 2rem;
-          background: #f8f9fa;
+          background: var(--background-secondary);
           border-radius: 8px;
         }
         
         .sources-section h2 {
-          color: #2c3e50;
+          color: var(--text-primary);
           margin-bottom: 1rem;
         }
         
         .sources-list {
-          color: #5a6c7d;
+          color: var(--text-secondary);
         }
         
         .sources-list li {
@@ -229,7 +217,7 @@ export default function CasePage({ caseData, content }) {
         .case-footer {
           margin-top: 3rem;
           padding-top: 2rem;
-          border-top: 1px solid #ecf0f1;
+          border-top: 1px solid var(--border-primary);
         }
         
         .disclaimer {
@@ -261,7 +249,7 @@ export default function CasePage({ caseData, content }) {
         }
         
         .error-page a {
-          color: #3498db;
+          color: var(--accent-primary);
           text-decoration: none;
         }
         
