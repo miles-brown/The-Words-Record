@@ -108,3 +108,58 @@ export default function Home({ allCases }) {
         
         .case-date {
           color: #7f8c8d;
+          font-size: 0.9rem;
+          margin-bottom: 1rem;
+        }
+        
+        .case-excerpt {
+          color: #5a6c7d;
+          line-height: 1.5;
+          margin-bottom: 1rem;
+        }
+        
+        .case-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+        
+        .tag {
+          background: #ecf0f1;
+          color: #2c3e50;
+          padding: 0.2rem 0.6rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+        }
+        
+        .view-all {
+          text-align: center;
+        }
+        
+        .btn-primary {
+          background: #3498db;
+          color: white;
+          border: none;
+          padding: 1rem 2rem;
+          border-radius: 6px;
+          font-size: 1.1rem;
+          cursor: pointer;
+          transition: background 0.2s;
+        }
+        
+        .btn-primary:hover {
+          background: #2980b9;
+        }
+      `}</style>
+    </Layout>
+  )
+}
+
+export async function getStaticProps() {
+  const allCases = getAllCases()
+  return {
+    props: {
+      allCases
+    }
+  }
+}
