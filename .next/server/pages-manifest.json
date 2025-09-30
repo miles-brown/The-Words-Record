@@ -1,1 +1,10 @@
-{}
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/cases/[slug]": "pages/cases/[slug].js",
+  "/": "pages/index.js",
+  "/cases": "pages/cases.js",
+  "/contact": "pages/contact.js",
+  "/methodology": "pages/methodology.js"
+}
