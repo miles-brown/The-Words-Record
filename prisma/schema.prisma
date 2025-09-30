@@ -1,0 +1,145 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// Person model - individuals who made statements
+model Person {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  name            String
+  bio             String?
+  imageUrl        String?
+  profession      String?
+  nationality     String?
+  birthDate       DateTime?
+  deathDate       DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  incidents       Incident[]      @relation("PersonIncidents")
+  statements      Statement[]
+  responses       Response[]
+}
+
+// Organization model
+model Organization {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  name            String
+  type            String          // e.g., "media", "advocacy", "corporate"
+  description     String?
+  website         String?
+  founded         DateTime?
+  headquarters    String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  incidents       Incident[]      @relation("OrganizationIncidents")
+  responses       Response[]
+}
+
+// Incident/Event model - specific events or cases
+model Incident {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  title           String
+  summary         String
+  description     String
+  incidentDate    DateTime
+  publicationDate DateTime        @default(now())
+  status          String          @default("documented") // documented, ongoing, resolved
+  severity        String?         // low, medium, high
+  location        String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  persons         Person[]        @relation("PersonIncidents")
+  organizations   Organization[]  @relation("OrganizationIncidents")
+  statements      Statement[]
+  responses       Response[]
+  sources         Source[]
+  tags            Tag[]          @relation("IncidentTags")
+}
+
+// Statement model - what was said
+model Statement {
+  id              String          @id @default(cuid())
+  content         String
+  context         String?
+  statementDate   DateTime
+  medium          String?         // phone call, interview, social media, etc.
+  isVerified      Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  personId        String
+  person          Person          @relation(fields: [personId], references: [id])
+  incidentId      String
+  incident        Incident        @relation(fields: [incidentId], references: [id])
+  sources         Source[]
+  responses       Response[]
+}
+
+// Response model - reactions and responses to statements
+model Response {
+  id              String          @id @default(cuid())
+  content         String
+  responseDate    DateTime
+  type            String          // apology, clarification, denial, support, criticism
+  impact          String?         // description of the impact
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  
+  // Relations
+  statementId     String?
+  statement       Statement?      @relation(fields: [statementId], references: [id])
+  personId        String?
+  person          Person?         @relation(fields: [personId], references: [id])
+  organizationId  String?
+  organization    Organization?   @relation(fields: [organizationId], references: [id])
+  incidentId      String
+  incident        Incident        @relation(fields: [incidentId], references: [id])
+}
+
+// Source model - references and citations
+model Source {
+  id              String          @id @default(cuid())
+  title           String
+  url             String?
+  publication     String?
+  author          String?
+  publishDate     DateTime?
+  accessDate      DateTime        @default(now())
+  credibility     String?         // primary, secondary, verified, unverified
+  createdAt       DateTime        @default(now())
+  
+  // Relations
+  incidentId      String?
+  incident        Incident?       @relation(fields: [incidentId], references: [id])
+  statementId     String?
+  statement       Statement?      @relation(fields: [statementId], references: [id])
+}
+
+// Tag model for categorization
+model Tag {
+  id              String          @id @default(cuid())
+  name            String          @unique
+  slug            String          @unique
+  description     String?
+  createdAt       DateTime        @default(now())
+  
+  // Relations
+  incidents       Incident[]      @relation("IncidentTags")
+}

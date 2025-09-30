@@ -42,8 +42,9 @@ nav {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 2rem;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
   align-items: center;
 }
 
@@ -53,9 +54,16 @@ nav {
   cursor: pointer;
 }
 
+.nav-center {
+  display: flex;
+  justify-content: center;
+  max-width: 400px;
+}
+
 .nav-links {
   display: flex;
-  gap: 2rem;
+  gap: 1.5rem;
+  white-space: nowrap;
 }
 
 .nav-links a {
@@ -113,14 +121,23 @@ footer {
 
 @media (max-width: 768px) {
   nav {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
     gap: 1rem;
     padding: 0 1rem;
+    text-align: center;
+  }
+
+  .nav-center {
+    max-width: 100%;
   }
 
   .nav-links {
     gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
   }
+}
 
   main {
     padding: 1rem;

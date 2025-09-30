@@ -1,10 +1,24 @@
 {
   "/_app": "pages/_app.js",
+  "/api/incidents/[slug]": "pages/api/incidents/[slug].js",
+  "/api/incidents": "pages/api/incidents.js",
+  "/about": "pages/about.js",
+  "/api/organizations": "pages/api/organizations.js",
+  "/api/persons/[slug]": "pages/api/persons/[slug].js",
+  "/api/persons": "pages/api/persons.js",
+  "/404": "pages/404.js",
+  "/api/organizations/[slug]": "pages/api/organizations/[slug].js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/cases/[slug]": "pages/cases/[slug].js",
+  "/incidents": "pages/incidents.js",
+  "/incidents/[slug]": "pages/incidents/[slug].js",
   "/": "pages/index.js",
-  "/cases": "pages/cases.js",
+  "/cases/[slug]": "pages/cases/[slug].js",
+  "/persons": "pages/persons.js",
+  "/methodology": "pages/methodology.js",
+  "/organizations": "pages/organizations.js",
   "/contact": "pages/contact.js",
-  "/methodology": "pages/methodology.js"
+  "/organizations/[slug]": "pages/organizations/[slug].js",
+  "/persons/[slug]": "pages/persons/[slug].js",
+  "/_document": "pages/_document.js",
+  "/cases": "pages/cases.js"
 }

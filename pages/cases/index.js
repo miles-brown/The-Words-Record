@@ -13,10 +13,11 @@ export default function CasesPage({ allCases }) {
       </Head>
 
       <div className="cases-page">
-        <h1>All Case Studies</h1>
+        <h1>Legacy Case Studies</h1>
         <p className="page-description">
-          Comprehensive documentation of public statements, allegations, and responses. 
-          All cases are researched, sourced, and presented with neutral analysis.
+          Note: This is the legacy cases page using markdown files. 
+          Please visit <Link href="/incidents"><a style={{color: 'var(--accent-primary)'}}>the new incidents page</a></Link> for 
+          the updated database-driven content with better search and filtering capabilities.
         </p>
 
         <div className="cases-list">
