@@ -4,7 +4,9 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
 import { format } from 'date-fns'
+import ReactMarkdown from 'react-markdown'
 import Layout from '@/components/Layout'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { IncidentWithRelations } from '@/types'
 import prisma from '@/lib/prisma'
@@ -85,31 +87,25 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
       </Head>
 
       <article className="incident-page">
+        <Breadcrumbs
+          items={[
+            { label: 'What?', href: '/incidents' },
+            { label: incident.title }
+          ]}
+        />
+
         <div className="incident-header">
-          <Link href="/incidents" className="back-link">
-            ← Back to Incidents
-          </Link>
-          
           <h1>{incident.title}</h1>
           
           <div className="incident-meta">
             <span className="meta-item">
-              <strong>Date:</strong>{' '}
               <time dateTime={incident.incidentDate}>
                 {format(new Date(incident.incidentDate), 'MMMM d, yyyy')}
               </time>
             </span>
-            <span className={`meta-item status status-${incident.status}`}>
-              <strong>Status:</strong> {incident.status}
-            </span>
-            {incident.severity && (
-              <span className={`meta-item severity severity-${incident.severity}`}>
-                <strong>Severity:</strong> {incident.severity}
-              </span>
-            )}
             {incident.location && (
               <span className="meta-item">
-                <strong>Location:</strong> {incident.location}
+                {incident.location}
               </span>
             )}
           </div>
@@ -130,12 +126,15 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
 
         <section className="incident-description">
           <h2>Full Description</h2>
-          <div className="description-content">
-            {incident.description.split('\n').map((paragraph: string, index: number) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+          <div className="description-content markdown-content">
+            <ReactMarkdown>{incident.description}</ReactMarkdown>
           </div>
         </section>
+
+        {/* Mid-page Ad Banner */}
+        <div className="ad-banner ad-banner-mid">
+          <p>Advertisement</p>
+        </div>
 
         {incident.persons && incident.persons.length > 0 && (
           <section className="involved-persons">
@@ -247,6 +246,25 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           </section>
         )}
 
+        {incident.relatedIncidents && incident.relatedIncidents.length > 0 && (
+          <section className="related-incidents">
+            <h2>Related Incidents</h2>
+            <div className="related-grid">
+              {incident.relatedIncidents.map((related) => (
+                <Link href={`/incidents/${related.slug}`} key={related.id}>
+                  <div className="related-card">
+                    <h3>{related.title}</h3>
+                    <span className="related-date">
+                      {format(new Date(related.incidentDate), 'MMM d, yyyy')}
+                    </span>
+                    <p className="related-summary">{related.summary}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         <footer className="incident-footer">
           <div className="publication-info">
             <p>
@@ -308,44 +326,18 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
         }
 
         .meta-item {
-          background: var(--background-secondary);
-          padding: 0.5rem 1rem;
-          border-radius: 6px;
+          color: var(--text-secondary);
           font-size: 0.95rem;
         }
 
-        .meta-item strong {
-          color: var(--text-primary);
-        }
-
-        .status-documented {
-          background: #d5f4e6 !important;
-          color: #27ae60 !important;
-        }
-
-        .status-ongoing {
-          background: #ffeaa7 !important;
-          color: #f39c12 !important;
-        }
-
-        .status-resolved {
-          background: #dfe6e9 !important;
-          color: #2d3436 !important;
-        }
-
-        .severity-high {
-          background: #fee !important;
-          color: #c33 !important;
-        }
-
-        .severity-medium {
-          background: #fff3cd !important;
-          color: #856404 !important;
-        }
-
-        .severity-low {
-          background: #d1ecf1 !important;
-          color: #0c5460 !important;
+        .ad-banner {
+          background: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: 4px;
+          padding: 3rem;
+          text-align: center;
+          color: var(--text-secondary);
+          margin: 3rem 0;
         }
 
         .tags {
@@ -355,11 +347,12 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
         }
 
         .tag {
-          background: var(--accent-primary);
-          color: white;
-          padding: 0.3rem 0.8rem;
-          border-radius: 4px;
-          font-size: 0.85rem;
+          background: var(--background-secondary);
+          color: var(--text-primary);
+          padding: 0.35rem 0.75rem;
+          border-radius: 3px;
+          font-size: 0.8rem;
+          border: 1px solid var(--border-primary);
         }
 
         section {
@@ -392,6 +385,119 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           line-height: 1.8;
           color: var(--text-primary);
           margin-bottom: 1rem;
+        }
+
+        .markdown-content {
+          font-size: 1.05rem;
+        }
+
+        .markdown-content h1,
+        .markdown-content h2,
+        .markdown-content h3,
+        .markdown-content h4 {
+          color: var(--text-primary);
+          margin-top: 2rem;
+          margin-bottom: 1rem;
+          line-height: 1.4;
+        }
+
+        .markdown-content h1 {
+          font-size: 2rem;
+          border-bottom: 2px solid var(--border-primary);
+          padding-bottom: 0.5rem;
+        }
+
+        .markdown-content h2 {
+          font-size: 1.6rem;
+        }
+
+        .markdown-content h3 {
+          font-size: 1.3rem;
+        }
+
+        .markdown-content ul,
+        .markdown-content ol {
+          margin: 1.5rem 0;
+          padding-left: 2rem;
+        }
+
+        .markdown-content li {
+          margin-bottom: 0.75rem;
+          line-height: 1.7;
+        }
+
+        .markdown-content strong {
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .markdown-content em {
+          font-style: italic;
+        }
+
+        .markdown-content a {
+          color: var(--accent-primary);
+          text-decoration: underline;
+          transition: color 0.2s;
+        }
+
+        .markdown-content a:hover {
+          color: #2c3e50;
+        }
+
+        .markdown-content blockquote {
+          border-left: 4px solid var(--border-secondary);
+          padding-left: 1.5rem;
+          margin: 1.5rem 0;
+          color: var(--text-secondary);
+          font-style: italic;
+        }
+
+        .markdown-content code {
+          background: var(--background-secondary);
+          padding: 0.2rem 0.4rem;
+          border-radius: 3px;
+          font-family: 'Courier New', monospace;
+          font-size: 0.9em;
+          color: var(--text-primary);
+        }
+
+        .markdown-content pre {
+          background: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: 6px;
+          padding: 1rem;
+          overflow-x: auto;
+          margin: 1.5rem 0;
+        }
+
+        .markdown-content pre code {
+          background: none;
+          padding: 0;
+        }
+
+        .markdown-content hr {
+          border: none;
+          border-top: 1px solid var(--border-primary);
+          margin: 2rem 0;
+        }
+
+        .markdown-content table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 1.5rem 0;
+        }
+
+        .markdown-content th,
+        .markdown-content td {
+          border: 1px solid var(--border-primary);
+          padding: 0.75rem;
+          text-align: left;
+        }
+
+        .markdown-content th {
+          background: var(--background-secondary);
+          font-weight: 600;
         }
 
         .persons-grid {
@@ -591,6 +697,61 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           color: #e74c3c;
         }
 
+        .related-incidents {
+          background: var(--background-secondary);
+          border-radius: 8px;
+          padding: 2rem;
+        }
+
+        .related-incidents h2 {
+          margin-bottom: 1.5rem;
+        }
+
+        .related-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .related-card {
+          background: var(--background-primary);
+          border: 1px solid var(--border-primary);
+          border-radius: 6px;
+          padding: 1.5rem;
+          transition: all 0.2s ease;
+          cursor: pointer;
+        }
+
+        .related-card:hover {
+          border-color: var(--border-secondary);
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          transform: translateY(-2px);
+        }
+
+        .related-card h3 {
+          font-size: 1.1rem;
+          color: var(--text-primary);
+          margin-bottom: 0.5rem;
+          line-height: 1.3;
+        }
+
+        .related-date {
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          display: block;
+          margin-bottom: 0.75rem;
+        }
+
+        .related-summary {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          line-height: 1.5;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
         .incident-footer {
           margin-top: 4rem;
           padding-top: 2rem;
@@ -719,9 +880,52 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       return { notFound: true }
     }
 
+    // Fetch related incidents based on shared tags or persons
+    const relatedIncidents = await prisma.incident.findMany({
+      where: {
+        AND: [
+          { id: { not: incident.id } }, // Exclude current incident
+          {
+            OR: [
+              // Incidents with shared tags
+              {
+                tags: {
+                  some: {
+                    id: { in: incident.tags.map(t => t.id) }
+                  }
+                }
+              },
+              // Incidents with shared persons
+              {
+                persons: {
+                  some: {
+                    id: { in: incident.persons.map(p => p.id) }
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        summary: true,
+        incidentDate: true,
+      },
+      orderBy: {
+        incidentDate: 'desc'
+      },
+      take: 3
+    })
+
     return {
       props: {
-        incident: JSON.parse(JSON.stringify(incident)) // Serialize dates
+        incident: JSON.parse(JSON.stringify({
+          ...incident,
+          relatedIncidents
+        })) // Serialize dates
       }
     }
   } catch (error) {

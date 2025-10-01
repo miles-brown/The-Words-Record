@@ -1,45 +1,25 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react'
-import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import Layout from '@/components/Layout'
 import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
 import { Organization } from '@/types'
 import { format } from 'date-fns'
 
-interface OrganizationsPageProps {
-  initialData?: {
-    organizations: (Organization & {
-      _count: {
-        incidents: number
-        responses: number
-      }
-    })[]
-    pagination: {
-      page: number
-      limit: number
-      total: number
-      totalPages: number
-    }
-  }
-}
-
-export default function OrganizationsPage({ initialData }: OrganizationsPageProps) {
-  const [organizations, setOrganizations] = useState(initialData?.organizations || [])
-  const [pagination, setPagination] = useState(initialData?.pagination || {
+export default function OrganizationsPage() {
+  const [organizations, setOrganizations] = useState([])
+  const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
     total: 0,
     totalPages: 0
   })
-  const [loading, setLoading] = useState(!initialData)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    if (!initialData) {
-      fetchOrganizations(1)
-    }
+    fetchOrganizations(1)
   }, [])
 
   const fetchOrganizations = async (page: number) => {
@@ -492,26 +472,4 @@ export default function OrganizationsPage({ initialData }: OrganizationsPageProp
       `}</style>
     </Layout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/organizations?page=1&limit=12`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch')
-    }
-    
-    const data = await response.json()
-    
-    return {
-      props: {
-        initialData: data
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching organizations:', error)
-    return {
-      props: {}
-    }
-  }
 }

@@ -15,6 +15,7 @@ export default async function handler(
         const statusFilter = req.query.status as string
         const tag = req.query.tag as string
         const person = req.query.person as string
+        const sortBy = req.query.sortBy as string || 'date-desc'
 
         // Build filter conditions
         const where: any = {}
@@ -34,6 +35,23 @@ export default async function handler(
           }
         }
 
+        // Build orderBy based on sortBy parameter
+        let orderBy: any = { incidentDate: 'desc' }
+        switch (sortBy) {
+          case 'date-asc':
+            orderBy = { incidentDate: 'asc' }
+            break
+          case 'date-desc':
+            orderBy = { incidentDate: 'desc' }
+            break
+          case 'title-asc':
+            orderBy = { title: 'asc' }
+            break
+          case 'title-desc':
+            orderBy = { title: 'desc' }
+            break
+        }
+
         const [incidents, total] = await Promise.all([
           prisma.incident.findMany({
             where,
@@ -51,9 +69,7 @@ export default async function handler(
                 }
               }
             },
-            orderBy: {
-              incidentDate: 'desc'
-            }
+            orderBy
           }),
           prisma.incident.count({ where })
         ])

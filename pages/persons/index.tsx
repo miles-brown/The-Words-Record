@@ -1,6 +1,5 @@
 // @ts-nocheck
 import { useState, useEffect } from 'react'
-import { GetServerSideProps } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import Layout from '@/components/Layout'
@@ -8,33 +7,55 @@ import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations, PaginatedResponse } from '@/types'
 import { format } from 'date-fns'
 
-interface PersonsPageProps {
-  initialData?: {
-    persons: PersonWithRelations[]
-    pagination: {
-      page: number
-      limit: number
-      total: number
-      totalPages: number
-    }
-  }
-}
-
-export default function PersonsPage({ initialData }: PersonsPageProps) {
-  const [persons, setPersons] = useState(initialData?.persons || [])
-  const [pagination, setPagination] = useState(initialData?.pagination || {
+export default function PersonsPage() {
+  const [persons, setPersons] = useState([])
+  const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
     total: 0,
     totalPages: 0
   })
-  const [loading, setLoading] = useState(!initialData)
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!initialData) {
-      fetchPersons(1)
+  const getPageNumbers = () => {
+    const pages: (number | string)[] = []
+    const { page, totalPages } = pagination
+
+    if (totalPages <= 7) {
+      // Show all pages if 7 or fewer
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      // Always show first page
+      pages.push(1)
+
+      if (page > 3) {
+        pages.push('...')
+      }
+
+      // Show pages around current page
+      const start = Math.max(2, page - 1)
+      const end = Math.min(totalPages - 1, page + 1)
+
+      for (let i = start; i <= end; i++) {
+        pages.push(i)
+      }
+
+      if (page < totalPages - 2) {
+        pages.push('...')
+      }
+
+      // Always show last page
+      pages.push(totalPages)
     }
+
+    return pages
+  }
+
+  useEffect(() => {
+    fetchPersons(1)
   }, [])
 
   const fetchPersons = async (page: number) => {
@@ -58,15 +79,15 @@ export default function PersonsPage({ initialData }: PersonsPageProps) {
 
   return (
     <Layout
-      title="People"
+      title="Who?"
       description="Browse profiles of individuals involved in documented public statements"
     >
       <div className="persons-page">
         <div className="page-header">
-          <h1>People</h1>
+          <h1>Who?</h1>
           <p className="page-description">
             Browse profiles of individuals who have made or been subjects of documented public statements.
-            Click on any profile to view their complete history of incidents and statements.
+            Click on any profile to view their complete history and statements.
           </p>
         </div>
 
@@ -149,16 +170,36 @@ export default function PersonsPage({ initialData }: PersonsPageProps) {
               onClick={() => fetchPersons(pagination.page - 1)}
               disabled={pagination.page === 1}
               aria-label="Previous page"
+              className="pagination-prev"
             >
               Previous
             </button>
-            <span className="page-info">
-              Page {pagination.page} of {pagination.totalPages}
-            </span>
+
+            <div className="page-numbers">
+              {getPageNumbers().map((pageNum, index) => (
+                typeof pageNum === 'number' ? (
+                  <button
+                    key={index}
+                    onClick={() => fetchPersons(pageNum)}
+                    className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
+                    aria-label={`Go to page ${pageNum}`}
+                    aria-current={pagination.page === pageNum ? 'page' : undefined}
+                  >
+                    {pageNum}
+                  </button>
+                ) : (
+                  <span key={index} className="page-ellipsis">
+                    {pageNum}
+                  </span>
+                )
+              ))}
+            </div>
+
             <button
               onClick={() => fetchPersons(pagination.page + 1)}
               disabled={pagination.page === pagination.totalPages}
               aria-label="Next page"
+              className="pagination-next"
             >
               Next
             </button>
@@ -307,31 +348,71 @@ export default function PersonsPage({ initialData }: PersonsPageProps) {
           display: flex;
           justify-content: center;
           align-items: center;
-          gap: 2rem;
+          gap: 1rem;
           margin-top: 3rem;
+          flex-wrap: wrap;
         }
 
-        .pagination button {
+        .page-numbers {
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+        }
+
+        .pagination-prev,
+        .pagination-next {
           background: var(--accent-primary);
           color: white;
           border: none;
-          padding: 0.5rem 1.5rem;
-          border-radius: 6px;
+          padding: 0.6rem 1.5rem;
+          border-radius: 4px;
           cursor: pointer;
           transition: background 0.2s;
+          font-weight: 500;
+          font-size: 0.9rem;
         }
 
-        .pagination button:hover:not(:disabled) {
-          background: #2980b9;
+        .pagination-prev:hover:not(:disabled),
+        .pagination-next:hover:not(:disabled) {
+          background: #2c3e50;
         }
 
-        .pagination button:disabled {
-          background: var(--text-secondary);
+        .pagination-prev:disabled,
+        .pagination-next:disabled {
+          background: var(--accent-secondary);
           cursor: not-allowed;
+          opacity: 0.6;
         }
 
-        .page-info {
+        .page-number {
+          background: var(--background-primary);
+          color: var(--text-primary);
+          border: 1px solid var(--border-primary);
+          padding: 0.5rem 0.85rem;
+          border-radius: 4px;
+          cursor: pointer;
+          transition: all 0.2s;
+          font-weight: 500;
+          font-size: 0.9rem;
+          min-width: 38px;
+        }
+
+        .page-number:hover {
+          border-color: var(--accent-primary);
+          background: var(--background-secondary);
+        }
+
+        .page-number.active {
+          background: var(--accent-primary);
+          color: white;
+          border-color: var(--accent-primary);
+          cursor: default;
+        }
+
+        .page-ellipsis {
           color: var(--text-secondary);
+          padding: 0.5rem 0.25rem;
+          font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -352,26 +433,4 @@ export default function PersonsPage({ initialData }: PersonsPageProps) {
       `}</style>
     </Layout>
   )
-}
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/persons?page=1&limit=12`)
-    if (!response.ok) {
-      throw new Error('Failed to fetch')
-    }
-    
-    const data = await response.json()
-    
-    return {
-      props: {
-        initialData: data
-      }
-    }
-  } catch (error) {
-    console.error('Error fetching persons:', error)
-    return {
-      props: {}
-    }
-  }
 }

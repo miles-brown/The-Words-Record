@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import Layout from '@/components/Layout'
+import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations } from '@/types'
 import prisma from '@/lib/prisma'
@@ -66,11 +67,14 @@ export default function PersonPage({ person }: PersonPageProps) {
       description={person.bio || `Profile of ${person.name}`}
     >
       <article className="person-profile">
+        <Breadcrumbs
+          items={[
+            { label: 'Who?', href: '/persons' },
+            { label: person.name }
+          ]}
+        />
+
         <div className="profile-header">
-          <Link href="/persons" className="back-link">
-            ← Back to People
-          </Link>
-          
           <div className="profile-info">
             <div className="profile-image">
               {person.imageUrl ? (

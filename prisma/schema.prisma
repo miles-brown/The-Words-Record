@@ -82,7 +82,7 @@ model Statement {
   isVerified      Boolean         @default(false)
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  
+
   // Relations
   personId        String
   person          Person          @relation(fields: [personId], references: [id])
@@ -90,6 +90,8 @@ model Statement {
   incident        Incident        @relation(fields: [incidentId], references: [id])
   sources         Source[]
   responses       Response[]
+
+  @@unique([personId, incidentId, content])
 }
 
 // Response model - reactions and responses to statements
