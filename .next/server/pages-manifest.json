@@ -2,11 +2,11 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/incidents": "pages/incidents.js",
   "/": "pages/index.js",
-  "/incidents/[slug]": "pages/incidents/[slug].js",
+  "/incidents": "pages/incidents.js",
   "/api/tags": "pages/api/tags.js",
+  "/incidents/[slug]": "pages/incidents/[slug].js",
   "/api/incidents": "pages/api/incidents.js",
-  "/persons": "pages/persons.js",
-  "/api/persons": "pages/api/persons.js"
+  "/api/search": "pages/api/search.js",
+  "/search": "pages/search.js"
 }
