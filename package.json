@@ -4,13 +4,14 @@
   "description": "Documentation of public statements and responses",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "export": "next build && next export",
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "node scripts/migrate-markdown.js",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@imbios/next-pwa": "^1.1.1",

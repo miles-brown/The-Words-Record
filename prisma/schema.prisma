@@ -15,19 +15,24 @@ model Person {
   id              String          @id @default(cuid())
   slug            String          @unique
   name            String
+  akaNames        String?         // Alternative names, aliases (comma-separated)
   bio             String?
+  background      String?         // General background information
   imageUrl        String?
   profession      String?
   nationality     String?
+  racialGroup     String?         // Racial/ethnic group
+  religion        String?         // Religious affiliation/denomination
   birthDate       DateTime?
   deathDate       DateTime?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  
+
   // Relations
   incidents       Incident[]      @relation("PersonIncidents")
   statements      Statement[]
   responses       Response[]
+  affiliations    Affiliation[]   // Organization memberships/roles
 }
 
 // Organization model
@@ -35,17 +40,18 @@ model Organization {
   id              String          @id @default(cuid())
   slug            String          @unique
   name            String
-  type            String          // e.g., "media", "advocacy", "corporate"
+  type            String          // e.g., "media", "advocacy", "corporate", "government"
   description     String?
   website         String?
   founded         DateTime?
   headquarters    String?
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  
+
   // Relations
   incidents       Incident[]      @relation("OrganizationIncidents")
   responses       Response[]
+  affiliations    Affiliation[]   // People affiliated with this org
 }
 
 // Incident/Event model - specific events or cases
@@ -60,16 +66,23 @@ model Incident {
   status          String          @default("documented") // documented, ongoing, resolved
   severity        String?         // low, medium, high
   location        String?
+  mediaFraming    String?         // How media characterized/framed this incident
+  triggeringEvent String?         // What prompted this incident
+  outcome         String?         // What was the result/resolution
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  
-  // Relations
+
+  // Relations - Parent Event (wider context)
+  parentEventId   String?
+  parentEvent     Event?          @relation("EventIncidents", fields: [parentEventId], references: [id])
+
+  // Relations - Connected entities
   persons         Person[]        @relation("PersonIncidents")
   organizations   Organization[]  @relation("OrganizationIncidents")
   statements      Statement[]
   responses       Response[]
   sources         Source[]
-  tags            Tag[]          @relation("IncidentTags")
+  tags            Tag[]           @relation("IncidentTags")
 }
 
 // Statement model - what was said
@@ -134,6 +147,42 @@ model Source {
   statement       Statement?      @relation(fields: [statementId], references: [id])
 }
 
+// Event model - wider context grouping multiple incidents
+model Event {
+  id              String          @id @default(cuid())
+  slug            String          @unique
+  title           String
+  description     String
+  startDate       DateTime
+  endDate         DateTime?
+  scope           String?         // geographic or thematic scope
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  incidents       Incident[]      @relation("EventIncidents")
+}
+
+// Affiliation model - person-organization relationships
+model Affiliation {
+  id              String          @id @default(cuid())
+  role            String          // e.g., "UN Ambassador", "Representative", "Member"
+  startDate       DateTime?
+  endDate         DateTime?
+  isActive        Boolean         @default(true)
+  description     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  personId        String
+  person          Person          @relation(fields: [personId], references: [id])
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id])
+
+  @@unique([personId, organizationId, role])
+}
+
 // Tag model for categorization
 model Tag {
   id              String          @id @default(cuid())
@@ -141,7 +190,7 @@ model Tag {
   slug            String          @unique
   description     String?
   createdAt       DateTime        @default(now())
-  
+
   // Relations
   incidents       Incident[]      @relation("IncidentTags")
 }

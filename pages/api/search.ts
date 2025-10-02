@@ -39,10 +39,10 @@ export default async function handler(
       const persons = await prisma.person.findMany({
         where: {
           OR: [
-            { name: { contains: query, mode: 'insensitive' } },
-            { bio: { contains: query, mode: 'insensitive' } },
-            { profession: { contains: query, mode: 'insensitive' } },
-            { nationality: { contains: query, mode: 'insensitive' } }
+            { name: { contains: query } },
+            { bio: { contains: query } },
+            { profession: { contains: query } },
+            { nationality: { contains: query } }
           ]
         },
         include: {
@@ -86,10 +86,10 @@ export default async function handler(
       const incidents = await prisma.incident.findMany({
         where: {
           OR: [
-            { title: { contains: query, mode: 'insensitive' } },
-            { summary: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-            { location: { contains: query, mode: 'insensitive' } }
+            { title: { contains: query } },
+            { summary: { contains: query } },
+            { description: { contains: query } },
+            { location: { contains: query } }
           ]
         },
         include: {
@@ -140,10 +140,10 @@ export default async function handler(
       const organizations = await prisma.organization.findMany({
         where: {
           OR: [
-            { name: { contains: query, mode: 'insensitive' } },
-            { description: { contains: query, mode: 'insensitive' } },
-            { type: { contains: query, mode: 'insensitive' } },
-            { headquarters: { contains: query, mode: 'insensitive' } }
+            { name: { contains: query } },
+            { description: { contains: query } },
+            { type: { contains: query } },
+            { headquarters: { contains: query } }
           ]
         },
         include: {

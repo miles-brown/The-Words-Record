@@ -188,8 +188,7 @@ export default function Methodology() {
               <li>Have questions about our methodology</li>
             </ul>
             <p>
-              Please visit our <a href="/contact">Contact page</a> to get in touch. We take
-              all feedback seriously and respond promptly to correction requests.
+              We take all feedback seriously and respond promptly to correction requests.
             </p>
           </section>
         </div>

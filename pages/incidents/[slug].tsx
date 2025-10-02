@@ -169,11 +169,12 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
                       <span className="statement-medium">via {statement.medium}</span>
                     )}
                   </div>
-                  
-                  <blockquote className="statement-content">
-                    {statement.content}
-                  </blockquote>
-                  
+
+                  <div className="block-quote">
+                    <span className="quote-mark">&ldquo;</span>
+                    <div className="quote-content">{statement.content}</div>
+                  </div>
+
                   {statement.context && (
                     <div className="statement-context">
                       <strong>Context:</strong> {statement.context}
@@ -534,21 +535,20 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
         .statements-timeline {
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 3rem;
         }
 
         .statement-item {
-          background: var(--background-secondary);
-          border-radius: 8px;
-          padding: 1.5rem;
-          border-left: 4px solid var(--text-secondary);
+          margin: 1.5rem 0;
         }
 
         .statement-header {
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
-          margin-bottom: 1rem;
+          margin-bottom: 1.5rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 1px solid var(--border-primary);
           font-size: 0.9rem;
         }
 
@@ -566,22 +566,40 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           color: var(--text-secondary);
         }
 
-        .statement-content {
-          font-size: 1.05rem;
-          line-height: 1.7;
-          color: var(--text-primary);
-          font-style: italic;
-          margin: 1rem 0;
+        .block-quote {
+          position: relative;
+          margin: 1rem 0 1.5rem 3rem;
           padding-left: 1rem;
-          border-left: 3px solid var(--border-primary);
+        }
+
+        .quote-mark {
+          position: absolute;
+          left: -2.5rem;
+          top: -0.5rem;
+          font-family: Georgia, 'Times New Roman', serif;
+          font-size: 5rem;
+          font-weight: bold;
+          line-height: 1;
+          color: var(--accent-primary);
+          opacity: 0.6;
+          font-style: italic;
+        }
+
+        .quote-content {
+          font-family: Garamond, 'EB Garamond', Georgia, serif;
+          font-size: 1.05rem;
+          line-height: 1.8;
+          color: var(--text-primary);
+          text-align: justify;
         }
 
         .statement-context {
-          background: var(--background-primary);
+          background: var(--background-secondary);
           padding: 1rem;
           border-radius: 6px;
-          margin-top: 1rem;
+          margin: 1rem 0 1rem 3rem;
           font-size: 0.95rem;
+          border-left: 3px solid var(--accent-primary);
         }
 
         .responses {
@@ -809,6 +827,20 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           .publication-info {
             flex-direction: column;
             gap: 0.5rem;
+          }
+
+          .block-quote {
+            margin: 1rem 0 1.5rem 2rem;
+            padding-left: 0.5rem;
+          }
+
+          .quote-mark {
+            left: -1.8rem;
+            font-size: 3.5rem;
+          }
+
+          .statement-context {
+            margin-left: 2rem;
           }
         }
       `}</style>

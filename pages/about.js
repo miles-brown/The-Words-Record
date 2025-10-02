@@ -104,11 +104,10 @@ export default function About() {
           </section>
 
           <section className="about-section">
-            <h2>Get in Touch</h2>
+            <h2>Questions or Feedback?</h2>
             <p>
-              Have a suggestion? Found an error? Want to contribute? We'd love to hear from you.
-              Visit our <a href="/contact">Contact page</a> to get in touch, or check out our
-              <a href="/methodology">Methodology page</a> to learn more about how we verify and
+              Have a suggestion? Found an error? Want to contribute? Check out our
+              {' '}<a href="/methodology">Methodology page</a> to learn more about how we verify and
               document statements.
             </p>
           </section>

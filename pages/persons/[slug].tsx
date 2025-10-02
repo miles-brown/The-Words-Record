@@ -74,15 +74,15 @@ export default function PersonPage({ person }: PersonPageProps) {
           ]}
         />
 
-        <div className="profile-header">
-          <div className="profile-info">
-            <div className="profile-image">
+        <div className="profile-layout">
+          <aside className="profile-infobox">
+            <div className="infobox-image">
               {person.imageUrl ? (
                 <Image
                   src={person.imageUrl}
                   alt={person.name}
-                  width={150}
-                  height={150}
+                  width={250}
+                  height={250}
                   objectFit="cover"
                 />
               ) : (
@@ -91,35 +91,106 @@ export default function PersonPage({ person }: PersonPageProps) {
                 </div>
               )}
             </div>
-            
-            <div className="profile-details">
-              <h1>{person.name}</h1>
-              <div className="meta-info">
-                {person.profession && (
-                  <span className="meta-item">
-                    <strong>Profession:</strong> {person.profession}
-                  </span>
+
+            <div className="infobox-content">
+              <h2 className="infobox-title">{person.name}</h2>
+
+              <div className="infobox-section">
+                {person.akaNames && (
+                  <div className="info-row">
+                    <span className="info-label">Also Known As:</span>
+                    <span className="info-value">{person.akaNames}</span>
+                  </div>
                 )}
-                {person.nationality && (
-                  <span className="meta-item">
-                    <strong>Nationality:</strong> {person.nationality}
-                  </span>
-                )}
+
                 {person.birthDate && (
-                  <span className="meta-item">
-                    <strong>Born:</strong> {format(new Date(person.birthDate), 'MMMM d, yyyy')}
-                    {person.deathDate && ` - ${format(new Date(person.deathDate), 'MMMM d, yyyy')}`}
-                  </span>
+                  <div className="info-row">
+                    <span className="info-label">Born:</span>
+                    <span className="info-value">
+                      {format(new Date(person.birthDate), 'MMMM d, yyyy')}
+                    </span>
+                  </div>
+                )}
+
+                {person.deathDate && (
+                  <div className="info-row">
+                    <span className="info-label">Died:</span>
+                    <span className="info-value">
+                      {format(new Date(person.deathDate), 'MMMM d, yyyy')}
+                    </span>
+                  </div>
+                )}
+
+                {person.nationality && (
+                  <div className="info-row">
+                    <span className="info-label">Nationality:</span>
+                    <span className="info-value">{person.nationality}</span>
+                  </div>
+                )}
+
+                {person.racialGroup && (
+                  <div className="info-row">
+                    <span className="info-label">Ethnicity:</span>
+                    <span className="info-value">{person.racialGroup}</span>
+                  </div>
+                )}
+
+                {person.religion && (
+                  <div className="info-row">
+                    <span className="info-label">Religion:</span>
+                    <span className="info-value">{person.religion}</span>
+                  </div>
+                )}
+
+                {person.profession && (
+                  <div className="info-row">
+                    <span className="info-label">Profession:</span>
+                    <span className="info-value">{person.profession}</span>
+                  </div>
                 )}
               </div>
-              
-              {person.bio && (
-                <div className="biography">
-                  <h2>Biography</h2>
-                  <p>{person.bio}</p>
+
+              {person.affiliations && person.affiliations.length > 0 && (
+                <div className="infobox-section">
+                  <h3>Affiliations</h3>
+                  <div className="affiliations-list">
+                    {person.affiliations.map((affiliation) => (
+                      <div key={affiliation.id} className="affiliation-item">
+                        <div className="affiliation-role">{affiliation.role}</div>
+                        <Link href={`/organizations/${affiliation.organization.slug}`}>
+                          <div className="affiliation-org">{affiliation.organization.name}</div>
+                        </Link>
+                        {(affiliation.startDate || affiliation.endDate) && (
+                          <div className="affiliation-dates">
+                            {affiliation.startDate && format(new Date(affiliation.startDate), 'yyyy')}
+                            {affiliation.startDate && affiliation.endDate && ' - '}
+                            {affiliation.endDate ? format(new Date(affiliation.endDate), 'yyyy') : affiliation.isActive && 'present'}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
+          </aside>
+
+          <div className="profile-main">
+            <h1>{person.name}</h1>
+
+            {person.background && (
+              <section className="background-section">
+                <h2>Background</h2>
+                <p>{person.background}</p>
+              </section>
+            )}
+
+            {person.bio && (
+              <section className="biography-section">
+                <h2>Biography</h2>
+                <p>{person.bio}</p>
+              </section>
+            )}
           </div>
         </div>
 
@@ -139,11 +210,6 @@ export default function PersonPage({ person }: PersonPageProps) {
                       <span className={`status status-${incident.status}`}>
                         {incident.status}
                       </span>
-                      {incident.severity && (
-                        <span className={`severity severity-${incident.severity}`}>
-                          {incident.severity} severity
-                        </span>
-                      )}
                     </div>
                     <p className="summary">{incident.summary}</p>
                     <div className="incident-stats">
@@ -173,17 +239,20 @@ export default function PersonPage({ person }: PersonPageProps) {
             <div className="statements-list">
               {person.statements.slice(0, 5).map((statement) => (
                 <div key={statement.id} className="statement-item">
-                  <blockquote>{statement.content}</blockquote>
-                  <div className="statement-meta">
-                    <span className="date">
+                  <div className="block-quote">
+                    <span className="quote-mark">&ldquo;</span>
+                    <div className="quote-content">{statement.content}</div>
+                  </div>
+                  <div className="statement-citation">
+                    <span className="citation-date">
                       {format(new Date(statement.statementDate), 'MMMM d, yyyy')}
                     </span>
                     {statement.medium && (
-                      <span className="medium">via {statement.medium}</span>
+                      <span className="citation-medium">via {statement.medium}</span>
                     )}
                     {statement.incident && (
                       <Link href={`/incidents/${statement.incident.slug}`}>
-                        <span className="related-incident">
+                        <span className="citation-incident">
                           Related to: {statement.incident.title}
                         </span>
                       </Link>
@@ -203,87 +272,165 @@ export default function PersonPage({ person }: PersonPageProps) {
 
       <style jsx>{`
         .person-profile {
-          max-width: 900px;
+          max-width: 1200px;
           margin: 0 auto;
         }
 
-        .back-link {
-          color: var(--accent-primary);
-          text-decoration: none;
-          display: inline-block;
-          margin-bottom: 2rem;
-        }
-
-        .back-link:hover {
-          text-decoration: underline;
-        }
-
-        .profile-header {
+        .profile-layout {
+          display: grid;
+          grid-template-columns: 1fr 320px;
+          gap: 2rem;
           margin-bottom: 3rem;
         }
 
-        .profile-info {
+        .profile-infobox {
+          grid-column: 2;
+          grid-row: 1;
+          background: var(--background-primary);
+          border: 1px solid var(--border-primary);
+          border-radius: 8px;
+          overflow: hidden;
+          align-self: start;
+          position: sticky;
+          top: 80px;
+        }
+
+        .infobox-image {
+          width: 100%;
+          padding: 1.5rem;
           display: flex;
-          gap: 2rem;
-          align-items: start;
+          justify-content: center;
+          align-items: center;
+          background: var(--background-secondary);
         }
 
-        .profile-image {
-          flex-shrink: 0;
-        }
-
-        .profile-image img {
+        .infobox-image img {
+          width: 220px;
+          height: 220px;
+          object-fit: cover;
           border-radius: 50%;
+          border: 3px solid var(--border-primary);
         }
 
         .image-placeholder {
-          width: 150px;
-          height: 150px;
-          border-radius: 50%;
+          width: 220px;
+          height: 220px;
           background: var(--accent-primary);
           display: flex;
           align-items: center;
           justify-content: center;
           color: white;
-          font-size: 3rem;
+          font-size: 4rem;
           font-weight: bold;
+          border-radius: 50%;
+          border: 3px solid var(--border-primary);
         }
 
-        .profile-details {
-          flex: 1;
+        .infobox-content {
+          padding: 1.5rem;
         }
 
-        .profile-details h1 {
-          font-size: 2.5rem;
-          color: var(--text-primary);
+        .infobox-title {
+          font-size: 1.3rem;
           margin-bottom: 1rem;
+          padding-bottom: 0.5rem;
+          border-bottom: 2px solid var(--border-primary);
         }
 
-        .meta-info {
+        .infobox-section {
+          margin-bottom: 1.5rem;
+        }
+
+        .infobox-section h3 {
+          font-size: 1rem;
+          margin-bottom: 0.75rem;
+          color: var(--text-primary);
+          border-bottom: 1px solid var(--border-primary);
+          padding-bottom: 0.25rem;
+        }
+
+        .info-row {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
-          margin-bottom: 2rem;
+          padding: 0.5rem 0;
+          border-bottom: 1px solid var(--border-primary);
         }
 
-        .meta-item {
+        .info-row:last-child {
+          border-bottom: none;
+        }
+
+        .info-label {
+          font-size: 0.85rem;
+          font-weight: 600;
+          color: var(--text-primary);
+          margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+          font-size: 0.9rem;
           color: var(--text-secondary);
         }
 
-        .meta-item strong {
+        .affiliations-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+        }
+
+        .affiliation-item {
+          padding: 0.5rem;
+          background: var(--background-secondary);
+          border-radius: 4px;
+        }
+
+        .affiliation-role {
+          font-size: 0.85rem;
+          font-weight: 600;
           color: var(--text-primary);
+          margin-bottom: 0.25rem;
         }
 
-        .biography {
-          margin-top: 2rem;
+        .affiliation-org {
+          font-size: 0.9rem;
+          color: var(--accent-primary);
+          cursor: pointer;
+          margin-bottom: 0.25rem;
         }
 
-        .biography h2 {
+        .affiliation-org:hover {
+          text-decoration: underline;
+        }
+
+        .affiliation-dates {
+          font-size: 0.8rem;
+          color: var(--text-secondary);
+        }
+
+        .profile-main {
+          grid-column: 1;
+          grid-row: 1;
+        }
+
+        .profile-main h1 {
+          font-size: 2.5rem;
+          color: var(--text-primary);
+          margin-bottom: 1.5rem;
+        }
+
+        .background-section,
+        .biography-section {
+          margin-bottom: 2rem;
+        }
+
+        .background-section h2,
+        .biography-section h2 {
           font-size: 1.5rem;
           margin-bottom: 1rem;
         }
 
-        .biography p {
+        .background-section p,
+        .biography-section p {
           line-height: 1.8;
           color: var(--text-secondary);
         }
@@ -348,21 +495,6 @@ export default function PersonPage({ person }: PersonPageProps) {
           color: #d63031 !important;
         }
 
-        .severity-high {
-          background: #fee !important;
-          color: #c33 !important;
-        }
-
-        .severity-medium {
-          background: #fff3cd !important;
-          color: #856404 !important;
-        }
-
-        .severity-low {
-          background: #d1ecf1 !important;
-          color: #0c5460 !important;
-        }
-
         .summary {
           color: var(--text-secondary);
           line-height: 1.6;
@@ -399,37 +531,74 @@ export default function PersonPage({ person }: PersonPageProps) {
         .statements-list {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 2.5rem;
         }
 
         .statement-item {
-          background: var(--background-secondary);
-          padding: 1.5rem;
-          border-radius: 8px;
-          border-left: 4px solid var(--accent-primary);
+          margin: 1.5rem 0;
         }
 
-        blockquote {
-          margin: 0 0 1rem 0;
+        .block-quote {
+          position: relative;
+          margin: 1rem 0 1.5rem 3rem;
+          padding-left: 1rem;
+        }
+
+        .quote-mark {
+          position: absolute;
+          left: -2.5rem;
+          top: -0.5rem;
+          font-family: Georgia, 'Times New Roman', serif;
+          font-size: 5rem;
+          font-weight: bold;
+          line-height: 1;
+          color: var(--accent-primary);
+          opacity: 0.6;
           font-style: italic;
-          color: var(--text-primary);
-          line-height: 1.6;
         }
 
-        .statement-meta {
+        .quote-content {
+          font-family: Garamond, 'EB Garamond', Georgia, serif;
+          font-size: 1.05rem;
+          line-height: 1.8;
+          color: var(--text-primary);
+          text-align: justify;
+        }
+
+        .quote-content p {
+          margin-bottom: 1rem;
+        }
+
+        .quote-content p:first-line {
+          text-indent: 0;
+        }
+
+        .quote-content p + p {
+          text-indent: 2rem;
+        }
+
+        .statement-citation {
+          margin-left: 3rem;
+          padding-left: 1rem;
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
           font-size: 0.9rem;
           color: var(--text-secondary);
+          border-top: 1px solid var(--border-primary);
+          padding-top: 0.75rem;
         }
 
-        .related-incident {
+        .citation-date {
+          font-weight: 500;
+        }
+
+        .citation-incident {
           color: var(--accent-primary);
           cursor: pointer;
         }
 
-        .related-incident:hover {
+        .citation-incident:hover {
           text-decoration: underline;
         }
 
@@ -440,19 +609,65 @@ export default function PersonPage({ person }: PersonPageProps) {
           margin-top: 1rem;
         }
 
-        @media (max-width: 768px) {
-          .profile-info {
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
+        @media (max-width: 968px) {
+          .profile-layout {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
           }
 
-          .profile-details h1 {
+          .profile-infobox {
+            grid-column: 1;
+            grid-row: 2;
+            position: static;
+          }
+
+          .profile-main {
+            grid-column: 1;
+            grid-row: 1;
+          }
+
+          .profile-main h1 {
             font-size: 2rem;
           }
 
           .incident-meta {
-            justify-content: center;
+            justify-content: flex-start;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .profile-main h1 {
+            font-size: 1.8rem;
+          }
+
+          .infobox-image {
+            padding: 1rem;
+          }
+
+          .infobox-image img {
+            width: 180px;
+            height: 180px;
+          }
+
+          .image-placeholder {
+            width: 180px;
+            height: 180px;
+            font-size: 3rem;
+          }
+
+          .block-quote {
+            margin: 1rem 0 1.5rem 2rem;
+            padding-left: 0.5rem;
+          }
+
+          .quote-mark {
+            left: -1.8rem;
+            font-size: 3.5rem;
+          }
+
+          .statement-citation {
+            margin-left: 2rem;
+            padding-left: 0.5rem;
           }
         }
       `}</style>
@@ -515,6 +730,14 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           },
           orderBy: {
             responseDate: 'desc'
+          }
+        },
+        affiliations: {
+          include: {
+            organization: true
+          },
+          orderBy: {
+            isActive: 'desc'
           }
         }
       }

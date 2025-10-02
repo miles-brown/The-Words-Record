@@ -2,11 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
   "/incidents": "pages/incidents.js",
-  "/api/tags": "pages/api/tags.js",
-  "/incidents/[slug]": "pages/incidents/[slug].js",
-  "/api/incidents": "pages/api/incidents.js",
-  "/api/search": "pages/api/search.js",
-  "/search": "pages/search.js"
+  "/404": "pages/404.js"
 }
