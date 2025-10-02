@@ -2,7 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
+  "/incidents/[slug]": "pages/incidents/[slug].js",
   "/": "pages/index.js",
-  "/search": "pages/search.js",
-  "/incidents/[slug]": "pages/incidents/[slug].js"
+  "/cases/[slug]": "pages/cases/[slug].js",
+  "/incidents": "pages/incidents.js",
+  "/api/tags": "pages/api/tags.js",
+  "/api/incidents": "pages/api/incidents.js"
 }
