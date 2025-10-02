@@ -2,6 +2,7 @@
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import Image from 'next/image'
 import Head from 'next/head'
 import { format } from 'date-fns'
 import ReactMarkdown from 'react-markdown'
@@ -33,7 +34,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           <h1>Incident Not Found</h1>
           <p>The incident you're looking for doesn't exist in our database.</p>
           <Link href="/incidents">
-            <button>Browse All Incidents</button>
+            <button type="button">Browse All Incidents</button>
           </Link>
         </div>
 
@@ -140,14 +141,44 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           <section className="involved-persons">
             <h2>People Involved</h2>
             <div className="persons-grid">
-              {incident.persons.map(person => (
-                <Link href={`/persons/${person.slug}`} key={person.id}>
-                  <div className="person-card">
-                    <h3>{person.name}</h3>
-                    {person.profession && <p className="profession">{person.profession}</p>}
-                  </div>
-                </Link>
-              ))}
+              {incident.persons.map(person => {
+                // Determine if person made a statement or response
+                const madeStatement = incident.statements?.some(s => s.person.id === person.id)
+                const madeResponse = incident.responses?.some(r => r.person?.id === person.id) ||
+                                   incident.statements?.some(s =>
+                                     s.responses?.some(r => r.person?.id === person.id)
+                                   )
+
+                return (
+                  <Link href={`/persons/${person.slug}`} key={person.id}>
+                    <div className="person-card">
+                      <div className="person-card-image">
+                        {person.imageUrl ? (
+                          <Image
+                            src={person.imageUrl}
+                            alt={person.name}
+                            width={60}
+                            height={60}
+                            objectFit="cover"
+                          />
+                        ) : (
+                          <div className="person-card-placeholder">
+                            {person.name[0]}
+                          </div>
+                        )}
+                      </div>
+                      <div className="person-card-info">
+                        <h3>{person.name}</h3>
+                        {person.profession && <p className="profession">{person.profession}</p>}
+                        <div className="person-role">
+                          {madeStatement && <span className="role-badge statement">Made Statement</span>}
+                          {madeResponse && <span className="role-badge response">Responded</span>}
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
           </section>
         )}
@@ -157,7 +188,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
             <h2>Statements ({incident.statements.length})</h2>
             <div className="statements-timeline">
               {incident.statements.map((statement) => (
-                <div key={statement.id} className="statement-item">
+                <div key={statement.id} className="statement-item stagger-item">
                   <div className="statement-header">
                     <Link href={`/persons/${statement.person.slug}`}>
                       <span className="statement-author">{statement.person.name}</span>
@@ -508,6 +539,9 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
         }
 
         .person-card {
+          display: flex;
+          gap: 1rem;
+          align-items: center;
           border: 1px solid var(--border-primary);
           border-radius: 8px;
           padding: 1rem;
@@ -521,15 +555,73 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
+        .person-card-image {
+          flex-shrink: 0;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          overflow: hidden;
+          border: 2px solid var(--border-primary);
+        }
+
+        .person-card-image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .person-card-placeholder {
+          width: 100%;
+          height: 100%;
+          background: var(--accent-primary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 1.5rem;
+          font-weight: bold;
+          font-family: 'Merriweather', Georgia, serif;
+        }
+
+        .person-card-info {
+          flex: 1;
+          min-width: 0;
+        }
+
         .person-card h3 {
           color: var(--text-primary);
           margin-bottom: 0.25rem;
+          font-size: 1.1rem;
         }
 
         .person-card .profession {
           color: var(--text-secondary);
-          font-size: 0.9rem;
-          margin: 0;
+          font-size: 0.85rem;
+          margin: 0 0 0.5rem 0;
+        }
+
+        .person-role {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+        }
+
+        .role-badge {
+          font-size: 0.75rem;
+          padding: 0.2rem 0.6rem;
+          border-radius: 12px;
+          font-weight: 500;
+          white-space: nowrap;
+        }
+
+        .role-badge.statement {
+          background: #e3f2fd;
+          color: #1976d2;
+        }
+
+        .role-badge.response {
+          background: #f3e5f5;
+          color: #7b1fa2;
         }
 
         .statements-timeline {
@@ -816,6 +908,24 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
 
           .persons-grid {
             grid-template-columns: 1fr;
+          }
+
+          .person-card {
+            gap: 0.75rem;
+            padding: 0.75rem;
+          }
+
+          .person-card-image {
+            width: 50px;
+            height: 50px;
+          }
+
+          .person-card h3 {
+            font-size: 1rem;
+          }
+
+          .person-card .profession {
+            font-size: 0.8rem;
           }
 
           .statement-header,

@@ -238,7 +238,7 @@ export default function PersonPage({ person }: PersonPageProps) {
             <h2>Statements ({person.statements.length})</h2>
             <div className="statements-list">
               {person.statements.slice(0, 5).map((statement) => (
-                <div key={statement.id} className="statement-item">
+                <div key={statement.id} className="statement-item stagger-item">
                   <div className="block-quote">
                     <span className="quote-mark">&ldquo;</span>
                     <div className="quote-content">{statement.content}</div>

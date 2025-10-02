@@ -108,7 +108,7 @@ export default function PersonsPage() {
           ) : (
             persons.map((person) => (
               <Link href={`/persons/${person.slug}`} key={person.id}>
-                <article className="person-card">
+                <article className="person-card stagger-item">
                   <div className="person-header">
                     {person.imageUrl ? (
                       <div className="person-image">

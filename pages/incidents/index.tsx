@@ -186,7 +186,7 @@ export default function IncidentsPage() {
             incidents.map((incident, index) => (
               <>
                 <Link href={`/incidents/${incident.slug}`} key={incident.id}>
-                  <article className="incident-card">
+                  <article className="incident-card stagger-item">
                     <div className="incident-header">
                       <h2>{incident.title}</h2>
                       <span className="date">
