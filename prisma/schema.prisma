@@ -19,12 +19,28 @@ model Person {
   bio             String?
   background      String?         // General background information
   imageUrl        String?
-  profession      String?
+
+  // Professional Information
+  profession      String?         // Comma-separated tags: Politician, Actor, Journalist, etc.
+  roleDescription String?         // Short description of their main role/job
+  yearsActive     String?         // e.g., "2005-2019" or "2005-present"
+  bestKnownFor    String?         // One-sentence summary: "British MP for Lewisham East, 2005-2019"
+
+  // Personal Information
   nationality     String?
   racialGroup     String?         // Racial/ethnic group
   religion        String?         // Religious affiliation/denomination
   birthDate       DateTime?
+  birthPlace      String?         // Place of birth
+  residence       String?         // Place of main residence
   deathDate       DateTime?
+  deathPlace      String?         // Place of death
+
+  // Political Information
+  politicalParty  String?         // Political party alignment with years in brackets
+  politicalBeliefs String?        // Political ideology/beliefs if known
+
+  // Timestamps
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 
@@ -32,7 +48,7 @@ model Person {
   incidents       Incident[]      @relation("PersonIncidents")
   statements      Statement[]
   responses       Response[]
-  affiliations    Affiliation[]   // Organization memberships/roles
+  affiliations    Affiliation[]   // Organization memberships/roles (for employers/contracts)
 }
 
 // Organization model
@@ -93,6 +109,13 @@ model Statement {
   statementDate   DateTime
   medium          String?         // phone call, interview, social media, etc.
   isVerified      Boolean         @default(false)
+
+  // Repercussions tracking
+  lostEmployment  Boolean         @default(false)  // Lost job/employment as result
+  lostContracts   Boolean         @default(false)  // Lost contracts/sponsorships
+  paintedNegatively Boolean       @default(false)  // Painted negatively in media (regardless of whether rightly or wrongly)
+  repercussionDetails String?     // Additional context about repercussions
+
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
 

@@ -1,0 +1,22 @@
+# People to Research
+# Add one person per line. AI will automatically research and document incidents.
+# Lines starting with # are comments and will be ignored.
+
+# Entertainment
+# Taylor Swift
+# Kanye West
+# J.K. Rowling
+
+# Tech & Business
+# Elon Musk
+# Mark Zuckerberg
+
+# Politics
+# Donald Trump
+# Joe Biden
+
+# Sports
+# Kyrie Irving
+# LeBron James
+
+# Add your own people below:

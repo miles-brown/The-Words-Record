@@ -3,9 +3,11 @@
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
   "/incidents/[slug]": "pages/incidents/[slug].js",
-  "/": "pages/index.js",
-  "/cases/[slug]": "pages/cases/[slug].js",
-  "/incidents": "pages/incidents.js",
+  "/api/organizations": "pages/api/organizations.js",
+  "/organizations": "pages/organizations.js",
+  "/api/incidents": "pages/api/incidents.js",
   "/api/tags": "pages/api/tags.js",
-  "/api/incidents": "pages/api/incidents.js"
+  "/persons": "pages/persons.js",
+  "/incidents": "pages/incidents.js",
+  "/api/persons": "pages/api/persons.js"
 }

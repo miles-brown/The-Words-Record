@@ -96,6 +96,15 @@ export default function PersonPage({ person }: PersonPageProps) {
               <h2 className="infobox-title">{person.name}</h2>
 
               <div className="infobox-section">
+                <h3>Quick Facts</h3>
+
+                {person.bestKnownFor && (
+                  <div className="info-row">
+                    <span className="info-label">Best Known For:</span>
+                    <span className="info-value">{person.bestKnownFor}</span>
+                  </div>
+                )}
+
                 {person.akaNames && (
                   <div className="info-row">
                     <span className="info-label">Also Known As:</span>
@@ -108,6 +117,7 @@ export default function PersonPage({ person }: PersonPageProps) {
                     <span className="info-label">Born:</span>
                     <span className="info-value">
                       {format(new Date(person.birthDate), 'MMMM d, yyyy')}
+                      {person.birthPlace && ` in ${person.birthPlace}`}
                     </span>
                   </div>
                 )}
@@ -118,6 +128,13 @@ export default function PersonPage({ person }: PersonPageProps) {
                     <span className="info-value">
                       {format(new Date(person.deathDate), 'MMMM d, yyyy')}
                     </span>
+                  </div>
+                )}
+
+                {person.residence && (
+                  <div className="info-row">
+                    <span className="info-label">Residence:</span>
+                    <span className="info-value">{person.residence}</span>
                   </div>
                 )}
 
@@ -146,6 +163,34 @@ export default function PersonPage({ person }: PersonPageProps) {
                   <div className="info-row">
                     <span className="info-label">Profession:</span>
                     <span className="info-value">{person.profession}</span>
+                  </div>
+                )}
+
+                {person.roleDescription && (
+                  <div className="info-row">
+                    <span className="info-label">Role:</span>
+                    <span className="info-value">{person.roleDescription}</span>
+                  </div>
+                )}
+
+                {person.yearsActive && (
+                  <div className="info-row">
+                    <span className="info-label">Years Active:</span>
+                    <span className="info-value">{person.yearsActive}</span>
+                  </div>
+                )}
+
+                {person.politicalParty && (
+                  <div className="info-row">
+                    <span className="info-label">Political Party:</span>
+                    <span className="info-value">{person.politicalParty}</span>
+                  </div>
+                )}
+
+                {person.politicalBeliefs && (
+                  <div className="info-row">
+                    <span className="info-label">Political Beliefs:</span>
+                    <span className="info-value">{person.politicalBeliefs}</span>
                   </div>
                 )}
               </div>

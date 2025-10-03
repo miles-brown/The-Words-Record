@@ -15,15 +15,15 @@ export default function CasesPage({ allCases }) {
       <div className="cases-page">
         <h1>Legacy Case Studies</h1>
         <p className="page-description">
-          Note: This is the legacy cases page using markdown files. 
-          Please visit <Link href="/incidents"><a style={{color: 'var(--accent-primary)'}}>the new incidents page</a></Link> for 
+          Note: This is the legacy cases page using markdown files.
+          Please visit <Link href="/incidents" style={{color: 'var(--accent-primary)'}}>the new incidents page</Link> for
           the updated database-driven content with better search and filtering capabilities.
         </p>
 
         <div className="cases-list">
           {allCases.map((caseStudy) => (
-            <Link href={`/cases/${caseStudy.slug}`} key={caseStudy.slug}>
-              <article className="case-item">
+            <article className="case-item" key={caseStudy.slug}>
+              <Link href={`/cases/${caseStudy.slug}`}>
                 <div className="case-header">
                   <h2>{caseStudy.title}</h2>
                   <div className="case-meta">
@@ -36,9 +36,9 @@ export default function CasesPage({ allCases }) {
                     </span>
                   </div>
                 </div>
-                
+
                 <p className="case-excerpt">{caseStudy.excerpt}</p>
-                
+
                 {caseStudy.tags && caseStudy.tags.length > 0 && (
                   <div className="case-tags">
                     {caseStudy.tags.map(tag => (
@@ -46,8 +46,8 @@ export default function CasesPage({ allCases }) {
                     ))}
                   </div>
                 )}
-              </article>
-            </Link>
+              </Link>
+            </article>
           ))}
         </div>
 
@@ -87,14 +87,18 @@ export default function CasesPage({ allCases }) {
         .case-item {
           border: 1px solid var(--border-primary);
           border-radius: 8px;
-          padding: 2rem;
           background: var(--background-primary);
-          cursor: pointer;
           transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .case-item a {
+          display: block;
+          padding: 2rem;
+          cursor: pointer;
           text-decoration: none;
           color: inherit;
         }
-        
+
         .case-item:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -173,11 +177,11 @@ export default function CasesPage({ allCases }) {
           .cases-page h1 {
             font-size: 2rem;
           }
-          
-          .case-item {
+
+          .case-item a {
             padding: 1.5rem;
           }
-          
+
           .case-meta {
             flex-direction: column;
             gap: 0.5rem;

@@ -1,0 +1,130 @@
+# US and UK Politicians - Israel/Palestine/Jewish People Statements
+# AI will research statements, comments, or positions on Israel, Palestine, Jews, or Zionism
+# One person per line
+
+# UK Labour Party
+Jeremy Corbyn
+Keir Starmer
+Diane Abbott
+John McDonnell
+Rebecca Long-Bailey
+Richard Burgon
+Chris Williamson
+Zarah Sultana
+Apsana Begum
+Naz Shah
+Yasmin Qureshi
+Afzal Khan
+Lisa Nandy
+Emily Thornberry
+David Lammy
+Angela Rayner
+Andy McDonald
+Lloyd Russell-Moyle
+Kate Osamor
+Dawn Butler
+Bell Ribeiro-Addy
+Clive Lewis
+Fabian Hamilton
+Louise Ellman
+Margaret Hodge
+Ruth Smeeth
+Luciana Berger
+Wes Streeting
+Jess Phillips
+Rachel Reeves
+
+# UK Conservative Party
+Boris Johnson
+Rishi Sunak
+Suella Braverman
+Priti Patel
+Robert Jenrick
+James Cleverly
+Theresa May
+David Cameron
+Michael Gove
+Liz Truss
+Dominic Raab
+Sajid Javid
+Gavin Williamson
+Jacob Rees-Mogg
+Mark Francois
+Iain Duncan Smith
+William Hague
+George Osborne
+
+# UK Other Parties
+Nicola Sturgeon
+Humza Yousaf
+Ian Blackford
+Mhairi Black
+Jeremy Hunt
+Ed Davey
+Caroline Lucas
+George Galloway
+Salma Yaqoob
+
+# US Democrats
+Joe Biden
+Kamala Harris
+Bernie Sanders
+Alexandria Ocasio-Cortez
+Ilhan Omar
+Rashida Tlaib
+Ayanna Pressley
+Cori Bush
+Jamaal Bowman
+Summer Lee
+Greg Casar
+Nancy Pelosi
+Chuck Schumer
+Adam Schiff
+Eric Swalwell
+Jamie Raskin
+Jerry Nadler
+Hakeem Jeffries
+Steny Hoyer
+James Clyburn
+Debbie Wasserman Schultz
+Ted Deutch
+Eliot Engel
+Nita Lowey
+Brad Sherman
+Hillary Clinton
+Barack Obama
+Bill Clinton
+John Kerry
+Antony Blinken
+Jake Sullivan
+Elizabeth Warren
+Pete Buttigieg
+Gavin Newsom
+J.B. Pritzker
+Gretchen Whitmer
+Josh Shapiro
+
+# US Republicans
+Donald Trump
+Mike Pence
+Ron DeSantis
+Nikki Haley
+Marco Rubio
+Ted Cruz
+Josh Hawley
+Tom Cotton
+Lindsey Graham
+Mitch McConnell
+Kevin McCarthy
+Mike Johnson
+Elise Stefanik
+Jim Jordan
+Matt Gaetz
+Marjorie Taylor Greene
+Lauren Boebert
+Paul Ryan
+Mitt Romney
+Mike Pompeo
+Jared Kushner
+Ivanka Trump
+Mike Huckabee

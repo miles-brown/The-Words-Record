@@ -1,0 +1,440 @@
+
+🚀 Starting batch processing for 117 people...
+
+
+[1/117] Processing: Jeremy Corbyn
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jeremy Corbyn
+
+🤖 AI is researching incidents involving Jeremy Corbyn...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jeremy-corbyn-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jeremy-corbyn-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jeremy Corbyn
+✅ Successfully imported: Jeremy Corbyn
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[2/117] Processing: Keir Starmer
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Keir Starmer
+
+🤖 AI is researching incidents involving Keir Starmer...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/keir-starmer-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/keir-starmer-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Keir Starmer
+✅ Successfully imported: Keir Starmer
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[3/117] Processing: Diane Abbott
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Diane Abbott
+
+🤖 AI is researching incidents involving Diane Abbott...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/diane-abbott-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/diane-abbott-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Diane Abbott
+✅ Successfully imported: Diane Abbott
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[4/117] Processing: John McDonnell
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: John McDonnell
+
+🤖 AI is researching incidents involving John McDonnell...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/john-mcdonnell-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/john-mcdonnell-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: John McDonnell
+✅ Successfully imported: John McDonnell
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[5/117] Processing: Rebecca Long-Bailey
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Rebecca Long-Bailey
+
+🤖 AI is researching incidents involving Rebecca Long-Bailey...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/rebecca-long-bailey-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/rebecca-long-bailey-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Rebecca Long-Bailey
+✅ Successfully imported: Rebecca Long-Bailey
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[6/117] Processing: Richard Burgon
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Richard Burgon
+
+🤖 AI is researching incidents involving Richard Burgon...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/richard-burgon-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/richard-burgon-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Richard Burgon
+✅ Successfully imported: Richard Burgon
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[7/117] Processing: Chris Williamson
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Chris Williamson
+
+🤖 AI is researching incidents involving Chris Williamson...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/chris-williamson-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/chris-williamson-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Chris Williamson
+✅ Successfully imported: Chris Williamson
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[8/117] Processing: Zarah Sultana
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Zarah Sultana
+
+🤖 AI is researching incidents involving Zarah Sultana...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/zarah-sultana-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/zarah-sultana-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Zarah Sultana
+✅ Successfully imported: Zarah Sultana
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[9/117] Processing: Apsana Begum
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Apsana Begum
+
+🤖 AI is researching incidents involving Apsana Begum...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/apsana-begum-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/apsana-begum-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Apsana Begum
+✅ Successfully imported: Apsana Begum
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[10/117] Processing: Naz Shah
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Naz Shah
+
+🤖 AI is researching incidents involving Naz Shah...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/naz-shah-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/naz-shah-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Naz Shah
+✅ Successfully imported: Naz Shah
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[11/117] Processing: Yasmin Qureshi
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Yasmin Qureshi
+
+🤖 AI is researching incidents involving Yasmin Qureshi...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/yasmin-qureshi-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/yasmin-qureshi-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Yasmin Qureshi
+✅ Successfully imported: Yasmin Qureshi
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[12/117] Processing: Afzal Khan
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Afzal Khan
+
+🤖 AI is researching incidents involving Afzal Khan...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/afzal-khan-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/afzal-khan-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Afzal Khan
+✅ Successfully imported: Afzal Khan
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[13/117] Processing: Lisa Nandy
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Lisa Nandy
+
+🤖 AI is researching incidents involving Lisa Nandy...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/lisa-nandy-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/lisa-nandy-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Lisa Nandy
+✅ Successfully imported: Lisa Nandy
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[14/117] Processing: Emily Thornberry
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Emily Thornberry
+
+🤖 AI is researching incidents involving Emily Thornberry...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/emily-thornberry-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/emily-thornberry-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Emily Thornberry
+✅ Successfully imported: Emily Thornberry
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[15/117] Processing: David Lammy
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: David Lammy
+
+🤖 AI is researching incidents involving David Lammy...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/david-lammy-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/david-lammy-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: David Lammy
+✅ Successfully imported: David Lammy
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[16/117] Processing: Angela Rayner
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Angela Rayner
+
+🤖 AI is researching incidents involving Angela Rayner...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/angela-rayner-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/angela-rayner-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Angela Rayner
+✅ Successfully imported: Angela Rayner
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[17/117] Processing: Andy McDonald
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Andy McDonald
+
+🤖 AI is researching incidents involving Andy McDonald...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/andy-mcdonald-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/andy-mcdonald-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Andy McDonald
+✅ Successfully imported: Andy McDonald
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[18/117] Processing: Lloyd Russell-Moyle
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Lloyd Russell-Moyle
+
+🤖 AI is researching incidents involving Lloyd Russell-Moyle...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/lloyd-russell-moyle-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/lloyd-russell-moyle-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Lloyd Russell-Moyle
+✅ Successfully imported: Lloyd Russell-Moyle
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[19/117] Processing: Kate Osamor
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Kate Osamor
+
+🤖 AI is researching incidents involving Kate Osamor...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/kate-osamor-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/kate-osamor-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Kate Osamor
+✅ Successfully imported: Kate Osamor
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
