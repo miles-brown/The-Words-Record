@@ -240,8 +240,18 @@ async function importIncident(incident: IncidentData) {
   // Handle affiliated organizations via Affiliation model
   if (incident.person.affiliatedOrgs) {
     const orgs = incident.person.affiliatedOrgs.split(',').map(o => o.trim())
-    for (const orgName of orgs) {
-      if (!orgName || orgName === 'N/A' || orgName === 'None') continue
+    for (const orgEntry of orgs) {
+      if (!orgEntry || orgEntry === 'N/A' || orgEntry === 'None') continue
+
+      // Parse "Organization Name (Role)" format
+      let orgName = orgEntry
+      let role = 'Member'  // Default role
+
+      const roleMatch = orgEntry.match(/^(.+?)\s*\((.+?)\)$/)
+      if (roleMatch) {
+        orgName = roleMatch[1].trim()
+        role = roleMatch[2].trim()
+      }
 
       const orgSlug = createSlug(orgName)
 
@@ -262,7 +272,7 @@ async function importIncident(incident: IncidentData) {
           data: {
             personId: person.id,
             organizationId: org.id,
-            role: 'Member',  // Default role
+            role: role,
             isActive: true,
           },
         })

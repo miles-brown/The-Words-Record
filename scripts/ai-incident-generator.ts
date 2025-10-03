@@ -82,7 +82,7 @@ Return the information in this EXACT format (replace placeholders with actual da
 - **Residence:** [Current main place of residence if alive]
 - **Political Party:** [Party name with years in brackets if changed, e.g., "Labour Party (2005-present)"]
 - **Political Beliefs:** [Political ideology/position if known: Progressive, Conservative, Liberal, Socialist, etc.]
-- **Affiliated Organizations:** [ONLY legal organizations, companies, or institutions - comma separated. Use "UK Parliament" instead of "Parliamentary Labour Party", "UK Government" instead of "Shadow Cabinet", party names instead of roles within parties. Examples: "UK Parliament, Labour Party, Daily Telegraph, Amnesty International"]
+- **Affiliated Organizations:** [Format as: "Organization Name (Role)" - comma separated. Specify the person's role/relationship with each organization. Examples: "Labour Party (Elected Politician)", "UK Parliament (Member of Parliament)", "Campaign for Nuclear Disarmament (Activist)", "Momentum (Supporter)", "Daily Telegraph (Columnist)", "UN (Ambassador)", "Conservative Party (Former Leader)". Use roles like: Elected Politician, Member, Activist, Supporter, Founder, Board Member, Columnist, Employee, Ambassador, Former Leader, etc.]
 
 ### STATEMENT/INCIDENT INFORMATION:
 - **Date:** [Date in format: DD Month YYYY]

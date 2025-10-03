@@ -1,30 +1,37 @@
 ## Diane Abbott
 
-### PERSON INFORMATION (Research and fill out all fields):
-- **AKA Names:** Diane Julie Abbott, Dame Diane Abbott
-- **Profession:** Politician, Activist, Journalist
+### PERSON INFORMATION:
+- **AKA Names:** N/A
+- **Profession:** Politician, Activist
 - **Role Description:** British Member of Parliament and former Shadow Home Secretary
 - **Years Active:** 1987-present
-- **Best Known For:** Britain's first Black female MP and longest-serving Black MP in the House of Commons
+- **Best Known For:** First Black woman elected to the British Parliament in 1987, representing Hackney North and Stoke Newington
 - **Nationality:** British
 - **Racial/Ethnic Group:** Black British (Jamaican heritage)
 - **Religion:** Not publicly specified
 - **Birth Date:** 27 September 1953
 - **Birth Place:** London, England
+- **Death Date:** 
+- **Death Place:** 
 - **Residence:** London, England
 - **Political Party:** Labour Party (1987-present)
-- **Political Beliefs:** Socialist, Progressive
-- **Affiliated Organizations:** Labour Party, Parliamentary Labour Party
+- **Political Beliefs:** Progressive, Socialist
+- **Affiliated Organizations:** Labour Party (Elected Politician), UK Parliament (Member of Parliament), Campaign for Nuclear Disarmament (Supporter), Stop the War Coalition (Supporter)
 
 ### STATEMENT/INCIDENT INFORMATION:
-- **Date:** 13 October 2023
-- **Exact Wording:** *"The Israeli Government's collective punishment of the Palestinian people is a war crime. Cutting off power, fuel, water and food to 2.3 million people, including one million children, will not achieve security for Israel. Only a just and lasting peace can do that."*
-- **Context:** Abbott made this statement on Twitter following escalation in the Israel-Gaza conflict after Hamas attacks on Israel on October 7, 2023, and Israel's subsequent military response including a blockade of Gaza. The statement came amid international debate over Israel's response and calls from various quarters regarding proportionality and civilian protection.
-- **Platform:** Twitter/X
-- **Media Coverage / Framing:** The statement was reported by various outlets as part of broader Labour Party divisions on Israel-Palestine policy. Some outlets noted it as criticism of Israeli government actions, while others contextualized it within ongoing debates about international law and civilian protection during armed conflict.
-- **Categories:** Politics / International Relations / Social Media / Human Rights / Middle East Conflict
-- **Response / Outcome:** Abbott maintained her position and continued to advocate for civilian protection on both sides. The statement was consistent with her long-standing positions on Palestinian rights and international law.
+- **Date:** 23 April 2023
+- **Exact Wording:** *"It is true that many types of white people with points of difference, such as redheads, can experience this prejudice. But they are not all their lives subject to racism. Jewish, Irish and Traveller people all suffer from 'racism'. This is similar to racism and the two words are often used as if they are interchangeable."*
+- **Context:** Abbott wrote a letter to The Observer newspaper responding to an article about racism. In her letter, she appeared to suggest that Jewish, Irish and Traveller people experience prejudice and discrimination but not racism in the same way as Black people. The letter was published and immediately sparked controversy for appearing to minimize antisemitism and create a hierarchy of racism.
+- **Platform:** The Observer newspaper (letter to editor)
+- **Media Coverage / Framing:** Major outlets reported this as a significant controversy. Headlines included "Diane Abbott suspended from Labour Party over racism letter" and focused on her apparent distinction between racism and prejudice. The coverage was largely critical, with Jewish organizations and politicians from multiple parties condemning the comments as deeply offensive and historically ignorant.
+- **Categories:** Politics / Antisemitism / Media / Party Discipline / Race Relations
+- **Response / Outcome:** Abbott issued a public apology stating the letter was an "initial draft" sent by mistake and that she wished to "wholly and unreservedly withdraw my remarks and disassociate myself from them." She acknowledged the letter was offensive and wrong.
+- **Repercussions:**
+  - Lost Employment: NO - Though suspended from Labour Party, retained MP position
+  - Lost Contracts: NO
+  - Painted Negatively: YES - Widely criticized across political spectrum and media
+  - Details: Suspended from Labour Party parliamentary group pending investigation. Faced calls for resignation from multiple Jewish organizations and cross-party politicians.
 - **Citations:** 
-  - https://twitter.com/HackneyAbbott/status/1712890285849809011
-  - https://www.middleeasteye.net/news/israel-palestine-war-uk-labour-mps-call-gaza-ceasefire-despite-starmer-opposition
-  - https://www.independent.co.uk/news/uk/politics/labour-mps-ceasefire-gaza-israel-b2429073.html
+  - https://www.bbc.co.uk/news/uk-politics-65355397
+  - https://www.theguardian.com/politics/2023/apr/24/diane-abbott-suspended-labour-party-jewish-irish-traveller-racism-letter
+  - https://www.independent.co.uk/news/uk/politics/diane-abbott-suspended-labour-racism-b2325385.html

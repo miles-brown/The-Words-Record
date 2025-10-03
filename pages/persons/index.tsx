@@ -18,6 +18,16 @@ export default function PersonsPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Filters
+  const [filters, setFilters] = useState({
+    profession: '',
+    nationality: '',
+    organization: '',
+    hasRepercussions: '',
+    sortBy: 'name-asc'
+  })
+  const [showFilters, setShowFilters] = useState(false)
+
   const getPageNumbers = () => {
     const pages: (number | string)[] = []
     const { page, totalPages } = pagination
@@ -56,16 +66,25 @@ export default function PersonsPage() {
 
   useEffect(() => {
     fetchPersons(1)
-  }, [])
+  }, [filters])
 
   const fetchPersons = async (page: number) => {
     setLoading(true)
     setError(null)
-    
+
     try {
-      const response = await fetch(`/api/persons?page=${page}&limit=12`)
+      const params = new URLSearchParams({
+        page: page.toString(),
+        limit: '12',
+        ...Object.entries(filters).reduce((acc, [key, value]) => {
+          if (value) acc[key] = value
+          return acc
+        }, {})
+      })
+
+      const response = await fetch(`/api/persons?${params}`)
       if (!response.ok) throw new Error('Failed to fetch persons')
-      
+
       const data = await response.json()
       setPersons(data.persons)
       setPagination(data.pagination)
@@ -75,6 +94,20 @@ export default function PersonsPage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }))
+  }
+
+  const clearFilters = () => {
+    setFilters({
+      profession: '',
+      nationality: '',
+      organization: '',
+      hasRepercussions: '',
+      sortBy: 'name-asc'
+    })
   }
 
   return (
@@ -89,6 +122,94 @@ export default function PersonsPage() {
             Browse profiles of individuals who have made or been subjects of documented public statements.
             Click on any profile to view their complete history and statements.
           </p>
+        </div>
+
+        {/* Filters and Sorting */}
+        <div className="filters-section">
+          <button
+            className="toggle-filters-btn"
+            onClick={() => setShowFilters(!showFilters)}
+          >
+            {showFilters ? '▼' : '▶'} Filters & Sorting
+          </button>
+
+          {showFilters && (
+            <div className="filters-grid">
+              <div className="filter-group">
+                <label htmlFor="sortBy">Sort By</label>
+                <select
+                  id="sortBy"
+                  value={filters.sortBy}
+                  onChange={(e) => handleFilterChange('sortBy', e.target.value)}
+                >
+                  <option value="name-asc">Name (A-Z)</option>
+                  <option value="name-desc">Name (Z-A)</option>
+                  <option value="surname-asc">Surname (A-Z)</option>
+                  <option value="surname-desc">Surname (Z-A)</option>
+                  <option value="birthdate-asc">Birth Date (Oldest First)</option>
+                  <option value="birthdate-desc">Birth Date (Newest First)</option>
+                  <option value="statements-desc">Most Statements</option>
+                  <option value="statements-asc">Fewest Statements</option>
+                  <option value="responses-desc">Most Responses</option>
+                  <option value="responses-asc">Fewest Responses</option>
+                </select>
+              </div>
+
+              <div className="filter-group">
+                <label htmlFor="profession">Profession</label>
+                <input
+                  id="profession"
+                  type="text"
+                  placeholder="e.g. Politician, Actor"
+                  value={filters.profession}
+                  onChange={(e) => handleFilterChange('profession', e.target.value)}
+                />
+              </div>
+
+              <div className="filter-group">
+                <label htmlFor="nationality">Nationality</label>
+                <input
+                  id="nationality"
+                  type="text"
+                  placeholder="e.g. British, American"
+                  value={filters.nationality}
+                  onChange={(e) => handleFilterChange('nationality', e.target.value)}
+                />
+              </div>
+
+              <div className="filter-group">
+                <label htmlFor="organization">Organization</label>
+                <input
+                  id="organization"
+                  type="text"
+                  placeholder="e.g. Labour Party, UK Parliament"
+                  value={filters.organization}
+                  onChange={(e) => handleFilterChange('organization', e.target.value)}
+                />
+              </div>
+
+              <div className="filter-group">
+                <label htmlFor="hasRepercussions">Repercussions</label>
+                <select
+                  id="hasRepercussions"
+                  value={filters.hasRepercussions}
+                  onChange={(e) => handleFilterChange('hasRepercussions', e.target.value)}
+                >
+                  <option value="">All</option>
+                  <option value="any">Any Repercussions</option>
+                  <option value="employment">Lost Employment</option>
+                  <option value="contracts">Lost Contracts</option>
+                  <option value="painted-negatively">Painted Negatively</option>
+                </select>
+              </div>
+
+              <div className="filter-actions">
+                <button className="clear-filters-btn" onClick={clearFilters}>
+                  Clear All Filters
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {error && (
@@ -230,6 +351,83 @@ export default function PersonsPage() {
           line-height: 1.6;
           max-width: 700px;
           margin: 0 auto;
+        }
+
+        .filters-section {
+          background: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: 8px;
+          padding: 1.5rem;
+          margin-bottom: 2rem;
+        }
+
+        .toggle-filters-btn {
+          background: none;
+          border: none;
+          color: var(--text-primary);
+          font-size: 1.1rem;
+          font-weight: 600;
+          cursor: pointer;
+          padding: 0;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .filters-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+          gap: 1.5rem;
+          margin-top: 1.5rem;
+        }
+
+        .filter-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .filter-group label {
+          font-size: 0.9rem;
+          font-weight: 600;
+          color: var(--text-primary);
+        }
+
+        .filter-group input,
+        .filter-group select {
+          padding: 0.6rem;
+          border: 1px solid var(--border-primary);
+          border-radius: 4px;
+          background: var(--background-primary);
+          color: var(--text-primary);
+          font-size: 0.95rem;
+        }
+
+        .filter-group input:focus,
+        .filter-group select:focus {
+          outline: none;
+          border-color: var(--accent-primary);
+        }
+
+        .filter-actions {
+          display: flex;
+          align-items: flex-end;
+        }
+
+        .clear-filters-btn {
+          padding: 0.6rem 1.2rem;
+          background: var(--accent-secondary);
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          font-weight: 500;
+          transition: background 0.2s;
+        }
+
+        .clear-filters-btn:hover {
+          background: #34495e;
         }
 
         .error-message {
