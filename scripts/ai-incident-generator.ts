@@ -77,7 +77,9 @@ Return the information in this EXACT format (replace placeholders with actual da
 - **Religion:** [Religious affiliation or denomination if publicly known]
 - **Birth Date:** [DD Month YYYY format]
 - **Birth Place:** [City, Country]
-- **Residence:** [Current main place of residence]
+- **Death Date:** [DD Month YYYY format - ONLY if deceased, otherwise leave blank]
+- **Death Place:** [City, Country - ONLY if deceased, otherwise leave blank]
+- **Residence:** [Current main place of residence if alive]
 - **Political Party:** [Party name with years in brackets if changed, e.g., "Labour Party (2005-present)"]
 - **Political Beliefs:** [Political ideology/position if known: Progressive, Conservative, Liberal, Socialist, etc.]
 - **Affiliated Organizations:** [ONLY legal organizations, companies, or institutions - comma separated. Use "UK Parliament" instead of "Parliamentary Labour Party", "UK Government" instead of "Shadow Cabinet", party names instead of roles within parties. Examples: "UK Parliament, Labour Party, Daily Telegraph, Amnesty International"]
@@ -90,6 +92,11 @@ Return the information in this EXACT format (replace placeholders with actual da
 - **Media Coverage / Framing:** [How did major outlets report this? Include key headlines and perspectives. Be neutral and factual.]
 - **Categories:** [3-5 relevant categories separated by /]
 - **Response / Outcome:** [How did the person respond? Was there an apology, clarification, legal outcome, or further action?]
+- **Repercussions:** [Answer YES or NO for each]
+  - Lost Employment: [YES/NO - Did they lose their job/employment as a result?]
+  - Lost Contracts: [YES/NO - Did they lose contracts, sponsorships, or deals?]
+  - Painted Negatively: [YES/NO - Were they painted negatively in media coverage, regardless of whether rightly or wrongly?]
+  - Details: [Brief description of the repercussions if any occurred]
 - **Citations:** [List 2-3 credible source URLs]
 
 IMPORTANT RULES:

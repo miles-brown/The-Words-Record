@@ -1756,3 +1756,282 @@ Importing: Steny Hoyer
 🚀 Starting AI research for: James Clyburn
 
 🤖 AI is researching incidents involving James Clyburn...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/james-clyburn-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/james-clyburn-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: James Clyburn
+✅ Successfully imported: James Clyburn
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[78/117] Processing: Debbie Wasserman Schultz
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Debbie Wasserman Schultz
+
+🤖 AI is researching incidents involving Debbie Wasserman Schultz...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/debbie-wasserman-schultz-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/debbie-wasserman-schultz-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Debbie Wasserman Schultz
+✅ Successfully imported: Debbie Wasserman Schultz
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[79/117] Processing: Ted Deutch
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Ted Deutch
+
+🤖 AI is researching incidents involving Ted Deutch...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ted-deutch-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ted-deutch-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Ted Deutch
+✅ Successfully imported: Ted Deutch
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[80/117] Processing: Eliot Engel
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Eliot Engel
+
+🤖 AI is researching incidents involving Eliot Engel...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/eliot-engel-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/eliot-engel-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Eliot Engel
+✅ Successfully imported: Eliot Engel
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[81/117] Processing: Nita Lowey
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Nita Lowey
+
+🤖 AI is researching incidents involving Nita Lowey...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/nita-lowey-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/nita-lowey-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Nita Lowey
+✅ Successfully imported: Nita Lowey
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[82/117] Processing: Brad Sherman
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Brad Sherman
+
+🤖 AI is researching incidents involving Brad Sherman...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/brad-sherman-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/brad-sherman-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Brad Sherman
+✅ Successfully imported: Brad Sherman
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[83/117] Processing: Hillary Clinton
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Hillary Clinton
+
+🤖 AI is researching incidents involving Hillary Clinton...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/hillary-clinton-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/hillary-clinton-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Hillary Clinton
+✅ Successfully imported: Hillary Clinton
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[84/117] Processing: Barack Obama
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Barack Obama
+
+🤖 AI is researching incidents involving Barack Obama...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/barack-obama-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/barack-obama-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Barack Obama
+✅ Successfully imported: Barack Obama
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[85/117] Processing: Bill Clinton
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Bill Clinton
+
+🤖 AI is researching incidents involving Bill Clinton...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bill-clinton-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bill-clinton-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Bill Clinton
+✅ Successfully imported: Bill Clinton
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[86/117] Processing: John Kerry
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: John Kerry
+
+🤖 AI is researching incidents involving John Kerry...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/john-kerry-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/john-kerry-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: John Kerry
+✅ Successfully imported: John Kerry
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[87/117] Processing: Antony Blinken
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Antony Blinken
+
+🤖 AI is researching incidents involving Antony Blinken...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/antony-blinken-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/antony-blinken-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Antony Blinken
+✅ Successfully imported: Antony Blinken
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[88/117] Processing: Jake Sullivan
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jake Sullivan
+
+🤖 AI is researching incidents involving Jake Sullivan...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jake-sullivan-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jake-sullivan-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jake Sullivan
+✅ Successfully imported: Jake Sullivan
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[89/117] Processing: Elizabeth Warren
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Elizabeth Warren
+
+🤖 AI is researching incidents involving Elizabeth Warren...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/elizabeth-warren-2025-10-03.md
+
+📥 Importing to database...

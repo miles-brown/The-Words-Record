@@ -9,6 +9,7 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations } from '@/types'
 import prisma from '@/lib/prisma'
+import { getAgeString } from '@/lib/ageUtils'
 
 interface PersonPageProps {
   person: PersonWithRelations | null
@@ -118,6 +119,7 @@ export default function PersonPage({ person }: PersonPageProps) {
                     <span className="info-value">
                       {format(new Date(person.birthDate), 'MMMM d, yyyy')}
                       {person.birthPlace && ` in ${person.birthPlace}`}
+                      {!person.deathDate && getAgeString(person.birthDate, null) && ` ${getAgeString(person.birthDate, null)}`}
                     </span>
                   </div>
                 )}
@@ -127,6 +129,8 @@ export default function PersonPage({ person }: PersonPageProps) {
                     <span className="info-label">Died:</span>
                     <span className="info-value">
                       {format(new Date(person.deathDate), 'MMMM d, yyyy')}
+                      {person.deathPlace && ` in ${person.deathPlace}`}
+                      {person.birthDate && getAgeString(person.birthDate, person.deathDate) && ` ${getAgeString(person.birthDate, person.deathDate)}`}
                     </span>
                   </div>
                 )}

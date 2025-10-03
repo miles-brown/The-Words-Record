@@ -20,10 +20,19 @@ interface PersonData {
   religion?: string
   birthDate?: string
   birthPlace?: string
+  deathDate?: string
+  deathPlace?: string
   residence?: string
   politicalParty?: string
   politicalBeliefs?: string
   affiliatedOrgs?: string
+}
+
+interface RepercussionsData {
+  lostEmployment: boolean
+  lostContracts: boolean
+  paintedNegatively: boolean
+  details?: string
 }
 
 interface IncidentData {
@@ -35,6 +44,7 @@ interface IncidentData {
   mediaCoverage: string
   categories: string
   response: string
+  repercussions?: RepercussionsData
   citations: string
 }
 
@@ -80,6 +90,8 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
         const religionMatch = line.match(/\*\*Religion:\*\*\s*(.+)/)
         const birthDateMatch = line.match(/\*\*Birth Date:\*\*\s*(.+)/)
         const birthPlaceMatch = line.match(/\*\*Birth Place:\*\*\s*(.+)/)
+        const deathDateMatch = line.match(/\*\*Death Date:\*\*\s*(.+)/)
+        const deathPlaceMatch = line.match(/\*\*Death Place:\*\*\s*(.+)/)
         const residenceMatch = line.match(/\*\*Residence:\*\*\s*(.+)/)
         const partyMatch = line.match(/\*\*Political Party:\*\*\s*(.+)/)
         const beliefsMatch = line.match(/\*\*Political Beliefs:\*\*\s*(.+)/)
@@ -95,6 +107,8 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
         if (religionMatch) person.religion = religionMatch[1].trim()
         if (birthDateMatch) person.birthDate = birthDateMatch[1].trim()
         if (birthPlaceMatch) person.birthPlace = birthPlaceMatch[1].trim()
+        if (deathDateMatch) person.deathDate = deathDateMatch[1].trim()
+        if (deathPlaceMatch) person.deathPlace = deathPlaceMatch[1].trim()
         if (residenceMatch) person.residence = residenceMatch[1].trim()
         if (partyMatch) person.politicalParty = partyMatch[1].trim()
         if (beliefsMatch) person.politicalBeliefs = beliefsMatch[1].trim()
@@ -109,6 +123,13 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
       const coverageMatch = line.match(/\*\*Media Coverage.*:\*\*\s*(.+)/)
       const categoriesMatch = line.match(/\*\*Categories:\*\*\s*(.+)/)
       const responseMatch = line.match(/\*\*Response.*:\*\*\s*(.+)/)
+
+      // Repercussions parsing
+      const lostEmployMatch = line.match(/Lost Employment:\s*(YES|NO)/i)
+      const lostContractsMatch = line.match(/Lost Contracts:\s*(YES|NO)/i)
+      const paintedNegMatch = line.match(/Painted Negatively:\s*(YES|NO)/i)
+      const repercDetailsMatch = line.match(/Details:\s*(.+)/)
+
       const citationsMatch = line.match(/\*\*Citations:\*\*\s*(.+)/)
 
       if (dateMatch) incident.date = dateMatch[1].trim()
@@ -118,6 +139,22 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
       if (coverageMatch) incident.mediaCoverage = coverageMatch[1].trim()
       if (categoriesMatch) incident.categories = categoriesMatch[1].trim()
       if (responseMatch) incident.response = responseMatch[1].trim()
+
+      // Parse repercussions
+      if (lostEmployMatch || lostContractsMatch || paintedNegMatch || repercDetailsMatch) {
+        if (!incident.repercussions) {
+          incident.repercussions = {
+            lostEmployment: false,
+            lostContracts: false,
+            paintedNegatively: false
+          }
+        }
+        if (lostEmployMatch) incident.repercussions.lostEmployment = lostEmployMatch[1].toUpperCase() === 'YES'
+        if (lostContractsMatch) incident.repercussions.lostContracts = lostContractsMatch[1].toUpperCase() === 'YES'
+        if (paintedNegMatch) incident.repercussions.paintedNegatively = paintedNegMatch[1].toUpperCase() === 'YES'
+        if (repercDetailsMatch) incident.repercussions.details = repercDetailsMatch[1].trim()
+      }
+
       if (citationsMatch) incident.citations = citationsMatch[1].trim()
     }
 
@@ -184,6 +221,15 @@ async function importIncident(incident: IncidentData) {
     const birthDate = parseDate(incident.person.birthDate)
     if (birthDate) personData.birthDate = birthDate
   }
+
+  // Parse death date if available
+  if (incident.person.deathDate) {
+    const deathDate = parseDate(incident.person.deathDate)
+    if (deathDate) personData.deathDate = deathDate
+  }
+
+  // Add death place if available
+  if (incident.person.deathPlace) personData.deathPlace = incident.person.deathPlace
 
   const person = await prisma.person.upsert({
     where: { slug: personSlug },
@@ -272,7 +318,27 @@ ${incident.response || 'No response information available'}
     },
   })
 
-  // Create statement
+  // Create statement with repercussions
+  const statementData: any = {
+    content: statement,
+    context: incident.context,
+    statementDate: incidentDate,
+    medium: incident.platform,
+    isVerified: true,
+    personId: person.id,
+    incidentId: incidentRecord.id,
+  }
+
+  // Add repercussions if present
+  if (incident.repercussions) {
+    statementData.lostEmployment = incident.repercussions.lostEmployment
+    statementData.lostContracts = incident.repercussions.lostContracts
+    statementData.paintedNegatively = incident.repercussions.paintedNegatively
+    if (incident.repercussions.details) {
+      statementData.repercussionDetails = incident.repercussions.details
+    }
+  }
+
   await prisma.statement.upsert({
     where: {
       personId_incidentId_content: {
@@ -281,16 +347,8 @@ ${incident.response || 'No response information available'}
         content: statement
       }
     },
-    update: {},
-    create: {
-      content: statement,
-      context: incident.context,
-      statementDate: incidentDate,
-      medium: incident.platform,
-      isVerified: true,
-      personId: person.id,
-      incidentId: incidentRecord.id,
-    },
+    update: statementData,
+    create: statementData,
   })
 
   // Parse and create tags from categories
