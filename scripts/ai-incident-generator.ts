@@ -66,26 +66,30 @@ Return the information in this EXACT format (replace placeholders with actual da
 
 ## ${personName}
 
-### PERSON INFORMATION (Research and fill out all fields):
-- **AKA Names:** [Alternative names, nicknames, maiden names - comma separated]
-- **Profession:** [Comma-separated tags from: Politician, Actor, Journalist, Activist, Podcaster, Painter, Singer, Presenter, News Anchor, TV Personality, Entrepreneur, Diplomat, etc.]
-- **Role Description:** [Short description of their main job/role]
-- **Years Active:** [e.g., "2005-2019" or "2005-present"]
-- **Best Known For:** [One sentence: "British MP for Lewisham East, 2005-2019" or "U.S. President, 2009-2017"]
-- **Nationality:** [Their nationality/citizenship]
-- **Racial/Ethnic Group:** [If publicly known and relevant]
-- **Religion:** [Religious affiliation or denomination if publicly known]
-- **Birth Date:** [DD Month YYYY format]
-- **Birth Place:** [City, Country]
+### PERSON INFORMATION (COMPLETE ALL FIELDS - RESEARCH THOROUGHLY):
+CRITICAL: Every field must be completed with accurate information. Research thoroughly to fill ALL fields.
+
+- **AKA Names:** [Alternative names, nicknames, maiden names - comma separated. If none, write "N/A"]
+- **Profession:** [REQUIRED - Comma-separated tags from: Politician, Actor, Journalist, Activist, Podcaster, Painter, Singer, Presenter, News Anchor, TV Personality, Entrepreneur, Diplomat, Author, Comedian, etc.]
+- **Role Description:** [REQUIRED - Short description of their main job/role]
+- **Years Active:** [REQUIRED - e.g., "2005-2019" or "2005-present"]
+- **Best Known For:** [REQUIRED - One sentence summary of what they're famous for]
+- **Nationality:** [REQUIRED - MUST be country name (ISO standard), NEVER use adjectives like "British" or "American". Correct: "United Kingdom", "United States", "France". For dual citizenship use comma-separated: "United Kingdom, Ireland". Use "Stateless" for stateless individuals.]
+- **Racial/Ethnic Group:** [REQUIRED - If publicly known, specify. Examples: "White", "Black", "Arab", "Jewish", "Asian", etc. If not publicly known, write "Not publicly disclosed"]
+- **Religion:** [REQUIRED - Choose EXACTLY ONE: Jewish, Christian, Muslim, Hindu, Buddhist, Sikh, Other, Unknown, No Religion. DO NOT use "Atheist" or "Agnostic" here.]
+- **Religious Denomination:** [REQUIRED - Specific denomination/affiliation. IF Christian: Anglican, Baptist, Evangelical, Lutheran, Methodist, Orthodox, Roman Catholic, Presbyterian, etc. IF Muslim: Sunni, Shia, Ahmadiyya, Ibadi, etc. IF Jewish: Modern Orthodox, Haredi, Hasidic, Conservative, Reform, Reconstructionist, Sephardi, Mizrahi, etc. IF No Religion: Atheist, Agnostic, Spiritual, Secular Humanist, etc. IF Other: Scientology, Baháʼí, Jainism, Zoroastrianism, Rastafarianism, etc. IF Hindu/Buddhist/Sikh/Unknown: "Not Applicable"]
+- **Birth Date:** [REQUIRED - DD Month YYYY format - Research to find exact date]
+- **Birth Place:** [REQUIRED - City, Country]
 - **Death Date:** [DD Month YYYY format - ONLY if deceased, otherwise leave blank]
 - **Death Place:** [City, Country - ONLY if deceased, otherwise leave blank]
-- **Residence:** [Current main place of residence if alive]
-- **Political Party:** [Party name with years in brackets if changed, e.g., "Labour Party (2005-present)"]
-- **Political Beliefs:** [Political ideology/position if known: Progressive, Conservative, Liberal, Socialist, etc.]
-- **Affiliated Organizations:** [Format as: "Organization Name (Role)" - comma separated. Specify the person's role/relationship with each organization. Examples: "Labour Party (Elected Politician)", "UK Parliament (Member of Parliament)", "Campaign for Nuclear Disarmament (Activist)", "Momentum (Supporter)", "Daily Telegraph (Columnist)", "UN (Ambassador)", "Conservative Party (Former Leader)". Use roles like: Elected Politician, Member, Activist, Supporter, Founder, Board Member, Columnist, Employee, Ambassador, Former Leader, etc.]
+- **Residence:** [REQUIRED if alive - Current main place of residence - City, Country]
+- **Political Party:** [If applicable - Party name with years in brackets if changed, e.g., "Labour Party (2005-present)". If not in a party, write "Independent" or "N/A"]
+- **Political Beliefs:** [REQUIRED - Political ideology/position if known: Progressive, Conservative, Liberal, Socialist, Libertarian, Centrist, etc. If not publicly known, write "Not publicly disclosed"]
+- **Biography:** [REQUIRED - 3-4 medium paragraphs covering: Early life and background, Career development and achievements, Current work and influence, Controversial positions or public stances if relevant]
+- **Affiliated Organizations:** [REQUIRED - Format as: "Organization Name (Role)" - comma separated. Specify the person's role/relationship with each organization. Examples: "Labour Party (Elected Politician)", "UK Parliament (Member of Parliament)", "Campaign for Nuclear Disarmament (Activist)", "Momentum (Supporter)", "Daily Telegraph (Columnist)", "UN (Ambassador)", "Conservative Party (Former Leader)". Use roles like: Elected Politician, Member, Activist, Supporter, Founder, Board Member, Columnist, Employee, Ambassador, Former Leader, etc. If none, list their employer/company.]
 
 ### STATEMENT/INCIDENT INFORMATION:
-- **Date:** [Date in format: DD Month YYYY]
+- **Date:** [Date in format: DD Month YYYY - THIS IS PARAMOUNT, FIND THE EXACT DATE]
 - **Exact Wording:** *"[The exact quote or statement, or 'N/A' if not applicable]"*
 - **Context:** [Detailed background: What was happening? What led to this? What were the circumstances?]
 - **Platform:** [Where it occurred: Instagram, Twitter, Court, Interview, etc.]
@@ -98,6 +102,23 @@ Return the information in this EXACT format (replace placeholders with actual da
   - Painted Negatively: [YES/NO - Were they painted negatively in media coverage, regardless of whether rightly or wrongly?]
   - Details: [Brief description of the repercussions if any occurred]
 - **Citations:** [List 2-3 credible source URLs]
+
+### RESPONSES TO THE STATEMENT (CRITICAL - RESEARCH THOROUGHLY):
+IMPORTANT: Research if ANYONE responded to this statement - on social media, in interviews, in statements, or directly. Include ALL significant responses.
+
+Format each response as:
+---RESPONSE---
+- **Responder Name:** [Full name of person/organization who responded]
+- **Responder Type:** [Person/Organization]
+- **Response Date:** [DD Month YYYY - exact date of response]
+- **Response Content:** *"[Exact quote of their response]"*
+- **Response Type:** [Criticism/Support/Clarification/Apology/Denial]
+- **Platform:** [Where they responded: Twitter, Interview, Statement, etc.]
+- **Impact:** [Brief description of what happened after this response]
+---END RESPONSE---
+
+IMPORTANT: If NO responses were found, write: "NO_RESPONSES_FOUND"
+Include responses from: politicians, celebrities, organizations, activists, journalists, etc.
 
 IMPORTANT RULES:
 - Be strictly factual and neutral

@@ -6,6 +6,7 @@ import Layout from '@/components/Layout'
 import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations, PaginatedResponse } from '@/types'
 import { format } from 'date-fns'
+import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
 
 export default function PersonsPage() {
   const [persons, setPersons] = useState([])
@@ -23,10 +24,20 @@ export default function PersonsPage() {
     profession: '',
     nationality: '',
     organization: '',
-    hasRepercussions: '',
     sortBy: 'name-asc'
   })
   const [showFilters, setShowFilters] = useState(false)
+
+  // Filter options from database
+  const [filterOptions, setFilterOptions] = useState({
+    professions: [] as string[],
+    nationalities: [] as string[],
+    organizations: [] as string[]
+  })
+
+  // View settings
+  const [viewMode, setViewMode] = useState<'card' | 'list' | 'grid' | 'profile'>('card')
+  const [itemsPerPage, setItemsPerPage] = useState(12)
 
   const getPageNumbers = () => {
     const pages: (number | string)[] = []
@@ -64,9 +75,26 @@ export default function PersonsPage() {
     return pages
   }
 
+  // Fetch filter options on mount
+  useEffect(() => {
+    fetchFilterOptions()
+  }, [])
+
+  // Fetch persons when filters or itemsPerPage change
   useEffect(() => {
     fetchPersons(1)
-  }, [filters])
+  }, [filters, itemsPerPage])
+
+  const fetchFilterOptions = async () => {
+    try {
+      const response = await fetch('/api/persons/filter-options')
+      if (!response.ok) throw new Error('Failed to fetch filter options')
+      const data = await response.json()
+      setFilterOptions(data)
+    } catch (err) {
+      console.error('Failed to load filter options:', err)
+    }
+  }
 
   const fetchPersons = async (page: number) => {
     setLoading(true)
@@ -75,7 +103,7 @@ export default function PersonsPage() {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '12',
+        limit: itemsPerPage.toString(),
         ...Object.entries(filters).reduce((acc, [key, value]) => {
           if (value) acc[key] = value
           return acc
@@ -105,7 +133,6 @@ export default function PersonsPage() {
       profession: '',
       nationality: '',
       organization: '',
-      hasRepercussions: '',
       sortBy: 'name-asc'
     })
   }
@@ -122,6 +149,40 @@ export default function PersonsPage() {
             Browse profiles of individuals who have made or been subjects of documented public statements.
             Click on any profile to view their complete history and statements.
           </p>
+        </div>
+
+        {/* View Mode Toggle */}
+        <div className="view-controls">
+          <div className="view-mode-buttons">
+            <button
+              className={`view-mode-btn ${viewMode === 'card' ? 'active' : ''}`}
+              onClick={() => setViewMode('card')}
+              title="Card View"
+            >
+              📇 Card
+            </button>
+            <button
+              className={`view-mode-btn ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              title="List View"
+            >
+              📋 List
+            </button>
+            <button
+              className={`view-mode-btn ${viewMode === 'grid' ? 'active' : ''}`}
+              onClick={() => setViewMode('grid')}
+              title="Grid View"
+            >
+              ⊞ Grid
+            </button>
+            <button
+              className={`view-mode-btn ${viewMode === 'profile' ? 'active' : ''}`}
+              onClick={() => setViewMode('profile')}
+              title="Profile Only View"
+            >
+              👤 Profile
+            </button>
+          </div>
         </div>
 
         {/* Filters and Sorting */}
@@ -157,49 +218,43 @@ export default function PersonsPage() {
 
               <div className="filter-group">
                 <label htmlFor="profession">Profession</label>
-                <input
+                <select
                   id="profession"
-                  type="text"
-                  placeholder="e.g. Politician, Actor"
                   value={filters.profession}
                   onChange={(e) => handleFilterChange('profession', e.target.value)}
-                />
+                >
+                  <option value="">All Professions</option>
+                  {filterOptions.professions.map(prof => (
+                    <option key={prof} value={prof}>{prof}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="filter-group">
                 <label htmlFor="nationality">Nationality</label>
-                <input
+                <select
                   id="nationality"
-                  type="text"
-                  placeholder="e.g. British, American"
                   value={filters.nationality}
                   onChange={(e) => handleFilterChange('nationality', e.target.value)}
-                />
+                >
+                  <option value="">All Nationalities</option>
+                  {filterOptions.nationalities.map(nat => (
+                    <option key={nat} value={nat}>{nat}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="filter-group">
                 <label htmlFor="organization">Organization</label>
-                <input
+                <select
                   id="organization"
-                  type="text"
-                  placeholder="e.g. Labour Party, UK Parliament"
                   value={filters.organization}
                   onChange={(e) => handleFilterChange('organization', e.target.value)}
-                />
-              </div>
-
-              <div className="filter-group">
-                <label htmlFor="hasRepercussions">Repercussions</label>
-                <select
-                  id="hasRepercussions"
-                  value={filters.hasRepercussions}
-                  onChange={(e) => handleFilterChange('hasRepercussions', e.target.value)}
                 >
-                  <option value="">All</option>
-                  <option value="any">Any Repercussions</option>
-                  <option value="employment">Lost Employment</option>
-                  <option value="contracts">Lost Contracts</option>
-                  <option value="painted-negatively">Painted Negatively</option>
+                  <option value="">All Organizations</option>
+                  {filterOptions.organizations.map(org => (
+                    <option key={org} value={org}>{org}</option>
+                  ))}
                 </select>
               </div>
 
@@ -219,111 +274,208 @@ export default function PersonsPage() {
           </div>
         )}
 
-        <div className="persons-grid">
+        <div className={`persons-container view-${viewMode}`}>
           {loading ? (
             <>
-              {[...Array(12)].map((_, i) => (
+              {[...Array(itemsPerPage)].map((_, i) => (
                 <PersonCardSkeleton key={i} />
               ))}
             </>
           ) : (
-            persons.map((person) => (
-              <Link href={`/persons/${person.slug}`} key={person.id}>
-                <article className="person-card stagger-item">
-                  <div className="person-header">
-                    {person.imageUrl ? (
-                      <div className="person-image">
-                        <Image
-                          src={person.imageUrl}
-                          alt={person.name}
-                          width={80}
-                          height={80}
-                          objectFit="cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="person-image placeholder">
-                        <span>{person.name[0]}</span>
-                      </div>
-                    )}
-                    <div className="person-info">
-                      <h2>{person.name}</h2>
-                      {person.profession && (
-                        <p className="profession">{person.profession}</p>
-                      )}
-                      {person.nationality && (
-                        <p className="nationality">{person.nationality}</p>
-                      )}
-                    </div>
-                  </div>
-                  
-                  {person.bio && (
-                    <p className="person-bio">{person.bio}</p>
-                  )}
-                  
-                  <div className="person-stats">
-                    <span className="stat">
-                      <strong>{person._count?.incidents || 0}</strong> incidents
-                    </span>
-                    <span className="stat">
-                      <strong>{person._count?.statements || 0}</strong> statements
-                    </span>
-                    <span className="stat">
-                      <strong>{person._count?.responses || 0}</strong> responses
-                    </span>
-                  </div>
+            persons.map((person) => {
+              const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null
+              const deathYear = person.deathDate ? new Date(person.deathDate).getFullYear() : null
+              const firstNationality = person.nationality ? person.nationality.split(',')[0].trim() : null
 
-                  {person.birthDate && (
-                    <p className="dates">
-                      Born: {format(new Date(person.birthDate), 'yyyy')}
-                      {person.deathDate && ` - ${format(new Date(person.deathDate), 'yyyy')}`}
-                    </p>
+              return <Link href={`/persons/${person.slug}`} key={person.id}>
+                <article className={`person-item ${viewMode}-view stagger-item`}>
+                  {viewMode === 'grid' ? (
+                    // GRID VIEW: Large image + name only
+                    <div className="grid-layout">
+                      {person.imageUrl ? (
+                        <div className="person-image">
+                          <Image
+                            src={person.imageUrl}
+                            alt={person.name}
+                            width={180}
+                            height={180}
+                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="person-image placeholder">
+                          <span>{person.name[0]}</span>
+                        </div>
+                      )}
+                      <h3 className="person-name">{person.name}</h3>
+                    </div>
+                  ) : viewMode === 'list' ? (
+                    // LIST VIEW: No images, compact data row
+                    <div className="list-layout">
+                      <div className="list-content">
+                        <h2>{person.name}</h2>
+                        <div className="list-meta">
+                          {person.profession && (
+                            <span className="profession">{person.profession}</span>
+                          )}
+                          {firstNationality && (
+                            <span className="nationality">{getCountryFlag(firstNationality)}</span>
+                          )}
+                          {birthYear && (
+                            <span className="years">b. {birthYear}</span>
+                          )}
+                          {deathYear && (
+                            <span className="years">d. {deathYear}</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="list-stats">
+                        <span>{person._count?.incidents || 0}</span>
+                        <span>{person._count?.statements || 0}</span>
+                        <span>{person._count?.responses || 0}</span>
+                      </div>
+                    </div>
+                  ) : viewMode === 'profile' ? (
+                    // PROFILE VIEW: Image, name, profession, nationality, stats
+                    <div className="profile-layout">
+                      {person.imageUrl ? (
+                        <div className="person-image">
+                          <Image
+                            src={person.imageUrl}
+                            alt={person.name}
+                            width={88}
+                            height={88}
+                            style={{ objectFit: 'cover', width: '100%', height: '100%' }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="person-image placeholder">
+                          <span>{person.name[0]}</span>
+                        </div>
+                      )}
+                      <div className="profile-info">
+                        <h3>{person.name}</h3>
+                        {person.profession && (
+                          <p className="profession">{person.profession}</p>
+                        )}
+                        <div className="profile-meta">
+                          {person.nationality && (
+                            <span className="nationality">
+                              <span className="icon">{getCountryFlag(person.nationality)}</span>
+                              {person.nationality}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="profile-stats">
+                        <span><strong>{person._count?.incidents || 0}</strong> incidents</span>
+                        <span><strong>{person._count?.statements || 0}</strong> statements</span>
+                        <span><strong>{person._count?.responses || 0}</strong> responses</span>
+                      </div>
+                    </div>
+                  ) : (
+                    // CARD VIEW: Image left + name, profession, stats only
+                    <div className="card-layout">
+                      {person.imageUrl ? (
+                        <div className="person-image">
+                          <Image
+                            src={person.imageUrl}
+                            alt={person.name}
+                            width={100}
+                            height={100}
+                            objectFit="cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="person-image placeholder">
+                          <span>{person.name[0]}</span>
+                        </div>
+                      )}
+                      <div className="card-content">
+                        <h2>{person.name}</h2>
+                        {person.profession && (
+                          <p className="profession">{person.profession}</p>
+                        )}
+                        <div className="card-stats">
+                          <span className="stat">
+                            <strong>{person._count?.incidents || 0}</strong> incidents
+                          </span>
+                          <span className="stat">
+                            <strong>{person._count?.statements || 0}</strong> statements
+                          </span>
+                          <span className="stat">
+                            <strong>{person._count?.responses || 0}</strong> responses
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </article>
               </Link>
-            ))
+            })
           )}
         </div>
 
-        {!loading && pagination.totalPages > 1 && (
-          <div className="pagination">
-            <button
-              onClick={() => fetchPersons(pagination.page - 1)}
-              disabled={pagination.page === 1}
-              aria-label="Previous page"
-              className="pagination-prev"
-            >
-              Previous
-            </button>
-
-            <div className="page-numbers">
-              {getPageNumbers().map((pageNum, index) => (
-                typeof pageNum === 'number' ? (
+        {!loading && (
+          <div className="pagination-controls">
+            {/* Items per page selector */}
+            <div className="items-per-page">
+              <label>Items per page:</label>
+              <div className="items-per-page-buttons">
+                {[12, 24, 48, 96].map(count => (
                   <button
-                    key={index}
-                    onClick={() => fetchPersons(pageNum)}
-                    className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
-                    aria-label={`Go to page ${pageNum}`}
-                    aria-current={pagination.page === pageNum ? 'page' : undefined}
+                    key={count}
+                    className={`items-btn ${itemsPerPage === count ? 'active' : ''}`}
+                    onClick={() => setItemsPerPage(count)}
                   >
-                    {pageNum}
+                    {count}
                   </button>
-                ) : (
-                  <span key={index} className="page-ellipsis">
-                    {pageNum}
-                  </span>
-                )
-              ))}
+                ))}
+              </div>
             </div>
 
-            <button
-              onClick={() => fetchPersons(pagination.page + 1)}
-              disabled={pagination.page === pagination.totalPages}
-              aria-label="Next page"
-              className="pagination-next"
-            >
-              Next
-            </button>
+            {/* Pagination */}
+            {pagination.totalPages > 1 && (
+              <div className="pagination">
+                <button
+                  onClick={() => fetchPersons(pagination.page - 1)}
+                  disabled={pagination.page === 1}
+                  aria-label="Previous page"
+                  className="pagination-prev"
+                >
+                  Previous
+                </button>
+
+                <div className="page-numbers">
+                  {getPageNumbers().map((pageNum, index) => (
+                    typeof pageNum === 'number' ? (
+                      <button
+                        key={index}
+                        onClick={() => fetchPersons(pageNum)}
+                        className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
+                        aria-label={`Go to page ${pageNum}`}
+                        aria-current={pagination.page === pageNum ? 'page' : undefined}
+                      >
+                        {pageNum}
+                      </button>
+                    ) : (
+                      <span key={index} className="page-ellipsis">
+                        {pageNum}
+                      </span>
+                    )
+                  ))}
+                </div>
+
+                <button
+                  onClick={() => fetchPersons(pagination.page + 1)}
+                  disabled={pagination.page === pagination.totalPages}
+                  aria-label="Next page"
+                  className="pagination-next"
+                >
+                  Next
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -351,6 +503,43 @@ export default function PersonsPage() {
           line-height: 1.6;
           max-width: 700px;
           margin: 0 auto;
+        }
+
+        .view-controls {
+          margin-bottom: 1.5rem;
+          display: flex;
+          justify-content: center;
+        }
+
+        .view-mode-buttons {
+          display: flex;
+          gap: 0.5rem;
+          background: var(--background-secondary);
+          padding: 0.5rem;
+          border-radius: 8px;
+          border: 1px solid var(--border-primary);
+        }
+
+        .view-mode-btn {
+          padding: 0.6rem 1rem;
+          background: transparent;
+          border: 1px solid transparent;
+          border-radius: 4px;
+          color: var(--text-secondary);
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: all 0.2s;
+        }
+
+        .view-mode-btn:hover {
+          background: var(--background-primary);
+          color: var(--text-primary);
+        }
+
+        .view-mode-btn.active {
+          background: var(--accent-primary);
+          color: white;
+          border-color: var(--accent-primary);
         }
 
         .filters-section {
@@ -453,14 +642,227 @@ export default function PersonsPage() {
           cursor: pointer;
         }
 
-        .persons-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 2rem;
+        /* Container for different view modes */
+        .persons-container {
           margin-bottom: 3rem;
         }
 
-        .person-card {
+        /* CARD VIEW */
+        .persons-container.view-card {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+          gap: 2rem;
+        }
+
+        .card-layout {
+          display: flex;
+          align-items: flex-start;
+          gap: 1.5rem;
+        }
+
+        .card-layout .person-image {
+          flex-shrink: 0;
+          width: 100px;
+          height: 100px;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .card-content {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .card-content h2 {
+          font-size: 1.3rem;
+          margin: 0 0 0.5rem 0;
+          color: var(--text-primary);
+        }
+
+        .card-content .profession {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          margin: 0 0 1rem 0;
+        }
+
+        .card-stats {
+          display: flex;
+          flex-direction: column;
+          gap: 0.4rem;
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+        }
+
+        .card-stats .stat strong {
+          color: var(--accent-primary);
+          font-weight: 600;
+        }
+
+        /* LIST VIEW */
+        .persons-container.view-list {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+
+        .view-list .person-item {
+          padding: 0.75rem 1rem;
+        }
+
+        .list-layout {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 2rem;
+        }
+
+        .list-content {
+          flex: 1;
+          min-width: 0;
+        }
+
+        .list-content h2 {
+          margin: 0 0 0.25rem 0;
+          font-size: 1.1rem;
+          color: var(--text-primary);
+        }
+
+        .list-meta {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+        }
+
+        .list-meta .profession,
+        .list-meta .nationality,
+        .list-meta .years {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+        }
+
+        .list-stats {
+          display: flex;
+          gap: 1.5rem;
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          white-space: nowrap;
+        }
+
+        /* GRID VIEW */
+        .persons-container.view-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .view-grid .person-item {
+          padding: 1rem;
+        }
+
+        .grid-layout {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+
+        .grid-layout .person-image {
+          width: 100%;
+          height: 180px;
+          border-radius: 8px;
+          overflow: hidden;
+          margin-bottom: 0.75rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--background-secondary);
+        }
+
+        .grid-layout .person-name {
+          font-size: 1rem;
+          margin: 0;
+          color: var(--text-primary);
+          font-weight: 500;
+        }
+
+        /* PROFILE VIEW */
+        .persons-container.view-profile {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .profile-layout {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .profile-layout .person-image {
+          width: 88px;
+          height: 88px;
+          border-radius: 50%;
+          overflow: hidden;
+          align-self: center;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: var(--background-secondary);
+        }
+
+        .profile-info {
+          text-align: center;
+        }
+
+        .profile-info h3 {
+          font-size: 1.1rem;
+          margin: 0 0 0.25rem 0;
+          color: var(--text-primary);
+        }
+
+        .profile-info .profession {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          margin: 0 0 0.75rem 0;
+        }
+
+        .profile-meta {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          flex-wrap: wrap;
+        }
+
+        .profile-meta .nationality,
+        .profile-meta .religion {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+        }
+
+        .profile-stats {
+          display: flex;
+          flex-direction: column;
+          gap: 0.35rem;
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          text-align: center;
+          padding-top: 0.75rem;
+          border-top: 1px solid var(--border-primary);
+        }
+
+        .profile-stats strong {
+          color: var(--accent-primary);
+          font-weight: 600;
+        }
+
+        /* Common styles */
+        .person-item {
           border: 1px solid var(--border-primary);
           border-radius: 8px;
           padding: 1.5rem;
@@ -469,7 +871,7 @@ export default function PersonsPage() {
           transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .person-card:hover {
+        .person-item:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
@@ -505,10 +907,33 @@ export default function PersonsPage() {
           margin-bottom: 0.25rem;
         }
 
-        .profession, .nationality {
+        .profession, .nationality, .religion {
           font-size: 0.9rem;
           color: var(--text-secondary);
           margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .profession .icon, .nationality .icon, .religion .icon {
+          font-size: 1.1rem;
+          line-height: 1;
+        }
+
+        .list-meta {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          align-items: center;
+        }
+
+        .list-meta .profession,
+        .list-meta .nationality,
+        .list-meta .religion {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
         }
 
         .person-bio {
@@ -542,12 +967,58 @@ export default function PersonsPage() {
           margin: 0;
         }
 
+        .pagination-controls {
+          margin-top: 3rem;
+          display: flex;
+          flex-direction: column;
+          gap: 2rem;
+          align-items: center;
+        }
+
+        .items-per-page {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .items-per-page label {
+          font-size: 0.95rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+        }
+
+        .items-per-page-buttons {
+          display: flex;
+          gap: 0.5rem;
+        }
+
+        .items-btn {
+          padding: 0.5rem 1rem;
+          background: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: 4px;
+          color: var(--text-primary);
+          cursor: pointer;
+          font-size: 0.9rem;
+          transition: all 0.2s;
+        }
+
+        .items-btn:hover {
+          background: var(--background-primary);
+          border-color: var(--accent-primary);
+        }
+
+        .items-btn.active {
+          background: var(--accent-primary);
+          color: white;
+          border-color: var(--accent-primary);
+        }
+
         .pagination {
           display: flex;
           justify-content: center;
           align-items: center;
           gap: 1rem;
-          margin-top: 3rem;
           flex-wrap: wrap;
         }
 
@@ -618,12 +1089,42 @@ export default function PersonsPage() {
             font-size: 2rem;
           }
 
-          .persons-grid {
+          .persons-container.view-card,
+          .persons-container.view-grid {
             grid-template-columns: 1fr;
             gap: 1rem;
           }
 
+          .persons-container.view-profile {
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+          }
+
+          .list-layout {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+
+          .list-stats {
+            text-align: left;
+            flex-direction: row;
+            gap: 1rem;
+          }
+
           .person-header {
+            flex-direction: column;
+            text-align: center;
+          }
+
+          .view-mode-buttons {
+            flex-wrap: wrap;
+          }
+
+          .view-mode-btn {
+            font-size: 0.85rem;
+            padding: 0.5rem 0.75rem;
+          }
+
+          .items-per-page {
             flex-direction: column;
             text-align: center;
           }

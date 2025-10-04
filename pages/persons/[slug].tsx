@@ -10,6 +10,7 @@ import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations } from '@/types'
 import prisma from '@/lib/prisma'
 import { getAgeString } from '@/lib/ageUtils'
+import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
 
 interface PersonPageProps {
   person: PersonWithRelations | null
@@ -145,7 +146,10 @@ export default function PersonPage({ person }: PersonPageProps) {
                 {person.nationality && (
                   <div className="info-row">
                     <span className="info-label">Nationality:</span>
-                    <span className="info-value">{person.nationality}</span>
+                    <span className="info-value">
+                      <span className="icon">{getCountryFlag(person.nationality)}</span>
+                      {person.nationality}
+                    </span>
                   </div>
                 )}
 
@@ -159,14 +163,20 @@ export default function PersonPage({ person }: PersonPageProps) {
                 {person.religion && (
                   <div className="info-row">
                     <span className="info-label">Religion:</span>
-                    <span className="info-value">{person.religion}</span>
+                    <span className="info-value">
+                      <span className="icon">{getReligionIcon(person.religion)}</span>
+                      {person.religion}
+                    </span>
                   </div>
                 )}
 
                 {person.profession && (
                   <div className="info-row">
                     <span className="info-label">Profession:</span>
-                    <span className="info-value">{person.profession}</span>
+                    <span className="info-value">
+                      <span className="icon">{getProfessionIcon(person.profession)}</span>
+                      {person.profession}
+                    </span>
                   </div>
                 )}
 
@@ -419,6 +429,14 @@ export default function PersonPage({ person }: PersonPageProps) {
         .info-value {
           font-size: 0.9rem;
           color: var(--text-secondary);
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .info-value .icon {
+          font-size: 1.2rem;
+          line-height: 1;
         }
 
         .affiliations-list {

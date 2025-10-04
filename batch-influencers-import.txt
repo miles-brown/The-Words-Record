@@ -1,0 +1,1505 @@
+
+🚀 Starting batch processing for 60 people...
+
+
+[1/60] Processing: Joe Rogan
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Joe Rogan
+
+🤖 AI is researching incidents involving Joe Rogan...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/joe-rogan-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/joe-rogan-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Joe Rogan
+  📥 Importing 2 response(s)...
+    ✓ Response from Ben Shapiro
+    ✓ Response from Jewish News Syndicate
+✅ Successfully imported: Joe Rogan
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[2/60] Processing: Piers Morgan
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Piers Morgan
+
+🤖 AI is researching incidents involving Piers Morgan...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/piers-morgan-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/piers-morgan-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Piers Morgan
+  📥 Importing 2 response(s)...
+    ✓ Response from Mehdi Hasan
+    ✓ Response from Israeli Embassy UK
+✅ Successfully imported: Piers Morgan
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[3/60] Processing: Russell Brand
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Russell Brand
+
+🤖 AI is researching incidents involving Russell Brand...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/russell-brand-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/russell-brand-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Russell Brand
+✅ Successfully imported: Russell Brand
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[4/60] Processing: Hasan Piker
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Hasan Piker
+
+🤖 AI is researching incidents involving Hasan Piker...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/hasan-piker-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/hasan-piker-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Hasan Piker
+  📥 Importing 2 response(s)...
+    ✓ Response from Dan Crenshaw
+    ✓ Response from ADL (Anti-Defamation League)
+✅ Successfully imported: Hasan Piker
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[5/60] Processing: Ethan Klein
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Ethan Klein
+
+🤖 AI is researching incidents involving Ethan Klein...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ethan-klein-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ethan-klein-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Ethan Klein
+  📥 Importing 2 response(s)...
+    ✓ Response from Various Twitter Users
+    ✓ Response from Pro-Palestinian Advocacy Groups
+✅ Successfully imported: Ethan Klein
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[6/60] Processing: Mehdi Hasan
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Mehdi Hasan
+
+🤖 AI is researching incidents involving Mehdi Hasan...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/mehdi-hasan-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/mehdi-hasan-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Mehdi Hasan
+  📥 Importing 3 response(s)...
+    ✓ Response from Hen Mazzig
+    ✓ Response from StopAntisemitism
+    ✓ Response from Glenn Greenwald
+✅ Successfully imported: Mehdi Hasan
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[7/60] Processing: Bassem Youssef
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Bassem Youssef
+
+🤖 AI is researching incidents involving Bassem Youssef...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bassem-youssef-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bassem-youssef-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Bassem Youssef
+  📥 Importing 2 response(s)...
+    ✓ Response from Piers Morgan
+    ✓ Response from Israeli Ministry of Foreign Affairs
+✅ Successfully imported: Bassem Youssef
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[8/60] Processing: Cenk Uygur
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Cenk Uygur
+
+🤖 AI is researching incidents involving Cenk Uygur...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/cenk-uygur-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/cenk-uygur-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Cenk Uygur
+  📥 Importing 2 response(s)...
+    ✓ Response from David Pakman
+    ✓ Response from StopAntisemitism Organization
+✅ Successfully imported: Cenk Uygur
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[9/60] Processing: Ana Kasparian
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Ana Kasparian
+
+🤖 AI is researching incidents involving Ana Kasparian...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ana-kasparian-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ana-kasparian-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Ana Kasparian
+  📥 Importing 2 response(s)...
+    ✓ Response from Ben Shapiro
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: Ana Kasparian
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[10/60] Processing: Ben Burgis
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Ben Burgis
+
+🤖 AI is researching incidents involving Ben Burgis...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ben-burgis-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ben-burgis-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Ben Burgis
+Could not parse date: Not publicly available
+✅ Successfully imported: Ben Burgis
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[11/60] Processing: Vaush
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Vaush
+
+🤖 AI is researching incidents involving Vaush...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/vaush-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/vaush-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Vaush
+  📥 Importing 2 response(s)...
+    ✓ Response from Destiny (Steven Bonnell II)
+    ✓ Response from Hasan Piker (HasanAbi)
+✅ Successfully imported: Vaush
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[12/60] Processing: Destiny (Steven Bonnell)
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Destiny (Steven Bonnell)
+
+🤖 AI is researching incidents involving Destiny (Steven Bonnell)...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/destiny-steven-bonnell-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/destiny-steven-bonnell-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Destiny (Steven Bonnell)
+  📥 Importing 1 response(s)...
+    ✓ Response from Various Twitter users and online political commentators
+✅ Successfully imported: Destiny (Steven Bonnell)
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[13/60] Processing: Lex Fridman
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Lex Fridman
+
+🤖 AI is researching incidents involving Lex Fridman...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/lex-fridman-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/lex-fridman-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Lex Fridman
+  📥 Importing 1 response(s)...
+    ✓ Response from Various Twitter Users
+✅ Successfully imported: Lex Fridman
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[14/60] Processing: Sam Harris
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Sam Harris
+
+🤖 AI is researching incidents involving Sam Harris...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/sam-harris-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/sam-harris-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Sam Harris
+  📥 Importing 2 response(s)...
+    ✓ Response from Murtaza Hussain
+    ✓ Response from Reza Aslan
+✅ Successfully imported: Sam Harris
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[15/60] Processing: Bill Maher
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Bill Maher
+
+🤖 AI is researching incidents involving Bill Maher...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bill-maher-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bill-maher-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Bill Maher
+  📥 Importing 3 response(s)...
+    ✓ Response from Linda Sarsour
+    ✓ Response from Jewish Voice for Peace
+    ✓ Response from Mehdi Hasan
+✅ Successfully imported: Bill Maher
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[16/60] Processing: Jon Stewart
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jon Stewart
+
+🤖 AI is researching incidents involving Jon Stewart...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jon-stewart-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jon-stewart-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jon Stewart
+  📥 Importing 2 response(s)...
+    ✓ Response from Abraham Foxman
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: Jon Stewart
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[17/60] Processing: Trevor Noah
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Trevor Noah
+
+🤖 AI is researching incidents involving Trevor Noah...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/trevor-noah-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/trevor-noah-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Trevor Noah
+  📥 Importing 2 response(s)...
+    ✓ Response from Combat Antisemitism Movement
+    ✓ Response from StandWithUs
+✅ Successfully imported: Trevor Noah
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[18/60] Processing: John Oliver
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: John Oliver
+
+🤖 AI is researching incidents involving John Oliver...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/john-oliver-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/john-oliver-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: John Oliver
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: John Oliver
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[19/60] Processing: Stephen Colbert
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Stephen Colbert
+
+🤖 AI is researching incidents involving Stephen Colbert...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/stephen-colbert-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/stephen-colbert-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Stephen Colbert
+✅ Successfully imported: Stephen Colbert
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[20/60] Processing: Jimmy Kimmel
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jimmy Kimmel
+
+🤖 AI is researching incidents involving Jimmy Kimmel...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jimmy-kimmel-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jimmy-kimmel-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jimmy Kimmel
+✅ Successfully imported: Jimmy Kimmel
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[21/60] Processing: Seth Meyers
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Seth Meyers
+
+🤖 AI is researching incidents involving Seth Meyers...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/seth-meyers-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/seth-meyers-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Seth Meyers
+  📥 Importing 1 response(s)...
+    ✓ Response from Anti-Defamation League
+✅ Successfully imported: Seth Meyers
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[22/60] Processing: Whoopi Goldberg
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Whoopi Goldberg
+
+🤖 AI is researching incidents involving Whoopi Goldberg...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/whoopi-goldberg-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/whoopi-goldberg-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Whoopi Goldberg
+  📥 Importing 3 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Kim Godwin (ABC News President)
+    ✓ Response from Yad Vashem Holocaust Memorial
+✅ Successfully imported: Whoopi Goldberg
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[23/60] Processing: Joy Behar
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Joy Behar
+
+🤖 AI is researching incidents involving Joy Behar...
+ℹ️  No significant incidents found for Joy Behar
+
+❌ Failed to generate incident data
+❌ Failed to process Joy Behar
+
+⏳ Waiting 5s before next request...
+
+[24/60] Processing: Meghan McCain
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Meghan McCain
+
+🤖 AI is researching incidents involving Meghan McCain...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/meghan-mccain-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/meghan-mccain-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Meghan McCain
+  📥 Importing 2 response(s)...
+    ✓ Response from Rashida Tlaib
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: Meghan McCain
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[25/60] Processing: Tucker Carlson
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Tucker Carlson
+
+🤖 AI is researching incidents involving Tucker Carlson...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/tucker-carlson-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/tucker-carlson-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Tucker Carlson
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Jewish Federations of North America
+✅ Successfully imported: Tucker Carlson
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[26/60] Processing: Sean Hannity
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Sean Hannity
+
+🤖 AI is researching incidents involving Sean Hannity...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/sean-hannity-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/sean-hannity-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Sean Hannity
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Council on American-Islamic Relations
+✅ Successfully imported: Sean Hannity
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[27/60] Processing: Rachel Maddow
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Rachel Maddow
+
+🤖 AI is researching incidents involving Rachel Maddow...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/rachel-maddow-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/rachel-maddow-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Rachel Maddow
+  📥 Importing 1 response(s)...
+    ✓ Response from Mehdi Hasan
+✅ Successfully imported: Rachel Maddow
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[28/60] Processing: Anderson Cooper
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Anderson Cooper
+
+🤖 AI is researching incidents involving Anderson Cooper...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/anderson-cooper-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/anderson-cooper-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Anderson Cooper
+✅ Successfully imported: Anderson Cooper
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[29/60] Processing: Jake Tapper
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jake Tapper
+
+🤖 AI is researching incidents involving Jake Tapper...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jake-tapper-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jake-tapper-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jake Tapper
+✅ Successfully imported: Jake Tapper
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[30/60] Processing: Don Lemon
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Don Lemon
+
+🤖 AI is researching incidents involving Don Lemon...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/don-lemon-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/don-lemon-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Don Lemon
+  📥 Importing 3 response(s)...
+    ✓ Response from Tucker Carlson
+    ✓ Response from Donald Trump Jr.
+    ✓ Response from Anti-Defamation League
+✅ Successfully imported: Don Lemon
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[31/60] Processing: Chris Cuomo
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Chris Cuomo
+
+🤖 AI is researching incidents involving Chris Cuomo...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/chris-cuomo-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/chris-cuomo-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Chris Cuomo
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: Chris Cuomo
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[32/60] Processing: Megyn Kelly
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Megyn Kelly
+
+🤖 AI is researching incidents involving Megyn Kelly...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/megyn-kelly-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/megyn-kelly-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Megyn Kelly
+  📥 Importing 2 response(s)...
+    ✓ Response from Ben Shapiro
+    ✓ Response from Anti-Defamation League
+✅ Successfully imported: Megyn Kelly
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[33/60] Processing: Katie Hopkins
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Katie Hopkins
+
+🤖 AI is researching incidents involving Katie Hopkins...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/katie-hopkins-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/katie-hopkins-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Katie Hopkins
+  📥 Importing 3 response(s)...
+    ✓ Response from Board of Deputies of British Jews
+    ✓ Response from Wes Streeting
+    ✓ Response from Yvette Cooper
+✅ Successfully imported: Katie Hopkins
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[34/60] Processing: Owen Jones
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Owen Jones
+
+🤖 AI is researching incidents involving Owen Jones...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/owen-jones-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/owen-jones-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Owen Jones
+  📥 Importing 2 response(s)...
+    ✓ Response from Campaign Against Antisemitism
+    ✓ Response from Various pro-Palestinian activists and supporters
+✅ Successfully imported: Owen Jones
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[35/60] Processing: Andrew Neil
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Andrew Neil
+
+🤖 AI is researching incidents involving Andrew Neil...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/andrew-neil-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/andrew-neil-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Andrew Neil
+✅ Successfully imported: Andrew Neil
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[36/60] Processing: Jeremy Vine
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jeremy Vine
+
+🤖 AI is researching incidents involving Jeremy Vine...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jeremy-vine-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jeremy-vine-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jeremy Vine
+✅ Successfully imported: Jeremy Vine
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[37/60] Processing: Nick Ferrari
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Nick Ferrari
+
+🤖 AI is researching incidents involving Nick Ferrari...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/nick-ferrari-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/nick-ferrari-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Nick Ferrari
+  📥 Importing 2 response(s)...
+    ✓ Response from Campaign Against Antisemitism
+    ✓ Response from Palestine Solidarity Campaign
+✅ Successfully imported: Nick Ferrari
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[38/60] Processing: James O'Brien
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: James O'Brien
+
+🤖 AI is researching incidents involving James O'Brien...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/james-obrien-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/james-obrien-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: James O'Brien
+  📥 Importing 2 response(s)...
+    ✓ Response from Campaign Against Antisemitism
+    ✓ Response from Palestine Solidarity Campaign
+✅ Successfully imported: James O'Brien
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[39/60] Processing: Julia Hartley-Brewer
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Julia Hartley-Brewer
+
+🤖 AI is researching incidents involving Julia Hartley-Brewer...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/julia-hartley-brewer-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/julia-hartley-brewer-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Julia Hartley-Brewer
+✅ Successfully imported: Julia Hartley-Brewer
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[40/60] Processing: Naomi Klein
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Naomi Klein
+
+🤖 AI is researching incidents involving Naomi Klein...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/naomi-klein-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/naomi-klein-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Naomi Klein
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: Naomi Klein
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[41/60] Processing: Noam Chomsky
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Noam Chomsky
+
+🤖 AI is researching incidents involving Noam Chomsky...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/noam-chomsky-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/noam-chomsky-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Noam Chomsky
+  📥 Importing 1 response(s)...
+    ✓ Response from StandWithUs
+✅ Successfully imported: Noam Chomsky
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[42/60] Processing: Norman Finkelstein
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Norman Finkelstein
+
+🤖 AI is researching incidents involving Norman Finkelstein...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/norman-finkelstein-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/norman-finkelstein-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Norman Finkelstein
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Campus Watch
+✅ Successfully imported: Norman Finkelstein
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[43/60] Processing: Bari Weiss
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Bari Weiss
+
+🤖 AI is researching incidents involving Bari Weiss...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bari-weiss-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bari-weiss-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Bari Weiss
+  📥 Importing 2 response(s)...
+    ✓ Response from Rashida Tlaib
+    ✓ Response from Jewish Voice for Peace
+✅ Successfully imported: Bari Weiss
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[44/60] Processing: Douglas Murray
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Douglas Murray
+
+🤖 AI is researching incidents involving Douglas Murray...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/douglas-murray-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/douglas-murray-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Douglas Murray
+  📥 Importing 2 response(s)...
+    ✓ Response from Mehdi Hasan
+    ✓ Response from Various Palestinian solidarity activists
+✅ Successfully imported: Douglas Murray
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[45/60] Processing: Sam Seder
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Sam Seder
+
+🤖 AI is researching incidents involving Sam Seder...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/sam-seder-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/sam-seder-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Sam Seder
+  📥 Importing 2 response(s)...
+    ✓ Response from David Pakman
+    ✓ Response from StopAntisemitism.org
+✅ Successfully imported: Sam Seder
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[46/60] Processing: Emma Vigeland
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Emma Vigeland
+
+🤖 AI is researching incidents involving Emma Vigeland...
+ℹ️  No significant incidents found for Emma Vigeland
+
+❌ Failed to generate incident data
+❌ Failed to process Emma Vigeland
+
+⏳ Waiting 5s before next request...
+
+[47/60] Processing: Matt Walsh
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Matt Walsh
+
+🤖 AI is researching incidents involving Matt Walsh...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/matt-walsh-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/matt-walsh-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Matt Walsh
+  📥 Importing 2 response(s)...
+    ✓ Response from Ben Shapiro
+    ✓ Response from Jeremy Boreing
+✅ Successfully imported: Matt Walsh
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[48/60] Processing: Candace Owens (recheck if exists)
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Candace Owens (recheck if exists)
+
+🤖 AI is researching incidents involving Candace Owens (recheck if exists)...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/candace-owens-recheck-if-exists-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/candace-owens-recheck-if-exists-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Candace Owens
+  📥 Importing 2 response(s)...
+    ✓ Response from Ben Shapiro
+    ✓ Response from Anti-Defamation League
+✅ Successfully imported: Candace Owens
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[49/60] Processing: Dave Rubin
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Dave Rubin
+
+🤖 AI is researching incidents involving Dave Rubin...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/dave-rubin-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/dave-rubin-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Dave Rubin
+  📥 Importing 2 response(s)...
+    ✓ Response from Glenn Greenwald
+    ✓ Response from Ben Shapiro
+✅ Successfully imported: Dave Rubin
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[50/60] Processing: Jordan Peterson
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jordan Peterson
+
+🤖 AI is researching incidents involving Jordan Peterson...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jordan-peterson-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jordan-peterson-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jordan Peterson
+  📥 Importing 2 response(s)...
+    ✓ Response from Mehdi Hasan
+    ✓ Response from Palestine Solidarity Campaign
+✅ Successfully imported: Jordan Peterson
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[51/60] Processing: Andrew Tate
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Andrew Tate
+
+🤖 AI is researching incidents involving Andrew Tate...
+ℹ️  No significant incidents found for Andrew Tate
+
+❌ Failed to generate incident data
+❌ Failed to process Andrew Tate
+
+⏳ Waiting 5s before next request...
+
+[52/60] Processing: Greta Thunberg
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Greta Thunberg
+
+🤖 AI is researching incidents involving Greta Thunberg...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/greta-thunberg-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/greta-thunberg-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Greta Thunberg
+  📥 Importing 2 response(s)...
+    ✓ Response from StandWithUs
+    ✓ Response from Palestine Solidarity Campaign
+✅ Successfully imported: Greta Thunberg
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[53/60] Processing: Malala Yousafzai
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Malala Yousafzai
+
+🤖 AI is researching incidents involving Malala Yousafzai...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/malala-yousafzai-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/malala-yousafzai-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Malala Yousafzai
+  📥 Importing 1 response(s)...
+    ✓ Response from Various social media users and pro-Israel advocates
+✅ Successfully imported: Malala Yousafzai
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[54/60] Processing: Mark Ruffalo
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Mark Ruffalo
+
+🤖 AI is researching incidents involving Mark Ruffalo...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/mark-ruffalo-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/mark-ruffalo-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Mark Ruffalo
+  📥 Importing 3 response(s)...
+    ✓ Response from StopAntisemitism
+    ✓ Response from Combat Antisemitism Movement
+    ✓ Response from American Jewish Committee
+✅ Successfully imported: Mark Ruffalo
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[55/60] Processing: Susan Sarandon
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Susan Sarandon
+
+🤖 AI is researching incidents involving Susan Sarandon...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/susan-sarandon-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/susan-sarandon-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Susan Sarandon
+  📥 Importing 3 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Debra Messing
+    ✓ Response from United Talent Agency
+✅ Successfully imported: Susan Sarandon
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[56/60] Processing: Roger Waters
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Roger Waters
+
+🤖 AI is researching incidents involving Roger Waters...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/roger-waters-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/roger-waters-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Roger Waters
+  📥 Importing 3 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Campaign Against Antisemitism
+    ✓ Response from Jewish Leadership Council (UK)
+✅ Successfully imported: Roger Waters
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[57/60] Processing: Bella Hadid
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Bella Hadid
+
+🤖 AI is researching incidents involving Bella Hadid...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bella-hadid-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/bella-hadid-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Bella Hadid
+  📥 Importing 3 response(s)...
+    ✓ Response from Israeli Ministry of Foreign Affairs
+    ✓ Response from StopAntisemitism organization
+    ✓ Response from Palestinian activist Linda Sarsour
+✅ Successfully imported: Bella Hadid
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[58/60] Processing: Gigi Hadid
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Gigi Hadid
+
+🤖 AI is researching incidents involving Gigi Hadid...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/gigi-hadid-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/gigi-hadid-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Gigi Hadid
+  📥 Importing 2 response(s)...
+    ✓ Response from Anti-Defamation League
+    ✓ Response from Bella Hadid
+✅ Successfully imported: Gigi Hadid
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[59/60] Processing: Dua Lipa
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Dua Lipa
+
+🤖 AI is researching incidents involving Dua Lipa...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/dua-lipa-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/dua-lipa-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Dua Lipa
+  📥 Importing 2 response(s)...
+    ✓ Response from Various pro-Israel social media users
+    ✓ Response from Palestinian solidarity activists
+✅ Successfully imported: Dua Lipa
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[60/60] Processing: Mia Khalifa
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Mia Khalifa
+
+🤖 AI is researching incidents involving Mia Khalifa...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/mia-khalifa-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/mia-khalifa-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Mia Khalifa
+  📥 Importing 1 response(s)...
+    ✓ Response from Multiple pro-Israel advocacy groups
+✅ Successfully imported: Mia Khalifa
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+==================================================
+✨ Batch processing complete!
+   ✅ Success: 57
+   ❌ Failed: 3
+==================================================
+

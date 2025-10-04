@@ -25,6 +25,7 @@ interface PersonData {
   residence?: string
   politicalParty?: string
   politicalBeliefs?: string
+  bio?: string
   affiliatedOrgs?: string
 }
 
@@ -33,6 +34,16 @@ interface RepercussionsData {
   lostContracts: boolean
   paintedNegatively: boolean
   details?: string
+}
+
+interface ResponseData {
+  responderName: string
+  responderType: 'Person' | 'Organization'
+  responseDate: string
+  responseContent: string
+  responseType: string
+  platform: string
+  impact?: string
 }
 
 interface IncidentData {
@@ -45,6 +56,7 @@ interface IncidentData {
   categories: string
   response: string
   repercussions?: RepercussionsData
+  responses?: ResponseData[]
   citations: string
 }
 
@@ -95,6 +107,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
         const residenceMatch = line.match(/\*\*Residence:\*\*\s*(.+)/)
         const partyMatch = line.match(/\*\*Political Party:\*\*\s*(.+)/)
         const beliefsMatch = line.match(/\*\*Political Beliefs:\*\*\s*(.+)/)
+        const bioMatch = line.match(/\*\*Biography:\*\*\s*(.+)/)
         const affilMatch = line.match(/\*\*Affiliated Organizations:\*\*\s*(.+)/)
 
         if (akaMatch) person.akaNames = akaMatch[1].trim()
@@ -112,6 +125,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
         if (residenceMatch) person.residence = residenceMatch[1].trim()
         if (partyMatch) person.politicalParty = partyMatch[1].trim()
         if (beliefsMatch) person.politicalBeliefs = beliefsMatch[1].trim()
+        if (bioMatch) person.bio = bioMatch[1].trim()
         if (affilMatch) person.affiliatedOrgs = affilMatch[1].trim()
       }
 
@@ -156,6 +170,36 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
       }
 
       if (citationsMatch) incident.citations = citationsMatch[1].trim()
+    }
+
+    // Parse responses section
+    const responsesSection = section.match(/### RESPONSES TO THE STATEMENT[\s\S]*/)
+    if (responsesSection) {
+      const responseBlocks = responsesSection[0].match(/---RESPONSE---[\s\S]*?---END RESPONSE---/g)
+      if (responseBlocks) {
+        incident.responses = []
+        for (const block of responseBlocks) {
+          const responderNameMatch = block.match(/\*\*Responder Name:\*\*\s*(.+)/)
+          const responderTypeMatch = block.match(/\*\*Responder Type:\*\*\s*(Person|Organization)/)
+          const responseDateMatch = block.match(/\*\*Response Date:\*\*\s*(.+)/)
+          const responseContentMatch = block.match(/\*\*Response Content:\*\*\s*(.+)/)
+          const responseTypeMatch = block.match(/\*\*Response Type:\*\*\s*(.+)/)
+          const platformMatch = block.match(/\*\*Platform:\*\*\s*(.+)/)
+          const impactMatch = block.match(/\*\*Impact:\*\*\s*(.+)/)
+
+          if (responderNameMatch && responderTypeMatch && responseDateMatch && responseContentMatch) {
+            incident.responses.push({
+              responderName: responderNameMatch[1].trim(),
+              responderType: responderTypeMatch[1].trim() as 'Person' | 'Organization',
+              responseDate: responseDateMatch[1].trim(),
+              responseContent: responseContentMatch[1].trim(),
+              responseType: responseTypeMatch ? responseTypeMatch[1].trim() : 'Other',
+              platform: platformMatch ? platformMatch[1].trim() : 'Unknown',
+              impact: impactMatch ? impactMatch[1].trim() : undefined
+            })
+          }
+        }
+      }
     }
 
     // Only add if we have minimum required fields
@@ -215,6 +259,7 @@ async function importIncident(incident: IncidentData) {
   if (incident.person.residence) personData.residence = incident.person.residence
   if (incident.person.politicalParty) personData.politicalParty = incident.person.politicalParty
   if (incident.person.politicalBeliefs) personData.politicalBeliefs = incident.person.politicalBeliefs
+  if (incident.person.bio) personData.bio = incident.person.bio
 
   // Parse birth date if available
   if (incident.person.birthDate) {
@@ -386,6 +431,63 @@ ${incident.response || 'No response information available'}
           }
         }
       })
+    }
+  }
+
+  // Import responses if they exist
+  if (incident.responses && incident.responses.length > 0) {
+    console.log(`  📥 Importing ${incident.responses.length} response(s)...`)
+
+    for (const responseData of incident.responses) {
+      // Create or get responder (person or organization)
+      let responderId: string | null = null
+      let responderOrgId: string | null = null
+
+      if (responseData.responderType === 'Person') {
+        const responderSlug = createSlug(responseData.responderName)
+        const responder = await prisma.person.upsert({
+          where: { slug: responderSlug },
+          update: {},
+          create: {
+            slug: responderSlug,
+            name: responseData.responderName,
+          },
+        })
+        responderId = responder.id
+      } else {
+        const responderSlug = createSlug(responseData.responderName)
+        const responder = await prisma.organization.upsert({
+          where: { slug: responderSlug },
+          update: {},
+          create: {
+            slug: responderSlug,
+            name: responseData.responderName,
+            type: 'Other',
+          },
+        })
+        responderOrgId = responder.id
+      }
+
+      // Parse response date
+      const responseDate = parseDate(responseData.responseDate) || new Date()
+
+      // Create response
+      try {
+        await prisma.response.create({
+          data: {
+            content: responseData.responseContent,
+            responseDate: responseDate,
+            type: responseData.responseType,
+            impact: responseData.impact,
+            incidentId: incidentRecord.id,
+            personId: responderId,
+            organizationId: responderOrgId,
+          },
+        })
+        console.log(`    ✓ Response from ${responseData.responderName}`)
+      } catch (e) {
+        console.log(`    ⚠ Could not import response from ${responseData.responderName}:`, e.message)
+      }
     }
   }
 

@@ -1,0 +1,597 @@
+
+🚀 Starting batch processing for 30 people...
+
+
+[1/30] Processing: Luiz Inácio Lula da Silva
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Luiz Inácio Lula da Silva
+
+🤖 AI is researching incidents involving Luiz Inácio Lula da Silva...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/luiz-incio-lula-da-silva-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/luiz-incio-lula-da-silva-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Luiz Inácio Lula da Silva
+  📥 Importing 3 response(s)...
+    ✓ Response from Benjamin Netanyahu
+    ✓ Response from Israel Katz (Israeli Foreign Minister)
+    ✓ Response from Palestinian Authority
+✅ Successfully imported: Luiz Inácio Lula da Silva
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[2/30] Processing: Jair Bolsonaro
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jair Bolsonaro
+
+🤖 AI is researching incidents involving Jair Bolsonaro...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jair-bolsonaro-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jair-bolsonaro-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jair Bolsonaro
+  📥 Importing 2 response(s)...
+    ✓ Response from Benjamin Netanyahu
+    ✓ Response from Arab Brazilian Chamber of Commerce
+✅ Successfully imported: Jair Bolsonaro
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[3/30] Processing: Dilma Rousseff
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Dilma Rousseff
+
+🤖 AI is researching incidents involving Dilma Rousseff...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/dilma-rousseff-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/dilma-rousseff-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Dilma Rousseff
+✅ Successfully imported: Dilma Rousseff
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[4/30] Processing: Fernando Haddad
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Fernando Haddad
+
+🤖 AI is researching incidents involving Fernando Haddad...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/fernando-haddad-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/fernando-haddad-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Fernando Haddad
+✅ Successfully imported: Fernando Haddad
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[5/30] Processing: Ciro Gomes
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Ciro Gomes
+
+🤖 AI is researching incidents involving Ciro Gomes...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ciro-gomes-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ciro-gomes-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Ciro Gomes
+  📥 Importing 2 response(s)...
+    ✓ Response from CONIB (National Confederation of Israel in Brazil)
+    ✓ Response from Guilherme Boulos
+✅ Successfully imported: Ciro Gomes
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[6/30] Processing: Marina Silva
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Marina Silva
+
+🤖 AI is researching incidents involving Marina Silva...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/marina-silva-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/marina-silva-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Marina Silva
+✅ Successfully imported: Marina Silva
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[7/30] Processing: Guilherme Boulos
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Guilherme Boulos
+
+🤖 AI is researching incidents involving Guilherme Boulos...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/guilherme-boulos-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/guilherme-boulos-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Guilherme Boulos
+✅ Successfully imported: Guilherme Boulos
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[8/30] Processing: Celso Amorim
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Celso Amorim
+
+🤖 AI is researching incidents involving Celso Amorim...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/celso-amorim-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/celso-amorim-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Celso Amorim
+  📥 Importing 1 response(s)...
+    ✓ Response from Israeli Embassy in Brazil
+✅ Successfully imported: Celso Amorim
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[9/30] Processing: Ernesto Araújo
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Ernesto Araújo
+
+🤖 AI is researching incidents involving Ernesto Araújo...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ernesto-arajo-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/ernesto-arajo-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Ernesto Araújo
+  📥 Importing 1 response(s)...
+    ✓ Response from Palestinian Authority Ministry of Foreign Affairs
+✅ Successfully imported: Ernesto Araújo
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[10/30] Processing: Carlos Bolsonaro
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Carlos Bolsonaro
+
+🤖 AI is researching incidents involving Carlos Bolsonaro...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/carlos-bolsonaro-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/carlos-bolsonaro-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Carlos Bolsonaro
+  📥 Importing 2 response(s)...
+    ✓ Response from Guilherme Boulos
+    ✓ Response from PSOL (Socialism and Liberty Party)
+✅ Successfully imported: Carlos Bolsonaro
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[11/30] Processing: Eduardo Bolsonaro
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Eduardo Bolsonaro
+
+🤖 AI is researching incidents involving Eduardo Bolsonaro...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/eduardo-bolsonaro-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/eduardo-bolsonaro-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Eduardo Bolsonaro
+  📥 Importing 1 response(s)...
+    ✓ Response from Guilherme Boulos
+✅ Successfully imported: Eduardo Bolsonaro
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[12/30] Processing: Flávio Bolsonaro
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Flávio Bolsonaro
+
+🤖 AI is researching incidents involving Flávio Bolsonaro...
+ℹ️  No significant incidents found for Flávio Bolsonaro
+
+❌ Failed to generate incident data
+❌ Failed to process Flávio Bolsonaro
+
+⏳ Waiting 5s before next request...
+
+[13/30] Processing: Gleisi Hoffmann
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Gleisi Hoffmann
+
+🤖 AI is researching incidents involving Gleisi Hoffmann...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/gleisi-hoffmann-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/gleisi-hoffmann-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Gleisi Hoffmann
+  📥 Importing 1 response(s)...
+    ✓ Response from Brazilian Israelite Confederation (CONIB)
+✅ Successfully imported: Gleisi Hoffmann
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[14/30] Processing: José Dirceu
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: José Dirceu
+
+🤖 AI is researching incidents involving José Dirceu...
+ℹ️  No significant incidents found for José Dirceu
+
+❌ Failed to generate incident data
+❌ Failed to process José Dirceu
+
+⏳ Waiting 5s before next request...
+
+[15/30] Processing: Aloizio Mercadante
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Aloizio Mercadante
+
+🤖 AI is researching incidents involving Aloizio Mercadante...
+ℹ️  No significant incidents found for Aloizio Mercadante
+
+❌ Failed to generate incident data
+❌ Failed to process Aloizio Mercadante
+
+⏳ Waiting 5s before next request...
+
+[16/30] Processing: Manuela d'Ávila
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Manuela d'Ávila
+
+🤖 AI is researching incidents involving Manuela d'Ávila...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/manuela-dvila-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/manuela-dvila-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Manuela d'Ávila
+✅ Successfully imported: Manuela d'Ávila
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[17/30] Processing: Jean Wyllys
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Jean Wyllys
+
+🤖 AI is researching incidents involving Jean Wyllys...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jean-wyllys-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/jean-wyllys-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Jean Wyllys
+  📥 Importing 2 response(s)...
+    ✓ Response from Brazilian Israelite Confederation
+    ✓ Response from Fernando Holiday
+✅ Successfully imported: Jean Wyllys
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[18/30] Processing: Marcelo Freixo
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Marcelo Freixo
+
+🤖 AI is researching incidents involving Marcelo Freixo...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/marcelo-freixo-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/marcelo-freixo-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Marcelo Freixo
+  📥 Importing 1 response(s)...
+    ✓ Response from Confederação Israelita do Brasil
+✅ Successfully imported: Marcelo Freixo
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[19/30] Processing: Alessandro Molon
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Alessandro Molon
+
+🤖 AI is researching incidents involving Alessandro Molon...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/alessandro-molon-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/alessandro-molon-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Alessandro Molon
+✅ Successfully imported: Alessandro Molon
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[20/30] Processing: Simone Tebet
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Simone Tebet
+
+🤖 AI is researching incidents involving Simone Tebet...
+ℹ️  No significant incidents found for Simone Tebet
+
+❌ Failed to generate incident data
+❌ Failed to process Simone Tebet
+
+⏳ Waiting 5s before next request...
+
+[21/30] Processing: Rodrigo Pacheco
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Rodrigo Pacheco
+
+🤖 AI is researching incidents involving Rodrigo Pacheco...
+ℹ️  No significant incidents found for Rodrigo Pacheco
+
+❌ Failed to generate incident data
+❌ Failed to process Rodrigo Pacheco
+
+⏳ Waiting 5s before next request...
+
+[22/30] Processing: Arthur Lira
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Arthur Lira
+
+🤖 AI is researching incidents involving Arthur Lira...
+ℹ️  No significant incidents found for Arthur Lira
+
+❌ Failed to generate incident data
+❌ Failed to process Arthur Lira
+
+⏳ Waiting 5s before next request...
+
+[23/30] Processing: Sergio Moro
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Sergio Moro
+
+🤖 AI is researching incidents involving Sergio Moro...
+ℹ️  No significant incidents found for Sergio Moro
+
+❌ Failed to generate incident data
+❌ Failed to process Sergio Moro
+
+⏳ Waiting 5s before next request...
+
+[24/30] Processing: Joaquim Barbosa
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Joaquim Barbosa
+
+🤖 AI is researching incidents involving Joaquim Barbosa...
+ℹ️  No significant incidents found for Joaquim Barbosa
+
+❌ Failed to generate incident data
+❌ Failed to process Joaquim Barbosa
+
+⏳ Waiting 5s before next request...
+
+[25/30] Processing: Gilmar Mendes
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Gilmar Mendes
+
+🤖 AI is researching incidents involving Gilmar Mendes...
+ℹ️  No significant incidents found for Gilmar Mendes
+
+❌ Failed to generate incident data
+❌ Failed to process Gilmar Mendes
+
+⏳ Waiting 5s before next request...
+
+[26/30] Processing: Alexandre de Moraes
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Alexandre de Moraes
+
+🤖 AI is researching incidents involving Alexandre de Moraes...
+ℹ️  No significant incidents found for Alexandre de Moraes
+
+❌ Failed to generate incident data
+❌ Failed to process Alexandre de Moraes
+
+⏳ Waiting 5s before next request...
+
+[27/30] Processing: Luís Roberto Barroso
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Luís Roberto Barroso
+
+🤖 AI is researching incidents involving Luís Roberto Barroso...
+ℹ️  No significant incidents found for Luís Roberto Barroso
+
+❌ Failed to generate incident data
+❌ Failed to process Luís Roberto Barroso
+
+⏳ Waiting 5s before next request...
+
+[28/30] Processing: Caetano Veloso
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Caetano Veloso
+
+🤖 AI is researching incidents involving Caetano Veloso...
+ℹ️  No significant incidents found for Caetano Veloso
+
+❌ Failed to generate incident data
+❌ Failed to process Caetano Veloso
+
+⏳ Waiting 5s before next request...
+
+[29/30] Processing: Gilberto Gil
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Gilberto Gil
+
+🤖 AI is researching incidents involving Gilberto Gil...
+✅ Markdown file created: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/gilberto-gil-2025-10-03.md
+
+📥 Importing to database...
+Reading markdown file: /Users/milesbrown/Documents/Who-Said-What/Who-Said-What/data/auto-generated/gilberto-gil-2025-10-03.md
+Found 1 incidents to import
+
+
+Importing: Gilberto Gil
+  📥 Importing 2 response(s)...
+    ✓ Response from Brazilian-Israeli Cultural Association
+    ✓ Response from Caetano Veloso
+✅ Successfully imported: Gilberto Gil
+
+✅ Import complete! Imported 1 incidents
+✅ Successfully imported to database!
+
+✨ All done! Check your website to see the new incident.
+
+⏳ Waiting 5s before next request...
+
+[30/30] Processing: Chico Buarque
+──────────────────────────────────────────────────
+
+🚀 Starting AI research for: Chico Buarque
+
+🤖 AI is researching incidents involving Chico Buarque...
+ℹ️  No significant incidents found for Chico Buarque
+
+❌ Failed to generate incident data
+❌ Failed to process Chico Buarque
+
+==================================================
+✨ Batch processing complete!
+   ✅ Success: 17
+   ❌ Failed: 13
+==================================================
+

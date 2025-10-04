@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,210 +7,171 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Person model - individuals who made statements
 model Person {
-  id              String          @id @default(cuid())
-  slug            String          @unique
-  name            String
-  akaNames        String?         // Alternative names, aliases (comma-separated)
-  bio             String?
-  background      String?         // General background information
-  imageUrl        String?
-
-  // Professional Information
-  profession      String?         // Comma-separated tags: Politician, Actor, Journalist, etc.
-  roleDescription String?         // Short description of their main role/job
-  yearsActive     String?         // e.g., "2005-2019" or "2005-present"
-  bestKnownFor    String?         // One-sentence summary: "British MP for Lewisham East, 2005-2019"
-
-  // Personal Information
-  nationality     String?
-  racialGroup     String?         // Racial/ethnic group
-  religion        String?         // Religious affiliation/denomination
-  birthDate       DateTime?
-  birthPlace      String?         // Place of birth
-  residence       String?         // Place of main residence
-  deathDate       DateTime?
-  deathPlace      String?         // Place of death
-
-  // Political Information
-  politicalParty  String?         // Political party alignment with years in brackets
-  politicalBeliefs String?        // Political ideology/beliefs if known
-
-  // Timestamps
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations
-  incidents       Incident[]      @relation("PersonIncidents")
-  statements      Statement[]
-  responses       Response[]
-  affiliations    Affiliation[]   // Organization memberships/roles (for employers/contracts)
+  id                   String        @id @default(cuid())
+  slug                 String        @unique
+  name                 String
+  bio                  String?
+  imageUrl             String?
+  profession           String?
+  nationality          String?
+  birthDate            DateTime?
+  deathDate            DateTime?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  akaNames             String?
+  background           String?
+  racialGroup          String?
+  religion             String?
+  bestKnownFor         String?
+  birthPlace           String?
+  politicalBeliefs     String?
+  politicalParty       String?
+  residence            String?
+  roleDescription      String?
+  yearsActive          String?
+  deathPlace           String?
+  religionDenomination String?
+  affiliations         Affiliation[]
+  responses            Response[]
+  statements           Statement[]
+  incidents            Incident[]    @relation("PersonIncidents")
 }
 
-// Organization model
 model Organization {
-  id              String          @id @default(cuid())
-  slug            String          @unique
-  name            String
-  type            String          // e.g., "media", "advocacy", "corporate", "government"
-  description     String?
-  website         String?
-  founded         DateTime?
-  headquarters    String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations
-  incidents       Incident[]      @relation("OrganizationIncidents")
-  responses       Response[]
-  affiliations    Affiliation[]   // People affiliated with this org
+  id           String        @id @default(cuid())
+  slug         String        @unique
+  name         String
+  type         String
+  description  String?
+  website      String?
+  founded      DateTime?
+  headquarters String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  affiliations Affiliation[]
+  responses    Response[]
+  incidents    Incident[]    @relation("OrganizationIncidents")
 }
 
-// Incident/Event model - specific events or cases
 model Incident {
-  id              String          @id @default(cuid())
-  slug            String          @unique
+  id              String         @id @default(cuid())
+  slug            String         @unique
   title           String
   summary         String
   description     String
   incidentDate    DateTime
-  publicationDate DateTime        @default(now())
-  status          String          @default("documented") // documented, ongoing, resolved
-  severity        String?         // low, medium, high
+  publicationDate DateTime       @default(now())
+  status          String         @default("documented")
+  severity        String?
   location        String?
-  mediaFraming    String?         // How media characterized/framed this incident
-  triggeringEvent String?         // What prompted this incident
-  outcome         String?         // What was the result/resolution
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations - Parent Event (wider context)
+  mediaFraming    String?
+  triggeringEvent String?
+  outcome         String?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
   parentEventId   String?
-  parentEvent     Event?          @relation("EventIncidents", fields: [parentEventId], references: [id])
-
-  // Relations - Connected entities
-  persons         Person[]        @relation("PersonIncidents")
-  organizations   Organization[]  @relation("OrganizationIncidents")
-  statements      Statement[]
+  parentEvent     Event?         @relation("EventIncidents", fields: [parentEventId], references: [id])
   responses       Response[]
   sources         Source[]
-  tags            Tag[]           @relation("IncidentTags")
+  statements      Statement[]
+  tags            Tag[]          @relation("IncidentTags")
+  organizations   Organization[] @relation("OrganizationIncidents")
+  persons         Person[]       @relation("PersonIncidents")
 }
 
-// Statement model - what was said
 model Statement {
-  id              String          @id @default(cuid())
-  content         String
-  context         String?
-  statementDate   DateTime
-  medium          String?         // phone call, interview, social media, etc.
-  isVerified      Boolean         @default(false)
-
-  // Repercussions tracking
-  lostEmployment  Boolean         @default(false)  // Lost job/employment as result
-  lostContracts   Boolean         @default(false)  // Lost contracts/sponsorships
-  paintedNegatively Boolean       @default(false)  // Painted negatively in media (regardless of whether rightly or wrongly)
-  repercussionDetails String?     // Additional context about repercussions
-
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations
-  personId        String
-  person          Person          @relation(fields: [personId], references: [id])
-  incidentId      String
-  incident        Incident        @relation(fields: [incidentId], references: [id])
-  sources         Source[]
-  responses       Response[]
+  id                  String     @id @default(cuid())
+  content             String
+  context             String?
+  statementDate       DateTime
+  medium              String?
+  isVerified          Boolean    @default(false)
+  lostEmployment      Boolean    @default(false)
+  lostContracts       Boolean    @default(false)
+  paintedNegatively   Boolean    @default(false)
+  repercussionDetails String?
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+  personId            String
+  incidentId          String
+  responses           Response[]
+  sources             Source[]
+  incident            Incident   @relation(fields: [incidentId], references: [id])
+  person              Person     @relation(fields: [personId], references: [id])
 
   @@unique([personId, incidentId, content])
 }
 
-// Response model - reactions and responses to statements
 model Response {
-  id              String          @id @default(cuid())
-  content         String
-  responseDate    DateTime
-  type            String          // apology, clarification, denial, support, criticism
-  impact          String?         // description of the impact
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-  
-  // Relations
-  statementId     String?
-  statement       Statement?      @relation(fields: [statementId], references: [id])
-  personId        String?
-  person          Person?         @relation(fields: [personId], references: [id])
-  organizationId  String?
-  organization    Organization?   @relation(fields: [organizationId], references: [id])
-  incidentId      String
-  incident        Incident        @relation(fields: [incidentId], references: [id])
+  id             String        @id @default(cuid())
+  content        String
+  responseDate   DateTime
+  type           String
+  impact         String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  statementId    String?
+  personId       String?
+  organizationId String?
+  incidentId     String
+  incident       Incident      @relation(fields: [incidentId], references: [id])
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+  person         Person?       @relation(fields: [personId], references: [id])
+  statement      Statement?    @relation(fields: [statementId], references: [id])
 }
 
-// Source model - references and citations
 model Source {
-  id              String          @id @default(cuid())
-  title           String
-  url             String?
-  publication     String?
-  author          String?
-  publishDate     DateTime?
-  accessDate      DateTime        @default(now())
-  credibility     String?         // primary, secondary, verified, unverified
-  createdAt       DateTime        @default(now())
-  
-  // Relations
-  incidentId      String?
-  incident        Incident?       @relation(fields: [incidentId], references: [id])
-  statementId     String?
-  statement       Statement?      @relation(fields: [statementId], references: [id])
+  id          String     @id @default(cuid())
+  title       String
+  url         String?
+  publication String?
+  author      String?
+  publishDate DateTime?
+  accessDate  DateTime   @default(now())
+  credibility String?
+  createdAt   DateTime   @default(now())
+  incidentId  String?
+  statementId String?
+  statement   Statement? @relation(fields: [statementId], references: [id])
+  incident    Incident?  @relation(fields: [incidentId], references: [id])
 }
 
-// Event model - wider context grouping multiple incidents
 model Event {
-  id              String          @id @default(cuid())
-  slug            String          @unique
-  title           String
-  description     String
-  startDate       DateTime
-  endDate         DateTime?
-  scope           String?         // geographic or thematic scope
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations
-  incidents       Incident[]      @relation("EventIncidents")
+  id          String     @id @default(cuid())
+  slug        String     @unique
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+  scope       String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  incidents   Incident[] @relation("EventIncidents")
 }
 
-// Affiliation model - person-organization relationships
 model Affiliation {
-  id              String          @id @default(cuid())
-  role            String          // e.g., "UN Ambassador", "Representative", "Member"
-  startDate       DateTime?
-  endDate         DateTime?
-  isActive        Boolean         @default(true)
-  description     String?
-  createdAt       DateTime        @default(now())
-  updatedAt       DateTime        @updatedAt
-
-  // Relations
-  personId        String
-  person          Person          @relation(fields: [personId], references: [id])
-  organizationId  String
-  organization    Organization    @relation(fields: [organizationId], references: [id])
+  id             String       @id @default(cuid())
+  role           String
+  startDate      DateTime?
+  endDate        DateTime?
+  isActive       Boolean      @default(true)
+  description    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  personId       String
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  person         Person       @relation(fields: [personId], references: [id])
 
   @@unique([personId, organizationId, role])
 }
 
-// Tag model for categorization
 model Tag {
-  id              String          @id @default(cuid())
-  name            String          @unique
-  slug            String          @unique
-  description     String?
-  createdAt       DateTime        @default(now())
-
-  // Relations
-  incidents       Incident[]      @relation("IncidentTags")
+  id          String     @id @default(cuid())
+  name        String     @unique
+  slug        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  incidents   Incident[] @relation("IncidentTags")
 }

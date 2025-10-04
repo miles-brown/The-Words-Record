@@ -2,7 +2,9 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/persons": "pages/persons.js",
+  "/": "pages/index.js",
   "/incidents": "pages/incidents.js",
-  "/organizations": "pages/organizations.js"
+  "/about": "pages/about.js",
+  "/api/persons/filter-options": "pages/api/persons/filter-options.js",
+  "/api/persons": "pages/api/persons.js"
 }
