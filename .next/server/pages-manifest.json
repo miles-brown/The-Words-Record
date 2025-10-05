@@ -2,9 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
   "/incidents": "pages/incidents.js",
   "/about": "pages/about.js",
+  "/persons": "pages/persons.js",
+  "/persons/[slug]": "pages/persons/[slug].js",
   "/api/persons/filter-options": "pages/api/persons/filter-options.js",
   "/api/persons": "pages/api/persons.js"
 }

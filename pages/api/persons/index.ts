@@ -28,15 +28,13 @@ export default async function handler(
 
     if (profession) {
       where.profession = {
-        contains: profession as string,
-        mode: 'insensitive'
+        contains: profession as string
       }
     }
 
     if (nationality) {
       where.nationality = {
-        contains: nationality as string,
-        mode: 'insensitive'
+        contains: nationality as string
       }
     }
 
@@ -45,8 +43,7 @@ export default async function handler(
         some: {
           organization: {
             name: {
-              contains: organization as string,
-              mode: 'insensitive'
+              contains: organization as string
             }
           }
         }
