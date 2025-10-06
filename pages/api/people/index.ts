@@ -61,9 +61,12 @@ export default async function handler(
         orderBy = { name: 'desc' }
         break
       case 'surname-asc':
+        // Sort by lastName field directly from database
+        orderBy = { lastName: 'asc' }
+        break
       case 'surname-desc':
-        // For surname sorting, we'll need to sort in the application layer
-        orderBy = { name: sortBy === 'surname-asc' ? 'asc' : 'desc' }
+        // Sort by lastName field directly from database
+        orderBy = { lastName: 'desc' }
         break
       case 'birthdate-asc':
         orderBy = { birthDate: 'asc' }
@@ -121,24 +124,8 @@ export default async function handler(
       }
     })
 
-    // Handle surname sorting in application layer
-    let sortedPersons = personsWithResponseCount
-    if (sortBy === 'surname-asc' || sortBy === 'surname-desc') {
-      sortedPersons = personsWithResponseCount.sort((a, b) => {
-        const getSurname = (name: string) => name.split(' ').pop() || name
-        const surnameA = getSurname(a.name)
-        const surnameB = getSurname(b.name)
-
-        if (sortBy === 'surname-asc') {
-          return surnameA.localeCompare(surnameB)
-        } else {
-          return surnameB.localeCompare(surnameA)
-        }
-      })
-    }
-
     res.status(200).json({
-      persons: sortedPersons,
+      persons: personsWithResponseCount,
       pagination: {
         page: pageNum,
         limit: limitNum,
