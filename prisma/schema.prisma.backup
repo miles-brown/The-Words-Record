@@ -256,199 +256,6 @@ enum TopicIncidentRelation {
   EXAMPLE
 }
 
-// ============ ENHANCED v3.0.1 ENUMS ============
-
-// Affiliation Enums
-enum RoleCategory {
-  EXECUTIVE_LEADERSHIP
-  BOARD_MEMBER
-  EDITORIAL_LEADERSHIP
-  EDITORIAL_STAFF
-  MEDIA_PERSONALITY
-  ELECTED_OFFICIAL
-  APPOINTED_OFFICIAL
-  POLITICAL_STAFF
-  ACADEMIC_LEADERSHIP
-  ACADEMIC_FACULTY
-  RESEARCH
-  LEGAL_LEADERSHIP
-  LEGAL_PRACTITIONER
-  NGO_LEADERSHIP
-  NGO_STAFF
-  CONSULTANT
-  EMPLOYEE
-  CONTRACTOR
-  MEMBER
-  VOLUNTEER
-  HONORARY
-}
-
-enum AffiliationType {
-  EMPLOYMENT
-  BOARD_POSITION
-  MEMBERSHIP
-  FELLOWSHIP
-  CONSULTANCY
-  ADVISORY
-  HONORARY
-  VOLUNTEER
-  INTERNSHIP
-  POLITICAL_APPOINTMENT
-  ELECTED_POSITION
-}
-
-enum EmploymentStatus {
-  FULL_TIME
-  PART_TIME
-  CONTRACT
-  FREELANCE
-  PER_DIEM
-  SEASONAL
-  TEMPORARY
-}
-
-enum AppointmentType {
-  ELECTED
-  APPOINTED
-  HIRED
-  VOLUNTEER_SELECTED
-  NOMINATED
-  HEREDITARY
-}
-
-enum DepartureReason {
-  RESIGNED
-  RETIRED
-  CAREER_CHANGE
-  PERSONAL_REASONS
-  TERMINATED
-  FIRED_FOR_CAUSE
-  LAID_OFF
-  POSITION_ELIMINATED
-  CONTRACT_ENDED
-  FORCED_RESIGNATION
-  SCANDAL
-  INVESTIGATION
-  POLITICAL_PRESSURE
-  PUBLIC_PRESSURE
-  DECEASED
-  UNKNOWN
-  NOT_SPECIFIED
-}
-
-// Source Enums
-enum SourceType {
-  NEWS_ARTICLE
-  OPINION_PIECE
-  EDITORIAL
-  PRESS_RELEASE
-  GOVERNMENT_DOCUMENT
-  ACADEMIC_PAPER
-  SOCIAL_MEDIA_POST
-  VIDEO
-  AUDIO
-  TRANSCRIPT
-  LEGAL_DOCUMENT
-  REPORT
-  BOOK
-  WEBSITE
-  INTERVIEW
-  SPEECH
-  LEAKED_DOCUMENT
-  OTHER
-}
-
-enum SourceLevel {
-  PRIMARY
-  SECONDARY
-  TERTIARY
-  ANALYSIS
-}
-
-enum ContentType {
-  TEXT
-  VIDEO
-  AUDIO
-  IMAGE
-  DOCUMENT
-  INTERACTIVE
-  DATA
-}
-
-enum VerificationStatus {
-  VERIFIED
-  PARTIALLY_VERIFIED
-  UNVERIFIED
-  DISPUTED
-  DEBUNKED
-}
-
-enum FactCheckStatus {
-  TRUE
-  MOSTLY_TRUE
-  MIXED
-  MOSTLY_FALSE
-  FALSE
-  UNPROVEN
-  PENDING
-}
-
-enum ArchiveMethod {
-  WAYBACK_MACHINE
-  ARCHIVE_TODAY
-  LOCAL_STORAGE
-  SCREENSHOT
-  PDF_CAPTURE
-  FULL_CAPTURE
-}
-
-enum BiasRating {
-  EXTREME_LEFT
-  LEFT
-  LEFT_CENTER
-  CENTER
-  RIGHT_CENTER
-  RIGHT
-  EXTREME_RIGHT
-  CONSPIRACY_PSEUDOSCIENCE
-  PRO_SCIENCE
-  SATIRE
-}
-
-enum OutletType {
-  NEWSPAPER
-  TELEVISION
-  RADIO
-  ONLINE_ONLY
-  MAGAZINE
-  WIRE_SERVICE
-  BLOG
-  PODCAST
-  SOCIAL_MEDIA
-  GOVERNMENT
-  ACADEMIC
-  NGO
-  THINK_TANK
-}
-
-// Tag Enums
-enum TagStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  DEPRECATED
-  ARCHIVED
-}
-
-enum AliasType {
-  SYNONYM
-  ABBREVIATION
-  TRANSLATION
-  HISTORICAL
-  COLLOQUIAL
-  MISSPELLING
-}
-
 // ============ MODELS ============
 
 model Person {
@@ -504,7 +311,6 @@ model Person {
   incidents            Incident[]       @relation("PersonIncidents")
   repercussions        Repercussion[]   @relation("PersonRepercussions")
   journalistProfile    Journalist?
-  tags                 Tag[]            @relation("PersonTags")
 
   @@index([slug])
   @@index([verificationLevel])
@@ -558,7 +364,6 @@ model Organization {
   incidents            Incident[]       @relation("OrganizationIncidents")
   repercussions        Repercussion[]   @relation("OrganizationRepercussions")
   mediaOutlet          MediaOutlet?
-  tags                 Tag[]            @relation("OrganizationTags")
 
   @@index([slug])
   @@index([type])
@@ -711,7 +516,6 @@ model Topic {
   tags                  Tag[]           @relation("TopicTags")
   relationsFrom         TopicRelation[] @relation("TopicRelationFrom")
   relationsTo           TopicRelation[] @relation("TopicRelationTo")
-  sources               Source[]        @relation("TopicSources")
 
   @@index([slug])
   @@index([topicType])
@@ -775,7 +579,6 @@ model Incident {
   organizations   Organization[]   @relation("OrganizationIncidents")
   persons         Person[]         @relation("PersonIncidents")
   repercussions   Repercussion[]
-  departureAffiliations Affiliation[] @relation("AffiliationDepartureIncident")
 
   @@index([slug])
   @@index([status])
@@ -835,15 +638,10 @@ model Statement {
   createdAt           DateTime        @default(now())
   updatedAt           DateTime        @updatedAt
 
-  // Primary source
-  primarySourceId     String?
-  primarySource       Source?         @relation("PrimaryStatementSource", fields: [primarySourceId], references: [id])
-
   // Relations
   sources             Source[]
   repercussionsCaused Repercussion[]  @relation("TriggeringStatement")
   repercussionsAbout  Repercussion[]  @relation("ResponseStatement")
-  tags                Tag[]           @relation("StatementTags")
 
   @@unique([personId, incidentId, content])
   @@index([statementType])
@@ -923,103 +721,36 @@ model Repercussion {
 
 model Source {
   id              String           @id @default(cuid())
-
-  // ═══════════════════════════════════════════
-  // CORE CONTENT
-  // ═══════════════════════════════════════════
   title           String
   url             String?
-  archiveUrl      String?          // Archive.org or local archive
 
-  // ═══════════════════════════════════════════
-  // PUBLICATION INFO (Normalized)
-  // ═══════════════════════════════════════════
+  // Publication info
+  publication     String?
+  publicationSlug String?
   mediaOutletId   String?
   mediaOutlet     MediaOutlet?     @relation(fields: [mediaOutletId], references: [id])
 
-  publication     String?          // Legacy field for migration
-  publicationSlug String?
-  publicationSection String?       // "News", "Opinion", "Editorial"
-
-  // ═══════════════════════════════════════════
-  // AUTHORSHIP
-  // ═══════════════════════════════════════════
+  // Author info
   author          String?
-  journalistId    String?          // Link to Journalist if known
+  journalistId    String?
   journalist      Journalist?      @relation(fields: [journalistId], references: [id])
 
-  additionalAuthors String[]       // Co-authors
-
-  // ═══════════════════════════════════════════
-  // TEMPORAL DATA
-  // ═══════════════════════════════════════════
+  // Dates
   publishDate     DateTime?
   accessDate      DateTime         @default(now())
   lastVerified    DateTime?
-  lastVerifiedDate DateTime?
 
-  // ═══════════════════════════════════════════
-  // SOURCE TYPE & CLASSIFICATION
-  // ═══════════════════════════════════════════
-  sourceType      SourceType?      @default(NEWS_ARTICLE)
-  sourceLevel     SourceLevel?     @default(SECONDARY)
-  contentType     ContentType?     @default(TEXT)
-
-  // ═══════════════════════════════════════════
-  // VERIFICATION & CREDIBILITY
-  // ═══════════════════════════════════════════
-  credibilityScore Float?          // 0-100 calculated score
+  // Credibility and verification
   credibility     CredibilityRating @default(UNKNOWN)
-
-  verificationStatus VerificationStatus? @default(UNVERIFIED)
-  verificationDate DateTime?
-  verifiedBy      String?
-  verificationNotes String?         @db.Text
-
-  // Fact-checking
-  factCheckStatus FactCheckStatus?
-  factCheckUrl    String?
-  factCheckBy     String?
-
-  // ═══════════════════════════════════════════
-  // ARCHIVAL & PRESERVATION
-  // ═══════════════════════════════════════════
   isArchived      Boolean          @default(false)
-  archiveDate     DateTime?
-  archiveMethod   ArchiveMethod?
-  archiveHash     String?          // SHA-256 of archived content
+  archiveUrl      String?          // Wayback Machine, archive.is, etc.
 
-  requiresArchival Boolean         @default(true)
-  archivalPriority Int             @default(5) // 1-10
-
-  // Content preservation
-  contentSnapshot String?          @db.Text // Text content backup
-  screenshotUrl   String?
-  pdfUrl          String?
-
-  // ═══════════════════════════════════════════
-  // QUALITY METRICS
-  // ═══════════════════════════════════════════
-  hasPaywall      Boolean          @default(false)
-  isOpinion       Boolean          @default(false)
-  isEditorial     Boolean          @default(false)
-  isExclusive     Boolean          @default(false)
-
-  // Source quality indicators
-  hasByline       Boolean          @default(false)
-  hasDate         Boolean          @default(false)
-  hasSources      Boolean          @default(false)
-  hasMultipleSources Boolean       @default(false)
-  wordCount       Int?
+  // Quality scoring
   qualityScore    Int?             // 1-100
+  hasByline       Boolean          @default(false)
+  hasMultipleSources Boolean       @default(false)
 
-  // Bias indicators
-  biasRating      BiasRating?
-  biasNote        String?
-
-  // ═══════════════════════════════════════════
-  // RELATIONSHIPS
-  // ═══════════════════════════════════════════
+  // What it sources
   incidentId      String?
   incident        Incident?        @relation(fields: [incidentId], references: [id])
 
@@ -1029,284 +760,92 @@ model Source {
   repercussionId  String?
   repercussion    Repercussion?    @relation(fields: [repercussionId], references: [id])
 
-  topicId         String?
-  topic           Topic?           @relation("TopicSources", fields: [topicId], references: [id])
-
-  // As primary source
-  primaryForStatements Statement[]  @relation("PrimaryStatementSource")
-
-  // Related to affiliations
-  affiliations    Affiliation[]    @relation("AffiliationSources")
-
-  // ═══════════════════════════════════════════
-  // METADATA & FLAGS
-  // ═══════════════════════════════════════════
-  isDeleted       Boolean          @default(false)
-  deletionDate    DateTime?
-  deletionReason  String?
-
-  isBroken        Boolean          @default(false) // Link broken
-  lastCheckDate   DateTime?
-  checkFailCount  Int              @default(0)
-
-  // Content warnings
-  contentWarning  String?
-  isGraphic       Boolean          @default(false)
-  isSensitive     Boolean          @default(false)
-
-  // Usage tracking
-  citationCount   Int              @default(0) // Times cited
-  viewCount       Int              @default(0)
-
-  // ═══════════════════════════════════════════
-  // NOTES
-  // ═══════════════════════════════════════════
-  publicNotes     String?          @db.Text
-  internalNotes   String?          @db.Text
-
-  // ═══════════════════════════════════════════
-  // METADATA
-  // ═══════════════════════════════════════════
+  // Timestamps
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
-  createdBy       String?
-  lastEditedBy    String?
 
-  // ═══════════════════════════════════════════
-  // INDEXES
-  // ═══════════════════════════════════════════
-  @@index([mediaOutletId])
-  @@index([sourceType, sourceLevel])
-  @@index([verificationStatus])
-  @@index([publishDate])
   @@index([credibility])
-  @@index([isArchived])
+  @@index([mediaOutletId])
   @@index([journalistId])
   @@index([incidentId])
   @@index([statementId])
-  @@index([topicId])
 }
 
 model Affiliation {
   id               String         @id @default(cuid())
 
-  // ═══════════════════════════════════════════
-  // CORE RELATIONSHIP
-  // ═══════════════════════════════════════════
+  // Role information
+  role             String
+  roleLevel        RoleLevel      @default(MID)
+  department       String?
+
+  // Dates
+  startDate        DateTime?
+  endDate          DateTime?
+  isActive         Boolean        @default(true)
+
+  // Details
+  description      String?
+  responsibilities String[]
+
+  // For media appearances
+  appearanceType   String?        // "regular", "contributor", "guest", "host"
+  frequency        String?        // "daily", "weekly", "monthly", "occasional"
+
+  // Compensation (optional, sensitive)
+  isPaid           Boolean?
+  compensationType String?        // "salary", "contract", "per-appearance"
+
+  // Who and where
   personId         String
   person           Person         @relation(fields: [personId], references: [id])
 
   organizationId   String
   organization     Organization   @relation(fields: [organizationId], references: [id])
 
-  // ═══════════════════════════════════════════
-  // ROLE & POSITION
-  // ═══════════════════════════════════════════
-  role             String         // "CEO", "Board Member", "Spokesperson"
-  roleCategory     RoleCategory?
-  roleLevel        RoleLevel?     @default(MID)
-  department       String?        // "Editorial", "News", "Opinion"
-
-  // Detailed title
-  officialTitle    String?        // Full official title
-  shortTitle       String?        // Abbreviated for display
-  previousRole     String?        // If promoted/changed within same org
-
-  // ═══════════════════════════════════════════
-  // TEMPORAL DATA
-  // ═══════════════════════════════════════════
-  startDate        DateTime?
-  endDate          DateTime?
-  isActive         Boolean        @default(true)
-  isCurrent        Boolean        @default(true) // Primary current affiliation
-
-  // Tenure tracking
-  tenureMonths     Int?           // Calculated or entered
-  appointmentType  AppointmentType? // ELECTED, APPOINTED, HIRED
-  termLimit        String?        // "2 years", "At pleasure"
-
-  // ═══════════════════════════════════════════
-  // AFFILIATION TYPE & NATURE
-  // ═══════════════════════════════════════════
-  affiliationType  AffiliationType?
-  isPrimary        Boolean        @default(false) // Primary affiliation
-  isPublic         Boolean        @default(true)  // Publicly known
-  isVerified       Boolean        @default(false)
-
-  // Employment details
-  employmentStatus EmploymentStatus? // FULL_TIME, PART_TIME, CONTRACT
-  isPaid           Boolean?       @default(true)
-  isVolunteer      Boolean        @default(false)
-  compensationType String?        // "salary", "contract", "per-appearance"
-
-  // ═══════════════════════════════════════════
-  // DEPARTURE & CHANGES
-  // ═══════════════════════════════════════════
-  departureReason  DepartureReason?
-  departureNote    String?        @db.Text
-  wasTerminated    Boolean        @default(false)
-  wasResignation   Boolean        @default(false)
-
-  // If controversial departure
-  departureIncidentId String?
-  departureIncident   Incident?   @relation("AffiliationDepartureIncident", fields: [departureIncidentId], references: [id])
-
-  // ═══════════════════════════════════════════
-  // INFLUENCE & AUTHORITY
-  // ═══════════════════════════════════════════
-  hasHiringAuthority Boolean      @default(false)
-  hasBudgetAuthority Boolean      @default(false)
-  hasPublicProfile   Boolean      @default(false)
-  hasMediaRole       Boolean      @default(false)
-
-  influenceLevel   Int?           // 1-10 scale
-  authorityScope   String?        // "National", "Regional", "Department"
-
-  // ═══════════════════════════════════════════
-  // MEDIA & PUBLIC APPEARANCES
-  // ═══════════════════════════════════════════
-  appearanceType   String?        // "regular", "contributor", "guest", "host"
-  frequency        String?        // "daily", "weekly", "monthly", "occasional"
-  mediaAppearances Int            @default(0)
-  speakingEngagements Int         @default(0)
-  publicStatements Int            @default(0)
-
-  isSpokesperson   Boolean        @default(false)
-  mediaRestrictions String?       // "Not authorized to speak"
-
-  // ═══════════════════════════════════════════
-  // VERIFICATION & SOURCES
-  // ═══════════════════════════════════════════
-  verificationDate DateTime?
-  verifiedBy       String?
-  verificationSource String?      // "LinkedIn", "Company website"
-
-  sources          Source[]       @relation("AffiliationSources")
-  evidenceUrl      String?        // Link to proof
-
-  // ═══════════════════════════════════════════
-  // NOTES & METADATA
-  // ═══════════════════════════════════════════
-  description      String?        @db.Text // Additional context
-  responsibilities String[]
-  internalNotes    String?        @db.Text // Private editorial notes
-  publicNotes      String?        @db.Text // Public display notes
-
-  // Controversy flags
-  isControversial  Boolean        @default(false)
-  controversyNote  String?        @db.Text
-
-  // ═══════════════════════════════════════════
-  // METADATA
-  // ═══════════════════════════════════════════
+  // Timestamps
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
-  createdBy        String?
-  lastEditedBy     String?
 
-  // ═══════════════════════════════════════════
-  // INDEXES
-  // ═══════════════════════════════════════════
-  @@unique([personId, organizationId, role, startDate])
-  @@index([personId, isCurrent])
-  @@index([organizationId, isActive])
-  @@index([roleCategory, roleLevel])
-  @@index([startDate, endDate])
-  @@index([isVerified])
-  @@index([departureReason])
+  @@unique([personId, organizationId, role])
+  @@index([personId])
+  @@index([organizationId])
+  @@index([isActive])
 }
 
 model Tag {
   id               String        @id @default(cuid())
-
-  // ═══════════════════════════════════════════
-  // CORE IDENTIFICATION
-  // ═══════════════════════════════════════════
   name             String        @unique
   slug             String        @unique
 
-  // ═══════════════════════════════════════════
-  // CATEGORIZATION & HIERARCHY
-  // ═══════════════════════════════════════════
+  // Categorization
   category         TagCategory   @default(OTHER)
-  subcategory      String?
-
-  // Parent-child relationships
   parentTagId      String?
   parentTag        Tag?          @relation("TagHierarchy", fields: [parentTagId], references: [id])
   childTags        Tag[]         @relation("TagHierarchy")
 
-  // ═══════════════════════════════════════════
-  // DESCRIPTION & METADATA
-  // ═══════════════════════════════════════════
-  description      String?       @db.Text
-  usageGuidelines  String?       @db.Text
+  // Details
+  description      String?
+  color            String?       // For UI display
+  icon             String?       // Icon identifier
 
-  // Visual elements
-  icon             String?       // Emoji or icon identifier
-  color            String?       // Hex color
-  backgroundColor  String?
-
-  // ═══════════════════════════════════════════
-  // CONTROVERSY & NEUTRALITY
-  // ═══════════════════════════════════════════
+  // Controversy tracking
   isControversial  Boolean       @default(false)
   controversyScore Int?          // 1-100
-  controversyNote  String?       @db.Text
 
-  disputedBy       String[]      // Groups that dispute
-  preferredBy      String[]      // Groups that prefer
-  neutralAlternative String?
-
-  // ═══════════════════════════════════════════
-  // MODERATION & QUALITY
-  // ═══════════════════════════════════════════
-  status           TagStatus     @default(PENDING)
-  createdBy        String?
-  approvedBy       String?
-  approvedDate     DateTime?
-  rejectionReason  String?
-
-  requiresApproval Boolean       @default(false)
-  restrictedTo     String[]      // User roles
-
-  // ═══════════════════════════════════════════
-  // RELATIONSHIPS (Multi-entity)
-  // ═══════════════════════════════════════════
-  incidents        Incident[]    @relation("IncidentTags")
-  statements       Statement[]   @relation("StatementTags")
-  persons          Person[]      @relation("PersonTags")
-  organizations    Organization[] @relation("OrganizationTags")
-  topics           Topic[]       @relation("TopicTags")
-
-  // ═══════════════════════════════════════════
-  // STATISTICS & METRICS
-  // ═══════════════════════════════════════════
+  // Usage stats
   usageCount       Int           @default(0)
 
-  // Cached counts by entity
-  incidentCount    Int           @default(0)
-  statementCount   Int           @default(0)
-  personCount      Int           @default(0)
-  orgCount         Int           @default(0)
-
-  // ═══════════════════════════════════════════
-  // ALIASES & SYNONYMS
-  // ═══════════════════════════════════════════
-  aliases          TagAlias[]
-
-  // ═══════════════════════════════════════════
-  // TEMPORAL DATA
-  // ═══════════════════════════════════════════
+  // Timestamps
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
-  lastUsedAt       DateTime?
-  deprecatedAt     DateTime?
 
-  @@index([category, status])
+  // Relations
+  incidents        Incident[]    @relation("IncidentTags")
+  topics           Topic[]       @relation("TopicTags")
+
   @@index([slug])
-  @@index([parentTagId])
-  @@index([isControversial])
+  @@index([category])
   @@index([usageCount])
 }
 
@@ -1357,22 +896,4 @@ model TopicRelation {
   @@index([fromTopicId])
   @@index([toTopicId])
   @@index([relationType])
-}
-
-// ============ NEW v3.0.1 MODELS ============
-
-model TagAlias {
-  id              String         @id @default(cuid())
-
-  tagId           String
-  tag             Tag            @relation(fields: [tagId], references: [id])
-
-  alias           String         @unique
-  aliasType       AliasType
-  language        String         @default("en")
-
-  createdAt       DateTime       @default(now())
-
-  @@index([alias])
-  @@index([tagId])
 }
