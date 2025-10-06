@@ -546,55 +546,740 @@ enum AliasType {
   MISSPELLING
 }
 
+// Organization v3.0.1 Enhancement Enums
+
+enum OrgType {
+  // Advocacy & NGO (8 types)
+  ADVOCACY_GROUP
+  THINK_TANK
+  NGO
+  CHARITY
+  FOUNDATION
+  RESEARCH_INSTITUTE
+  POLICY_CENTER
+  WATCHDOG
+
+  // Media (7 types)
+  NEWS_OUTLET
+  SOCIAL_MEDIA_PLATFORM
+  PUBLISHING_HOUSE
+  PRODUCTION_COMPANY
+  BROADCASTER
+  ONLINE_MEDIA
+  ALTERNATIVE_MEDIA
+
+  // Political (8 types)
+  POLITICAL_PARTY
+  PAC
+  SUPER_PAC
+  CAMPAIGN
+  LOBBY_GROUP
+  POLITICAL_ACTION_GROUP
+  GRASSROOTS_MOVEMENT
+  COALITION
+
+  // Government (9 types)
+  GOVERNMENT_AGENCY
+  LEGISLATIVE_BODY
+  JUDICIAL_BODY
+  EXECUTIVE_OFFICE
+  MILITARY_UNIT
+  INTELLIGENCE_AGENCY
+  DIPLOMATIC_MISSION
+  INTERNATIONAL_BODY
+  TREATY_ORGANIZATION
+
+  // Educational (5 types)
+  UNIVERSITY
+  COLLEGE
+  SCHOOL
+  RESEARCH_CENTER
+  ACADEMIC_DEPARTMENT
+
+  // Religious (6 types)
+  RELIGIOUS_INSTITUTION
+  PLACE_OF_WORSHIP
+  RELIGIOUS_ORGANIZATION
+  FAITH_BASED_CHARITY
+  RELIGIOUS_SCHOOL
+  DENOMINATIONAL_BODY
+
+  // Business (8 types)
+  CORPORATION
+  COMPANY
+  STARTUP
+  CONSULTANCY
+  LAW_FIRM
+  PR_FIRM
+  TECH_COMPANY
+  FINANCIAL_INSTITUTION
+
+  // Professional (5 types)
+  UNION
+  TRADE_ASSOCIATION
+  PROFESSIONAL_SOCIETY
+  CERTIFICATION_BODY
+  STANDARDS_ORGANIZATION
+
+  // Cultural (5 types)
+  MUSEUM
+  CULTURAL_CENTER
+  ARTS_ORGANIZATION
+  HERITAGE_GROUP
+  COMMUNITY_CENTER
+
+  // Other (2 types)
+  INFORMAL_GROUP
+  OTHER
+}
+
+enum LegalStructure {
+  // Non-profit (6 types)
+  NONPROFIT_501C3
+  NONPROFIT_501C4
+  NONPROFIT_501C6
+  NONPROFIT_OTHER
+  CHARITABLE_TRUST
+  RELIGIOUS_EXEMPT
+
+  // For-profit (7 types)
+  CORPORATION
+  LLC
+  PARTNERSHIP
+  SOLE_PROPRIETORSHIP
+  COOPERATIVE
+  BENEFIT_CORP
+  SOCIAL_ENTERPRISE
+
+  // Government (4 types)
+  GOVERNMENT_ENTITY
+  QUASI_GOVERNMENTAL
+  INTERNATIONAL_ORG
+  INTERGOVERNMENTAL
+
+  // Other (3 types)
+  UNINCORPORATED
+  INFORMAL
+  UNKNOWN
+}
+
+enum TaxStatus {
+  TAX_EXEMPT
+  TAXABLE
+  PARTIAL_EXEMPT
+  PENDING
+  REVOKED
+  UNKNOWN
+}
+
+enum OperationalStatus {
+  ACTIVE
+  INACTIVE
+  DISSOLVED
+  SUSPENDED
+  MERGED
+  ACQUIRED
+  BANKRUPTCY
+  PENDING_FORMATION
+  DORMANT
+  UNKNOWN
+}
+
+enum FundingSource {
+  // Government (4 types)
+  GOVERNMENT_GRANTS
+  GOVERNMENT_CONTRACTS
+  FOREIGN_GOVERNMENT
+  MULTILATERAL_FUNDING
+
+  // Private (8 types)
+  INDIVIDUAL_DONORS
+  MAJOR_DONORS
+  CORPORATE_SPONSORS
+  FOUNDATIONS
+  MEMBERSHIP_DUES
+  VENTURE_CAPITAL
+  PRIVATE_EQUITY
+  CROWDFUNDING
+
+  // Earned (5 types)
+  PROGRAM_REVENUE
+  PRODUCT_SALES
+  SERVICE_FEES
+  INVESTMENTS
+  ENDOWMENT
+
+  // Mixed (2 types)
+  MIXED_SOURCES
+  UNKNOWN
+}
+
+enum TransparencyLevel {
+  FULL_DISCLOSURE
+  PARTIAL_DISCLOSURE
+  MINIMAL_DISCLOSURE
+  NO_DISCLOSURE
+  LEGALLY_REQUIRED
+  VOLUNTARY_TRANSPARENCY
+  UNKNOWN
+}
+
+enum InfluenceLevel {
+  GLOBAL
+  INTERNATIONAL
+  NATIONAL
+  REGIONAL
+  STATE_PROVINCIAL
+  LOCAL
+  COMMUNITY
+  NICHE
+  MINIMAL
+  UNKNOWN
+}
+
+enum PoliticalLeaning {
+  FAR_LEFT
+  LEFT
+  CENTER_LEFT
+  CENTER
+  CENTER_RIGHT
+  RIGHT
+  FAR_RIGHT
+  LIBERTARIAN
+  AUTHORITARIAN
+  POPULIST
+  PROGRESSIVE
+  CONSERVATIVE
+  SOCIALIST
+  COMMUNIST
+  FASCIST
+  ANARCHIST
+  MIXED
+  APOLITICAL
+  UNKNOWN
+}
+
+enum StanceOnIsrael {
+  STRONGLY_SUPPORTIVE
+  SUPPORTIVE
+  CONDITIONALLY_SUPPORTIVE
+  NEUTRAL
+  CONDITIONALLY_CRITICAL
+  CRITICAL
+  STRONGLY_CRITICAL
+  BDS_SUPPORTER
+  MIXED_POSITIONS
+  NO_POSITION
+  UNKNOWN
+}
+
+enum OrganizationSize {
+  MICRO          // 1-9
+  SMALL          // 10-49
+  MEDIUM         // 50-249
+  LARGE          // 250-999
+  ENTERPRISE     // 1000-9999
+  MEGA           // 10000+
+  UNKNOWN
+}
+
+// Person v3.0.1 Enhancement Enums
+
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  OTHER
+  UNKNOWN
+}
+
+enum Nationality {
+  // Major countries
+  USA
+  UK
+  CANADA
+  AUSTRALIA
+  ISRAEL
+  PALESTINE
+  FRANCE
+  GERMANY
+  RUSSIA
+  CHINA
+  INDIA
+  BRAZIL
+  MEXICO
+  JAPAN
+  SOUTH_KOREA
+  SAUDI_ARABIA
+  IRAN
+  EGYPT
+  TURKEY
+  SOUTH_AFRICA
+  NIGERIA
+  // Add more as needed
+  OTHER
+  UNKNOWN
+}
+
+enum Profession {
+  // Politics
+  POLITICIAN
+  DIPLOMAT
+  GOVERNMENT_OFFICIAL
+  POLITICAL_ADVISOR
+
+  // Media
+  JOURNALIST
+  EDITOR
+  NEWS_ANCHOR
+  COLUMNIST
+  COMMENTATOR
+  BLOGGER
+  PODCASTER
+
+  // Academia
+  PROFESSOR
+  RESEARCHER
+  ACADEMIC_ADMINISTRATOR
+  STUDENT
+
+  // Legal
+  LAWYER
+  JUDGE
+  PROSECUTOR
+  LEGAL_SCHOLAR
+
+  // Business
+  CEO
+  EXECUTIVE
+  ENTREPRENEUR
+  INVESTOR
+  CONSULTANT
+
+  // Arts & Entertainment
+  ACTOR
+  DIRECTOR
+  PRODUCER
+  WRITER
+  MUSICIAN
+  ARTIST
+  COMEDIAN
+
+  // Activism
+  ACTIVIST
+  ORGANIZER
+  NGO_LEADER
+  ADVOCATE
+
+  // Religion
+  CLERGY
+  RABBI
+  IMAM
+  PRIEST
+  RELIGIOUS_LEADER
+
+  // Military/Security
+  MILITARY_OFFICER
+  INTELLIGENCE_OFFICIAL
+  POLICE_OFFICER
+
+  // Healthcare
+  DOCTOR
+  NURSE
+  RESEARCHER_MEDICAL
+
+  // Technology
+  ENGINEER
+  DEVELOPER
+  TECH_EXECUTIVE
+
+  // Sports
+  ATHLETE
+  COACH
+  SPORTS_EXECUTIVE
+
+  // Other
+  INFLUENCER
+  PUBLIC_FIGURE
+  OTHER
+  UNKNOWN
+}
+
+enum Industry {
+  POLITICS_GOVERNMENT
+  MEDIA_JOURNALISM
+  EDUCATION_ACADEMIA
+  LAW_LEGAL
+  BUSINESS_FINANCE
+  TECHNOLOGY
+  HEALTHCARE
+  ENTERTAINMENT
+  SPORTS
+  NONPROFIT_NGO
+  RELIGION
+  MILITARY_DEFENSE
+  OTHER
+}
+
+enum EducationLevel {
+  HIGH_SCHOOL
+  SOME_COLLEGE
+  BACHELORS
+  MASTERS
+  DOCTORATE
+  PROFESSIONAL
+  OTHER
+}
+
+enum CelebrityStatus {
+  A_LIST
+  B_LIST
+  NOTABLE
+  NICHE_FAMOUS
+  INTERNET_FAMOUS
+  LOCAL_CELEBRITY
+}
+
+enum PersonInfluenceLevel {
+  GLOBAL
+  INTERNATIONAL
+  NATIONAL
+  REGIONAL
+  LOCAL
+  NICHE
+}
+
+enum PoliticalAffiliation {
+  // US
+  DEMOCRAT
+  REPUBLICAN
+  INDEPENDENT_US
+  GREEN_US
+  LIBERTARIAN_US
+
+  // UK
+  CONSERVATIVE_UK
+  LABOUR_UK
+  LIBERAL_DEMOCRAT_UK
+  GREEN_UK
+
+  // Israel
+  LIKUD
+  LABOR_IL
+  BLUE_WHITE
+  RELIGIOUS_ZIONIST
+
+  // Generic
+  CONSERVATIVE
+  LIBERAL
+  SOCIALIST
+  COMMUNIST
+  NATIONALIST
+
+  // Other
+  NONPARTISAN
+  UNKNOWN
+  OTHER
+}
+
+enum ReputationStatus {
+  EXCELLENT
+  GOOD
+  MIXED
+  DAMAGED
+  SEVERELY_DAMAGED
+  REHABILITATING
+}
+
+enum PersonVerificationLevel {
+  FULLY_VERIFIED
+  VERIFIED
+  PARTIALLY_VERIFIED
+  UNVERIFIED
+  DISPUTED
+}
+
 // ============ MODELS ============
 
 model Person {
   id                   String            @id @default(cuid())
   slug                 String            @unique
+
+  // ═══════════════════════════════════════════
+  // CORE IDENTIFICATION
+  // ═══════════════════════════════════════════
   name                 String
-  bio                  String?
-  imageUrl             String?
+  fullName             String?          // Full legal name
+  firstName            String?
+  middleName           String?
+  lastName             String?
+  namePrefix           String?          // Dr., Prof., Rabbi, etc.
+  nameSuffix           String?          // Jr., III, PhD, etc.
 
-  // Structured fields
-  profession           ProfessionType    @default(OTHER)
-  professionDetail     String?          // Free text for specific role
-  nationality          NationalityType   @default(OTHER)
-  nationalityDetail    String?          // Free text for specific country
+  // Alternative names
+  aliases              String[]         // Other names used (enhanced from akaNames)
+  hebrewName           String?
+  arabicName           String?
+  nativeName           String?          // Name in native script
+  akaNames             String[]         // Legacy field - array of alternative names
 
-  // Dates
-  birthDate            DateTime?
-  deathDate            DateTime?
+  // ═══════════════════════════════════════════
+  // DEMOGRAPHICS
+  // ═══════════════════════════════════════════
+  birthDate            DateTime?        // Legacy field
+  dateOfBirth          DateTime?        // v3.0.1 - same as birthDate for clarity
+  age                  Int?             // Calculated or estimated
+  gender               Gender?
 
-  // Additional info
-  akaNames             String[]         // Array of alternative names
-  background           String?
-  racialGroup          String?
-  religion             String?
-  bestKnownFor         String?
-  birthPlace           String?
-  politicalBeliefs     String?
-  politicalParty       String?
-  residence            String?
-  roleDescription      String?
-  yearsActive          String?
-  deathPlace           String?
-  religionDenomination String?
+  // Legacy nationality fields
+  nationality          NationalityType   @default(OTHER)  // Legacy field
+  nationalityDetail    String?          // Legacy free text for specific country
 
-  // Verification
-  verificationLevel    VerificationLevel @default(UNVERIFIED)
-  verifiedAt           DateTime?
-  verifiedBy           String?
+  // v3.0.1 nationality fields
+  nationalityArray     Nationality[]    // Can have multiple nationalities
+  primaryNationality   Nationality?
+  ethnicity            String[]
 
-  // Cached statistics
-  statementCount       Int              @default(0)
-  incidentCount        Int              @default(0)
-  lastActiveDate       DateTime?
+  // ═══════════════════════════════════════════
+  // PROFESSIONAL INFO
+  // ═══════════════════════════════════════════
+  // Legacy profession fields
+  profession           ProfessionType    @default(OTHER)  // Legacy field
+  professionDetail     String?          // Legacy free text for specific role
 
-  // Timestamps
+  // v3.0.1 profession fields
+  professionArray      Profession[]     // Can have multiple professions
+  primaryProfession    Profession?
+  professionDetails    String?          // Specific role details
+
+  industry             Industry?
+  specialization       String?          // Area of expertise
+  yearsExperience      Int?
+  yearsActive          String?          // Legacy field
+
+  // Academic
+  educationLevel       EducationLevel?
+  degrees              String[]         // ["PhD", "MBA", "JD"]
+  universities         String[]         // Schools attended
+  academicTitles       String[]         // "Professor Emeritus"
+
+  // ═══════════════════════════════════════════
+  // CURRENT POSITION
+  // ═══════════════════════════════════════════
+  currentTitle         String?
+  currentOrganization  String?          // Quick reference
+  currentOrgId         String?
+
+  // Employment status
+  employmentStatus     EmploymentStatus?
+  isRetired            Boolean          @default(false)
+  retirementDate       DateTime?
+
+  // ═══════════════════════════════════════════
+  // PUBLIC PROFILE
+  // ═══════════════════════════════════════════
+  bio                  String?          @db.Text  // Legacy field, enhanced
+  shortBio             String?          @db.VarChar(500)
+  imageUrl             String?          // Legacy field
+
+  publicFigure         Boolean          @default(false)
+  celebrityStatus      CelebrityStatus?
+
+  notableFor           String[]         // Key achievements/positions
+  awards               String[]         // Awards received
+  publications         String[]         // Books/papers authored
+  bestKnownFor         String?          // Legacy field
+
+  // ═══════════════════════════════════════════
+  // INFLUENCE & REACH
+  // ═══════════════════════════════════════════
+  influenceScore       Float?           // 0-100 calculated
+  influenceLevel       PersonInfluenceLevel?
+
+  // Social Media
+  hasTwitter           Boolean          @default(false)
+  twitterHandle        String?
+  twitterFollowers     Int?
+  twitterVerified      Boolean          @default(false)
+
+  hasLinkedIn          Boolean          @default(false)
+  linkedInUrl          String?
+  linkedInConnections  Int?
+
+  hasFacebook          Boolean          @default(false)
+  facebookUrl          String?
+  facebookFollowers    Int?
+
+  hasInstagram         Boolean          @default(false)
+  instagramHandle      String?
+  instagramFollowers   Int?
+
+  totalSocialReach     Int?             // Combined followers
+
+  // Media presence
+  mediaAppearances     Int              @default(0)
+  citationCount        Int              @default(0)  // Times quoted
+
+  // ═══════════════════════════════════════════
+  // POLITICAL & IDEOLOGICAL
+  // ═══════════════════════════════════════════
+  politicalAffiliation PoliticalAffiliation?
+  politicalLeaning     PoliticalLeaning?  // From Organization enums
+
+  // Legacy political fields
+  politicalBeliefs     String?          // Legacy field
+  politicalParty       String?          // Legacy field
+
+  knownPositions       String[]         // Public positions taken
+  advocacy             String[]         // Causes championed
+
+  isPolitician         Boolean          @default(false)
+  isActivist           Boolean          @default(false)
+  isLobbyist           Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // RELATIONSHIPS & NETWORKS
+  // ═══════════════════════════════════════════
+  boardPositions       Int              @default(0)  // Count of board positions
+
+  // ═══════════════════════════════════════════
+  // CONTROVERSY & REPUTATION
+  // ═══════════════════════════════════════════
+  hasControversies     Boolean          @default(false)
+  controversyScore     Float?           // 0-100
+  controversyNotes     String?          @db.Text
+
+  reputationStatus     ReputationStatus?
+  reputationNotes      String?          @db.Text
+
+  // Specific flags
+  hasBeenCancelled     Boolean          @default(false)
+  cancelledDate        DateTime?
+  cancelledReason      String?
+
+  hasBeenSuspended     Boolean          @default(false)
+  hasBeenFired         Boolean          @default(false)
+  hasResigned          Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // LEGAL & SANCTIONS
+  // ═══════════════════════════════════════════
+  hasLegalIssues       Boolean          @default(false)
+  legalIssueNotes      String?          @db.Text
+
+  underInvestigation   Boolean          @default(false)
+  investigationType    String?
+
+  hasSanctions         Boolean          @default(false)
+  sanctionDetails      String?          @db.Text
+
+  hasCriminalRecord    Boolean          @default(false)
+  criminalNotes        String?          @db.Text
+
+  // ═══════════════════════════════════════════
+  // CACHED STATISTICS
+  // ═══════════════════════════════════════════
+  statementCount       Int              @default(0)  // Legacy field, kept
+  responseCount        Int              @default(0)  // v3.0.1
+  incidentCount        Int              @default(0)  // Legacy field, kept
+  sourceCount          Int              @default(0)  // v3.0.1
+
+  // Breakdown by type
+  criticismsMade       Int              @default(0)
+  criticismsReceived   Int              @default(0)
+  supportGiven         Int              @default(0)
+  supportReceived      Int              @default(0)
+
+  // Temporal
+  firstActivityDate    DateTime?
+  lastActivityDate     DateTime?        // Enhanced from lastActiveDate
+  lastActiveDate       DateTime?        // Legacy field
+  mostActiveYear       Int?
+
+  // ═══════════════════════════════════════════
+  // VERIFICATION & SOURCES
+  // ═══════════════════════════════════════════
+  // Legacy verification fields
+  verificationLevel    VerificationLevel @default(UNVERIFIED)  // Legacy field
+  verifiedAt           DateTime?        // Legacy field
+  verifiedBy           String?          // Legacy field
+
+  // v3.0.1 verification fields
+  isVerified           Boolean          @default(false)
+  personVerificationLevel PersonVerificationLevel @default(UNVERIFIED)
+  verificationDate     DateTime?
+  verificationNotes    String?          @db.Text
+
+  // Source of truth
+  wikipediaUrl         String?
+  officialWebsite      String?
+  linkedInVerified     Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // LOCATION & CONTACT
+  // ═══════════════════════════════════════════
+  // Legacy location fields
+  residence            String?          // Legacy field
+  birthPlace           String?          // Legacy field
+  deathPlace           String?          // Legacy field
+
+  // v3.0.1 location fields
+  residenceCountry     String?
+  residenceState       String?
+  residenceCity        String?
+
+  workCountry          String?
+  workCity             String?
+
+  publicEmail          String?
+  agentEmail           String?
+  pressContact         String?
+
+  // ═══════════════════════════════════════════
+  // RELIGIOUS & CULTURAL INFO
+  // ═══════════════════════════════════════════
+  religion             String?          // Legacy field
+  religionDenomination String?          // Legacy field
+  racialGroup          String?          // Legacy field
+  background           String?          // Legacy field
+
+  // ═══════════════════════════════════════════
+  // FLAGS & STATUS
+  // ═══════════════════════════════════════════
+  isActive             Boolean          @default(true)
+  isDeceased           Boolean          @default(false)
+  deathDate            DateTime?        // Legacy field
+  deceasedDate         DateTime?        // v3.0.1 - same as deathDate
+
+  isBlocked            Boolean          @default(false)  // Platform blocks
+  isPEP                Boolean          @default(false)  // Politically Exposed Person
+  isHighProfile        Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // NOTES & DOCUMENTATION
+  // ═══════════════════════════════════════════
+  roleDescription      String?          // Legacy field
+  publicNotes          String?          @db.Text
+  internalNotes        String?          @db.Text
+  researchNotes        String?          @db.Text
+  editorialNotes       String?          @db.Text
+
+  // ═══════════════════════════════════════════
+  // METADATA
+  // ═══════════════════════════════════════════
   createdAt            DateTime         @default(now())
   updatedAt            DateTime         @updatedAt
+  createdBy            String?
+  lastEditedBy         String?
 
-  // Relations
+  dataSource           String?          // Where info came from
+  importSource         String?          // Import batch identifier
+  lastReviewDate       DateTime?
+  needsReview          Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // RELATIONS
+  // ═══════════════════════════════════════════
   affiliations         Affiliation[]
   statements           Statement[]      @relation("PersonStatements")
   groupStatements      Statement[]      @relation("PersonGroupStatements")
@@ -602,47 +1287,152 @@ model Person {
   repercussions        Repercussion[]   @relation("PersonRepercussions")
   journalistProfile    Journalist?
   tags                 Tag[]            @relation("PersonTags")
+  personalBrands       Organization[]   @relation("PersonalBrand")  // v3.0.1 - Organizations that are personal brands of this person
 
+  // ═══════════════════════════════════════════
+  // INDEXES
+  // ═══════════════════════════════════════════
   @@index([slug])
-  @@index([verificationLevel])
-  @@index([profession])
-  @@index([nationality])
+  @@index([primaryProfession, primaryNationality])
+  @@index([influenceLevel])
+  @@index([politicalAffiliation])
+  @@index([isVerified])
+  @@index([hasControversies])
+  @@index([publicFigure])
+  @@index([isActive])
+  @@index([statementCount])
+  @@index([controversyScore])
+  @@index([verificationLevel])  // Legacy index kept
+  @@index([profession])  // Legacy index kept
+  @@index([nationality])  // Legacy index kept
 }
 
 model Organization {
   id                   String            @id @default(cuid())
   slug                 String            @unique
   name                 String
-  type                 OrganizationType
+
+  // Enhanced type system (v3.0.1)
+  type                 OrganizationType  // Legacy field for backward compatibility
+  orgType              OrgType          @default(OTHER)
+  orgTypeOther         String?          // When type is OTHER
+
   description          String?
   website              String?
 
-  // Legal entity info
+  // Legal & Registration (v3.0.1 enhanced)
   legalName            String?
+  legalStructure       LegalStructure?
   registrationNumber   String?
   taxId                String?
-  isPersonalBrand      Boolean          @default(false)
+  taxStatus            TaxStatus?
+  incorporationDate    DateTime?
+  incorporationState   String?
+  incorporationCountry String?
 
-  // Structure
+  // Personal Brand Support (v3.0.1)
+  isPersonalBrand      Boolean          @default(false)
+  personId             String?          // Link to Person for personal brands
+  person               Person?          @relation("PersonalBrand", fields: [personId], references: [id])
+
+  // Hierarchical Structure (v3.0.1 enhanced)
   parentOrganizationId String?
   parentOrganization   Organization?    @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id])
   subsidiaries         Organization[]   @relation("OrganizationHierarchy")
+  ultimateParentId     String?          // Top of ownership chain
+  ownershipPercentage  Float?           // If subsidiary
 
-  // Details
+  // Location & Operations (v3.0.1 enhanced)
   founded              DateTime?
   dissolved            DateTime?
   headquarters         String?
+  headquartersCity     String?
+  headquartersState    String?
+  headquartersCountry  String?
   operatingCountries   String[]
+  officeLocations      String[]         // Array of office addresses
 
-  // Verification
+  // Size & Scale (v3.0.1)
+  organizationSize     OrganizationSize?
+  employeeCount        Int?
+  employeeCountYear    Int?             // Year of employee count
+  memberCount          Int?             // For membership orgs
+  memberCountYear      Int?
+  volunteerCount       Int?
+
+  // Financial Information (v3.0.1)
+  annualRevenue        Float?
+  revenueYear          Int?             // Year of revenue figure
+  annualBudget         Float?
+  budgetYear           Int?
+  totalAssets          Float?
+  fundingSources       FundingSource[]
+  majorDonors          String[]         // Names of major funders
+  transparencyLevel    TransparencyLevel?
+  financialReportUrl   String?
+
+  // Leadership & Key People (v3.0.1)
+  leadership           Json?            // Flexible JSON for leadership info
+  boardMembers         Json?            // Board composition
+  keyStaffCount        Int?
+
+  // Mission & Activities (v3.0.1)
+  missionStatement     String?          @db.Text
+  visionStatement      String?          @db.Text
+  coreValues           String[]
+  primaryActivities    String[]
+  targetAudience       String[]
+  geographicFocus      String[]
+
+  // Political & Ideological (v3.0.1)
+  politicalLeaning     PoliticalLeaning?
+  stanceOnIsrael       StanceOnIsrael?
+  stanceOnPalestine    String?          // Free text stance
+  policyPositions      Json?            // Key policy positions
+  endorsements         String[]         // Political endorsements given
+
+  // Influence & Reach (v3.0.1)
+  influenceLevel       InfluenceLevel?
+  socialMediaReach     Json?            // Platform -> follower counts
+  publicationReach     Int?             // Circulation/subscribers
+  memberInfluence      String?          // Description of member influence
+
+  // Status & Compliance (v3.0.1)
+  operationalStatus    OperationalStatus @default(ACTIVE)
+  complianceIssues     String[]         // Any compliance problems
+  sanctionsStatus      String?          // Sanctions or restrictions
+  controversies        String[]         // Major controversies
+
+  // Network & Relationships (v3.0.1)
+  coalitionMemberships String[]         // Coalition/alliance memberships
+  partnerOrganizations String[]         // Key partners
+  competingOrganizations String[]       // Main competitors/opponents
+
+  // Media & Communication (v3.0.1)
+  pressContact         String?
+  pressEmail           String?
+  socialMediaHandles   Json?            // Platform -> handle mapping
+  publicationsOwned    String[]         // Media outlets owned
+
+  // Verification & Quality (v3.0.1 enhanced)
   verificationLevel    VerificationLevel @default(UNVERIFIED)
   verifiedAt           DateTime?
+  verificationNotes    String?          @db.Text
+  dataQualityScore     Float?           // 0-100 quality score
+  lastReviewedAt       DateTime?
 
-  // Cached statistics
-  employeeCount        Int?
-  annualRevenue        Float?
+  // Cached statistics (enhanced)
   statementCount       Int              @default(0)
   incidentCount        Int              @default(0)
+  responseCount        Int              @default(0)  // v3.0.1
+  citationCount        Int              @default(0)  // v3.0.1
+
+  // Metadata
+  notes                String?          @db.Text
+  internalNotes        String?          @db.Text  // Staff only notes
+  researchStatus       String?          // Research completion status
+  dataSource           String?          // Primary data source
+  lastDataUpdate       DateTime?
 
   // Timestamps
   createdAt            DateTime         @default(now())
@@ -659,7 +1449,16 @@ model Organization {
 
   @@index([slug])
   @@index([type])
+  @@index([orgType])
+  @@index([legalStructure])
+  @@index([operationalStatus])
+  @@index([politicalLeaning])
+  @@index([stanceOnIsrael])
+  @@index([influenceLevel])
+  @@index([organizationSize])
   @@index([verificationLevel])
+  @@index([headquartersCountry])
+  @@index([personId])
 }
 
 model MediaOutlet {
