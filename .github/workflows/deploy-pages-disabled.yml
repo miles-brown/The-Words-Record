@@ -1,10 +1,23 @@
-name: Deploy to GitHub Pages
+# =========================================================================
+# DISABLED: GitHub Pages workflow turned off (migrating to Vercel)
+# =========================================================================
+# This workflow has been disabled because:
+# - Next.js + Prisma + Supabase requires server-side rendering
+# - GitHub Pages only supports static content
+# - Project is now deployed on Vercel with full SSR and database support
+#
+# To re-enable: rename this file back to deploy.yml
+# =========================================================================
+
+name: Deploy to GitHub Pages (DISABLED)
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  # Workflow disabled - no triggers
+  workflow_dispatch:  # Manual trigger only
+  # push:
+  #   branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
 
 permissions:
   contents: read
