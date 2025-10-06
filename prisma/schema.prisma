@@ -115,6 +115,8 @@ enum RepercussionType {
   DEMOTION
   CONTRACT_CANCELLATION
   BLACKLISTING
+  PARTNERSHIP_ENDED
+  BOOKING_CANCELLED
 
   // Legal
   LAWSUIT
@@ -136,15 +138,23 @@ enum RepercussionType {
 
   // Professional
   LOSS_OF_PLATFORM
-  ACADEMIC_CENSURE
   LICENSE_REVOCATION
   PROFESSIONAL_SHUNNING
+  CENSURE
+  CONDEMNATION
+  MEMBERSHIP_REVOKED
+
+  // Academic
+  ACADEMIC_CENSURE
+  ACADEMIC_DISINVITATION
+  DEGREE_REVOKED
 
   // Financial
   FUNDING_WITHDRAWAL
   SPONSOR_LOSS
   FINE
   DAMAGES_AWARDED
+  DEMONETIZATION
 }
 
 enum MediaBias {
@@ -175,6 +185,75 @@ enum TagCategory {
   CONTROVERSY
   POLICY
   OTHER
+}
+
+enum TopicType {
+  // Core JasPIZ Topics
+  ANTISEMITISM_INCIDENT
+  ISRAEL_PALESTINE_CONFLICT
+  GAZA_OPERATIONS
+  WEST_BANK_SETTLEMENTS
+  ZIONISM_DEBATE
+  JEWISH_COMMUNITY
+  PALESTINIAN_RIGHTS
+  BDS_MOVEMENT
+  HOLOCAUST_MEMORY
+  IHRA_DEFINITION
+
+  // Political & Institutional
+  UK_POLITICS
+  US_POLITICS
+  INTERNATIONAL_RELATIONS
+  UNIVERSITY_CAMPUS
+  MEDIA_COVERAGE
+  SOCIAL_MEDIA
+
+  // Specific Controversies
+  CANCEL_CULTURE
+  DEPLATFORMING
+  LAWFARE
+  SMEAR_CAMPAIGN
+
+  // Other
+  OTHER
+}
+
+enum TopicScale {
+  LOCAL
+  REGIONAL
+  NATIONAL
+  INTERNATIONAL
+  GLOBAL
+}
+
+enum TopicStatus {
+  EMERGING
+  ACTIVE
+  DEVELOPING
+  ESCALATING
+  PEAK
+  DECLINING
+  RESOLVED
+  DORMANT
+  RECURRING
+}
+
+enum TopicRelationType {
+  SUBSET_OF
+  CAUSED_BY
+  LED_TO
+  RELATED_TO
+  CONTRADICTS
+  SUPPORTS
+  PART_OF_SERIES
+}
+
+enum TopicIncidentRelation {
+  PRIMARY
+  RELATED
+  BACKGROUND
+  CONSEQUENCE
+  EXAMPLE
 }
 
 // ============ MODELS ============
@@ -358,44 +437,98 @@ model Journalist {
 }
 
 model Topic {
-  id               String        @id @default(cuid())
-  slug             String        @unique
-  name             String
-  displayLabel     String?       // What shows in search results
-  description      String
+  id                    String          @id @default(cuid())
+  slug                  String          @unique
+  name                  String
+  displayLabel          String?
+  description           String
 
-  // Flexible categorization
-  topicType        String?       // "event", "scandal", "theme", "campaign", "narrative"
+  // Classification
+  topicType             TopicType       @default(OTHER)
+  status                TopicStatus     @default(ACTIVE)
+  scope                 TopicScale      @default(NATIONAL)
 
   // Search and display
-  searchKeywords   String[]      // For improved search
-  priority         Int           @default(0) // For sorting
-  isActive         Boolean       @default(true)
-  isFeatured       Boolean       @default(false)
+  searchKeywords        String[]
+  aliases               String[]
+  priority              Int             @default(0)
+  isActive              Boolean         @default(true)
+  isFeatured            Boolean         @default(false)
 
-  // Dates (flexible based on type)
-  startDate        DateTime?
-  endDate          DateTime?
+  // Hierarchy
+  parentTopicId         String?
+  parentTopic           Topic?          @relation("TopicHierarchy", fields: [parentTopicId], references: [id])
+  childTopics           Topic[]         @relation("TopicHierarchy")
+  relatedTopics         String[]        // Topic IDs
 
-  // Metadata
-  scope            String?       // "global", "national", "local"
-  location         String?       // If geographically specific
+  // Timeline
+  startDate             DateTime?
+  endDate               DateTime?
+  timelineStart         DateTime?
+  timelineEnd           DateTime?
+  peakDate              DateTime?
+
+  // Location
+  location              String?
+  geographicScope       String[]
+
+  // Content
+  resolution            String?
+  ongoingDevelopments   String?
 
   // Cached statistics
-  incidentCount    Int           @default(0)
-  participantCount Int           @default(0)
+  incidentCount         Int             @default(0)
+  participantCount      Int             @default(0)
+  statementCount        Int             @default(0)
+  sourceCount           Int             @default(0)
+  lastActivityAt        DateTime?
+
+  // Scores
+  trendingScore         Float           @default(0)
+  controversyScore      Float           @default(0)
+  publicInterestScore   Float           @default(0)
+  mediaAttentionScore   Float           @default(0)
+  politicalImpactScore  Float           @default(0)
+
+  // Related entities
+  keyFigures            String[]        // Person IDs
+  affectedOrganizations String[]        // Organization IDs
+  relatedPolicies       String[]
+  legislationLinks      String[]
+
+  // Media and external
+  mediaReferences       Json?
+  externalLinks         Json?
+
+  // Search optimization
+  searchTerms           String[]
+  hashtagsTracked       String[]
+
+  // Metadata
+  metaData              Json?
 
   // Timestamps
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
 
   // Relations
-  incidents        TopicIncident[]
-  tags             Tag[]         @relation("TopicTags")
+  incidents             TopicIncident[]
+  tags                  Tag[]           @relation("TopicTags")
+  relationsFrom         TopicRelation[] @relation("TopicRelationFrom")
+  relationsTo           TopicRelation[] @relation("TopicRelationTo")
 
   @@index([slug])
+  @@index([topicType])
+  @@index([status])
+  @@index([scope])
   @@index([isActive])
+  @@index([isFeatured])
   @@index([priority])
+  @@index([parentTopicId])
+  @@index([lastActivityAt])
+  @@index([trendingScore])
+  @@index([startDate])
+  @@index([name])
 }
 
 model Incident {
@@ -719,19 +852,48 @@ model Tag {
 // ============ JUNCTION TABLES ============
 
 model TopicIncident {
-  topicId     String
-  topic       Topic    @relation(fields: [topicId], references: [id])
+  topicId        String
+  topic          Topic                  @relation(fields: [topicId], references: [id])
 
-  incidentId  String
-  incident    Incident @relation(fields: [incidentId], references: [id])
+  incidentId     String
+  incident       Incident               @relation(fields: [incidentId], references: [id])
 
   // Additional fields
-  relevanceScore Int?   // How relevant this incident is to the topic
-  isPrimary   Boolean  @default(false) // Is this the primary topic?
+  relationType   TopicIncidentRelation  @default(RELATED)
+  relevanceScore Int?
+  isPrimary      Boolean                @default(false)
+  notes          String?
+  addedBy        String?
+  isVerified     Boolean                @default(false)
 
-  createdAt   DateTime @default(now())
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
 
   @@id([topicId, incidentId])
   @@index([topicId])
   @@index([incidentId])
+  @@index([relationType])
+}
+
+model TopicRelation {
+  id             String             @id @default(cuid())
+
+  fromTopicId    String
+  fromTopic      Topic              @relation("TopicRelationFrom", fields: [fromTopicId], references: [id], onDelete: Cascade)
+
+  toTopicId      String
+  toTopic        Topic              @relation("TopicRelationTo", fields: [toTopicId], references: [id], onDelete: Cascade)
+
+  relationType   TopicRelationType
+  description    String?
+  strength       Int                @default(5)  // 1-10 scale
+  isVerified     Boolean            @default(false)
+
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@unique([fromTopicId, toTopicId, relationType])
+  @@index([fromTopicId])
+  @@index([toTopicId])
+  @@index([relationType])
 }
