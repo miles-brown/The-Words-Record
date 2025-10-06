@@ -1,25 +1,203 @@
+// JasPIZ Database Schema v3.0.1
+// Complete PostgreSQL schema with all enhancements
+
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [uuidOssp(map: "uuid-ossp"), pgTrgm(map: "pg_trgm"), btreeGin(map: "btree_gin")]
 }
 
+// ============ ENUMS ============
+
+enum ProfessionType {
+  POLITICIAN
+  JOURNALIST
+  ACADEMIC
+  ACTIVIST
+  BUSINESS
+  CELEBRITY
+  RELIGIOUS
+  MILITARY
+  LEGAL
+  MEDICAL
+  ARTIST
+  ATHLETE
+  OTHER
+}
+
+enum NationalityType {
+  US
+  UK
+  ISRAEL
+  PALESTINE
+  FRANCE
+  GERMANY
+  CANADA
+  AUSTRALIA
+  OTHER
+}
+
+enum VerificationLevel {
+  UNVERIFIED
+  BASIC
+  VERIFIED
+  TRUSTED
+}
+
+enum OrganizationType {
+  MEDIA_OUTLET
+  POLITICAL_PARTY
+  NGO
+  CORPORATION
+  UNIVERSITY
+  THINK_TANK
+  GOVERNMENT_AGENCY
+  RELIGIOUS_ORGANIZATION
+  ADVOCACY_GROUP
+  OTHER
+}
+
+enum StatementType {
+  ORIGINAL    // Original statement
+  RESPONSE    // Response to another statement
+  CLARIFICATION
+  RETRACTION
+  APOLOGY
+}
+
+enum ResponseType {
+  CRITICISM
+  SUPPORT
+  MIXED_RESPONSE
+  CLARIFICATION_CHALLENGE
+  DISCIPLINARY_ACTION
+  PROFESSIONAL_CONSEQUENCE
+  APOLOGY_RESPONSE
+  INSTITUTIONAL_RESPONSE
+  OTHER
+}
+
+enum RoleLevel {
+  INTERN
+  JUNIOR
+  MID
+  SENIOR
+  EXECUTIVE
+  BOARD
+  HONORARY
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  DOCUMENTED
+  VERIFIED
+  DISPUTED
+  RETRACTED
+  ONGOING
+}
+
+enum RepercussionType {
+  // Direct Actions
+  TERMINATION
+  SUSPENSION
+  RESIGNATION
+  DEMOTION
+  CONTRACT_CANCELLATION
+  BLACKLISTING
+
+  // Legal
+  LAWSUIT
+  ARREST
+  INVESTIGATION
+  CHARGES_FILED
+
+  // Media Operations
+  COORDINATED_DEFAMATION
+  NARRATIVE_REFRAMING
+  CHARACTER_ASSASSINATION
+  MANUFACTURED_SCANDAL
+
+  // Social
+  PUBLIC_APOLOGY
+  BOYCOTT
+  HARASSMENT_CAMPAIGN
+  DEATH_THREATS
+
+  // Professional
+  LOSS_OF_PLATFORM
+  ACADEMIC_CENSURE
+  LICENSE_REVOCATION
+  PROFESSIONAL_SHUNNING
+
+  // Financial
+  FUNDING_WITHDRAWAL
+  SPONSOR_LOSS
+  FINE
+  DAMAGES_AWARDED
+}
+
+enum MediaBias {
+  FAR_LEFT
+  LEFT
+  CENTER_LEFT
+  CENTER
+  CENTER_RIGHT
+  RIGHT
+  FAR_RIGHT
+  UNKNOWN
+}
+
+enum CredibilityRating {
+  VERY_LOW
+  LOW
+  MIXED
+  HIGH
+  VERY_HIGH
+  UNKNOWN
+}
+
+enum TagCategory {
+  THEME
+  LOCATION
+  ORGANIZATION
+  EVENT
+  CONTROVERSY
+  POLICY
+  OTHER
+}
+
+// ============ MODELS ============
+
 model Person {
-  id                   String        @id @default(cuid())
-  slug                 String        @unique
+  id                   String            @id @default(cuid())
+  slug                 String            @unique
   name                 String
   bio                  String?
   imageUrl             String?
-  profession           String?
-  nationality          String?
+
+  // Structured fields
+  profession           ProfessionType    @default(OTHER)
+  professionDetail     String?          // Free text for specific role
+  nationality          NationalityType   @default(OTHER)
+  nationalityDetail    String?          // Free text for specific country
+
+  // Dates
   birthDate            DateTime?
   deathDate            DateTime?
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
-  akaNames             String?
+
+  // Additional info
+  akaNames             String[]         // Array of alternative names
   background           String?
   racialGroup          String?
   religion             String?
@@ -32,146 +210,528 @@ model Person {
   yearsActive          String?
   deathPlace           String?
   religionDenomination String?
+
+  // Verification
+  verificationLevel    VerificationLevel @default(UNVERIFIED)
+  verifiedAt           DateTime?
+  verifiedBy           String?
+
+  // Cached statistics
+  statementCount       Int              @default(0)
+  incidentCount        Int              @default(0)
+  lastActiveDate       DateTime?
+
+  // Timestamps
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  // Relations
   affiliations         Affiliation[]
-  responses            Response[]
-  statements           Statement[]
-  incidents            Incident[]    @relation("PersonIncidents")
+  statements           Statement[]      @relation("PersonStatements")
+  groupStatements      Statement[]      @relation("PersonGroupStatements")
+  incidents            Incident[]       @relation("PersonIncidents")
+  repercussions        Repercussion[]   @relation("PersonRepercussions")
+  journalistProfile    Journalist?
+
+  @@index([slug])
+  @@index([verificationLevel])
+  @@index([profession])
+  @@index([nationality])
 }
 
 model Organization {
-  id           String        @id @default(cuid())
-  slug         String        @unique
-  name         String
-  type         String
-  description  String?
-  website      String?
-  founded      DateTime?
-  headquarters String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  affiliations Affiliation[]
-  responses    Response[]
-  incidents    Incident[]    @relation("OrganizationIncidents")
+  id                   String            @id @default(cuid())
+  slug                 String            @unique
+  name                 String
+  type                 OrganizationType
+  description          String?
+  website              String?
+
+  // Legal entity info
+  legalName            String?
+  registrationNumber   String?
+  taxId                String?
+  isPersonalBrand      Boolean          @default(false)
+
+  // Structure
+  parentOrganizationId String?
+  parentOrganization   Organization?    @relation("OrganizationHierarchy", fields: [parentOrganizationId], references: [id])
+  subsidiaries         Organization[]   @relation("OrganizationHierarchy")
+
+  // Details
+  founded              DateTime?
+  dissolved            DateTime?
+  headquarters         String?
+  operatingCountries   String[]
+
+  // Verification
+  verificationLevel    VerificationLevel @default(UNVERIFIED)
+  verifiedAt           DateTime?
+
+  // Cached statistics
+  employeeCount        Int?
+  annualRevenue        Float?
+  statementCount       Int              @default(0)
+  incidentCount        Int              @default(0)
+
+  // Timestamps
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  // Relations
+  affiliations         Affiliation[]
+  statements           Statement[]      @relation("OrganizationStatements")
+  groupStatements      Statement[]      @relation("OrganizationGroupStatements")
+  incidents            Incident[]       @relation("OrganizationIncidents")
+  repercussions        Repercussion[]   @relation("OrganizationRepercussions")
+  mediaOutlet          MediaOutlet?
+
+  @@index([slug])
+  @@index([type])
+  @@index([verificationLevel])
+}
+
+model MediaOutlet {
+  id               String         @id @default(cuid())
+  organizationId   String         @unique
+  organization     Organization   @relation(fields: [organizationId], references: [id])
+
+  // Media-specific fields
+  circulationSize  Int?
+  primaryLanguage  String         @default("en")
+  languages        String[]
+  mediaType        String[]       // ["print", "digital", "broadcast", "podcast"]
+
+  // Bias and credibility
+  politicalBias    MediaBias      @default(UNKNOWN)
+  credibility      CredibilityRating @default(UNKNOWN)
+  factCheckRating  String?
+
+  // Ownership
+  ownershipType    String?        // "public", "private", "government", "non-profit"
+  majorShareholders String[]
+  fundingSources   String[]
+
+  // Timestamps
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  // Relations
+  journalists      Journalist[]
+  sources          Source[]
+
+  @@index([politicalBias])
+  @@index([credibility])
+}
+
+model Journalist {
+  id               String        @id @default(cuid())
+  personId         String        @unique
+  person           Person        @relation(fields: [personId], references: [id])
+
+  // Current affiliation
+  currentOutletId  String?
+  currentOutlet    MediaOutlet?  @relation(fields: [currentOutletId], references: [id])
+
+  // Journalist-specific
+  beat             String[]      // Topics they cover
+  isFreelance      Boolean       @default(false)
+  verificationType String?       // "blue-check", "press-badge", etc.
+
+  // Social media
+  twitterHandle    String?
+  linkedinProfile  String?
+  personalWebsite  String?
+
+  // Metrics
+  articlesCount    Int           @default(0)
+  averageBias      Float?
+
+  // Timestamps
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Relations
+  sources          Source[]
+
+  @@index([currentOutletId])
+}
+
+model Topic {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  name             String
+  displayLabel     String?       // What shows in search results
+  description      String
+
+  // Flexible categorization
+  topicType        String?       // "event", "scandal", "theme", "campaign", "narrative"
+
+  // Search and display
+  searchKeywords   String[]      // For improved search
+  priority         Int           @default(0) // For sorting
+  isActive         Boolean       @default(true)
+  isFeatured       Boolean       @default(false)
+
+  // Dates (flexible based on type)
+  startDate        DateTime?
+  endDate          DateTime?
+
+  // Metadata
+  scope            String?       // "global", "national", "local"
+  location         String?       // If geographically specific
+
+  // Cached statistics
+  incidentCount    Int           @default(0)
+  participantCount Int           @default(0)
+
+  // Timestamps
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Relations
+  incidents        TopicIncident[]
+  tags             Tag[]         @relation("TopicTags")
+
+  @@index([slug])
+  @@index([isActive])
+  @@index([priority])
 }
 
 model Incident {
-  id              String         @id @default(cuid())
-  slug            String         @unique
+  id              String           @id @default(cuid())
+  slug            String           @unique
   title           String
   summary         String
   description     String
+
+  // Dates
   incidentDate    DateTime
-  publicationDate DateTime       @default(now())
-  status          String         @default("documented")
-  severity        String?
-  location        String?
+  publicationDate DateTime         @default(now())
+
+  // Status and severity
+  status          IncidentStatus   @default(DOCUMENTED)
+  severity        IncidentSeverity?
+  severityScore   Int?             // 1-100 scale
+
+  // Location (structured)
+  locationCity    String?
+  locationState   String?
+  locationCountry String?
+  locationDetail  String?          // Free text for specifics
+
+  // Context
   mediaFraming    String?
   triggeringEvent String?
   outcome         String?
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  parentEventId   String?
-  parentEvent     Event?         @relation("EventIncidents", fields: [parentEventId], references: [id])
-  responses       Response[]
-  sources         Source[]
+
+  // Verification
+  isVerified      Boolean          @default(false)
+  verifiedBy      String?
+  verifiedAt      DateTime?
+
+  // Impact metrics
+  viewCount       Int              @default(0)
+  shareCount      Int              @default(0)
+
+  // Timestamps
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  // Relations
+  topics          TopicIncident[]
   statements      Statement[]
-  tags            Tag[]          @relation("IncidentTags")
-  organizations   Organization[] @relation("OrganizationIncidents")
-  persons         Person[]       @relation("PersonIncidents")
+  sources         Source[]
+  tags            Tag[]            @relation("IncidentTags")
+  organizations   Organization[]   @relation("OrganizationIncidents")
+  persons         Person[]         @relation("PersonIncidents")
+  repercussions   Repercussion[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([severity])
+  @@index([incidentDate])
 }
 
 model Statement {
-  id                  String     @id @default(cuid())
+  id                  String          @id @default(cuid())
   content             String
   context             String?
+
+  // Type and categorization
+  statementType       StatementType   @default(ORIGINAL)
+  responseType        ResponseType?   // Only for RESPONSE type
+
+  // Dates
   statementDate       DateTime
-  medium              String?
-  isVerified          Boolean    @default(false)
-  lostEmployment      Boolean    @default(false)
-  lostContracts       Boolean    @default(false)
-  paintedNegatively   Boolean    @default(false)
+
+  // Medium and verification
+  medium              String?         // "twitter", "interview", "speech", etc.
+  mediumUrl           String?         // Link to original
+  isVerified          Boolean         @default(false)
+  verifiedBy          String?
+  verifiedAt          DateTime?
+
+  // Impact tracking (for original statements)
+  lostEmployment      Boolean         @default(false)
+  lostContracts       Boolean         @default(false)
+  paintedNegatively   Boolean         @default(false)
   repercussionDetails String?
-  createdAt           DateTime   @default(now())
-  updatedAt           DateTime   @updatedAt
-  personId            String
+
+  // Response-specific (when statementType = RESPONSE)
+  responseImpact      String?         // Impact of the response
+
+  // Authors (can be person, org, or both for group statements)
+  personId            String?
+  person              Person?         @relation("PersonStatements", fields: [personId], references: [id])
+
+  organizationId      String?
+  organization        Organization?   @relation("OrganizationStatements", fields: [organizationId], references: [id])
+
+  // Group authorship
+  groupAuthors        Person[]        @relation("PersonGroupStatements")
+  groupOrganizations  Organization[]  @relation("OrganizationGroupStatements")
+
+  // What this responds to (if RESPONSE type)
+  respondsToId        String?
+  respondsTo          Statement?      @relation("StatementResponses", fields: [respondsToId], references: [id])
+  responses           Statement[]     @relation("StatementResponses")
+
+  // Incident connection
   incidentId          String
-  responses           Response[]
+  incident            Incident        @relation(fields: [incidentId], references: [id])
+
+  // Timestamps
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  // Relations
   sources             Source[]
-  incident            Incident   @relation(fields: [incidentId], references: [id])
-  person              Person     @relation(fields: [personId], references: [id])
+  repercussionsCaused Repercussion[]  @relation("TriggeringStatement")
+  repercussionsAbout  Repercussion[]  @relation("ResponseStatement")
 
   @@unique([personId, incidentId, content])
+  @@index([statementType])
+  @@index([personId])
+  @@index([organizationId])
+  @@index([incidentId])
+  @@index([respondsToId])
 }
 
-model Response {
-  id             String        @id @default(cuid())
-  content        String
-  responseDate   DateTime
-  type           String
-  impact         String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-  statementId    String?
-  personId       String?
-  organizationId String?
-  incidentId     String
-  incident       Incident      @relation(fields: [incidentId], references: [id])
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  person         Person?       @relation(fields: [personId], references: [id])
-  statement      Statement?    @relation(fields: [statementId], references: [id])
+model Repercussion {
+  id                    String            @id @default(cuid())
+
+  // Type and classification
+  type                  RepercussionType
+  description           String
+
+  // Tactical analysis
+  isTactical            Boolean           @default(false) // Planned/coordinated vs reactive
+  coordinationEvidence  String?           // Evidence of coordination
+
+  // Timing
+  startDate             DateTime
+  endDate               DateTime?
+  duration              Int?              // Days
+
+  // Severity and impact
+  severityScore         Int               // 1-100
+  impactDescription     String?
+
+  // Affected parties
+  affectedPersonId      String?
+  affectedPerson        Person?           @relation("PersonRepercussions", fields: [affectedPersonId], references: [id])
+
+  affectedOrgId         String?
+  affectedOrganization  Organization?     @relation("OrganizationRepercussions", fields: [affectedOrgId], references: [id])
+
+  // Initiating parties (for tactical operations)
+  initiatingOrgs        String[]          // Organization IDs involved
+  initiatingPersons     String[]          // Person IDs involved
+
+  // What triggered this
+  triggeringStatementId String?
+  triggeringStatement   Statement?        @relation("TriggeringStatement", fields: [triggeringStatementId], references: [id])
+
+  // Response statements about this repercussion
+  responseStatementId   String?
+  responseStatement     Statement?        @relation("ResponseStatement", fields: [responseStatementId], references: [id])
+
+  // Incident connection
+  incidentId            String
+  incident              Incident          @relation(fields: [incidentId], references: [id])
+
+  // Media coverage
+  mediaOutlets          String[]          // MediaOutlet IDs that covered this
+  coverageIntensity     String?           // "minimal", "moderate", "intense", "viral"
+
+  // Outcome
+  outcome               String?
+  isOngoing             Boolean           @default(false)
+  wasSuccessful         Boolean?          // Did it achieve intended goal?
+
+  // Verification
+  isVerified            Boolean           @default(false)
+  verifiedBy            String?
+  sources               Source[]
+
+  // Timestamps
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@index([type])
+  @@index([isTactical])
+  @@index([affectedPersonId])
+  @@index([affectedOrgId])
+  @@index([incidentId])
 }
 
 model Source {
-  id          String     @id @default(cuid())
-  title       String
-  url         String?
-  publication String?
-  author      String?
-  publishDate DateTime?
-  accessDate  DateTime   @default(now())
-  credibility String?
-  createdAt   DateTime   @default(now())
-  incidentId  String?
-  statementId String?
-  statement   Statement? @relation(fields: [statementId], references: [id])
-  incident    Incident?  @relation(fields: [incidentId], references: [id])
-}
+  id              String           @id @default(cuid())
+  title           String
+  url             String?
 
-model Event {
-  id          String     @id @default(cuid())
-  slug        String     @unique
-  title       String
-  description String
-  startDate   DateTime
-  endDate     DateTime?
-  scope       String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-  incidents   Incident[] @relation("EventIncidents")
+  // Publication info
+  publication     String?
+  publicationSlug String?
+  mediaOutletId   String?
+  mediaOutlet     MediaOutlet?     @relation(fields: [mediaOutletId], references: [id])
+
+  // Author info
+  author          String?
+  journalistId    String?
+  journalist      Journalist?      @relation(fields: [journalistId], references: [id])
+
+  // Dates
+  publishDate     DateTime?
+  accessDate      DateTime         @default(now())
+  lastVerified    DateTime?
+
+  // Credibility and verification
+  credibility     CredibilityRating @default(UNKNOWN)
+  isArchived      Boolean          @default(false)
+  archiveUrl      String?          // Wayback Machine, archive.is, etc.
+
+  // Quality scoring
+  qualityScore    Int?             // 1-100
+  hasByline       Boolean          @default(false)
+  hasMultipleSources Boolean       @default(false)
+
+  // What it sources
+  incidentId      String?
+  incident        Incident?        @relation(fields: [incidentId], references: [id])
+
+  statementId     String?
+  statement       Statement?       @relation(fields: [statementId], references: [id])
+
+  repercussionId  String?
+  repercussion    Repercussion?    @relation(fields: [repercussionId], references: [id])
+
+  // Timestamps
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  @@index([credibility])
+  @@index([mediaOutletId])
+  @@index([journalistId])
+  @@index([incidentId])
+  @@index([statementId])
 }
 
 model Affiliation {
-  id             String       @id @default(cuid())
-  role           String
-  startDate      DateTime?
-  endDate        DateTime?
-  isActive       Boolean      @default(true)
-  description    String?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  personId       String
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  person         Person       @relation(fields: [personId], references: [id])
+  id               String         @id @default(cuid())
+
+  // Role information
+  role             String
+  roleLevel        RoleLevel      @default(MID)
+  department       String?
+
+  // Dates
+  startDate        DateTime?
+  endDate          DateTime?
+  isActive         Boolean        @default(true)
+
+  // Details
+  description      String?
+  responsibilities String[]
+
+  // For media appearances
+  appearanceType   String?        // "regular", "contributor", "guest", "host"
+  frequency        String?        // "daily", "weekly", "monthly", "occasional"
+
+  // Compensation (optional, sensitive)
+  isPaid           Boolean?
+  compensationType String?        // "salary", "contract", "per-appearance"
+
+  // Who and where
+  personId         String
+  person           Person         @relation(fields: [personId], references: [id])
+
+  organizationId   String
+  organization     Organization   @relation(fields: [organizationId], references: [id])
+
+  // Timestamps
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
 
   @@unique([personId, organizationId, role])
+  @@index([personId])
+  @@index([organizationId])
+  @@index([isActive])
 }
 
 model Tag {
-  id          String     @id @default(cuid())
-  name        String     @unique
-  slug        String     @unique
-  description String?
-  createdAt   DateTime   @default(now())
-  incidents   Incident[] @relation("IncidentTags")
+  id               String        @id @default(cuid())
+  name             String        @unique
+  slug             String        @unique
+
+  // Categorization
+  category         TagCategory   @default(OTHER)
+  parentTagId      String?
+  parentTag        Tag?          @relation("TagHierarchy", fields: [parentTagId], references: [id])
+  childTags        Tag[]         @relation("TagHierarchy")
+
+  // Details
+  description      String?
+  color            String?       // For UI display
+  icon             String?       // Icon identifier
+
+  // Controversy tracking
+  isControversial  Boolean       @default(false)
+  controversyScore Int?          // 1-100
+
+  // Usage stats
+  usageCount       Int           @default(0)
+
+  // Timestamps
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  // Relations
+  incidents        Incident[]    @relation("IncidentTags")
+  topics           Topic[]       @relation("TopicTags")
+
+  @@index([slug])
+  @@index([category])
+  @@index([usageCount])
+}
+
+// ============ JUNCTION TABLES ============
+
+model TopicIncident {
+  topicId     String
+  topic       Topic    @relation(fields: [topicId], references: [id])
+
+  incidentId  String
+  incident    Incident @relation(fields: [incidentId], references: [id])
+
+  // Additional fields
+  relevanceScore Int?   // How relevant this incident is to the topic
+  isPrimary   Boolean  @default(false) // Is this the primary topic?
+
+  createdAt   DateTime @default(now())
+
+  @@id([topicId, incidentId])
+  @@index([topicId])
+  @@index([incidentId])
 }
