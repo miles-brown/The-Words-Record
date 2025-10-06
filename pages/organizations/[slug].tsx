@@ -214,7 +214,7 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
                   {response.statement && response.statement.person && (
                     <div className="response-context">
                       <span>In response to statement by{' '}</span>
-                      <Link href={`/persons/${response.statement.person.slug}`}>
+                      <Link href={`/people/${response.statement.person.slug}`}>
                         <span className="person-link">{response.statement.person.name}</span>
                       </Link>
                     </div>

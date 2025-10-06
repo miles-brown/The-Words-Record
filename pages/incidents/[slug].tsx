@@ -150,7 +150,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
                                    )
 
                 return (
-                  <Link href={`/persons/${person.slug}`} key={person.id}>
+                  <Link href={`/people/${person.slug}`} key={person.id}>
                     <div className="person-card">
                       <div className="person-card-image">
                         {person.imageUrl ? (
@@ -190,7 +190,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
               {incident.statements.map((statement) => (
                 <div key={statement.id} className="statement-item stagger-item">
                   <div className="statement-header">
-                    <Link href={`/persons/${statement.person.slug}`}>
+                    <Link href={`/people/${statement.person.slug}`}>
                       <span className="statement-author">{statement.person.name}</span>
                     </Link>
                     <span className="statement-date">
@@ -219,7 +219,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
                         <div key={response.id} className="response-item">
                           <div className="response-header">
                             {response.person && (
-                              <Link href={`/persons/${response.person.slug}`}>
+                              <Link href={`/people/${response.person.slug}`}>
                                 <span className="response-author">{response.person.name}</span>
                               </Link>
                             )}

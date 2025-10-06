@@ -71,7 +71,7 @@ export default function StatsPage() {
           <div className="stat-card">
             <div className="stat-number">{stats.counts.persons}</div>
             <div className="stat-label">People</div>
-            <Link href="/persons" className="stat-link">View all →</Link>
+            <Link href="/people" className="stat-link">View all →</Link>
           </div>
 
           <div className="stat-card">
@@ -117,7 +117,7 @@ export default function StatsPage() {
             <h2>Most Active People</h2>
             <div className="list-items">
               {stats.activePeople.map((person) => (
-                <Link href={`/persons/${person.slug}`} key={person.id}>
+                <Link href={`/people/${person.slug}`} key={person.id}>
                   <div className="list-item">
                     <span className="name">{person.name}</span>
                     <span className="count">

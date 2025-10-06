@@ -21,7 +21,7 @@ function generateSiteMap(
        <priority>0.9</priority>
      </url>
      <url>
-       <loc>${baseUrl}/persons</loc>
+       <loc>${baseUrl}/people</loc>
        <lastmod>${new Date().toISOString()}</lastmod>
        <priority>0.9</priority>
      </url>
@@ -55,7 +55,7 @@ function generateSiteMap(
        .map((person) => {
          return `
        <url>
-           <loc>${baseUrl}/persons/${person.slug}</loc>
+           <loc>${baseUrl}/people/${person.slug}</loc>
            <lastmod>${person.updatedAt.toISOString()}</lastmod>
            <priority>0.7</priority>
        </url>
