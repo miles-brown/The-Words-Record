@@ -158,6 +158,10 @@ export default async function handler(
               incidents: true,
               statements: true
             }
+          },
+          statements: {
+            where: { statementType: 'RESPONSE' },
+            select: { id: true }
           }
         },
         take: limit
@@ -169,6 +173,8 @@ export default async function handler(
         if (org.description?.toLowerCase().includes(query.toLowerCase())) score += 5
         if (org.type.toLowerCase().includes(query.toLowerCase())) score += 3
         if (org.headquarters?.toLowerCase().includes(query.toLowerCase())) score += 2
+
+        const responseCount = org.statements?.length || 0
 
         searchResults.push({
           type: 'organization',
@@ -183,7 +189,7 @@ export default async function handler(
             founded: org.founded,
             website: org.website,
             incidentCount: org._count.incidents,
-            responseCount: org._count.responses
+            responseCount: responseCount
           }
         })
       })

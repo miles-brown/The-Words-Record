@@ -29,6 +29,10 @@ export default async function handler(
                   incidents: true,
                   statements: true
                 }
+              },
+              statements: {
+                where: { statementType: 'RESPONSE' },
+                select: { id: true }
               }
             },
             orderBy: {
@@ -38,8 +42,21 @@ export default async function handler(
           prisma.organization.count({ where })
         ])
 
+        // Add response count to _count object for each organization
+        const organizationsWithResponseCount = organizations.map(org => {
+          const responseCount = org.statements?.length || 0
+          const { statements, ...orgWithoutStatements } = org
+          return {
+            ...orgWithoutStatements,
+            _count: {
+              ...org._count,
+              responses: responseCount
+            }
+          }
+        })
+
         res.status(200).json({
-          organizations,
+          organizations: organizationsWithResponseCount,
           pagination: {
             page,
             limit,

@@ -603,26 +603,28 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             _count: {
               select: {
                 statements: true,
-                responses: true,
                 sources: true
               }
+            },
+            statements: {
+              where: { statementType: 'RESPONSE' },
+              select: { id: true }
             }
           },
           orderBy: {
             incidentDate: 'desc'
           }
         },
-        responses: {
+        statements: {
           include: {
             incident: true,
-            statement: {
-              include: {
-                person: true
-              }
-            }
+            person: true,
+            sources: true,
+            respondsTo: true,
+            responses: true
           },
           orderBy: {
-            responseDate: 'desc'
+            statementDate: 'desc'
           }
         }
       }
@@ -632,9 +634,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       return { notFound: true }
     }
 
+    // Add response count to incidents and separate responses from statements
+    const responses = organization.statements?.filter(s => s.statementType === 'RESPONSE') || []
+    const organizationWithResponseCounts = {
+      ...organization,
+      responses,
+      incidents: organization.incidents.map(incident => {
+        const responseCount = incident.statements?.length || 0
+        const { statements, ...incidentWithoutStatements } = incident
+        return {
+          ...incidentWithoutStatements,
+          _count: {
+            ...incident._count,
+            responses: responseCount
+          }
+        }
+      })
+    }
+
     return {
       props: {
-        organization: JSON.parse(JSON.stringify(organization)) // Serialize dates
+        organization: JSON.parse(JSON.stringify(organizationWithResponseCounts)) // Serialize dates
       }
     }
   } catch (error) {

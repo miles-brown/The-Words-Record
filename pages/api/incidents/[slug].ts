@@ -41,6 +41,12 @@ export default async function handler(
               orderBy: {
                 publishDate: 'desc'
               }
+            },
+            _count: {
+              select: {
+                statements: true,
+                sources: true
+              }
             }
           }
         })
@@ -49,7 +55,23 @@ export default async function handler(
           return res.status(404).json({ error: 'Incident not found' })
         }
 
-        res.status(200).json(incident)
+        // Collect all responses to this incident's statements
+        const responses = incident.statements?.filter(s => s.statementType === 'RESPONSE') || []
+
+        // Count responses
+        const responseCount = responses.length
+
+        // Add response count to _count and responses array
+        const incidentWithResponses = {
+          ...incident,
+          responses,
+          _count: {
+            ...incident._count,
+            responses: responseCount
+          }
+        }
+
+        res.status(200).json(incidentWithResponses)
         break
 
       case 'PUT':

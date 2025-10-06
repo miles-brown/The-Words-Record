@@ -283,10 +283,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           _count: {
             select: {
               statements: true,
-              responses: true,
               sources: true,
             },
           },
+          statements: {
+            where: { statementType: 'RESPONSE' },
+            select: { id: true }
+          }
         },
         orderBy: {
           incidentDate: 'desc',
@@ -302,9 +305,25 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
 
+  // Add response count to _count object for each incident
+  const tagWithResponseCounts = {
+    ...tag,
+    incidents: tag.incidents.map(incident => {
+      const responseCount = incident.statements?.length || 0
+      const { statements, ...incidentWithoutStatements } = incident
+      return {
+        ...incidentWithoutStatements,
+        _count: {
+          ...incident._count,
+          responses: responseCount
+        }
+      }
+    })
+  }
+
   return {
     props: {
-      tag: JSON.parse(JSON.stringify(tag)),
+      tag: JSON.parse(JSON.stringify(tagWithResponseCounts)),
     },
     revalidate: 60,
   }

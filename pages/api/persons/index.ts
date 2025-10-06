@@ -100,13 +100,31 @@ export default async function handler(
             incidents: true,
             statements: true
           }
+        },
+        statements: {
+          where: { statementType: 'RESPONSE' },
+          select: { id: true }
+        }
+      }
+    })
+
+    // Add response count to _count object for each person
+    const personsWithResponseCount = persons.map(person => {
+      const responseCount = person.statements?.length || 0
+      const { statements, ...personWithoutStatements } = person
+      return {
+        ...personWithoutStatements,
+        _count: {
+          ...person._count,
+          responses: responseCount
         }
       }
     })
 
     // Handle surname sorting in application layer
+    let sortedPersons = personsWithResponseCount
     if (sortBy === 'surname-asc' || sortBy === 'surname-desc') {
-      persons = persons.sort((a, b) => {
+      sortedPersons = personsWithResponseCount.sort((a, b) => {
         const getSurname = (name: string) => name.split(' ').pop() || name
         const surnameA = getSurname(a.name)
         const surnameB = getSurname(b.name)
@@ -120,7 +138,7 @@ export default async function handler(
     }
 
     res.status(200).json({
-      persons,
+      persons: sortedPersons,
       pagination: {
         page: pageNum,
         limit: limitNum,

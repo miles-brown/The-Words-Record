@@ -66,6 +66,10 @@ export default async function handler(
                   statements: true,
                   sources: true
                 }
+              },
+              statements: {
+                where: { statementType: 'RESPONSE' },
+                select: { id: true }
               }
             },
             orderBy
@@ -73,8 +77,21 @@ export default async function handler(
           prisma.incident.count({ where })
         ])
 
+        // Add response count to _count object for each incident
+        const incidentsWithResponseCount = incidents.map(incident => {
+          const responseCount = incident.statements?.length || 0
+          const { statements, ...incidentWithoutStatements } = incident
+          return {
+            ...incidentWithoutStatements,
+            _count: {
+              ...incident._count,
+              responses: responseCount
+            }
+          }
+        })
+
         res.status(200).json({
-          incidents,
+          incidents: incidentsWithResponseCount,
           pagination: {
             page,
             limit,

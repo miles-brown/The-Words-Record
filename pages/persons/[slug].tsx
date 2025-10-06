@@ -772,9 +772,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             _count: {
               select: {
                 statements: true,
-                responses: true,
                 sources: true
               }
+            },
+            statements: {
+              where: { statementType: 'RESPONSE' },
+              select: { id: true }
             }
           },
           orderBy: {
@@ -784,19 +787,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         statements: {
           include: {
             incident: true,
-            sources: true
+            sources: true,
+            respondsTo: true,
+            responses: true
           },
           orderBy: {
             statementDate: 'desc'
-          }
-        },
-        responses: {
-          include: {
-            incident: true,
-            statement: true
-          },
-          orderBy: {
-            responseDate: 'desc'
           }
         },
         affiliations: {
@@ -814,9 +810,27 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       return { notFound: true }
     }
 
+    // Add response count to incidents and separate responses from statements
+    const responses = person.statements?.filter(s => s.statementType === 'RESPONSE') || []
+    const personWithResponseCounts = {
+      ...person,
+      responses,
+      incidents: person.incidents.map(incident => {
+        const responseCount = incident.statements?.length || 0
+        const { statements, ...incidentWithoutStatements } = incident
+        return {
+          ...incidentWithoutStatements,
+          _count: {
+            ...incident._count,
+            responses: responseCount
+          }
+        }
+      })
+    }
+
     return {
       props: {
-        person: JSON.parse(JSON.stringify(person)) // Serialize dates
+        person: JSON.parse(JSON.stringify(personWithResponseCounts)) // Serialize dates
       }
     }
   } catch (error) {
