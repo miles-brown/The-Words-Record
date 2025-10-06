@@ -10,7 +10,7 @@ export default function CasePage({ caseData, content }) {
   return (
     <Layout>
       <Head>
-        <title>{caseData.title} - Who Said What</title>
+        <title>{caseData.title} - The Words Record</title>
         <meta name="description" content={caseData.summary || caseData.excerpt} />
       </Head>
 

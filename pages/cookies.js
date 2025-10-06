@@ -5,7 +5,7 @@ export default function Cookies() {
   return (
     <Layout
       title="Cookies Policy"
-      description="Who Said What Cookies Policy - How we use cookies and tracking technologies"
+      description="The Words Record Cookies Policy - How we use cookies and tracking technologies"
     >
       <div className="policy-page">
         <div className="policy-header">
@@ -31,7 +31,7 @@ export default function Cookies() {
           <section className="policy-section">
             <h2>How We Use Cookies</h2>
             <p>
-              Who Said What uses cookies and similar technologies to:
+              The Words Record uses cookies and similar technologies to:
             </p>
             <ul>
               <li>Remember your preferences and settings</li>

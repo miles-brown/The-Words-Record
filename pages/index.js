@@ -8,12 +8,12 @@ export default function Home({ allCases }) {
   return (
     <Layout>
       <Head>
-        <title>Who Said What - Documentation of Public Statements</title>
+        <title>The Words Record - Documentation of Public Statements</title>
         <meta name="description" content="Neutral documentation of public statements and responses regarding antisemitism allegations" />
       </Head>
 
       <div className="hero-section">
-        <h1>Who Said What</h1>
+        <h1>The Words Record</h1>
         <p className="subtitle">
           Factual documentation of public statements and their responses
         </p>

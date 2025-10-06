@@ -18,7 +18,7 @@ export default function Methodology() {
           <section className="methodology-section">
             <h2>Overview</h2>
             <p>
-              Who Said What maintains rigorous standards for documenting public statements.
+              The Words Record maintains rigorous standards for documenting public statements.
               Every entry in our database follows a comprehensive verification process to
               ensure accuracy, preserve context, and maintain source credibility. This page
               outlines our methodology in detail.
@@ -162,7 +162,7 @@ export default function Methodology() {
           <section className="methodology-section">
             <h2>Editorial Independence</h2>
             <p>
-              Who Said What operates with editorial independence. We do not:
+              The Words Record operates with editorial independence. We do not:
             </p>
             <ul>
               <li>Accept payment for inclusion or exclusion of content</li>

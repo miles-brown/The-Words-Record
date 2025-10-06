@@ -1,7 +1,7 @@
 {
-  "name": "who-said-what",
+  "name": "the-words-record",
   "version": "1.0.0",
-  "description": "Documentation of public statements and responses",
+  "description": "The Words Record - Documentation of public statements and responses",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",

@@ -99,7 +99,7 @@ export default function AnalyticsPage() {
       <div className="analytics-container">
         <div className="analytics-header">
           <h1>Analytics Dashboard</h1>
-          <p>Comprehensive insights from the Who Said What v3.0.1 database</p>
+          <p>Comprehensive insights from The Words Record database</p>
         </div>
 
         {/* View Selector */}

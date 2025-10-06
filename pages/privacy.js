@@ -5,7 +5,7 @@ export default function Privacy() {
   return (
     <Layout
       title="Privacy Policy"
-      description="Who Said What Privacy Policy - How we collect, use, and protect your information"
+      description="The Words Record Privacy Policy - How we collect, use, and protect your information"
     >
       <div className="policy-page">
         <div className="policy-header">
@@ -17,7 +17,7 @@ export default function Privacy() {
           <section className="policy-section">
             <h2>Introduction</h2>
             <p>
-              Who Said What ("we," "our," or "us") is committed to protecting your privacy.
+              The Words Record ("we," "our," or "us") is committed to protecting your privacy.
               This Privacy Policy explains how we collect, use, disclose, and safeguard your
               information when you visit our website.
             </p>

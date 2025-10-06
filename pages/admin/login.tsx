@@ -60,7 +60,7 @@ export default function AdminLogin() {
   return (
     <>
       <Head>
-        <title>Admin Login - Who Said What</title>
+        <title>Admin Login - The Words Record</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
@@ -68,7 +68,7 @@ export default function AdminLogin() {
         <div className="login-card">
           <div className="login-header">
             <h1>Admin Login</h1>
-            <p>Who Said What Administration</p>
+            <p>The Words Record Administration</p>
           </div>
 
           <form onSubmit={handleSubmit} className="login-form">

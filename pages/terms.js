@@ -4,7 +4,7 @@ export default function Terms() {
   return (
     <Layout
       title="Terms of Use"
-      description="Who Said What Terms of Use - Legal terms and conditions for using our website"
+      description="The Words Record Terms of Use - Legal terms and conditions for using our website"
     >
       <div className="policy-page">
         <div className="policy-header">
@@ -17,8 +17,8 @@ export default function Terms() {
             <h2>Agreement to Terms</h2>
             <p>
               These Terms of Use constitute a legally binding agreement between you and
-              Who Said What ("we," "us," or "our") regarding your access to and use of the
-              whosaidwhat.com website and any related services (collectively, the "Service").
+              The Words Record ("we," "us," or "our") regarding your access to and use of the
+              thewordsrecord.com website and any related services (collectively, the "Service").
             </p>
             <p>
               By accessing or using the Service, you agree to be bound by these Terms. If you
@@ -64,7 +64,7 @@ export default function Terms() {
             <h3>Our Content</h3>
             <p>
               The Service and its original content (excluding quoted public statements and
-              citations), features, and functionality are owned by Who Said What and are
+              citations), features, and functionality are owned by The Words Record and are
               protected by international copyright, trademark, and other intellectual property laws.
             </p>
 
@@ -162,7 +162,7 @@ export default function Terms() {
           <section className="policy-section">
             <h2>Indemnification</h2>
             <p>
-              You agree to indemnify, defend, and hold harmless Who Said What and its
+              You agree to indemnify, defend, and hold harmless The Words Record and its
               affiliates, officers, employees, and agents from any claims, liabilities,
               damages, losses, and expenses (including reasonable attorneys' fees) arising
               from:
@@ -254,7 +254,7 @@ export default function Terms() {
             <h2>Entire Agreement</h2>
             <p>
               These Terms, together with our Privacy Policy and Cookies Policy, constitute the
-              entire agreement between you and Who Said What regarding the Service and supersede
+              entire agreement between you and The Words Record regarding the Service and supersede
               all prior agreements and understandings.
             </p>
           </section>

@@ -8,7 +8,7 @@ export default function CasesPage({ allCases }) {
   return (
     <Layout>
       <Head>
-        <title>All Cases - Who Said What</title>
+        <title>All Cases - The Words Record</title>
         <meta name="description" content="Complete list of documented public statements and responses" />
       </Head>
 

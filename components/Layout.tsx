@@ -11,9 +11,9 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, title, description }: LayoutProps) {
-  const pageTitle = title ? `${title} - Who Said What` : 'Who Said What - Documented Public Statements'
+  const pageTitle = title ? `${title} - The Words Record` : 'The Words Record - Documented Public Statements'
   const pageDescription = description || 'Comprehensive documentation of public statements, allegations, and responses. Neutral, factual, and thoroughly sourced.'
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://whosaidwhat.com'
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thewordsrecord.com'
 
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -50,7 +50,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
         <meta property="og:description" content={pageDescription} />
         <meta property="og:type" content="website" />
         <meta property="og:url" content={siteUrl} />
-        <meta property="og:site_name" content="Who Said What" />
+        <meta property="og:site_name" content="The Words Record" />
         <meta property="og:locale" content="en_US" />
 
         {/* Twitter Card Meta Tags */}
@@ -59,7 +59,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
         <meta name="twitter:description" content={pageDescription} />
 
         {/* Additional SEO */}
-        <meta name="author" content="Who Said What" />
+        <meta name="author" content="The Words Record" />
         <link rel="canonical" href={siteUrl} />
       </Head>
 
@@ -72,7 +72,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
           <nav aria-label="Main navigation">
             <div className="nav-brand">
               <Link href="/">
-                <h1>Who Said What</h1>
+                <h1>The Words Record</h1>
               </Link>
             </div>
 
@@ -182,7 +182,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2025 Who Said What. All rights reserved.</p>
+            <p>&copy; 2025 The Words Record. All rights reserved.</p>
           </div>
         </footer>
       </div>

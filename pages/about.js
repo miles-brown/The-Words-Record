@@ -5,11 +5,11 @@ export default function About() {
   return (
     <Layout
       title="About"
-      description="Learn about Who Said What and our mission to document public statements with verified sources"
+      description="Learn about The Words Record and our mission to document public statements with verified sources"
     >
       <div className="about-page">
         <div className="about-header">
-          <h1>About Who Said What</h1>
+          <h1>About The Words Record</h1>
           <p className="tagline">
             Documenting public statements, allegations, and responses with verified sources
           </p>
@@ -19,7 +19,7 @@ export default function About() {
           <section className="about-section">
             <h2>What We Do</h2>
             <p>
-              Who Said What is a comprehensive documentation platform tracking public statements,
+              The Words Record is a comprehensive documentation platform tracking public statements,
               allegations, and official responses from public figures, organizations, and institutions.
               We focus on capturing the exact words spoken or written, preserving context, and
               maintaining a thoroughly sourced record of what was said, when, and where.
@@ -40,7 +40,7 @@ export default function About() {
             </p>
             <p>
               Public figures often make statements that are later walked back, denied, or
-              mischaracterized. Media coverage can be fragmented or biased. Who Said What provides
+              mischaracterized. Media coverage can be fragmented or biased. The Words Record provides
               a centralized, neutral platform where anyone can find the original statements,
               complete with context and sources.
             </p>
@@ -69,7 +69,7 @@ export default function About() {
           <section className="about-section">
             <h2>What Makes Us Different</h2>
             <p>
-              Unlike news aggregators or social media platforms, Who Said What focuses exclusively
+              Unlike news aggregators or social media platforms, The Words Record focuses exclusively
               on preserving factual records with full context. We don't editorialize, we don't take
               sides, and we don't amplify inflammatory takes. We simply document what was said,
               with sources.
@@ -83,7 +83,7 @@ export default function About() {
           <section className="about-section">
             <h2>Who It's For</h2>
             <p>
-              Who Said What serves multiple audiences:
+              The Words Record serves multiple audiences:
             </p>
             <ul>
               <li><strong>Journalists:</strong> Quick access to verified quotes and sources for fact-checking</li>

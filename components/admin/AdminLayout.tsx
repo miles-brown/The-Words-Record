@@ -102,7 +102,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
   return (
     <>
       <Head>
-        <title>{title} - Who Said What Admin</title>
+        <title>{title} - The Words Record Admin</title>
         <meta name="robots" content="noindex, nofollow" />
       </Head>
 
