@@ -287,7 +287,7 @@ export default function PersonsPage() {
               const deathYear = person.deathDate ? new Date(person.deathDate).getFullYear() : null
               const firstNationality = person.nationality ? person.nationality.split(',')[0].trim() : null
 
-              return <Link href={`/persons/${person.slug}`} key={person.id}>
+              return <Link href={`/people/${person.slug}`} key={person.id}>
                 <article className={`person-item ${viewMode}-view stagger-item`}>
                   {viewMode === 'grid' ? (
                     // GRID VIEW: Large image + name only
