@@ -29,12 +29,18 @@ jobs:
         node-version: '18'
         
     - name: Install dependencies
-      run: npm install
-      
+      run: npm ci
+
+    - name: Generate Prisma Client
+      run: npx prisma generate
+      env:
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     - name: Build website
       run: npm run build
       env:
         DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        NEXT_PUBLIC_SITE_URL: https://miles-brown.github.io/Who-Said-What
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
