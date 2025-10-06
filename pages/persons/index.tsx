@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import Layout from '@/components/Layout'
@@ -80,11 +80,6 @@ export default function PersonsPage() {
     fetchFilterOptions()
   }, [])
 
-  // Fetch persons when filters or itemsPerPage change
-  useEffect(() => {
-    fetchPersons(1)
-  }, [filters, itemsPerPage])
-
   const fetchFilterOptions = async () => {
     try {
       const response = await fetch('/api/persons/filter-options')
@@ -96,7 +91,7 @@ export default function PersonsPage() {
     }
   }
 
-  const fetchPersons = async (page: number) => {
+  const fetchPersons = useCallback(async (page: number) => {
     setLoading(true)
     setError(null)
 
