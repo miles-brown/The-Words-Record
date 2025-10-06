@@ -11,19 +11,18 @@ export default function AdminLogin() {
 
   useEffect(() => {
     // Check if already logged in
-    checkExistingAuth()
-  }, [])
-
-  const checkExistingAuth = async () => {
-    try {
-      const response = await fetch('/api/auth/me')
-      if (response.ok) {
-        router.push('/admin')
+    const checkExistingAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me')
+        if (response.ok) {
+          router.push('/admin')
+        }
+      } catch (error) {
+        // Not logged in, stay on login page
       }
-    } catch (error) {
-      // Not logged in, stay on login page
     }
-  }
+    checkExistingAuth()
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

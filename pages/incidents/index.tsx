@@ -62,6 +62,7 @@ export default function IncidentsPage() {
 
   useEffect(() => {
     fetchIncidents(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, selectedTag])
 
   const fetchTags = async () => {

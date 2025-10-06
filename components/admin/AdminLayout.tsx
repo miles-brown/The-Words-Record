@@ -22,6 +22,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
   useEffect(() => {
     checkAuth()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const checkAuth = async () => {

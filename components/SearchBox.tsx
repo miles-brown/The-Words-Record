@@ -55,6 +55,7 @@ export default function SearchBox({
         clearTimeout(timeoutRef.current)
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query])
 
   // Click outside to close
@@ -167,6 +168,7 @@ export default function SearchBox({
             aria-label="Search"
             aria-expanded={showResults}
             aria-autocomplete="list"
+            aria-controls="search-results"
             role="combobox"
           />
           <button type="submit" className="search-button" aria-label="Search">
@@ -176,7 +178,7 @@ export default function SearchBox({
       </form>
 
       {showQuickResults && showResults && (
-        <div className="search-results" role="listbox">
+        <div id="search-results" className="search-results" role="listbox">
           {isLoading ? (
             <div className="search-loading">
               <div className="loading-spinner"></div>

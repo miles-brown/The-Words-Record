@@ -197,7 +197,7 @@ export default function AnalyticsPage() {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="platform" />
                   <YAxis />
-                  <Tooltip formatter={(value) => `${(value / 1000000).toFixed(1)}M`} />
+                  <Tooltip formatter={(value) => `${(Number(value) / 1000000).toFixed(1)}M`} />
                   <Bar dataKey="totalReach" fill="#8B5CF6" />
                 </BarChart>
               </ResponsiveContainer>
@@ -241,7 +241,7 @@ export default function AnalyticsPage() {
                   <Tooltip />
                   <Bar dataKey="count">
                     {data.orgsByPoliticalLeaning.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={POLITICAL_COLORS[entry.leaning] || '#9CA3AF'} />
+                      <Cell key={`cell-${index}`} fill={POLITICAL_COLORS[entry.leaning as keyof typeof POLITICAL_COLORS] || '#9CA3AF'} />
                     ))}
                   </Bar>
                 </BarChart>
@@ -258,7 +258,7 @@ export default function AnalyticsPage() {
                   <Tooltip />
                   <Bar dataKey="count">
                     {data.orgsByStanceOnIsrael.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={STANCE_COLORS[entry.stance] || '#9CA3AF'} />
+                      <Cell key={`cell-${index}`} fill={STANCE_COLORS[entry.stance as keyof typeof STANCE_COLORS] || '#9CA3AF'} />
                     ))}
                   </Bar>
                 </BarChart>

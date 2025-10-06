@@ -82,7 +82,7 @@ async function main() {
             where: { id: statementId }
           })
           console.log(`✅ Deleted statement ${statementId}`)
-          console.log(`   From: "${statement.person.name}"`)
+          console.log(`   From: "${statement.person?.name || 'Unknown'}"`)
           console.log(`   Content: "${statement.content.substring(0, 60)}..."\n`)
           statementsDeleted++
         } else {

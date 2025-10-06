@@ -143,9 +143,8 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
             <div className="persons-grid">
               {incident.persons.map(person => {
                 // Determine if person made a statement or response
-                const madeStatement = incident.statements?.some(s => s.person.id === person.id)
-                const madeResponse = incident.responses?.some(r => r.person?.id === person.id) ||
-                                   incident.statements?.some(s =>
+                const madeStatement = incident.statements?.some(s => s.person?.id === person.id)
+                const madeResponse = incident.statements?.some(s =>
                                      s.responses?.some(r => r.person?.id === person.id)
                                    )
 
@@ -226,15 +225,15 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
                             {response.organization && (
                               <span className="response-author">{response.organization.name}</span>
                             )}
-                            <span className="response-type">{response.type}</span>
+                            <span className="response-type">{response.responseType}</span>
                             <span className="response-date">
-                              {format(new Date(response.responseDate), 'MMM d, yyyy')}
+                              {format(new Date(response.statementDate), 'MMM d, yyyy')}
                             </span>
                           </div>
                           <p className="response-content">{response.content}</p>
-                          {response.impact && (
+                          {response.responseImpact && (
                             <p className="response-impact">
-                              <strong>Impact:</strong> {response.impact}
+                              <strong>Impact:</strong> {response.responseImpact}
                             </p>
                           )}
                         </div>
@@ -998,16 +997,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           },
           orderBy: {
             statementDate: 'desc'
-          }
-        },
-        responses: {
-          include: {
-            person: true,
-            organization: true,
-            statement: true
-          },
-          orderBy: {
-            responseDate: 'desc'
           }
         },
         sources: {

@@ -122,7 +122,7 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
                 <strong>Headquarters:</strong> {organization.headquarters}
               </div>
             )}
-            {organization.founded && (
+            {organization.founded && !isNaN(new Date(organization.founded).getTime()) && (
               <div className="meta-item">
                 <strong>Founded:</strong> {format(new Date(organization.founded), 'MMMM yyyy')}
               </div>
@@ -188,9 +188,9 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
               {organization.responses.map((response: any) => (
                 <div key={response.id} className="response-item">
                   <div className="response-header">
-                    <span className="response-type">{response.type}</span>
+                    <span className="response-type">{response.responseType}</span>
                     <span className="response-date">
-                      {format(new Date(response.responseDate), 'MMMM d, yyyy')}
+                      {format(new Date(response.statementDate), 'MMMM d, yyyy')}
                     </span>
                     {response.incident && (
                       <Link href={`/incidents/${response.incident.slug}`}>

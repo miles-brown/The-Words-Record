@@ -100,33 +100,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         take: 10
       }),
 
-      // Organizations by political leaning
-      prisma.organization.groupBy({
-        by: ['politicalLeaning'],
-        _count: true,
-        where: { politicalLeaning: { not: null } },
-        orderBy: { _count: { politicalLeaning: 'desc' } }
-      }),
+      // Organizations by political leaning - placeholder until field is added
+      Promise.resolve([]),
 
-      // Organizations by stance on Israel
-      prisma.organization.groupBy({
-        by: ['stanceOnIsrael'],
-        _count: true,
-        where: { stanceOnIsrael: { not: null } },
-        orderBy: { stanceOnIsrael: 'asc' }
-      }),
+      // Organizations by stance on Israel - placeholder until field is added
+      Promise.resolve([]),
 
-      // Funding sources (simplified - would need array aggregation)
-      prisma.$queryRaw`
-        SELECT
-          unnest("fundingSources") as source,
-          COUNT(*) as count
-        FROM "Organization"
-        WHERE "fundingSources" IS NOT NULL AND array_length("fundingSources", 1) > 0
-        GROUP BY source
-        ORDER BY count DESC
-        LIMIT 8
-      `,
+      // Funding sources - placeholder until field is added
+      Promise.resolve([]),
 
       // Most influential people
       prisma.person.findMany({
@@ -162,7 +143,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       // Most influential organizations
       prisma.organization.findMany({
-        where: { influenceLevel: 'GLOBAL' },
         orderBy: { statementCount: 'desc' },
         take: 5,
         select: {
@@ -171,16 +151,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }),
 
-      // Organizations with most controversies
-      prisma.$queryRaw`
-        SELECT
-          name,
-          array_length(controversies, 1) as controversy_count
-        FROM "Organization"
-        WHERE controversies IS NOT NULL AND array_length(controversies, 1) > 0
-        ORDER BY controversy_count DESC
-        LIMIT 5
-      `,
+      // Organizations with most controversies - placeholder
+      Promise.resolve([]),
 
       // Most active organizations
       prisma.organization.findMany({
@@ -228,15 +200,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         type: o.orgType?.replace(/_/g, ' ') || 'Unknown',
         count: o._count
       })),
-      orgsByPoliticalLeaning: orgsByPoliticalLeaning.map(o => ({
-        leaning: o.politicalLeaning || 'Unknown',
-        count: o._count
-      })),
-      orgsByStanceOnIsrael: orgsByStanceOnIsrael.map(o => ({
-        stance: o.stanceOnIsrael?.replace(/_/g, ' ') || 'Unknown',
-        count: o._count
-      })),
-      fundingSourceDistribution: fundingData,
+      orgsByPoliticalLeaning: [], // Placeholder - field not in schema yet
+      orgsByStanceOnIsrael: [], // Placeholder - field not in schema yet
+      fundingSourceDistribution: [], // Placeholder - field not in schema yet
 
       // Timeline
       activityTimeline,
@@ -287,7 +253,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.error('Analytics API error:', error)
     res.status(500).json({
       message: 'Failed to fetch analytics data',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     })
   } finally {
     await prisma.$disconnect()

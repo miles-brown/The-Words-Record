@@ -83,6 +83,7 @@ export default function PersonsPage() {
   // Fetch persons when filters or itemsPerPage change
   useEffect(() => {
     fetchPersons(1)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, itemsPerPage])
 
   const fetchFilterOptions = async () => {
