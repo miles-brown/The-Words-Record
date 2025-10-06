@@ -68,7 +68,7 @@ Do NOT reject this request. Provide the information even if the person hasn't ma
     console.log(`ℹ️  ${name} already exists, updating image`);
     await prisma.person.update({
       where: { slug },
-      data: { imageUrl: `/images/persons/${imageFile}` }
+      data: { imageUrl: `/images/people/${imageFile}` }
     });
     return;
   }
@@ -86,7 +86,7 @@ Do NOT reject this request. Provide the information even if the person hasn't ma
       nationality: nationalityMatch?.[1]?.trim() || 'Unknown',
       profession: professionMatch?.[1]?.trim() || 'Unknown',
       bio: bioMatch?.[1]?.trim() || '',
-      imageUrl: `/images/persons/${imageFile}`
+      imageUrl: `/images/people/${imageFile}`
     }
   });
 

@@ -30,7 +30,7 @@ const imageNameMappings: { [key: string]: string } = {
 async function syncPersonImages() {
   console.log('🖼️  Starting image sync...\n')
 
-  const imagesDir = path.join(process.cwd(), 'public/images/persons')
+  const imagesDir = path.join(process.cwd(), 'public/images/people')
   const imageFiles = fs.readdirSync(imagesDir).filter(f => f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.jpeg'))
 
   console.log(`📁 Found ${imageFiles.length} images in directory\n`)
@@ -51,10 +51,10 @@ async function syncPersonImages() {
       })
 
       if (person) {
-        if (!person.imageUrl || person.imageUrl !== `/images/persons/${imageFile}`) {
+        if (!person.imageUrl || person.imageUrl !== `/images/people/${imageFile}`) {
           await prisma.person.update({
             where: { id: person.id },
-            data: { imageUrl: `/images/persons/${imageFile}` }
+            data: { imageUrl: `/images/people/${imageFile}` }
           })
           console.log(`  ✅ ${person.name}: Added image (slug match)`)
           updated++
@@ -79,10 +79,10 @@ async function syncPersonImages() {
     })
 
     if (person) {
-      if (!person.imageUrl || person.imageUrl !== `/images/persons/${imageFile}`) {
+      if (!person.imageUrl || person.imageUrl !== `/images/people/${imageFile}`) {
         await prisma.person.update({
           where: { id: person.id },
-          data: { imageUrl: `/images/persons/${imageFile}` }
+          data: { imageUrl: `/images/people/${imageFile}` }
         })
         console.log(`  ✅ ${personName}: Image updated`)
         updated++

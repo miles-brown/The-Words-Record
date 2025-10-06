@@ -48,7 +48,7 @@ function createSlug(name: string): string {
 async function main() {
   console.log('🖼️  Adding person images...\n')
 
-  const imagesDir = path.join(process.cwd(), 'public', 'images', 'persons')
+  const imagesDir = path.join(process.cwd(), 'public', 'images', 'people')
   const imageFiles = fs.readdirSync(imagesDir).filter(f => f.endsWith('.png') || f.endsWith('.jpg') || f.endsWith('.jpeg'))
 
   let updatedCount = 0
@@ -64,7 +64,7 @@ async function main() {
     }
 
     const slug = createSlug(personName)
-    const imageUrl = `/images/persons/${imageFile}`
+    const imageUrl = `/images/people/${imageFile}`
 
     console.log(`Processing: ${personName} (${slug})`)
 

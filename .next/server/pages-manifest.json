@@ -2,10 +2,6 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/": "pages/index.js",
-  "/organizations": "pages/organizations.js",
-  "/people": "pages/people.js",
-  "/api/organizations": "pages/api/organizations.js",
-  "/incidents": "pages/incidents.js",
-  "/people/[slug]": "pages/people/[slug].js"
+  "/api/people": "pages/api/people.js",
+  "/people": "pages/people.js"
 }
