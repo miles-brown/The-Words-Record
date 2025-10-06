@@ -95,7 +95,7 @@ async function importIncident(incident: IncidentData) {
     create: {
       slug: personSlug,
       name: incident.name,
-      profession: incident.profession,
+      profession: 'OTHER' as const,
     },
   })
 
@@ -140,7 +140,7 @@ ${incident.response}
       summary: summary,
       description: description,
       incidentDate: incidentDate,
-      status: 'documented',
+      status: 'DOCUMENTED',
       persons: {
         connect: { id: person.id }
       }

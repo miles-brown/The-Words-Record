@@ -1,4 +1,5 @@
 import Layout from '../components/Layout';
+import Link from 'next/link';
 
 export default function Cookies() {
   return (
@@ -220,7 +221,7 @@ export default function Cookies() {
             </ul>
             <p>
               For more information about how we collect and use your personal information,
-              please see our <a href="/privacy">Privacy Policy</a>.
+              please see our <Link href="/privacy">Privacy Policy</Link>.
             </p>
           </section>
         </div>

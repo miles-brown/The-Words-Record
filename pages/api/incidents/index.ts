@@ -64,7 +64,6 @@ export default async function handler(
               _count: {
                 select: {
                   statements: true,
-                  responses: true,
                   sources: true
                 }
               }
@@ -95,7 +94,10 @@ export default async function handler(
           incidentDate,
           status,
           severity,
-          location,
+          locationCity,
+          locationState,
+          locationCountry,
+          locationDetail,
           personIds = [],
           organizationIds = [],
           tagIds = []
@@ -114,9 +116,12 @@ export default async function handler(
             summary,
             description,
             incidentDate: new Date(incidentDate),
-            status: status || 'documented',
+            status: status || 'DOCUMENTED',
             severity,
-            location,
+            locationCity,
+            locationState,
+            locationCountry,
+            locationDetail,
             persons: {
               connect: personIds.map((id: string) => ({ id }))
             },

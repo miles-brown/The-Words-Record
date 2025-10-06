@@ -1,4 +1,5 @@
 import Layout from '../components/Layout';
+import Link from 'next/link';
 
 export default function Privacy() {
   return (
@@ -120,7 +121,7 @@ export default function Privacy() {
             <p>
               We use cookies and similar tracking technologies to enhance your experience.
               For detailed information about our use of cookies, please see our{' '}
-              <a href="/cookies">Cookies Policy</a>.
+              <Link href="/cookies">Cookies Policy</Link>.
             </p>
             <p>
               You can configure your browser to refuse cookies or alert you when cookies are

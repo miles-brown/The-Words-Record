@@ -135,10 +135,10 @@ export function validateReligion(value: string): boolean {
 export function validateReligiousAffiliation(religion: string, affiliation: string): boolean {
   if (!RELIGIONS.includes(religion as any)) return false
 
-  const validAffiliations = RELIGIOUS_AFFILIATIONS[religion as keyof typeof RELIGIOUS_AFFILIATIONS]
+  const validAffiliations = RELIGIOUS_AFFILIATIONS[religion as keyof typeof RELIGIOUS_AFFILIATIONS] as readonly string[]
   if (!validAffiliations) return false
 
-  return validAffiliations.includes(affiliation as any)
+  return validAffiliations.includes(affiliation)
 }
 
 /**

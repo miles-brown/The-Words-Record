@@ -27,7 +27,7 @@ export default async function handler(
               _count: {
                 select: {
                   incidents: true,
-                  responses: true
+                  statements: true
                 }
               }
             },

@@ -4,7 +4,6 @@ import type {
   Organization as PrismaOrganization,
   Incident as PrismaIncident,
   Statement as PrismaStatement,
-  Response as PrismaResponse,
   Source as PrismaSource,
   Tag as PrismaTag
 } from '@prisma/client'
@@ -13,7 +12,6 @@ export type Person = PrismaPerson
 export type Organization = PrismaOrganization
 export type Incident = PrismaIncident
 export type Statement = PrismaStatement
-export type Response = PrismaResponse
 export type Source = PrismaSource
 export type Tag = PrismaTag
 
@@ -34,11 +32,9 @@ export interface PaginatedResponse<T> {
 export interface PersonWithRelations extends Person {
   incidents?: IncidentWithRelations[]
   statements?: StatementWithRelations[]
-  responses?: ResponseWithRelations[]
   _count?: {
     incidents: number
     statements: number
-    responses: number
   }
 }
 
@@ -47,27 +43,20 @@ export interface IncidentWithRelations extends Incident {
   organizations?: Organization[]
   tags?: Tag[]
   statements?: StatementWithRelations[]
-  responses?: ResponseWithRelations[]
   sources?: Source[]
   _count?: {
     statements: number
-    responses: number
     sources: number
   }
 }
 
 export interface StatementWithRelations extends Statement {
   person?: Person
-  incident?: Incident
-  sources?: Source[]
-  responses?: ResponseWithRelations[]
-}
-
-export interface ResponseWithRelations extends Response {
-  statement?: Statement
-  person?: Person
   organization?: Organization
   incident?: Incident
+  sources?: Source[]
+  responses?: Statement[]  // Responses are now Statements with type RESPONSE
+  respondsTo?: Statement   // The statement this is responding to
 }
 
 // Form/Input types

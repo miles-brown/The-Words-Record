@@ -1,4 +1,5 @@
 import Layout from '../components/Layout';
+import Link from 'next/link';
 
 export default function About() {
   return (
@@ -107,7 +108,7 @@ export default function About() {
             <h2>Questions or Feedback?</h2>
             <p>
               Have a suggestion? Found an error? Want to contribute? Check out our
-              {' '}<a href="/methodology">Methodology page</a> to learn more about how we verify and
+              {' '}<Link href="/methodology">Methodology page</Link> to learn more about how we verify and
               document statements.
             </p>
           </section>

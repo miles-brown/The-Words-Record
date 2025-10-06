@@ -78,7 +78,8 @@ export default async function handler(
         break
       case 'responses-asc':
       case 'responses-desc':
-        orderBy = { responses: { _count: sortBy === 'responses-asc' ? 'asc' : 'desc' } }
+        // Responses are now part of statements
+        orderBy = { statements: { _count: sortBy === 'responses-asc' ? 'asc' : 'desc' } }
         break
       default:
         orderBy = { name: 'asc' }
@@ -97,8 +98,7 @@ export default async function handler(
         _count: {
           select: {
             incidents: true,
-            statements: true,
-            responses: true
+            statements: true
           }
         }
       }

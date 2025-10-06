@@ -24,6 +24,7 @@ export default async function handler(
             statements: {
               include: {
                 person: true,
+                organization: true,
                 sources: true,
                 responses: {
                   include: {
@@ -34,16 +35,6 @@ export default async function handler(
               },
               orderBy: {
                 statementDate: 'desc'
-              }
-            },
-            responses: {
-              include: {
-                person: true,
-                organization: true,
-                statement: true
-              },
-              orderBy: {
-                responseDate: 'desc'
               }
             },
             sources: {
@@ -70,7 +61,10 @@ export default async function handler(
           incidentDate,
           status,
           severity,
-          location,
+          locationCity,
+          locationState,
+          locationCountry,
+          locationDetail,
           personIds,
           organizationIds,
           tagIds
@@ -82,7 +76,10 @@ export default async function handler(
           description,
           status,
           severity,
-          location
+          locationCity,
+          locationState,
+          locationCountry,
+          locationDetail
         }
 
         if (incidentDate) {

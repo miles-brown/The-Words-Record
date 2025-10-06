@@ -24,7 +24,6 @@ export default async function handler(
                 _count: {
                   select: {
                     statements: true,
-                    responses: true,
                     sources: true
                   }
                 }
@@ -36,19 +35,12 @@ export default async function handler(
             statements: {
               include: {
                 incident: true,
-                sources: true
+                sources: true,
+                respondsTo: true,
+                responses: true
               },
               orderBy: {
                 statementDate: 'desc'
-              }
-            },
-            responses: {
-              include: {
-                incident: true,
-                statement: true
-              },
-              orderBy: {
-                responseDate: 'desc'
               }
             }
           }

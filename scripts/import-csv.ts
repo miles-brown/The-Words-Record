@@ -36,15 +36,16 @@ async function importFromCSV(filePath: string) {
 
   for (const record of records) {
     try {
-      console.log(`\nImporting: ${record.name || record.title}`)
+      const rec = record as any
+      console.log(`\nImporting: ${rec.name || rec.title}`)
 
       // Check what type of record this is
-      if (record.name && record.profession) {
+      if (rec.name && rec.profession) {
         // This is a person record
-        await importPerson(record)
-      } else if (record.title && record.summary) {
+        await importPerson(rec)
+      } else if (rec.title && rec.summary) {
         // This is an incident record
-        await importIncident(record)
+        await importIncident(rec)
       } else {
         console.warn(`Unknown record type, skipping`)
       }
@@ -92,8 +93,8 @@ async function importIncident(record: any) {
       summary: record.summary,
       description: record.description || record.summary,
       incidentDate: incidentDate,
-      status: record.status || 'documented',
-      location: record.location || null,
+      status: record.status || 'DOCUMENTED',
+      locationDetail: record.location || null,
     },
     create: {
       slug,
@@ -101,8 +102,8 @@ async function importIncident(record: any) {
       summary: record.summary,
       description: record.description || record.summary,
       incidentDate: incidentDate,
-      status: record.status || 'documented',
-      location: record.location || null,
+      status: record.status || 'DOCUMENTED',
+      locationDetail: record.location || null,
     },
   })
 

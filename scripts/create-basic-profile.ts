@@ -57,7 +57,7 @@ Do NOT reject this request. Provide the information even if the person hasn't ma
   const nationalityMatch = content.match(/\*\*Nationality:\*\*\s*(.+)/);
   const professionMatch = content.match(/\*\*Profession:\*\*\s*(.+)/);
   const orgsMatch = content.match(/\*\*Affiliated Organizations:\*\*\s*(.+)/);
-  const bioMatch = content.match(/\*\*Bio:\*\*\s*(.+)/s);
+  const bioMatch = content.match(/\*\*Bio:\*\*\s*(.+)/);
 
   const fullName = nameMatch?.[1]?.trim() || name;
   const slug = createSlug(fullName);
@@ -92,7 +92,7 @@ Do NOT reject this request. Provide the information even if the person hasn't ma
 
   // Handle organizations
   if (orgsMatch?.[1]) {
-    const orgs = orgsMatch[1].split(',').map(o => o.trim());
+    const orgs = orgsMatch[1].split(',').map((o: string) => o.trim());
     for (const orgEntry of orgs) {
       if (!orgEntry || orgEntry === 'N/A' || orgEntry === 'None') continue;
 
@@ -110,7 +110,7 @@ Do NOT reject this request. Provide the information even if the person hasn't ma
       const org = await prisma.organization.upsert({
         where: { slug: orgSlug },
         update: {},
-        create: { slug: orgSlug, name: orgName, type: 'Other' }
+        create: { slug: orgSlug, name: orgName, type: 'OTHER' }
       });
 
       await prisma.affiliation.create({

@@ -193,7 +193,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
               responderType: responderTypeMatch[1].trim() as 'Person' | 'Organization',
               responseDate: responseDateMatch[1].trim(),
               responseContent: responseContentMatch[1].trim(),
-              responseType: responseTypeMatch ? responseTypeMatch[1].trim() : 'Other',
+              responseType: responseTypeMatch ? responseTypeMatch[1].trim() : 'OTHER',
               platform: platformMatch ? platformMatch[1].trim() : 'Unknown',
               impact: impactMatch ? impactMatch[1].trim() : undefined
             })
@@ -307,7 +307,7 @@ async function importIncident(incident: IncidentData) {
         create: {
           slug: orgSlug,
           name: orgName,
-          type: 'Other',  // Default type
+          type: 'OTHER',  // Default type
         },
       })
 
@@ -366,7 +366,7 @@ ${incident.response || 'No response information available'}
       summary: summary,
       description: description,
       incidentDate: incidentDate,
-      status: 'documented',
+      status: 'DOCUMENTED',
       persons: {
         connect: { id: person.id }
       }
@@ -462,7 +462,7 @@ ${incident.response || 'No response information available'}
           create: {
             slug: responderSlug,
             name: responseData.responderName,
-            type: 'Other',
+            type: 'OTHER',
           },
         })
         responderOrgId = responder.id
@@ -471,14 +471,15 @@ ${incident.response || 'No response information available'}
       // Parse response date
       const responseDate = parseDate(responseData.responseDate) || new Date()
 
-      // Create response
+      // Create response (as a Statement with RESPONSE type)
       try {
-        await prisma.response.create({
+        await prisma.statement.create({
           data: {
             content: responseData.responseContent,
-            responseDate: responseDate,
-            type: responseData.responseType,
-            impact: responseData.impact,
+            context: responseData.impact,
+            statementDate: responseDate,
+            statementType: 'RESPONSE',
+            responseType: (responseData.responseType?.toUpperCase() || 'CRITICISM') as any,
             incidentId: incidentRecord.id,
             personId: responderId,
             organizationId: responderOrgId,
@@ -486,7 +487,7 @@ ${incident.response || 'No response information available'}
         })
         console.log(`    ✓ Response from ${responseData.responderName}`)
       } catch (e) {
-        console.log(`    ⚠ Could not import response from ${responseData.responderName}:`, e.message)
+        console.log(`    ⚠ Could not import response from ${responseData.responderName}:`, (e as any).message)
       }
     }
   }

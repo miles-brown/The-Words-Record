@@ -24,7 +24,7 @@ export default async function handler(
       prisma.person.count(),
       prisma.organization.count(),
       prisma.statement.count(),
-      prisma.response.count(),
+      prisma.statement.count({ where: { statementType: 'RESPONSE' } }),
       prisma.source.count(),
       prisma.tag.count(),
     ])

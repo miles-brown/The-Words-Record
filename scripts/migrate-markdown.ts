@@ -97,7 +97,7 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
         description: caseData.content,
         incidentDate: new Date(caseData.incident_date),
         publicationDate: new Date(caseData.date),
-        status: caseData.status || 'documented',
+        status: (caseData.status || 'DOCUMENTED') as any,
         persons: {
           connect: [{ id: personId }]
         },
@@ -115,7 +115,7 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
             data: {
               title: sourceTitle,
               incidentId: incident.id,
-              credibility: 'verified'
+              credibility: 'HIGH'
             }
           })
         })
@@ -153,7 +153,7 @@ async function loadMarkdownCases(): Promise<MarkdownCase[]> {
       incident_date: data.incident_date || data.date || new Date().toISOString(),
       date: data.date || new Date().toISOString(),
       tags: data.tags || [],
-      status: data.status || 'documented',
+      status: data.status || 'DOCUMENTED',
       excerpt: data.excerpt || content.slice(0, 150) + '...',
       summary: data.summary || data.excerpt || content.slice(0, 300) + '...',
       sources: data.sources || [],
@@ -173,7 +173,7 @@ async function createSampleData(): Promise<MarkdownCase[]> {
       incident_date: '2025-01-15',
       date: '2025-01-20',
       tags: ['public statements', 'media coverage', 'analysis'],
-      status: 'documented',
+      status: 'DOCUMENTED',
       excerpt: 'A comprehensive analysis of a public statement and subsequent responses from various stakeholders.',
       summary: 'This incident involves a public statement made in January 2025 and the various responses it generated from media outlets, advocacy groups, and other public figures.',
       sources: [

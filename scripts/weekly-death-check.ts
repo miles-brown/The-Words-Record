@@ -14,14 +14,14 @@
 
 import { PrismaClient } from '@prisma/client'
 import { config } from 'dotenv'
-import Anthropic from '@anthropic-ai/sdk'
+// import Anthropic from '@anthropic-ai/sdk'
 
 config()
 
 const prisma = new PrismaClient()
-const anthropic = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY || '',
-})
+// const anthropic = new Anthropic({
+//   apiKey: process.env.ANTHROPIC_API_KEY || '',
+// })
 
 interface DeathInfo {
   isDead: boolean
@@ -30,52 +30,56 @@ interface DeathInfo {
 }
 
 async function checkForDeath(personName: string): Promise<DeathInfo> {
-  const prompt = `Check if ${personName} has died. Search for recent news, obituaries, and reliable sources.
+  // This function requires the @anthropic-ai/sdk package to be installed
+  // For now, returning default no death info
+  return { isDead: false }
 
-IMPORTANT INSTRUCTIONS:
-- Return ONLY death information if the person has actually died
-- Do NOT speculate or guess
-- ONLY return death information if you find concrete, verifiable evidence
-- If the person is alive or you cannot find reliable death information, return NO_DEATH_FOUND
+  // const prompt = `Check if ${personName} has died. Search for recent news, obituaries, and reliable sources.
 
-Return the information in this EXACT format:
+// IMPORTANT INSTRUCTIONS:
+// - Return ONLY death information if the person has actually died
+// - Do NOT speculate or guess
+// - ONLY return death information if you find concrete, verifiable evidence
+// - If the person is alive or you cannot find reliable death information, return NO_DEATH_FOUND
 
-STATUS: [DECEASED or NO_DEATH_FOUND]
-DEATH_DATE: [DD Month YYYY or leave blank if not deceased]
-DEATH_PLACE: [City, Country or leave blank if not deceased]
+// Return the information in this EXACT format:
 
-Be extremely careful to only report confirmed deaths from reliable sources.`
+// STATUS: [DECEASED or NO_DEATH_FOUND]
+// DEATH_DATE: [DD Month YYYY or leave blank if not deceased]
+// DEATH_PLACE: [City, Country or leave blank if not deceased]
 
-  try {
-    const message = await anthropic.messages.create({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 500,
-      messages: [{
-        role: 'user',
-        content: prompt
-      }]
-    })
+// Be extremely careful to only report confirmed deaths from reliable sources.`
 
-    const responseText = message.content[0].type === 'text' ? message.content[0].text : ''
+//   try {
+//     const message = await anthropic.messages.create({
+//       model: 'claude-sonnet-4-20250514',
+//       max_tokens: 500,
+//       messages: [{
+//         role: 'user',
+//         content: prompt
+//       }]
+//     })
 
-    // Parse response
-    const statusMatch = responseText.match(/STATUS:\s*(DECEASED|NO_DEATH_FOUND)/i)
-    const dateMatch = responseText.match(/DEATH_DATE:\s*(.+)/i)
-    const placeMatch = responseText.match(/DEATH_PLACE:\s*(.+)/i)
+//     const responseText = message.content[0].type === 'text' ? message.content[0].text : ''
 
-    if (statusMatch && statusMatch[1].toUpperCase() === 'DECEASED') {
-      return {
-        isDead: true,
-        deathDate: dateMatch?.[1]?.trim() || undefined,
-        deathPlace: placeMatch?.[1]?.trim() || undefined
-      }
-    }
+//     // Parse response
+//     const statusMatch = responseText.match(/STATUS:\s*(DECEASED|NO_DEATH_FOUND)/i)
+//     const dateMatch = responseText.match(/DEATH_DATE:\s*(.+)/i)
+//     const placeMatch = responseText.match(/DEATH_PLACE:\s*(.+)/i)
 
-    return { isDead: false }
-  } catch (error) {
-    console.error(`❌ Error checking death for ${personName}:`, error)
-    return { isDead: false }
-  }
+//     if (statusMatch && statusMatch[1].toUpperCase() === 'DECEASED') {
+//       return {
+//         isDead: true,
+//         deathDate: dateMatch?.[1]?.trim() || undefined,
+//         deathPlace: placeMatch?.[1]?.trim() || undefined
+//       }
+//     }
+
+//     return { isDead: false }
+//   } catch (error) {
+//     console.error(`❌ Error checking death for ${personName}:`, error)
+//     return { isDead: false }
+//   }
 }
 
 function parseDate(dateStr: string): Date | null {

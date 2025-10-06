@@ -49,8 +49,7 @@ export default async function handler(
           _count: {
             select: {
               incidents: true,
-              statements: true,
-              responses: true
+              statements: true
             }
           }
         },
@@ -89,7 +88,10 @@ export default async function handler(
             { title: { contains: query } },
             { summary: { contains: query } },
             { description: { contains: query } },
-            { location: { contains: query } }
+            { locationCity: { contains: query } },
+            { locationState: { contains: query } },
+            { locationCountry: { contains: query } },
+            { locationDetail: { contains: query } }
           ]
         },
         include: {
@@ -98,7 +100,6 @@ export default async function handler(
           _count: {
             select: {
               statements: true,
-              responses: true,
               sources: true
             }
           }
@@ -111,7 +112,13 @@ export default async function handler(
         if (incident.title.toLowerCase().includes(query.toLowerCase())) score += 10
         if (incident.summary.toLowerCase().includes(query.toLowerCase())) score += 7
         if (incident.description.toLowerCase().includes(query.toLowerCase())) score += 5
-        if (incident.location?.toLowerCase().includes(query.toLowerCase())) score += 3
+        if (incident.locationCity?.toLowerCase().includes(query.toLowerCase())) score += 3
+        if (incident.locationState?.toLowerCase().includes(query.toLowerCase())) score += 2
+        if (incident.locationCountry?.toLowerCase().includes(query.toLowerCase())) score += 2
+
+        const locationStr = [incident.locationCity, incident.locationState, incident.locationCountry]
+          .filter(Boolean)
+          .join(', ')
 
         searchResults.push({
           type: 'incident',
@@ -124,11 +131,10 @@ export default async function handler(
             status: incident.status,
             severity: incident.severity,
             incidentDate: incident.incidentDate,
-            location: incident.location,
+            location: locationStr || incident.locationDetail,
             persons: incident.persons.map(p => p.name),
             tags: incident.tags.map(t => t.name),
             statementCount: incident._count.statements,
-            responseCount: incident._count.responses,
             sourceCount: incident._count.sources
           }
         })
@@ -150,7 +156,7 @@ export default async function handler(
           _count: {
             select: {
               incidents: true,
-              responses: true
+              statements: true
             }
           }
         },

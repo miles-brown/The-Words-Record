@@ -28,13 +28,9 @@ async function main() {
     console.log()
 
     // Delete in order due to relations
-    console.log('Deleting statements...')
+    console.log('Deleting statements (including responses)...')
     const deletedStatements = await prisma.statement.deleteMany({})
     console.log(`✅ Deleted ${deletedStatements.count} statements`)
-
-    console.log('Deleting responses...')
-    const deletedResponses = await prisma.response.deleteMany({})
-    console.log(`✅ Deleted ${deletedResponses.count} responses`)
 
     console.log('Deleting sources...')
     const deletedSources = await prisma.source.deleteMany({})

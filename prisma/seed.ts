@@ -10,7 +10,8 @@ async function main() {
     create: {
       slug: 'emma-watson',
       name: 'Emma Watson',
-      profession: 'Actor',
+      profession: 'ARTIST',
+      nationality: 'UK',
       bio: 'British actress known for her role as Hermione Granger in the Harry Potter film series.',
     },
   })
@@ -22,7 +23,8 @@ async function main() {
     create: {
       slug: 'danny-danon',
       name: 'Danny Danon',
-      profession: 'Israeli politician',
+      profession: 'POLITICIAN',
+      nationality: 'ISRAEL',
       bio: 'Former Israeli UN ambassador and politician.',
     },
   })
@@ -34,7 +36,8 @@ async function main() {
     create: {
       slug: 'gilad-erdan',
       name: 'Gilad Erdan',
-      profession: 'Israeli politician',
+      profession: 'POLITICIAN',
+      nationality: 'ISRAEL',
       bio: 'Israeli UN ambassador.',
     },
   })
@@ -55,8 +58,8 @@ Major media outlets including The Guardian, The Independent, and The Times cover
 
 Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsky signed a solidarity letter defending Watson. She did not apologize or retract her post.`,
       incidentDate: new Date('2022-01-03'),
-      status: 'documented',
-      severity: 'medium',
+      status: 'DOCUMENTED',
+      severity: 'MEDIUM',
       persons: {
         connect: [
           { id: emmaWatson.id },
@@ -80,29 +83,33 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
     },
   })
 
-  // Create Danny Danon's response
-  await prisma.response.create({
+  // Create Danny Danon's response (as a Statement with RESPONSE type)
+  await prisma.statement.create({
     data: {
       content: '10 points from Gryffindor for being an antisemite.',
-      responseDate: new Date('2022-01-03'),
-      type: 'criticism',
-      impact: 'Sparked framing of Watson\'s post as a scandal in major media outlets.',
+      context: 'Response to Emma Watson\'s Instagram post; sparked framing of Watson\'s post as a scandal in major media outlets.',
+      statementDate: new Date('2022-01-03'),
+      statementType: 'RESPONSE',
+      responseType: 'CRITICISM',
+      medium: 'Twitter',
       personId: dannyDanon.id,
       incidentId: incident.id,
-      statementId: watsonStatement.id,
+      respondsToId: watsonStatement.id,
     },
   })
 
-  // Create Gilad Erdan's response
-  await prisma.response.create({
+  // Create Gilad Erdan's response (as a Statement with RESPONSE type)
+  await prisma.statement.create({
     data: {
       content: 'Fiction may work in Harry Potter but it does not work in reality. If it did, magic could eliminate the evils of Hamas…',
-      responseDate: new Date('2022-01-03'),
-      type: 'criticism',
-      impact: 'Israeli UN ambassador\'s response amplified the controversy in international media.',
+      context: 'Response to Emma Watson\'s Instagram post; Israeli UN ambassador\'s response amplified the controversy in international media.',
+      statementDate: new Date('2022-01-03'),
+      statementType: 'RESPONSE',
+      responseType: 'CRITICISM',
+      medium: 'Twitter',
       personId: giladErdan.id,
       incidentId: incident.id,
-      statementId: watsonStatement.id,
+      respondsToId: watsonStatement.id,
     },
   })
 
@@ -112,7 +119,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       title: 'The Guardian: Emma Watson pro-Palestinian post sparks antisemitism row',
       publication: 'The Guardian',
       publishDate: new Date('2022-01-03'),
-      credibility: 'verified',
+      credibility: 'HIGH',
       incidentId: incident.id,
     },
   })
@@ -122,7 +129,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       title: 'The Independent: Emma Watson faces backlash … accused of antisemitism',
       publication: 'The Independent',
       publishDate: new Date('2022-01-03'),
-      credibility: 'verified',
+      credibility: 'HIGH',
       incidentId: incident.id,
     },
   })
