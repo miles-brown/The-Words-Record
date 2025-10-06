@@ -141,7 +141,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           <section className="involved-persons">
             <h2>People Involved</h2>
             <div className="persons-grid">
-              {incident.persons.map(person => {
+              {incident.persons.filter(person => person !== null).map(person => {
                 // Determine if person made a statement or response
                 const madeStatement = incident.statements?.some(s => s.person?.id === person.id)
                 const madeResponse = incident.statements?.some(s =>
@@ -189,9 +189,13 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
               {incident.statements.map((statement) => (
                 <div key={statement.id} className="statement-item stagger-item">
                   <div className="statement-header">
-                    <Link href={`/people/${statement.person.slug}`}>
-                      <span className="statement-author">{statement.person.name}</span>
-                    </Link>
+                    {statement.person ? (
+                      <Link href={`/people/${statement.person.slug}`}>
+                        <span className="statement-author">{statement.person.name}</span>
+                      </Link>
+                    ) : (
+                      <span className="statement-author">Unknown</span>
+                    )}
                     <span className="statement-date">
                       {format(new Date(statement.statementDate), 'MMMM d, yyyy')}
                     </span>
