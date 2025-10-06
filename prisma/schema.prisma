@@ -92,19 +92,116 @@ enum RoleLevel {
   HONORARY
 }
 
+// Enhanced Incident Enums v3.0.1
+enum IncidentStatus {
+  ALLEGED           // Unconfirmed allegations
+  DOCUMENTED        // Confirmed and documented
+  VERIFIED          // Independently verified
+  DISPUTED          // Facts in dispute
+  DEVELOPING        // Still unfolding
+  UPDATED           // New information added
+  CORRECTED         // Corrections made
+  RETRACTED         // Story retracted
+  ONGOING           // Legacy support
+  RESOLVED          // Legacy support
+}
+
+enum IncidentType {
+  STATEMENT_CONTROVERSY   // Controversial statement made
+  RESPONSE_BACKLASH      // Backlash to response
+  EMPLOYMENT_ACTION      // Firing, suspension, etc.
+  LEGAL_ACTION          // Lawsuits, charges
+  PROTEST_ACTION        // Protests, demonstrations
+  PLATFORM_ACTION       // Bans, deplatforming
+  VIOLENCE_INCIDENT     // Physical violence
+  HARASSMENT_CAMPAIGN   // Coordinated harassment
+  MEDIA_CONTROVERSY     // Media coverage controversy
+  ACADEMIC_CONTROVERSY  // Campus incidents
+  POLITICAL_CONTROVERSY // Political incidents
+  SOCIAL_MEDIA_STORM   // Social media pile-on
+  BOYCOTT_CAMPAIGN     // Organized boycotts
+  INVESTIGATION        // Formal investigations
+  POLICY_CHANGE        // Policy changes
+  OTHER
+}
+
+enum IncidentCategory {
+  ANTISEMITISM_ALLEGATION
+  ISLAMOPHOBIA_ALLEGATION
+  RACISM_ALLEGATION
+  FREE_SPEECH
+  ACADEMIC_FREEDOM
+  CENSORSHIP
+  CANCEL_CULTURE
+  HATE_SPEECH
+  DISCRIMINATION
+  RETALIATION
+  DEFAMATION
+  MISREPRESENTATION
+  FACT_DISPUTE
+  POLITICAL_PRESSURE
+  INSTITUTIONAL_RESPONSE
+}
+
 enum IncidentSeverity {
+  MINIMAL
   LOW
   MEDIUM
   HIGH
   CRITICAL
 }
 
-enum IncidentStatus {
-  DOCUMENTED
-  VERIFIED
-  DISPUTED
-  RETRACTED
+enum ImpactScope {
+  INDIVIDUAL
+  LOCAL
+  INSTITUTIONAL
+  NATIONAL
+  INTERNATIONAL
+  GLOBAL
+}
+
+enum LocationType {
+  ONLINE
+  UNIVERSITY
+  WORKPLACE
+  GOVERNMENT_BUILDING
+  PUBLIC_SPACE
+  MEDIA_OUTLET
+  CONFERENCE
+  PRIVATE_VENUE
+  MULTIPLE
+}
+
+enum TriggerType {
+  STATEMENT
+  SOCIAL_MEDIA_POST
+  ARTICLE
+  SPEECH
+  PROTEST
+  POLICY
+  INVESTIGATION
+  MEDIA_COVERAGE
+  RESPONSE_TO_INCIDENT
+  CUMULATIVE
+}
+
+enum ResolutionStatus {
   ONGOING
+  PARTIALLY_RESOLVED
+  RESOLVED
+  ESCALATED
+  ABANDONED
+  LEGAL_PENDING
+  UNDER_REVIEW
+}
+
+enum RepercussionSeverity {
+  MINIMAL
+  MINOR
+  MODERATE
+  SIGNIFICANT
+  SEVERE
+  EXTREME
 }
 
 enum RepercussionType {
@@ -730,44 +827,216 @@ model Topic {
 model Incident {
   id              String           @id @default(cuid())
   slug            String           @unique
-  title           String
-  summary         String
-  description     String
 
-  // Dates
+  // ═══════════════════════════════════════════
+  // CORE CONTENT
+  // ═══════════════════════════════════════════
+  title           String
+  subtitle        String?          // Secondary headline
+  summary         String           @db.Text // 2-3 sentence summary
+  description     String           @db.Text // Full description
+
+  // Content language
+  contentLanguage String           @default("en")
+  translationAvailable Boolean     @default(false)
+
+  // ═══════════════════════════════════════════
+  // TEMPORAL DATA
+  // ═══════════════════════════════════════════
   incidentDate    DateTime
+  incidentEndDate DateTime?        // If multi-day incident
   publicationDate DateTime         @default(now())
 
-  // Status and severity
+  // Timing details
+  timeOfDay       String?          // "morning", "afternoon", "evening"
+  timezone        String?          // "America/New_York"
+  duration        String?          // "3 hours", "2 days"
+
+  // ═══════════════════════════════════════════
+  // CLASSIFICATION & STATUS
+  // ═══════════════════════════════════════════
   status          IncidentStatus   @default(DOCUMENTED)
-  severity        IncidentSeverity?
-  severityScore   Int?             // 1-100 scale
+  verificationLevel VerificationLevel @default(UNVERIFIED)
 
-  // Location (structured)
-  locationCity    String?
-  locationState   String?
+  incidentType    IncidentType?
+  incidentCategory IncidentCategory?
+
+  // ═══════════════════════════════════════════
+  // SEVERITY & IMPACT
+  // ═══════════════════════════════════════════
+  severity        IncidentSeverity @default(MEDIUM)
+  severityScore   Float?           // 0-100 calculated score
+
+  // Impact metrics
+  impactScope     ImpactScope?     @default(LOCAL)
+  affectedCount   Int?             // Number of people affected
+
+  // Specific impacts
+  hasEmploymentImpact Boolean      @default(false)
+  hasLegalImpact  Boolean          @default(false)
+  hasReputationalImpact Boolean    @default(false)
+  hasPlatformImpact Boolean        @default(false)
+  hasFinancialImpact Boolean       @default(false)
+
+  // ═══════════════════════════════════════════
+  // LOCATION (Structured)
+  // ═══════════════════════════════════════════
+  locationName    String?          // "UN General Assembly"
+  locationType    LocationType?
   locationCountry String?
-  locationDetail  String?          // Free text for specifics
+  locationState   String?
+  locationCity    String?
+  locationDetail  String?          // Legacy field
+  locationAddress String?
+  locationCoordinates String?      // "40.7489,-73.9680"
 
-  // Context
-  mediaFraming    String?
-  triggeringEvent String?
-  outcome         String?
+  isOnline        Boolean          @default(false)
+  isInPerson      Boolean          @default(true)
 
-  // Verification
+  // ═══════════════════════════════════════════
+  // TOPICS & THEMES
+  // ═══════════════════════════════════════════
+  primaryTopicId  String?          // Main topic if applicable
+
+  // Legacy Event relationship (for migration)
+  parentEventId   String?
+  parentEvent     Event?           @relation(fields: [parentEventId], references: [id])
+
+  // ═══════════════════════════════════════════
+  // TRIGGER & CONTEXT
+  // ═══════════════════════════════════════════
+  triggerType     TriggerType?
+  triggeringEvent String?          @db.Text
+
+  // What sparked this incident
+  triggeringStatementId String?     @unique
+  triggeringStatement Statement?   @relation("IncidentTriggeringStatement", fields: [triggeringStatementId], references: [id])
+
+  // Context and framing
+  mediaFraming    String?          @db.Text
+  contextualBackground String?     @db.Text
+
+  // ═══════════════════════════════════════════
+  // OUTCOME & RESOLUTION
+  // ═══════════════════════════════════════════
+  outcome         String?          @db.Text
+  outcomeDate     DateTime?
+  resolutionStatus ResolutionStatus @default(ONGOING)
+
+  // ═══════════════════════════════════════════
+  // REPERCUSSIONS
+  // ═══════════════════════════════════════════
+  hasRepercussions Boolean         @default(false)
+  repercussionCount Int            @default(0)
+
+  // Repercussion summary
+  primaryRepercussionType RepercussionType?
+  repercussionSeverity RepercussionSeverity?
+
+  // ═══════════════════════════════════════════
+  // PARTICIPANTS & RELATIONSHIPS
+  // ═══════════════════════════════════════════
+  // People involved
+  primaryPersonId String?          // Main person if applicable
+
+  // Organizations involved
+  primaryOrgId    String?          // Main organization if applicable
+
+  // Statements related to this incident
+  statementCount  Int              @default(0)
+
+  // Responses (from merged Response model)
+  responseCount   Int              @default(0)
+  supportCount    Int              @default(0)
+  criticismCount  Int              @default(0)
+
+  // ═══════════════════════════════════════════
+  // SOURCES & DOCUMENTATION
+  // ═══════════════════════════════════════════
+  primarySourceId String?
+  sourceCount     Int              @default(0)
+
+  hasVideo        Boolean          @default(false)
+  hasAudio        Boolean          @default(false)
+  hasDocuments    Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // MEDIA COVERAGE
+  // ═══════════════════════════════════════════
+  mediaOutletCount Int             @default(0)
+  articleCount    Int              @default(0)
+
+  wasFrontPage    Boolean          @default(false)
+  wasInternationalNews Boolean     @default(false)
+
+  // Coverage timeline
+  firstReportedDate DateTime?
+  peakCoverageDate DateTime?
+  coverageDuration String?         // "3 days", "2 weeks"
+
+  // ═══════════════════════════════════════════
+  // SOCIAL MEDIA IMPACT
+  // ═══════════════════════════════════════════
+  wentViral       Boolean          @default(false)
+  viralPlatform   String?          // "Twitter", "TikTok"
+
+  estimatedReach  Int?             // Estimated people reached
+  hashtagsUsed    String[]         // Related hashtags
+
+  // ═══════════════════════════════════════════
+  // CONTROVERSY & DISPUTES
+  // ═══════════════════════════════════════════
+  isControversial Boolean          @default(false)
+  isDisputed      Boolean          @default(false)
+  disputeNotes    String?          @db.Text
+
+  // Different narratives
+  narrativeDisputes String[]        // Different framings
+  primaryNarrative String?
+  counterNarrative String?
+
+  // ═══════════════════════════════════════════
+  // FLAGS & WARNINGS
+  // ═══════════════════════════════════════════
+  contentWarning  String?
+  isSensitive     Boolean          @default(false)
+  isGraphic       Boolean          @default(false)
+  requiresContext Boolean          @default(false)
+
+  // ═══════════════════════════════════════════
+  // METADATA & TRACKING
+  // ═══════════════════════════════════════════
+  viewCount       Int              @default(0)
+  shareCount      Int              @default(0)
+
+  isFeatured      Boolean          @default(false)
+  isPinned        Boolean          @default(false)
+
+  // Editorial
+  editorialNotes  String?          @db.Text
+  internalNotes   String?          @db.Text
+
+  // Quality
+  qualityScore    Float?           // 0-100 for completeness
+  lastReviewDate  DateTime?
+  reviewedBy      String?
+
+  // Verification (legacy)
   isVerified      Boolean          @default(false)
   verifiedBy      String?
   verifiedAt      DateTime?
 
-  // Impact metrics
-  viewCount       Int              @default(0)
-  shareCount      Int              @default(0)
-
-  // Timestamps
+  // ═══════════════════════════════════════════
+  // METADATA
+  // ═══════════════════════════════════════════
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+  createdBy       String?
+  lastEditedBy    String?
 
-  // Relations
+  // ═══════════════════════════════════════════
+  // RELATIONS
+  // ═══════════════════════════════════════════
   topics          TopicIncident[]
   statements      Statement[]
   sources         Source[]
@@ -777,10 +1046,20 @@ model Incident {
   repercussions   Repercussion[]
   departureAffiliations Affiliation[] @relation("AffiliationDepartureIncident")
 
-  @@index([slug])
+  // ═══════════════════════════════════════════
+  // INDEXES
+  // ═══════════════════════════════════════════
+  @@index([incidentDate])
   @@index([status])
   @@index([severity])
-  @@index([incidentDate])
+  @@index([incidentType, incidentCategory])
+  @@index([locationCountry, locationCity])
+  @@index([hasRepercussions])
+  @@index([isControversial])
+  @@index([isFeatured])
+  @@index([primaryTopicId])
+  @@index([resolutionStatus])
+  @@index([slug])
 }
 
 model Statement {
@@ -844,6 +1123,7 @@ model Statement {
   repercussionsCaused Repercussion[]  @relation("TriggeringStatement")
   repercussionsAbout  Repercussion[]  @relation("ResponseStatement")
   tags                Tag[]           @relation("StatementTags")
+  triggeredIncident   Incident?       @relation("IncidentTriggeringStatement")
 
   @@unique([personId, incidentId, content])
   @@index([statementType])
@@ -1360,6 +1640,24 @@ model TopicRelation {
 }
 
 // ============ NEW v3.0.1 MODELS ============
+
+// Legacy Event model for migration support
+model Event {
+  id              String         @id @default(cuid())
+  name            String
+  slug            String         @unique
+  description     String?
+  startDate       DateTime?
+  endDate         DateTime?
+
+  // Relations
+  childIncidents  Incident[]
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index([slug])
+}
 
 model TagAlias {
   id              String         @id @default(cuid())
