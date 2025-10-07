@@ -8,8 +8,23 @@ export default function Document() {
         {/* This meta tag verifies ownership for Google AdSense monetization */}
         <meta name="google-adsense-account" content="ca-pub-5418171625369886" />
 
+        {/* Google Funding Choices - Consent Management Platform (CMP) */}
+        {/* Google-certified CMP required for GDPR compliance in EEA/UK/Switzerland */}
+        {/* This MUST load BEFORE AdSense to handle consent properly */}
+        <script
+          async
+          src="https://fundingchoicesmessages.google.com/i/pub-5418171625369886?ers=1"
+          nonce="FUNDING-CHOICES"
+        />
+        <script
+          nonce="FUNDING-CHOICES"
+          dangerouslySetInnerHTML={{
+            __html: `(function() {function signalGooglefcPresent() {if (!window.frames['googlefcPresent']) {if (document.body) {const iframe = document.createElement('iframe'); iframe.style = 'width: 0; height: 0; border: none; z-index: -1000; left: -1000px; top: -1000px;'; iframe.style.display = 'none'; iframe.name = 'googlefcPresent'; document.body.appendChild(iframe);} else {setTimeout(signalGooglefcPresent, 0);}}}signalGooglefcPresent();})();`
+          }}
+        />
+
         {/* Google AdSense Code Snippet */}
-        {/* This code enables ads to be displayed on the site */}
+        {/* Loads after CMP to ensure consent is collected first */}
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5418171625369886"
