@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next'
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://whosaidwhat.com'
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://thewordsrecord.com'
 
   const robotsTxt = `# https://www.robotstxt.org/robotstxt.html
 User-agent: *
