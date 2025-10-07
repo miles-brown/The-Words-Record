@@ -41,6 +41,19 @@ export default function Layout({ children, title, description }: LayoutProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
 
+        {/* Google Analytics */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-26ERR1Y5ZZ"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-26ERR1Y5ZZ');
+            `,
+          }}
+        />
+
         {/* Basic Meta Tags */}
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
