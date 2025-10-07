@@ -17,3 +17,38 @@ out/
 
 # Supabase migration (applied to cloud, don't commit)
 supabase_migration.sql
+
+# CRITICAL: INTERNAL-ONLY DOCUMENTATION
+# These files contain internal terminology and organizational notes
+# that should NEVER be exposed publicly, in the UI, database, or repository
+INTERNAL-README.md
+INTERNAL-NOTES.md
+INTERNAL-CLASSIFICATION.md
+.internal/
+docs/internal/
+**/internal-docs/**
+**/*-internal.*
+**/*-private.*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Backups
+*.bak
+*.backup
+
+# Archives
+*.zip
+*.tar.gz
+
+# Database dumps
+*.sql
+!schema.sql
+
+# Temporary
+*.tmp
+*.temp
+.cache/
