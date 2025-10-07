@@ -1068,3 +1068,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return { notFound: true }
   }
 }
+
+// Enable AMP for incident pages
+export const config = {
+  amp: 'hybrid'
+}

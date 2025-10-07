@@ -328,3 +328,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     revalidate: 60,
   }
 }
+
+// Enable AMP for tag pages
+export const config = {
+  amp: 'hybrid'
+}
