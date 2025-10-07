@@ -3,8 +3,17 @@ import { useState, useEffect } from 'react'
 export default function CookieConsent() {
   const [showModal, setShowModal] = useState(false)
   const [isEuUser, setIsEuUser] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
+  // First mount effect - client-side only
   useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // Second effect - runs after mount
+  useEffect(() => {
+    if (!mounted) return
+
     // Check if user already consented
     const hasConsented = localStorage.getItem('cookie-consent')
     if (hasConsented === 'true') {
@@ -43,14 +52,15 @@ export default function CookieConsent() {
     if (isEu) {
       setShowModal(true)
     }
-  }, [])
+  }, [mounted])
 
   const handleAccept = () => {
     localStorage.setItem('cookie-consent', 'true')
     setShowModal(false)
   }
 
-  if (!showModal || !isEuUser) {
+  // Don't render anything until mounted (prevents hydration mismatch)
+  if (!mounted || !showModal || !isEuUser) {
     return null
   }
 
