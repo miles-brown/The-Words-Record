@@ -142,7 +142,7 @@ export default function Terms() {
           <section className="policy-section">
             <h2>Limitation of Liability</h2>
             <p>
-              TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHO SAID WHAT AND ITS AFFILIATES,
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE WORDS RECORD AND ITS AFFILIATES,
               OFFICERS, EMPLOYEES, AGENTS, AND LICENSORS SHALL NOT BE LIABLE FOR ANY
               INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING
               BUT NOT LIMITED TO:
@@ -265,7 +265,7 @@ export default function Terms() {
               If you have questions about these Terms, please contact us at:
             </p>
             <ul>
-              <li><strong>Email:</strong> legal@whosaidwhat.com</li>
+              <li><strong>Email:</strong> legal@thewordsrecord.com</li>
             </ul>
           </section>
         </div>

@@ -175,7 +175,7 @@ export default function Privacy() {
               If you have questions or concerns about this Privacy Policy, please contact us at:
             </p>
             <ul>
-              <li><strong>Email:</strong> privacy@whosaidwhat.com</li>
+              <li><strong>Email:</strong> privacy@thewordsrecord.com</li>
             </ul>
           </section>
         </div>
