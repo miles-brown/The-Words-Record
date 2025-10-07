@@ -27,6 +27,7 @@ interface VerificationResult {
     title: string
     publication: string
     date: string
+    author?: string
     harvardCitation: string
     archiveUrl?: string
   }>
@@ -74,7 +75,7 @@ Return JSON only:
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
+        'x-api-key': ANTHROPIC_API_KEY!,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
@@ -121,10 +122,10 @@ Return JSON only:
           year: new Date(source.date).getFullYear(),
           title: source.title,
           publication: source.publication,
-          publicationDate: source.date,
+          publicationDate: new Date(source.date),
           url: source.url,
           archiveUrl,
-          accessDate: new Date().toISOString().split('T')[0]
+          accessDate: new Date()
         })
 
         processedSources.push({
@@ -148,7 +149,7 @@ Return JSON only:
       isVerified: false,
       sources: [],
       confidence: 0,
-      notes: `Verification failed: ${error.message}`
+      notes: `Verification failed: ${error instanceof Error ? error.message : String(error)}`
     }
   }
 }
@@ -204,7 +205,6 @@ async function verifyStatements(limit: number = 10) {
             publication: source.publication,
             author: source.author || null,
             publishDate: new Date(source.date),
-            harvardCitation: source.harvardCitation,
             archiveUrl: source.archiveUrl || null,
             credibilityLevel: result.confidence > 0.8 ? 'VERY_HIGH' :
                            result.confidence > 0.5 ? 'HIGH' : 'MIXED',

@@ -241,7 +241,7 @@ async function updateStatementWithSources(
       title: sourceData.title,
       publication: sourceData.publication,
       author: sourceData.author,
-      publishDate: sourceData.publishDate,
+      publicationDate: sourceData.publishDate,
       accessDate: new Date(),
       url: sourceData.url,
       medium: 'web'

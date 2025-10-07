@@ -325,17 +325,9 @@ async function populateStatement(statement: any, dryRun: boolean): Promise<Popul
       await prisma.statement.update({
         where: { id: statement.id },
         data: {
-          context: contextData.extendedContext,
-          // Store additional context in JSON field or separate fields
-          internalNotes: JSON.stringify({
-            beforeText: contextData.beforeText,
-            afterText: contextData.afterText,
-            situation: contextData.situationDescription,
-            timeline: contextData.timeline,
-            relatedEvents: contextData.relatedEvents,
-            mediaFraming: contextData.mediaFraming,
-            publicReaction: contextData.publicReaction
-          })
+          context: contextData.extendedContext
+          // Note: Additional context data (beforeText, afterText, timeline, etc.)
+          // can be stored in a future internalNotes JSON field when added to schema
         }
       })
       result.fieldsPopulated.push('context', 'extendedContextData')

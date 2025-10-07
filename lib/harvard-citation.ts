@@ -19,6 +19,7 @@ export interface CitationData {
   publicationDate?: Date
   accessDate: Date
   url: string
+  archiveUrl?: string // Internet Archive/Wayback Machine URL
   medium?: 'web' | 'social' | 'book' | 'academic' | 'video' | 'government'
   platform?: string // For social media: Twitter, Facebook, etc.
   publisher?: string // For books
@@ -29,7 +30,7 @@ export interface CitationData {
  * Generate Harvard-style citation from data
  */
 export function generateHarvardCitation(data: CitationData): string {
-  const { author, authorOrg, year, title, publication, publicationDate, accessDate, url, medium, platform, publisher, doi } = data
+  const { author, authorOrg, year, title, publication, publicationDate, accessDate, url, archiveUrl, medium, platform, publisher, doi } = data
 
   let citation = ''
 
@@ -78,6 +79,12 @@ export function generateHarvardCitation(data: CitationData): string {
 
   // Access information
   citation += `. Available at: ${url}`
+
+  // Add archive URL if available
+  if (archiveUrl) {
+    citation += ` [Archived at: ${archiveUrl}]`
+  }
+
   citation += ` (Accessed: ${formatDate(accessDate)})`
 
   return citation + '.'

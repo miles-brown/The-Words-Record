@@ -264,10 +264,25 @@ async function processCitations(content: string): Promise<string> {
         // Extract citation data from URL
         const citationData = await extractCitationFromURL(citation)
 
-        // Generate Harvard citation
+        // Generate Harvard citation only if we have the required title field
+        if (!citationData.title) {
+          throw new Error('Could not extract title from URL')
+        }
+
         const harvardCitation = generateHarvardCitation({
-          ...citationData,
-          archiveUrl: archiveResult.archiveUrl
+          title: citationData.title,
+          url: citationData.url || citation,
+          accessDate: citationData.accessDate || new Date(),
+          author: citationData.author,
+          authorOrg: citationData.authorOrg,
+          year: citationData.year,
+          publication: citationData.publication,
+          publicationDate: citationData.publicationDate,
+          archiveUrl: archiveResult.archiveUrl,
+          medium: citationData.medium,
+          platform: citationData.platform,
+          publisher: citationData.publisher,
+          doi: citationData.doi
         })
 
         harvardCitations.push(harvardCitation)
@@ -296,21 +311,22 @@ async function addTopicClassification(content: string, personName: string): Prom
 
   try {
     // Extract the statement/incident section
-    const statementMatch = content.match(/- \*\*Exact Wording:\*\* \*"(.*?)"\*/s)
-    const contextMatch = content.match(/- \*\*Context:\*\* (.*?)\n/s)
+    const statementMatch = content.match(/- \*\*Exact Wording:\*\* \*"([\s\S]*?)"\*/)
+    const contextMatch = content.match(/- \*\*Context:\*\* ([\s\S]*?)\n/)
 
     if (statementMatch && contextMatch) {
       const classification = await classifyIntoTopics(
         statementMatch[1],
         contextMatch[1],
         personName,
-        null
+        undefined
       )
 
       // Add topic classification to content
       const topicSection = `
 ### TOPIC CLASSIFICATION:
-- **Primary Topics:** ${classification.topics.join(', ')}
+- **Primary Topic:** ${classification.primaryTopic}
+- **Secondary Topics:** ${classification.secondaryTopics.join(', ')}
 - **Relevance Scores:** ${JSON.stringify(classification.relevanceScores)}
 - **Confidence:** ${classification.confidence}
 - **Related Topics:** ${classification.relatedTopics.join(', ')}

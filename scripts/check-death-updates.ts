@@ -148,7 +148,7 @@ Return JSON only:
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': ANTHROPIC_API_KEY,
+        'x-api-key': ANTHROPIC_API_KEY!,
         'anthropic-version': '2023-06-01'
       },
       body: JSON.stringify({
@@ -192,7 +192,7 @@ Return JSON only:
 function parseDeathDate(dateStr: string): Date | null {
   try {
     // Try to parse "DD Month YYYY" format
-    const months = {
+    const months: Record<string, number> = {
       'january': 0, 'february': 1, 'march': 2, 'april': 3,
       'may': 4, 'june': 5, 'july': 6, 'august': 7,
       'september': 8, 'october': 9, 'november': 10, 'december': 11
@@ -338,11 +338,11 @@ async function checkDeathUpdates(options: { force?: boolean; ageGroup?: string }
               publication: source.publication,
               publishDate: new Date(source.date),
               credibilityLevel: result.confidence > 0.8 ? 'VERY_HIGH' : 'HIGH',
-              sourceType: 'OBITUARY'
+              sourceType: 'NEWS_ARTICLE'
             }
           })
         } catch (error) {
-          console.warn(`  ⚠️ Could not create source record: ${error.message}`)
+          console.warn(`  ⚠️ Could not create source record: ${error instanceof Error ? error.message : String(error)}`)
         }
       }
 
@@ -366,7 +366,7 @@ async function checkDeathUpdates(options: { force?: boolean; ageGroup?: string }
 const args = process.argv.slice(2)
 const options = {
   force: args.includes('--force'),
-  ageGroup: args.find(arg => arg.startsWith('--age-group='))?.split('=')[1] || null
+  ageGroup: args.find(arg => arg.startsWith('--age-group='))?.split('=')[1]
 }
 
 if (args.includes('--help')) {
