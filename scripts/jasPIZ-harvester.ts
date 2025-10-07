@@ -732,7 +732,7 @@ async function runIngestionCycle(): Promise<BatchStats> {
         }
 
         // Check for duplicates
-        for (const { statement } of extracted.statements) {
+        for (const { statement, source } of extracted.statements) {
           const hash = computeContentHash(statement.content);
 
           if (await isDuplicate(hash)) {
@@ -742,7 +742,7 @@ async function runIngestionCycle(): Promise<BatchStats> {
           }
 
           // Archive source
-          const archiveUrl = await archiveSource(result.url);
+          const archiveUrl = await archiveSource(source.url);
           if (archiveUrl) {
             stats.archived++;
           }
@@ -765,7 +765,7 @@ async function runIngestionCycle(): Promise<BatchStats> {
           }
 
           // Create source
-          const sourceId = await upsertSource(result, archiveUrl);
+          const sourceId = await upsertSource(source, archiveUrl);
 
           // Create statement
           await createStatement(statement, personId, sourceId);
