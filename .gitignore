@@ -52,3 +52,4 @@ docs/internal/
 *.tmp
 *.temp
 .cache/
+.env.txt

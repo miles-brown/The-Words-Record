@@ -21,6 +21,9 @@ import * as fs from 'fs'
 import * as path from 'path'
 import { execSync } from 'child_process'
 import { config } from 'dotenv'
+import { generateHarvardCitation, extractCitationFromURL } from '../lib/harvard-citation'
+import { saveToWaybackMachine, checkWaybackArchive } from '../lib/archive-service'
+import { classifyIntoTopics } from '../lib/topic-classifier'
 
 // Load environment variables
 config()
@@ -101,7 +104,7 @@ CRITICAL: Every field must be completed with accurate information. Research thor
   - Lost Contracts: [YES/NO - Did they lose contracts, sponsorships, or deals?]
   - Painted Negatively: [YES/NO - Were they painted negatively in media coverage, regardless of whether rightly or wrongly?]
   - Details: [Brief description of the repercussions if any occurred]
-- **Citations:** [List 2-3 credible source URLs]
+- **Citations:** [List 2-3 credible source URLs with titles, publication names, and dates for Harvard citation]
 
 ### RESPONSES TO THE STATEMENT (CRITICAL - RESEARCH THOROUGHLY):
 IMPORTANT: Research if ANYONE responded to this statement - on social media, in interviews, in statements, or directly. Include ALL significant responses.
@@ -237,6 +240,96 @@ async function callOpenAIAPI(personName: string): Promise<string | null> {
 }
 
 /**
+ * Process citations and add Harvard formatting with archiving
+ */
+async function processCitations(content: string): Promise<string> {
+  console.log('📚 Processing citations with Harvard format and archiving...')
+
+  // Extract citation URLs from the content
+  const citationRegex = /- \*\*Citations:\*\* \[(.*?)\]/g
+  const match = citationRegex.exec(content)
+
+  if (!match || !match[1]) return content
+
+  const citations = match[1].split(',').map(c => c.trim())
+  const harvardCitations: string[] = []
+
+  for (const citation of citations) {
+    // If it's a URL, extract citation info and archive it
+    if (citation.startsWith('http')) {
+      try {
+        // Archive the URL
+        const archiveResult = await saveToWaybackMachine(citation)
+
+        // Extract citation data from URL
+        const citationData = await extractCitationFromURL(citation)
+
+        // Generate Harvard citation
+        const harvardCitation = generateHarvardCitation({
+          ...citationData,
+          archiveUrl: archiveResult.archiveUrl
+        })
+
+        harvardCitations.push(harvardCitation)
+      } catch (error) {
+        console.warn(`⚠️ Could not process citation: ${citation}`)
+        harvardCitations.push(citation) // Keep original if processing fails
+      }
+    } else {
+      harvardCitations.push(citation)
+    }
+  }
+
+  // Replace citations in content with Harvard format
+  const harvardCitationsText = harvardCitations.join('\n  ')
+  return content.replace(
+    /- \*\*Citations:\*\* \[.*?\]/,
+    `- **Citations (Harvard Style):**\n  ${harvardCitationsText}`
+  )
+}
+
+/**
+ * Add topic classification to content
+ */
+async function addTopicClassification(content: string, personName: string): Promise<string> {
+  console.log('🏷️ Classifying topics...')
+
+  try {
+    // Extract the statement/incident section
+    const statementMatch = content.match(/- \*\*Exact Wording:\*\* \*"(.*?)"\*/s)
+    const contextMatch = content.match(/- \*\*Context:\*\* (.*?)\n/s)
+
+    if (statementMatch && contextMatch) {
+      const classification = await classifyIntoTopics(
+        statementMatch[1],
+        contextMatch[1],
+        personName,
+        null
+      )
+
+      // Add topic classification to content
+      const topicSection = `
+### TOPIC CLASSIFICATION:
+- **Primary Topics:** ${classification.topics.join(', ')}
+- **Relevance Scores:** ${JSON.stringify(classification.relevanceScores)}
+- **Confidence:** ${classification.confidence}
+- **Related Topics:** ${classification.relatedTopics.join(', ')}
+`
+
+      // Insert before the RESPONSES section
+      return content.replace(
+        '### RESPONSES TO THE STATEMENT',
+        topicSection + '\n### RESPONSES TO THE STATEMENT'
+      )
+    }
+  } catch (error) {
+    console.warn('⚠️ Could not classify topics:', error)
+  }
+
+  return content
+}
+
+/**
  * Save markdown file
  */
 function saveMarkdownFile(personName: string, content: string): string {
@@ -316,12 +409,18 @@ Setup:
   console.log(`\n🚀 Starting AI research for: ${personName}\n`)
 
   // Research incident using AI
-  const markdownContent = await researchIncident(personName)
+  let markdownContent = await researchIncident(personName)
 
   if (!markdownContent) {
     console.log('\n❌ Failed to generate incident data')
     process.exit(1)
   }
+
+  // Process citations with Harvard format and archiving
+  markdownContent = await processCitations(markdownContent)
+
+  // Add topic classification
+  markdownContent = await addTopicClassification(markdownContent, personName)
 
   // Save to markdown file
   const filepath = saveMarkdownFile(personName, markdownContent)

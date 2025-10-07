@@ -152,6 +152,8 @@ model Person {
   isActive                Boolean?                 @default(true)
   isDeceased              Boolean?                 @default(false)
   deceasedDate            DateTime?
+  deathCause              String?
+  lastDeathCheck          DateTime?
   isBlocked               Boolean?                 @default(false)
   isPEP                   Boolean?                 @default(false)
   isHighProfile           Boolean?                 @default(false)
