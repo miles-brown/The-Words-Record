@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Person" ADD COLUMN IF NOT EXISTS "deathCause" TEXT;
+ALTER TABLE "Person" ADD COLUMN IF NOT EXISTS "lastDeathCheck" TIMESTAMP(3);
