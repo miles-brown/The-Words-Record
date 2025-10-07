@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from 'next/document'
-import { useAmp } from 'next/amp'
 
 export default function Document() {
   return (
@@ -35,35 +34,6 @@ export default function Document() {
         {/* Other meta tags can be added here */}
       </Head>
       <body>
-        <Main />
-        <NextScript />
-      </body>
-    </Html>
-  )
-}
-
-// Component for AMP-specific document structure
-export function AmpDocument() {
-  return (
-    <Html lang="en" amp="">
-      <Head>
-        {/* Google AdSense Account Meta Tag */}
-        <meta name="google-adsense-account" content="ca-pub-5418171625369886" />
-
-        {/* AMP Auto Ads Script - Step 1 */}
-        <script
-          async
-          custom-element="amp-auto-ads"
-          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
-        />
-      </Head>
-      <body>
-        {/* AMP Auto Ads Code - Step 2 */}
-        <amp-auto-ads
-          type="adsense"
-          data-ad-client="ca-pub-5418171625369886"
-        />
-
         <Main />
         <NextScript />
       </body>

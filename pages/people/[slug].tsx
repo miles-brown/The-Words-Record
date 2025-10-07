@@ -839,7 +839,3 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 }
 
-// Enable AMP for people pages
-export const config = {
-  amp: 'hybrid'
-}

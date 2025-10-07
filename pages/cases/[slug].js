@@ -297,7 +297,3 @@ export async function getStaticProps({ params }) {
   }
 }
 
-// Enable AMP for case/statement pages
-export const config = {
-  amp: 'hybrid'
-}
