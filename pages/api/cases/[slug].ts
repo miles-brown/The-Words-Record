@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
+import { CaseVisibility } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -52,6 +53,11 @@ export default async function handler(
         })
 
         if (!caseItem) {
+          return res.status(404).json({ error: 'Case not found' })
+        }
+
+        // Handle locked cases - return 404
+        if (caseItem.visibility === CaseVisibility.LOCKED) {
           return res.status(404).json({ error: 'Case not found' })
         }
 

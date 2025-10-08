@@ -392,6 +392,18 @@ model Case {
   hasRepercussion        Boolean?          @default(false)
   wasManuallyPromoted    Boolean?          @default(false)
 
+  // Visibility & Lifecycle management
+  visibility             CaseVisibility    @default(PUBLIC)
+  isFeatured             Boolean?          @default(false)
+  isArchived             Boolean?          @default(false)
+  archivedAt             DateTime?
+  archivedBy             String?
+  archivedReason         String?
+  prominenceScore        Int?              @default(50)
+  lastReviewedAt         DateTime?
+  lastReviewedBy         String?
+  internalNotes          String?
+
   repercussions          Repercussion[]
   sources                Source[]
   statements             Statement[]
@@ -408,6 +420,10 @@ model Case {
   @@index([originatingStatementId])
   @@index([qualificationScore])
   @@index([promotedAt])
+  @@index([visibility])
+  @@index([isFeatured])
+  @@index([isArchived])
+  @@index([prominenceScore])
   @@map("Incident")
 }
 
@@ -934,6 +950,7 @@ enum RoleLevel {
 }
 
 enum CaseStatus {
+  DRAFT
   DOCUMENTED
   VERIFIED
   DISPUTED
@@ -944,10 +961,12 @@ enum CaseStatus {
   UPDATED
   CORRECTED
   RESOLVED
+  ACTIVE
+  DORMANT
+  ARCHIVED
 
   @@map("IncidentStatus")
 }
-
 enum IncidentType {
   STATEMENT_CONTROVERSY
   RESPONSE_BACKLASH
@@ -1783,4 +1802,12 @@ enum Medium {
   PROTEST
   PRIVATE_LEAKED
   UNKNOWN
+}
+
+enum CaseVisibility {
+  DRAFT
+  PUBLIC
+  PENDING_VERIFICATION
+  ARCHIVED
+  LOCKED
 }

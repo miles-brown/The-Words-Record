@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
+import { CaseVisibility } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,9 +17,17 @@ export default async function handler(
         const tag = req.query.tag as string
         const person = req.query.person as string
         const sortBy = req.query.sortBy as string || 'date-desc'
+        const includeArchived = req.query.includeArchived === 'true'
 
-        // Build filter conditions
-        const where: any = {}
+        // Build filter conditions - only show public cases by default
+        const where: any = {
+          visibility: {
+            in: includeArchived
+              ? [CaseVisibility.PUBLIC, CaseVisibility.ARCHIVED]
+              : [CaseVisibility.PUBLIC]
+          }
+        }
+
         if (statusFilter) where.status = statusFilter
         if (tag) {
           where.tags = {
