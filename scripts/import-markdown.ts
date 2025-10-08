@@ -127,7 +127,7 @@ ${incident.response}
   `.trim()
 
   // Create or update incident
-  const incidentRecord = await prisma.incident.upsert({
+  const incidentRecord = await prisma.case.upsert({
     where: { slug: incidentSlug },
     update: {
       title: incidentTitle,
@@ -139,7 +139,7 @@ ${incident.response}
       title: incidentTitle,
       summary: summary,
       description: description,
-      incidentDate: incidentDate,
+      caseDate: incidentDate,
       status: 'DOCUMENTED',
       persons: {
         connect: { id: person.id }
@@ -150,9 +150,9 @@ ${incident.response}
   // Create statement
   await prisma.statement.upsert({
     where: {
-      personId_incidentId_content: {
+      personId_caseId_content: {
         personId: person.id,
-        incidentId: incidentRecord.id,
+        caseId: incidentRecord.id,
         content: statement
       }
     },
@@ -164,7 +164,7 @@ ${incident.response}
       medium: incident.platform as any, // Platform string needs mapping to Medium enum
       isVerified: true,
       personId: person.id,
-      incidentId: incidentRecord.id,
+      caseId: incidentRecord.id,
     },
   })
 
@@ -182,7 +182,7 @@ ${incident.response}
     })
 
     // Connect tag to incident
-    await prisma.incident.update({
+    await prisma.case.update({
       where: { id: incidentRecord.id },
       data: {
         tags: {

@@ -18,12 +18,12 @@ async function main() {
   try {
     // Get count before deletion
     const personCount = await prisma.person.count()
-    const incidentCount = await prisma.incident.count()
+    const caseCount = await prisma.case.count()
     const statementCount = await prisma.statement.count()
 
     console.log(`Current database contents:`)
     console.log(`  Persons: ${personCount}`)
-    console.log(`  Incidents: ${incidentCount}`)
+    console.log(`  Incidents: ${caseCount}`)
     console.log(`  Statements: ${statementCount}`)
     console.log()
 
@@ -37,7 +37,7 @@ async function main() {
     console.log(`✅ Deleted ${deletedSources.count} sources`)
 
     console.log('Deleting incidents...')
-    const deletedIncidents = await prisma.incident.deleteMany({})
+    const deletedIncidents = await prisma.case.deleteMany({})
     console.log(`✅ Deleted ${deletedIncidents.count} incidents`)
 
     console.log('Deleting affiliations...')

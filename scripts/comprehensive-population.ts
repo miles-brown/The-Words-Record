@@ -417,7 +417,7 @@ ${limit ? `Limit: ${limit}` : 'Processing: ALL'}
     const statements = await prisma.statement.findMany({
       include: {
         person: true,
-        incident: true
+        case: true
       },
       take: limit,
       orderBy: { createdAt: 'desc' }

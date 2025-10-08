@@ -43,7 +43,7 @@ async function main() {
   })
 
   // Create the incident
-  const incident = await prisma.incident.upsert({
+  const incident = await prisma.case.upsert({
     where: { slug: 'emma-watson-solidarity-post-2022' },
     update: {},
     create: {
@@ -57,7 +57,7 @@ The post sparked immediate backlash, with Israeli officials and media outlets fr
 Major media outlets including The Guardian, The Independent, and The Times covered the story with headlines describing an "antisemitism row" and "backlash."
 
 Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsky signed a solidarity letter defending Watson. She did not apologize or retract her post.`,
-      incidentDate: new Date('2022-01-03'),
+      caseDate: new Date('2022-01-03'),
       status: 'DOCUMENTED',
       severity: 'MEDIUM',
       persons: {
@@ -79,7 +79,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       medium: 'INSTAGRAM',
       isVerified: true,
       personId: emmaWatson.id,
-      incidentId: incident.id,
+      caseId: incident.id,
     },
   })
 
@@ -93,7 +93,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       responseType: 'CRITICISM',
       medium: 'TWITTER_X',
       personId: dannyDanon.id,
-      incidentId: incident.id,
+      caseId: incident.id,
       respondsToId: watsonStatement.id,
     },
   })
@@ -108,7 +108,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       responseType: 'CRITICISM',
       medium: 'TWITTER_X',
       personId: giladErdan.id,
-      incidentId: incident.id,
+      caseId: incident.id,
       respondsToId: watsonStatement.id,
     },
   })
@@ -120,7 +120,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       publication: 'The Guardian',
       publishDate: new Date('2022-01-03'),
       credibility: 'HIGH',
-      incidentId: incident.id,
+      caseId: incident.id,
     },
   })
 
@@ -130,7 +130,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       publication: 'The Independent',
       publishDate: new Date('2022-01-03'),
       credibility: 'HIGH',
-      incidentId: incident.id,
+      caseId: incident.id,
     },
   })
 
@@ -166,7 +166,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
   })
 
   // Connect tags to incident
-  await prisma.incident.update({
+  await prisma.case.update({
     where: { id: incident.id },
     data: {
       tags: {

@@ -270,7 +270,7 @@ export async function ensureTopicsExist(classification: TopicClassification): Pr
  * Link incident to topics
  */
 export async function linkIncidentToTopics(
-  incidentId: string,
+  caseId: string,
   classification: TopicClassification
 ): Promise<void> {
   const topicIds = await ensureTopicsExist(classification)
@@ -280,11 +280,11 @@ export async function linkIncidentToTopics(
   const primaryTopic = await prisma.topic.findUnique({ where: { slug: primarySlug } })
 
   if (primaryTopic) {
-    await prisma.topicIncident.upsert({
+    await prisma.topicCase.upsert({
       where: {
-        topicId_incidentId: {
+        topicId_caseId: {
           topicId: primaryTopic.id,
-          incidentId
+          caseId
         }
       },
       update: {
@@ -294,7 +294,7 @@ export async function linkIncidentToTopics(
       },
       create: {
         topicId: primaryTopic.id,
-        incidentId,
+        caseId,
         relevanceScore: Math.floor(classification.relevanceScores[classification.primaryTopic] || 10),
         isPrimary: true,
         relationType: 'PRIMARY',
@@ -309,11 +309,11 @@ export async function linkIncidentToTopics(
     const topic = await prisma.topic.findUnique({ where: { slug } })
 
     if (topic) {
-      await prisma.topicIncident.upsert({
+      await prisma.topicCase.upsert({
         where: {
-          topicId_incidentId: {
+          topicId_caseId: {
             topicId: topic.id,
-            incidentId
+            caseId
           }
         },
         update: {
@@ -323,7 +323,7 @@ export async function linkIncidentToTopics(
         },
         create: {
           topicId: topic.id,
-          incidentId,
+          caseId,
           relevanceScore: Math.floor(classification.relevanceScores[secondaryName] || 5),
           isPrimary: false,
           relationType: 'RELATED',

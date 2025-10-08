@@ -78,8 +78,8 @@ function generateSiteMap(
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  // Fetch all incidents, persons, and organizations
-  const incidents = await prisma.incident.findMany({
+  // Fetch all cases, persons, and organizations
+  const cases = await prisma.case.findMany({
     select: { slug: true, updatedAt: true },
     orderBy: { updatedAt: 'desc' }
   })
@@ -94,7 +94,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     orderBy: { updatedAt: 'desc' }
   })
 
-  const sitemap = generateSiteMap(incidents, persons, organizations)
+  const sitemap = generateSiteMap(cases, persons, organizations)
 
   res.setHeader('Content-Type', 'text/xml')
   res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate')

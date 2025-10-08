@@ -8,7 +8,7 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        // Get all incidents with filters and pagination
+        // Get all cases with filters and pagination
         const page = parseInt(req.query.page as string) || 1
         const limit = parseInt(req.query.limit as string) || 10
         const skip = (page - 1) * limit
@@ -36,13 +36,13 @@ export default async function handler(
         }
 
         // Build orderBy based on sortBy parameter
-        let orderBy: any = { incidentDate: 'desc' }
+        let orderBy: any = { caseDate: 'desc' }
         switch (sortBy) {
           case 'date-asc':
-            orderBy = { incidentDate: 'asc' }
+            orderBy = { caseDate: 'asc' }
             break
           case 'date-desc':
-            orderBy = { incidentDate: 'desc' }
+            orderBy = { caseDate: 'desc' }
             break
           case 'title-asc':
             orderBy = { title: 'asc' }
@@ -52,8 +52,8 @@ export default async function handler(
             break
         }
 
-        const [incidents, total] = await Promise.all([
-          prisma.incident.findMany({
+        const [cases, total] = await Promise.all([
+          prisma.case.findMany({
             where,
             skip,
             take: limit,
@@ -74,24 +74,24 @@ export default async function handler(
             },
             orderBy
           }),
-          prisma.incident.count({ where })
+          prisma.case.count({ where })
         ])
 
-        // Add response count to _count object for each incident
-        const incidentsWithResponseCount = incidents.map(incident => {
-          const responseCount = incident.statements?.length || 0
-          const { statements, ...incidentWithoutStatements } = incident
+        // Add response count to _count object for each case
+        const casesWithResponseCount = cases.map(caseItem => {
+          const responseCount = caseItem.statements?.length || 0
+          const { statements, ...caseWithoutStatements } = caseItem
           return {
-            ...incidentWithoutStatements,
+            ...caseWithoutStatements,
             _count: {
-              ...incident._count,
+              ...caseItem._count,
               responses: responseCount
             }
           }
         })
 
         res.status(200).json({
-          incidents: incidentsWithResponseCount,
+          cases: casesWithResponseCount,
           pagination: {
             page,
             limit,
@@ -102,13 +102,13 @@ export default async function handler(
         break
 
       case 'POST':
-        // Create a new incident
+        // Create a new case
         const {
           title,
           slug,
           summary,
           description,
-          incidentDate,
+          caseDate,
           status,
           severity,
           locationCity,
@@ -120,19 +120,19 @@ export default async function handler(
           tagIds = []
         } = req.body
 
-        if (!title || !slug || !summary || !description || !incidentDate) {
-          return res.status(400).json({ 
-            error: 'Title, slug, summary, description, and incident date are required' 
+        if (!title || !slug || !summary || !description || !caseDate) {
+          return res.status(400).json({
+            error: 'Title, slug, summary, description, and case date are required'
           })
         }
 
-        const incident = await prisma.incident.create({
+        const newCase = await prisma.case.create({
           data: {
             title,
             slug,
             summary,
             description,
-            incidentDate: new Date(incidentDate),
+            caseDate: new Date(caseDate),
             status: status || 'DOCUMENTED',
             severity,
             locationCity,
@@ -156,7 +156,7 @@ export default async function handler(
           }
         })
 
-        res.status(201).json(incident)
+        res.status(201).json(newCase)
         break
 
       default:

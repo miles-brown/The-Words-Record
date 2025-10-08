@@ -20,7 +20,7 @@ export default async function handler(
       sourceCount,
       tagCount,
     ] = await Promise.all([
-      prisma.incident.count(),
+      prisma.case.count(),
       prisma.person.count(),
       prisma.organization.count(),
       prisma.statement.count(),
@@ -30,14 +30,14 @@ export default async function handler(
     ])
 
     // Get recent activity
-    const recentIncidents = await prisma.incident.findMany({
+    const recentIncidents = await prisma.case.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
       select: {
         id: true,
         title: true,
         slug: true,
-        incidentDate: true,
+        caseDate: true,
         createdAt: true,
       },
     })
@@ -47,11 +47,11 @@ export default async function handler(
       take: 10,
       include: {
         _count: {
-          select: { incidents: true },
+          select: { cases: true },
         },
       },
       orderBy: {
-        incidents: {
+        cases: {
           _count: 'desc',
         },
       },
@@ -62,11 +62,11 @@ export default async function handler(
       take: 10,
       include: {
         _count: {
-          select: { incidents: true, statements: true },
+          select: { cases: true, statements: true },
         },
       },
       orderBy: {
-        incidents: {
+        cases: {
           _count: 'desc',
         },
       },
@@ -74,7 +74,7 @@ export default async function handler(
 
     return res.status(200).json({
       counts: {
-        incidents: incidentCount,
+        cases: incidentCount,
         persons: personCount,
         organizations: organizationCount,
         statements: statementCount,

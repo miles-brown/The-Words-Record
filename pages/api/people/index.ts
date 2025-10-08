@@ -100,7 +100,7 @@ export default async function handler(
       include: {
         _count: {
           select: {
-            incidents: true,
+            cases: true,
             statements: true
           }
         },

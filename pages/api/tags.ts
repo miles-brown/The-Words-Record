@@ -13,7 +13,7 @@ export default async function handler(
     const tags = await prisma.tag.findMany({
       include: {
         _count: {
-          select: { incidents: true },
+          select: { cases: true },
         },
       },
       orderBy: {

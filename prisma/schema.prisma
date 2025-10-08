@@ -38,7 +38,7 @@ model Person {
   verifiedAt              DateTime?
   verifiedBy              String?
   statementCount          Int                      @default(0)
-  incidentCount           Int                      @default(0)
+  caseCount               Int                      @default(0)
   lastActiveDate          DateTime?
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
@@ -173,7 +173,7 @@ model Person {
   statements              Statement[]              @relation("PersonStatements")
   StatementAuthor         StatementAuthor[]
   groupStatements         Statement[]              @relation("PersonGroupStatements")
-  incidents               Incident[]               @relation("PersonIncidents")
+  cases                   Case[]                   @relation("PersonCases")
 
   @@index([slug])
   @@index([verificationLevel])
@@ -202,7 +202,7 @@ model Organization {
   employeeCount                                     Int?
   annualRevenue                                     Float?
   statementCount                                    Int               @default(0)
-  incidentCount                                     Int               @default(0)
+  caseCount                                         Int               @default(0)
   createdAt                                         DateTime          @default(now())
   updatedAt                                         DateTime          @updatedAt
   orgType                                           OrgType?          @default(OTHER)
@@ -225,7 +225,7 @@ model Organization {
   statements                                        Statement[]       @relation("OrganizationStatements")
   StatementAuthor                                   StatementAuthor[]
   groupStatements                                   Statement[]       @relation("OrganizationGroupStatements")
-  incidents                                         Incident[]        @relation("OrganizationIncidents")
+  cases                                             Case[]            @relation("OrganizationCases")
 
   @@index([slug])
   @@index([type])
@@ -324,7 +324,7 @@ model Topic {
   metaData              Json?
   parentTopic           Topic?          @relation("TopicHierarchy", fields: [parentTopicId], references: [id])
   childTopics           Topic[]         @relation("TopicHierarchy")
-  incidents             TopicIncident[]
+  cases                 TopicCase[]
   relationsFrom         TopicRelation[] @relation("TopicRelationFrom")
   relationsTo           TopicRelation[] @relation("TopicRelationTo")
   tags                  Tag[]           @relation("TopicTags")
@@ -354,16 +354,16 @@ model Topic {
   @@index([topicType, isActive])
 }
 
-model Incident {
+model Case {
   id              String            @id @default(cuid())
   slug            String            @unique
   title           String
   summary         String
   description     String
-  incidentDate    DateTime
+  caseDate        DateTime
   publicationDate DateTime          @default(now())
-  status          IncidentStatus    @default(DOCUMENTED)
-  severity        IncidentSeverity?
+  status          CaseStatus        @default(DOCUMENTED)
+  severity        CaseSeverity?
   severityScore   Int?
   locationCity    String?
   locationState   String?
@@ -382,15 +382,16 @@ model Incident {
   repercussions   Repercussion[]
   sources         Source[]
   statements      Statement[]
-  topics          TopicIncident[]
-  tags            Tag[]             @relation("IncidentTags")
-  organizations   Organization[]    @relation("OrganizationIncidents")
-  persons         Person[]          @relation("PersonIncidents")
+  topics          TopicCase[]
+  tags            Tag[]             @relation("CaseTags")
+  organizations   Organization[]    @relation("OrganizationCases")
+  persons         Person[]          @relation("PersonCases")
 
-  @@index([incidentDate])
+  @@index([caseDate])
   @@index([status])
   @@index([severity])
   @@index([slug])
+  @@map("Incident")
 }
 
 model Statement {
@@ -412,7 +413,7 @@ model Statement {
   personId                                             String?
   organizationId                                       String?
   respondsToId                                         String?
-  incidentId                                           String?
+  caseId                                               String?
   createdAt                                            DateTime           @default(now())
   updatedAt                                            DateTime           @updatedAt
   verificationLevel                                    VerificationLevel? @default(UNVERIFIED)
@@ -457,7 +458,7 @@ model Statement {
   repercussionsAbout                                   Repercussion[]     @relation("ResponseStatement")
   repercussionsCaused                                  Repercussion[]     @relation("TriggeringStatement")
   sources                                              Source[]
-  incident                                             Incident?          @relation(fields: [incidentId], references: [id], onDelete: Restrict)
+  case                                                 Case?              @relation(fields: [caseId], references: [id], onDelete: Restrict)
   Organization_Statement_onBehalfOfOrgIdToOrganization Organization?      @relation("Statement_onBehalfOfOrgIdToOrganization", fields: [onBehalfOfOrgId], references: [id], onUpdate: NoAction, map: "Statement_onBehalfOfOrg_fkey")
   organization                                         Organization?      @relation("OrganizationStatements", fields: [organizationId], references: [id])
   person                                               Person?            @relation("PersonStatements", fields: [personId], references: [id])
@@ -468,11 +469,11 @@ model Statement {
   groupOrganizations                                   Organization[]     @relation("OrganizationGroupStatements")
   groupAuthors                                         Person[]           @relation("PersonGroupStatements")
 
-  @@unique([personId, incidentId, content])
+  @@unique([personId, caseId, content])
   @@index([statementType])
   @@index([personId])
   @@index([organizationId])
-  @@index([incidentId])
+  @@index([caseId])
   @@index([respondsToId])
   @@index([hasRepercussions])
   @@index([isVerified])
@@ -499,7 +500,7 @@ model Repercussion {
   initiatingPersons     String[]
   triggeringStatementId String?
   responseStatementId   String?
-  incidentId            String
+  caseId                String
   mediaOutlets          String[]
   coverageIntensity     String?
   outcome               String?
@@ -511,7 +512,7 @@ model Repercussion {
   updatedAt             DateTime         @updatedAt
   affectedOrganization  Organization?    @relation("OrganizationRepercussions", fields: [affectedOrgId], references: [id])
   affectedPerson        Person?          @relation("PersonRepercussions", fields: [affectedPersonId], references: [id])
-  incident              Incident         @relation(fields: [incidentId], references: [id])
+  case                  Case             @relation(fields: [caseId], references: [id])
   responseStatement     Statement?       @relation("ResponseStatement", fields: [responseStatementId], references: [id])
   triggeringStatement   Statement?       @relation("TriggeringStatement", fields: [triggeringStatementId], references: [id])
   sources               Source[]
@@ -520,7 +521,7 @@ model Repercussion {
   @@index([isTactical])
   @@index([affectedPersonId])
   @@index([affectedOrgId])
-  @@index([incidentId])
+  @@index([caseId])
 }
 
 model Source {
@@ -541,7 +542,7 @@ model Source {
   qualityScore         Int?
   hasByline            Boolean              @default(false)
   hasMultipleSources   Boolean              @default(false)
-  incidentId           String?
+  caseId               String?
   statementId          String?
   repercussionId       String?
   createdAt            DateTime             @default(now())
@@ -595,7 +596,7 @@ model Source {
   createdBy            String?
   lastEditedBy         String?
   AffiliationSources   AffiliationSources[]
-  incident             Incident?            @relation(fields: [incidentId], references: [id])
+  case                 Case?                @relation(fields: [caseId], references: [id])
   journalist           Journalist?          @relation(fields: [journalistId], references: [id])
   mediaOutlet          MediaOutlet?         @relation(fields: [mediaOutletId], references: [id])
   repercussion         Repercussion?        @relation(fields: [repercussionId], references: [id])
@@ -605,7 +606,7 @@ model Source {
   @@index([mediaOutletId])
   @@index([credibility])
   @@index([journalistId])
-  @@index([incidentId])
+  @@index([caseId])
   @@index([statementId])
   @@index([isArchived], map: "idx_source_archived")
   @@index([credibilityLevel], map: "idx_source_credibility")
@@ -650,7 +651,7 @@ model Affiliation {
   departureNote       String?
   wasTerminated       Boolean?             @default(false)
   wasResignation      Boolean?             @default(false)
-  departureIncidentId String?
+  departureCaseId     String?
   hasHiringAuthority  Boolean?             @default(false)
   hasBudgetAuthority  Boolean?             @default(false)
   hasPublicProfile    Boolean?             @default(false)
@@ -716,7 +717,7 @@ model Tag {
   rejectionReason    String?
   requiresApproval   Boolean?    @default(false)
   restrictedTo       String[]
-  incidentCount      Int?        @default(0)
+  caseCount          Int?        @default(0)
   statementCount     Int?        @default(0)
   personCount        Int?        @default(0)
   orgCount           Int?        @default(0)
@@ -725,7 +726,7 @@ model Tag {
   parentTag          Tag?        @relation("TagHierarchy", fields: [parentTagId], references: [id])
   childTags          Tag[]       @relation("TagHierarchy")
   aliases            TagAlias[]
-  incidents          Incident[]  @relation("IncidentTags")
+  cases              Case[]      @relation("CaseTags")
   topics             Topic[]     @relation("TopicTags")
 
   @@index([slug])
@@ -736,24 +737,25 @@ model Tag {
   @@index([usageCount], map: "idx_tag_usage")
 }
 
-model TopicIncident {
+model TopicCase {
   topicId        String
-  incidentId     String
+  caseId         String
   relevanceScore Int?
-  isPrimary      Boolean                @default(false)
-  createdAt      DateTime               @default(now())
-  relationType   TopicIncidentRelation? @default(RELATED)
+  isPrimary      Boolean             @default(false)
+  createdAt      DateTime            @default(now())
+  relationType   TopicCaseRelation?  @default(RELATED)
   notes          String?
   addedBy        String?
-  isVerified     Boolean?               @default(false)
-  updatedAt      DateTime               @default(now()) @updatedAt @db.Timestamptz(6)
-  incident       Incident               @relation(fields: [incidentId], references: [id])
-  topic          Topic                  @relation(fields: [topicId], references: [id])
+  isVerified     Boolean?            @default(false)
+  updatedAt      DateTime            @default(now()) @updatedAt @db.Timestamptz(6)
+  case           Case                @relation(fields: [caseId], references: [id])
+  topic          Topic               @relation(fields: [topicId], references: [id])
 
-  @@id([topicId, incidentId])
+  @@id([topicId, caseId])
   @@index([topicId])
-  @@index([incidentId])
+  @@index([caseId])
   @@index([relationType])
+  @@map("TopicIncident")
 }
 
 model TopicRelation {
@@ -913,7 +915,7 @@ enum RoleLevel {
   HONORARY
 }
 
-enum IncidentStatus {
+enum CaseStatus {
   DOCUMENTED
   VERIFIED
   DISPUTED
@@ -924,6 +926,8 @@ enum IncidentStatus {
   UPDATED
   CORRECTED
   RESOLVED
+
+  @@map("IncidentStatus")
 }
 
 enum IncidentType {
@@ -963,12 +967,14 @@ enum IncidentCategory {
   INSTITUTIONAL_RESPONSE
 }
 
-enum IncidentSeverity {
+enum CaseSeverity {
   LOW
   MEDIUM
   HIGH
   CRITICAL
   MINIMAL
+
+  @@map("IncidentSeverity")
 }
 
 enum ImpactScope {
@@ -1145,12 +1151,14 @@ enum TopicRelationType {
   PART_OF_SERIES
 }
 
-enum TopicIncidentRelation {
+enum TopicCaseRelation {
   PRIMARY
   RELATED
   BACKGROUND
   CONSEQUENCE
   EXAMPLE
+
+  @@map("TopicIncidentRelation")
 }
 
 enum RoleCategory {

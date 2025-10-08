@@ -12,11 +12,11 @@ import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { IncidentWithRelations } from '@/types'
 import prisma from '@/lib/prisma'
 
-interface IncidentPageProps {
+interface CasePageProps {
   incident: any | null
 }
 
-export default function IncidentPage({ incident }: IncidentPageProps) {
+export default function CasePage({ incident }: CasePageProps) {
   const router = useRouter()
 
   if (router.isFallback) {
@@ -27,14 +27,14 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
     )
   }
 
-  if (!incident) {
+  if (!caseData) {
     return (
       <Layout title="Incident Not Found">
         <div className="error-page">
           <h1>Incident Not Found</h1>
-          <p>The incident you're looking for doesn't exist in our database.</p>
-          <Link href="/incidents">
-            <button type="button">Browse All Incidents</button>
+          <p>The case you're looking for doesn't exist in our database.</p>
+          <Link href="/cases">
+            <button type="button">Browse All Cases</button>
           </Link>
         </div>
 
@@ -66,19 +66,19 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Event",
-    "name": incident.title,
-    "description": incident.summary,
-    "startDate": incident.incidentDate,
+    "name": caseData.title,
+    "description": caseData.summary,
+    "startDate": caseData.caseDate,
     "location": {
       "@type": "Place",
-      "name": incident.location || "Unspecified"
+      "name": caseData.location || "Unspecified"
     }
   }
 
   return (
     <Layout 
-      title={incident.title} 
-      description={incident.summary}
+      title={caseData.title} 
+      description={caseData.summary}
     >
       <Head>
         <script
@@ -87,48 +87,48 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
         />
       </Head>
 
-      <article className="incident-page">
+      <article className="case-page">
         <Breadcrumbs
           items={[
-            { label: 'What?', href: '/incidents' },
-            { label: incident.title }
+            { label: 'What?', href: '/cases' },
+            { label: caseData.title }
           ]}
         />
 
-        <div className="incident-header">
-          <h1>{incident.title}</h1>
+        <div className="case-header">
+          <h1>{caseData.title}</h1>
           
-          <div className="incident-meta">
+          <div className="case-meta">
             <span className="meta-item">
-              <time dateTime={incident.incidentDate}>
-                {format(new Date(incident.incidentDate), 'MMMM d, yyyy')}
+              <time dateTime={caseData.caseDate}>
+                {format(new Date(caseData.caseDate), 'MMMM d, yyyy')}
               </time>
             </span>
-            {incident.location && (
+            {caseData.location && (
               <span className="meta-item">
-                {incident.location}
+                {caseData.location}
               </span>
             )}
           </div>
 
-          {incident.tags && incident.tags.length > 0 && (
+          {caseData.tags && caseData.tags.length > 0 && (
             <div className="tags">
-              {incident.tags.map((tag: any) => (
+              {caseData.tags.map((tag: any) => (
                 <span key={tag.id} className="tag">{tag.name}</span>
               ))}
             </div>
           )}
         </div>
 
-        <section className="incident-summary">
+        <section className="case-summary">
           <h2>Summary</h2>
-          <p>{incident.summary}</p>
+          <p>{caseData.summary}</p>
         </section>
 
-        <section className="incident-description">
+        <section className="case-description">
           <h2>Full Description</h2>
           <div className="description-content markdown-content">
-            <ReactMarkdown>{incident.description}</ReactMarkdown>
+            <ReactMarkdown>{caseData.description}</ReactMarkdown>
           </div>
         </section>
 
@@ -137,14 +137,14 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           <p>Advertisement</p>
         </div>
 
-        {incident.persons && incident.persons.length > 0 && (
+        {caseData.persons && caseData.persons.length > 0 && (
           <section className="involved-persons">
             <h2>People Involved</h2>
             <div className="persons-grid">
-              {incident.persons.filter(person => person !== null).map(person => {
+              {caseData.persons.filter(person => person !== null).map(person => {
                 // Determine if person made a statement or response
-                const madeStatement = incident.statements?.some(s => s.person?.id === person.id)
-                const madeResponse = incident.statements?.some(s =>
+                const madeStatement = caseData.statements?.some(s => s.person?.id === person.id)
+                const madeResponse = caseData.statements?.some(s =>
                                      s.responses?.some(r => r.person?.id === person.id)
                                    )
 
@@ -182,11 +182,11 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           </section>
         )}
 
-        {incident.statements && incident.statements.length > 0 && (
+        {caseData.statements && caseData.statements.length > 0 && (
           <section className="statements-section">
-            <h2>Statements ({incident.statements.length})</h2>
+            <h2>Statements ({caseData.statements.length})</h2>
             <div className="statements-timeline">
-              {incident.statements.map((statement) => (
+              {caseData.statements.map((statement) => (
                 <div key={statement.id} className="statement-item stagger-item">
                   <div className="statement-header">
                     {statement.person ? (
@@ -250,11 +250,11 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           </section>
         )}
 
-        {incident.sources && incident.sources.length > 0 && (
+        {caseData.sources && caseData.sources.length > 0 && (
           <section className="sources-section">
             <h2>Sources & References</h2>
             <ol className="sources-list">
-              {incident.sources.map((source) => (
+              {caseData.sources.map((source) => (
                 <li key={source.id}>
                   {source.url ? (
                     <a href={source.url} target="_blank" rel="noopener noreferrer">
@@ -281,16 +281,16 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           </section>
         )}
 
-        {incident.relatedIncidents && incident.relatedIncidents.length > 0 && (
-          <section className="related-incidents">
-            <h2>Related Incidents</h2>
+        {caseData.relatedCases && caseData.relatedCases.length > 0 && (
+          <section className="related-cases">
+            <h2>Related Cases</h2>
             <div className="related-grid">
-              {incident.relatedIncidents.map((related) => (
+              {caseData.relatedCases.map((related) => (
                 <Link href={`/incidents/${related.slug}`} key={related.id}>
                   <div className="related-card">
                     <h3>{related.title}</h3>
                     <span className="related-date">
-                      {format(new Date(related.incidentDate), 'MMM d, yyyy')}
+                      {format(new Date(related.caseDate), 'MMM d, yyyy')}
                     </span>
                     <p className="related-summary">{related.summary}</p>
                   </div>
@@ -300,22 +300,22 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           </section>
         )}
 
-        <footer className="incident-footer">
+        <footer className="case-footer">
           <div className="publication-info">
             <p>
               <strong>Published:</strong>{' '}
-              {format(new Date(incident.publicationDate), 'MMMM d, yyyy')}
+              {format(new Date(caseData.publicationDate), 'MMMM d, yyyy')}
             </p>
             <p>
               <strong>Last Updated:</strong>{' '}
-              {format(new Date(incident.updatedAt), 'MMMM d, yyyy')}
+              {format(new Date(caseData.updatedAt), 'MMMM d, yyyy')}
             </p>
           </div>
           
           <div className="disclaimer">
             <h3>Disclaimer</h3>
             <p>
-              This incident report is compiled from publicly available information and verified sources. 
+              This case report is compiled from publicly available information and verified sources. 
               We strive for accuracy and neutrality in our documentation. If you have corrections or 
               additional verified sources, please contact us.
             </p>
@@ -324,7 +324,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
       </article>
 
       <style jsx>{`
-        .incident-page {
+        .case-page {
           max-width: 900px;
           margin: 0 auto;
         }
@@ -340,20 +340,20 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           text-decoration: underline;
         }
 
-        .incident-header {
+        .case-header {
           margin-bottom: 3rem;
           padding-bottom: 2rem;
           border-bottom: 2px solid var(--border-primary);
         }
 
-        .incident-header h1 {
+        .case-header h1 {
           font-size: 2.5rem;
           color: var(--text-primary);
           margin-bottom: 1rem;
           line-height: 1.2;
         }
 
-        .incident-meta {
+        .case-meta {
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
@@ -402,14 +402,14 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           border-bottom: 2px solid var(--border-primary);
         }
 
-        .incident-summary {
+        .case-summary {
           background: var(--background-secondary);
           padding: 2rem;
           border-radius: 8px;
           border-left: 4px solid var(--accent-primary);
         }
 
-        .incident-summary p {
+        .case-summary p {
           font-size: 1.1rem;
           line-height: 1.8;
           color: var(--text-primary);
@@ -810,13 +810,13 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           color: #e74c3c;
         }
 
-        .related-incidents {
+        .related-cases {
           background: var(--background-secondary);
           border-radius: 8px;
           padding: 2rem;
         }
 
-        .related-incidents h2 {
+        .related-cases h2 {
           margin-bottom: 1.5rem;
         }
 
@@ -865,7 +865,7 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
           overflow: hidden;
         }
 
-        .incident-footer {
+        .case-footer {
           margin-top: 4rem;
           padding-top: 2rem;
           border-top: 2px solid var(--border-primary);
@@ -901,11 +901,11 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
         }
 
         @media (max-width: 768px) {
-          .incident-header h1 {
+          .case-header h1 {
             font-size: 2rem;
           }
 
-          .incident-meta {
+          .case-meta {
             justify-content: center;
           }
 
@@ -962,12 +962,12 @@ export default function IncidentPage({ incident }: IncidentPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const incidents = await prisma.incident.findMany({
+  const caseDatas = await prisma.caseData.findMany({
     select: { slug: true }
   })
 
   const paths = incidents.map((incident) => ({
-    params: { slug: incident.slug }
+    params: { slug: caseData.slug }
   }))
 
   return {
@@ -982,7 +982,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   try {
-    const incident = await prisma.incident.findUnique({
+    const caseData = await prisma.caseData.findUnique({
       where: { slug: params.slug },
       include: {
         persons: true,
@@ -1011,22 +1011,22 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }
     })
 
-    if (!incident) {
+    if (!caseData) {
       return { notFound: true }
     }
 
     // Fetch related incidents based on shared tags or persons
-    const relatedIncidents = await prisma.incident.findMany({
+    const relatedCases = await prisma.caseData.findMany({
       where: {
         AND: [
-          { id: { not: incident.id } }, // Exclude current incident
+          { id: { not: caseData.id } }, // Exclude current incident
           {
             OR: [
               // Incidents with shared tags
               {
                 tags: {
                   some: {
-                    id: { in: incident.tags.map(t => t.id) }
+                    id: { in: caseData.tags.map(t => t.id) }
                   }
                 }
               },
@@ -1034,7 +1034,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
               {
                 persons: {
                   some: {
-                    id: { in: incident.persons.map(p => p.id) }
+                    id: { in: caseData.persons.map(p => p.id) }
                   }
                 }
               }
@@ -1047,10 +1047,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         slug: true,
         title: true,
         summary: true,
-        incidentDate: true,
+        caseDate: true,
       },
       orderBy: {
-        incidentDate: 'desc'
+        caseDate: 'desc'
       },
       take: 3
     })
@@ -1059,7 +1059,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       props: {
         incident: JSON.parse(JSON.stringify({
           ...incident,
-          relatedIncidents
+          relatedCases
         })) // Serialize dates
       }
     }

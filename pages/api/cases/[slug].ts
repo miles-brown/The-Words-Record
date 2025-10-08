@@ -15,7 +15,7 @@ export default async function handler(
     switch (req.method) {
       case 'GET':
         // Get an incident by slug with all related data
-        const incident = await prisma.incident.findUnique({
+        const caseItem = await prisma.case.findUnique({
           where: { slug },
           include: {
             persons: true,
@@ -51,27 +51,27 @@ export default async function handler(
           }
         })
 
-        if (!incident) {
-          return res.status(404).json({ error: 'Incident not found' })
+        if (!caseItem) {
+          return res.status(404).json({ error: 'Case not found' })
         }
 
         // Collect all responses to this incident's statements
-        const responses = incident.statements?.filter(s => s.statementType === 'RESPONSE') || []
+        const responses = caseItem.statements?.filter(s => s.statementType === 'RESPONSE') || []
 
         // Count responses
         const responseCount = responses.length
 
         // Add response count to _count and responses array
-        const incidentWithResponses = {
-          ...incident,
+        const caseWithResponses = {
+          ...caseItem,
           responses,
           _count: {
-            ...incident._count,
+            ...caseItem._count,
             responses: responseCount
           }
         }
 
-        res.status(200).json(incidentWithResponses)
+        res.status(200).json(caseWithResponses)
         break
 
       case 'PUT':
@@ -80,7 +80,7 @@ export default async function handler(
           title,
           summary,
           description,
-          incidentDate,
+          caseDate,
           status,
           severity,
           locationCity,
@@ -104,8 +104,8 @@ export default async function handler(
           locationDetail
         }
 
-        if (incidentDate) {
-          updateData.incidentDate = new Date(incidentDate)
+        if (caseDate) {
+          updateData.caseDate = new Date(caseDate)
         }
 
         // Update relationships if provided
@@ -125,7 +125,7 @@ export default async function handler(
           }
         }
 
-        const updatedIncident = await prisma.incident.update({
+        const updatedIncident = await prisma.case.update({
           where: { slug },
           data: updateData,
           include: {
@@ -140,7 +140,7 @@ export default async function handler(
 
       case 'DELETE':
         // Delete an incident
-        await prisma.incident.delete({
+        await prisma.case.delete({
           where: { slug }
         })
 

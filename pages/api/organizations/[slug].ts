@@ -18,7 +18,7 @@ export default async function handler(
         const organization = await prisma.organization.findUnique({
           where: { slug },
           include: {
-            incidents: {
+            cases: {
               include: {
                 tags: true,
                 persons: true,
@@ -34,12 +34,12 @@ export default async function handler(
                 }
               },
               orderBy: {
-                incidentDate: 'desc'
+                caseDate: 'desc'
               }
             },
             statements: {
               include: {
-                incident: true,
+                case: true,
                 person: true,
                 sources: true,
                 respondsTo: true,
@@ -62,7 +62,7 @@ export default async function handler(
         const organizationWithResponseCounts = {
           ...organization,
           responses,
-          incidents: organization.incidents.map(incident => {
+          cases: organization.cases.map(incident => {
             const responseCount = incident.statements?.length || 0
             const { statements, ...incidentWithoutStatements } = incident
             return {

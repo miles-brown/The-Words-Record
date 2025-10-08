@@ -79,7 +79,7 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
     )
 
     // Check if incident already exists
-    const existingIncident = await prisma.incident.findUnique({
+    const existingIncident = await prisma.case.findUnique({
       where: { slug: caseData.slug }
     })
 
@@ -89,13 +89,13 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
     }
 
     // Create incident
-    const incident = await prisma.incident.create({
+    const incident = await prisma.case.create({
       data: {
         title: caseData.title,
         slug: caseData.slug,
         summary: caseData.summary || caseData.excerpt,
         description: caseData.content,
-        incidentDate: new Date(caseData.incident_date),
+        caseDate: new Date(caseData.incident_date),
         publicationDate: new Date(caseData.date),
         status: (caseData.status || 'DOCUMENTED') as any,
         persons: {
@@ -114,7 +114,7 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
           return prisma.source.create({
             data: {
               title: sourceTitle,
-              incidentId: incident.id,
+              caseId: incident.id,
               credibility: 'HIGH'
             }
           })
@@ -234,7 +234,7 @@ async function main() {
     // Display summary
     const summary = await prisma.$transaction([
       prisma.person.count(),
-      prisma.incident.count(),
+      prisma.case.count(),
       prisma.tag.count(),
       prisma.source.count()
     ])

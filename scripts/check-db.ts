@@ -5,16 +5,16 @@ const prisma = new PrismaClient()
 async function main() {
   try {
     // Count records
-    const [personCount, orgCount, incidentCount] = await Promise.all([
+    const [personCount, orgCount, caseCount] = await Promise.all([
       prisma.person.count(),
       prisma.organization.count(),
-      prisma.incident.count()
+      prisma.case.count()
     ])
 
     console.log('Database Status:')
     console.log(`- Persons: ${personCount}`)
     console.log(`- Organizations: ${orgCount}`)
-    console.log(`- Incidents: ${incidentCount}`)
+    console.log(`- Incidents: ${caseCount}`)
 
     // Get sample organization
     if (orgCount > 0) {

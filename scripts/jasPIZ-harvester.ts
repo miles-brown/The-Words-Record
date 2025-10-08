@@ -520,7 +520,7 @@ async function upsertPerson(personData: ExtractedPerson): Promise<string> {
       yearsActive: null,
       verificationLevel: 'UNVERIFIED',
       statementCount: 0,
-      incidentCount: 0
+      caseCount: 0
     },
     update: {
       // Only update fields that are explicitly provided
@@ -553,7 +553,7 @@ async function upsertOrganization(orgData: ExtractedOrganization): Promise<strin
       website: orgData.website || null,
       verificationLevel: 'UNVERIFIED',
       statementCount: 0,
-      incidentCount: 0,
+      caseCount: 0,
       createdAt: new Date()
     },
     update: {

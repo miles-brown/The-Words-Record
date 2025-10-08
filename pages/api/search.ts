@@ -48,7 +48,7 @@ export default async function handler(
         include: {
           _count: {
             select: {
-              incidents: true,
+              cases: true,
               statements: true
             }
           }
@@ -82,7 +82,7 @@ export default async function handler(
 
     // Search incidents
     if (!type || type === 'incidents') {
-      const incidents = await prisma.incident.findMany({
+      const incidents = await prisma.case.findMany({
         where: {
           OR: [
             { title: { contains: query } },
@@ -130,7 +130,7 @@ export default async function handler(
           metadata: {
             status: incident.status,
             severity: incident.severity,
-            incidentDate: incident.incidentDate,
+            caseDate: incident.caseDate,
             location: locationStr || incident.locationDetail,
             persons: incident.persons.map(p => p.name),
             tags: incident.tags.map(t => t.name),
@@ -155,7 +155,7 @@ export default async function handler(
         include: {
           _count: {
             select: {
-              incidents: true,
+              cases: true,
               statements: true
             }
           },
@@ -207,7 +207,7 @@ export default async function handler(
       results: limitedResults,
       summary: {
         persons: limitedResults.filter(r => r.type === 'person').length,
-        incidents: limitedResults.filter(r => r.type === 'incident').length,
+        cases: limitedResults.filter(r => r.type === 'incident').length,
         organizations: limitedResults.filter(r => r.type === 'organization').length
       }
     })

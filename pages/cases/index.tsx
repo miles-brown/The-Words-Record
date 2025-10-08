@@ -6,8 +6,8 @@ import { IncidentCardSkeleton } from '@/components/LoadingSkeletons'
 import { IncidentWithRelations } from '@/types'
 import { format } from 'date-fns'
 
-export default function IncidentsPage() {
-  const [incidents, setIncidents] = useState([])
+export default function CasesPage() {
+  const [cases, setCases] = useState([])
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 10,
@@ -61,7 +61,7 @@ export default function IncidentsPage() {
   }, [])
 
   useEffect(() => {
-    fetchIncidents(1)
+    fetchCases(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy, selectedTag])
 
@@ -77,7 +77,7 @@ export default function IncidentsPage() {
     }
   }
 
-  const fetchIncidents = async (page: number) => {
+  const fetchCases = async (page: number) => {
     setLoading(true)
     setError(null)
 
@@ -89,14 +89,14 @@ export default function IncidentsPage() {
         ...(selectedTag && { tag: selectedTag })
       })
 
-      const response = await fetch(`/api/incidents?${params}`)
-      if (!response.ok) throw new Error('Failed to fetch incidents')
+      const response = await fetch(`/api/cases?${params}`)
+      if (!response.ok) throw new Error('Failed to fetch cases')
 
       const data = await response.json()
-      setIncidents(data.incidents)
+      setCases(data.cases)
       setPagination(data.pagination)
     } catch (err) {
-      setError('Failed to load incidents. Please try again.')
+      setError('Failed to load cases. Please try again.')
       console.error(err)
     } finally {
       setLoading(false)
@@ -105,10 +105,10 @@ export default function IncidentsPage() {
 
   return (
     <Layout
-      title="What?"
+      title="Cases"
       description="Browse documented statements and public responses"
     >
-      <div className="incidents-page">
+      <div className="cases-page">
         <div className="page-header">
           <h1>What?</h1>
           <p className="page-description">
@@ -167,60 +167,60 @@ export default function IncidentsPage() {
         {error && (
           <div className="error-message" role="alert">
             <p>{error}</p>
-            <button onClick={() => fetchIncidents(pagination.page)}>Try Again</button>
+            <button onClick={() => fetchCases(pagination.page)}>Try Again</button>
           </div>
         )}
 
-        <div className="incidents-list">
+        <div className="cases-list">
           {loading ? (
             <>
               {[...Array(10)].map((_, i) => (
                 <IncidentCardSkeleton key={i} />
               ))}
             </>
-          ) : incidents.length === 0 ? (
+          ) : cases.length === 0 ? (
             <div className="no-results">
-              <h2>No incidents found</h2>
+              <h2>No cases found</h2>
               <p>Try adjusting your filters or check back later.</p>
             </div>
           ) : (
-            incidents.map((incident, index) => (
+            cases.map((caseItem, index) => (
               <>
-                <Link href={`/incidents/${incident.slug}`} key={incident.id}>
-                  <article className="incident-card stagger-item">
-                    <div className="incident-header">
-                      <h2>{incident.title}</h2>
+                <Link href={`/incidents/${caseItem.slug}`} key={caseItem.id}>
+                  <article className="case-card stagger-item">
+                    <div className="case-header">
+                      <h2>{caseItem.title}</h2>
                       <span className="date">
-                        {format(new Date(incident.incidentDate), 'MMMM d, yyyy')}
+                        {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
                       </span>
                     </div>
 
-                    <p className="incident-excerpt">{incident.summary}</p>
+                    <p className="case-excerpt">{caseItem.summary}</p>
 
-                    {incident.persons && incident.persons.length > 0 && (
+                    {caseItem.persons && caseItem.persons.length > 0 && (
                       <div className="involved-persons">
-                        <strong>Involved:</strong> {incident.persons.map(p => p.name).join(', ')}
+                        <strong>Involved:</strong> {caseItem.persons.map(p => p.name).join(', ')}
                       </div>
                     )}
 
-                    <div className="incident-footer">
-                      <div className="incident-stats">
+                    <div className="case-footer">
+                      <div className="case-stats">
                         <span>
-                          {incident._count?.statements || 0} statement{incident._count?.statements !== 1 ? 's' : ''}
+                          {caseItem._count?.statements || 0} statement{caseItem._count?.statements !== 1 ? 's' : ''}
                         </span>
                         <span>•</span>
                         <span>
-                          {incident._count?.responses || 0} response{incident._count?.responses !== 1 ? 's' : ''}
+                          {caseItem._count?.responses || 0} response{caseItem._count?.responses !== 1 ? 's' : ''}
                         </span>
                         <span>•</span>
                         <span>
-                          {incident._count?.sources || 0} source{incident._count?.sources !== 1 ? 's' : ''}
+                          {caseItem._count?.sources || 0} source{caseItem._count?.sources !== 1 ? 's' : ''}
                         </span>
                       </div>
 
-                      {incident.tags && incident.tags.length > 0 && (
+                      {caseItem.tags && caseItem.tags.length > 0 && (
                         <div className="tags">
-                          {incident.tags.map(tag => (
+                          {caseItem.tags.map(tag => (
                             <span key={tag.id} className="tag">{tag.name}</span>
                           ))}
                         </div>
@@ -229,8 +229,8 @@ export default function IncidentsPage() {
                   </article>
                 </Link>
 
-                {/* Ad Banner every 2 incidents */}
-                {(index + 1) % 2 === 0 && index !== incidents.length - 1 && (
+                {/* Ad Banner every 2 cases */}
+                {(index + 1) % 2 === 0 && index !== cases.length - 1 && (
                   <div className="ad-banner ad-banner-between" key={`ad-${index}`}>
                     <p>Advertisement</p>
                   </div>
@@ -243,7 +243,7 @@ export default function IncidentsPage() {
         {!loading && pagination.totalPages > 1 && (
           <div className="pagination">
             <button
-              onClick={() => fetchIncidents(pagination.page - 1)}
+              onClick={() => fetchCases(pagination.page - 1)}
               disabled={pagination.page === 1}
               aria-label="Previous page"
               className="pagination-prev"
@@ -256,7 +256,7 @@ export default function IncidentsPage() {
                 typeof pageNum === 'number' ? (
                   <button
                     key={index}
-                    onClick={() => fetchIncidents(pageNum)}
+                    onClick={() => fetchCases(pageNum)}
                     className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
                     aria-label={`Go to page ${pageNum}`}
                     aria-current={pagination.page === pageNum ? 'page' : undefined}
@@ -272,7 +272,7 @@ export default function IncidentsPage() {
             </div>
 
             <button
-              onClick={() => fetchIncidents(pagination.page + 1)}
+              onClick={() => fetchCases(pagination.page + 1)}
               disabled={pagination.page === pagination.totalPages}
               aria-label="Next page"
               className="pagination-next"
@@ -284,7 +284,7 @@ export default function IncidentsPage() {
       </div>
 
       <style jsx>{`
-        .incidents-page {
+        .cases-page {
           max-width: 900px;
           margin: 0 auto;
         }
@@ -422,13 +422,13 @@ export default function IncidentsPage() {
           background: #b91c1c;
         }
 
-        .incidents-list {
+        .cases-list {
           display: flex;
           flex-direction: column;
           gap: 1.25rem;
         }
 
-        .incident-card {
+        .case-card {
           border: 1px solid var(--border-primary);
           border-radius: 6px;
           padding: 1.75rem;
@@ -437,12 +437,12 @@ export default function IncidentsPage() {
           transition: all 0.2s ease;
         }
 
-        .incident-card:hover {
+        .case-card:hover {
           border-color: var(--border-secondary);
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .incident-header {
+        .case-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
@@ -450,7 +450,7 @@ export default function IncidentsPage() {
           gap: 1rem;
         }
 
-        .incident-header h2 {
+        .case-header h2 {
           font-size: 1.4rem;
           color: var(--text-primary);
           line-height: 1.4;
@@ -464,7 +464,7 @@ export default function IncidentsPage() {
           padding-top: 0.25rem;
         }
 
-        .incident-excerpt {
+        .case-excerpt {
           color: var(--text-secondary);
           line-height: 1.7;
           margin-bottom: 1.25rem;
@@ -482,7 +482,7 @@ export default function IncidentsPage() {
           font-weight: 600;
         }
 
-        .incident-footer {
+        .case-footer {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -492,7 +492,7 @@ export default function IncidentsPage() {
           border-top: 1px solid var(--border-primary);
         }
 
-        .incident-stats {
+        .case-stats {
           display: flex;
           gap: 0.75rem;
           align-items: center;
@@ -601,7 +601,7 @@ export default function IncidentsPage() {
             font-size: 2rem;
           }
 
-          .incident-header {
+          .case-header {
             flex-direction: column;
             gap: 0.5rem;
           }
@@ -610,12 +610,12 @@ export default function IncidentsPage() {
             align-self: flex-start;
           }
 
-          .incident-footer {
+          .case-footer {
             flex-direction: column;
             align-items: flex-start;
           }
 
-          .incident-stats {
+          .case-stats {
             width: 100%;
           }
         }

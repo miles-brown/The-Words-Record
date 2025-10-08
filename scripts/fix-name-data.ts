@@ -115,15 +115,15 @@ async function main() {
       include: {
         _count: {
           select: {
-            incidents: true,
+            cases: true,
             statements: true
           }
         }
       }
     })
 
-    if (hasRelations && (hasRelations._count.incidents > 0 || hasRelations._count.statements > 0)) {
-      console.log(`⚠️  Cannot delete "${entry.name}" - has ${hasRelations._count.incidents} incidents and ${hasRelations._count.statements} statements`)
+    if (hasRelations && (hasRelations._count.cases > 0 || hasRelations._count.statements > 0)) {
+      console.log(`⚠️  Cannot delete "${entry.name}" - has ${hasRelations._count.cases} incidents and ${hasRelations._count.statements} statements`)
     } else {
       await prisma.person.delete({
         where: { id: entry.id }

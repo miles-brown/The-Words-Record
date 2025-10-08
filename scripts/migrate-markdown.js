@@ -95,7 +95,7 @@ async function migrateMarkdownCase(caseData) {
           return prisma.source.create({
             data: {
               title: sourceTitle,
-              incidentId: incident.id,
+              caseId: incident.id,
               credibility: 'verified'
             }
           })

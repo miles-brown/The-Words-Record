@@ -86,13 +86,13 @@ async function importIncident(record: any) {
   const slug = createSlug(record.title)
   const incidentDate = record.date ? parseDate(record.date) : new Date()
 
-  const incident = await prisma.incident.upsert({
+  const incident = await prisma.case.upsert({
     where: { slug },
     update: {
       title: record.title,
       summary: record.summary,
       description: record.description || record.summary,
-      incidentDate: incidentDate,
+      caseDate: incidentDate,
       status: record.status || 'DOCUMENTED',
       locationDetail: record.location || null,
     },
@@ -101,7 +101,7 @@ async function importIncident(record: any) {
       title: record.title,
       summary: record.summary,
       description: record.description || record.summary,
-      incidentDate: incidentDate,
+      caseDate: incidentDate,
       status: record.status || 'DOCUMENTED',
       locationDetail: record.location || null,
     },
@@ -113,7 +113,7 @@ async function importIncident(record: any) {
     for (const personSlug of personSlugs) {
       const person = await prisma.person.findUnique({ where: { slug: personSlug } })
       if (person) {
-        await prisma.incident.update({
+        await prisma.case.update({
           where: { id: incident.id },
           data: {
             persons: {
@@ -139,7 +139,7 @@ async function importIncident(record: any) {
         },
       })
 
-      await prisma.incident.update({
+      await prisma.case.update({
         where: { id: incident.id },
         data: {
           tags: {

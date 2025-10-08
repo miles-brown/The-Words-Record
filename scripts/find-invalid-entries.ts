@@ -27,7 +27,7 @@ async function main() {
           id: true,
           content: true,
           statementType: true,
-          incident: {
+          case: {
             select: {
               id: true,
               title: true
@@ -37,7 +37,7 @@ async function main() {
       },
       _count: {
         select: {
-          incidents: true,
+          cases: true,
           statements: true
         }
       }
@@ -51,13 +51,13 @@ async function main() {
   for (const entry of variousEntries) {
     console.log(`📌 "${entry.name}"`)
     console.log(`   ID: ${entry.id}`)
-    console.log(`   Incidents: ${entry._count.incidents}, Statements: ${entry._count.statements}`)
+    console.log(`   Incidents: ${entry._count.cases}, Statements: ${entry._count.statements}`)
 
     if (entry.statements.length > 0) {
       console.log(`   Statements to reassign or remove:`)
       for (const stmt of entry.statements) {
         console.log(`     - Statement ${stmt.id}: "${stmt.content.substring(0, 100)}..."`)
-        console.log(`       From incident: ${stmt.incident?.title || 'No incident linked'}`)
+        console.log(`       From case: ${stmt.case?.title || 'No incident linked'}`)
       }
     }
 
@@ -66,7 +66,7 @@ async function main() {
       id: entry.id,
       name: entry.name,
       hasStatements: entry._count.statements > 0,
-      hasIncidents: entry._count.incidents > 0,
+      hasIncidents: entry._count.cases > 0,
       statementIds: entry.statements.map(s => s.id)
     })
 
@@ -90,7 +90,7 @@ async function main() {
     include: {
       _count: {
         select: {
-          incidents: true,
+          cases: true,
           statements: true
         }
       }
@@ -102,14 +102,14 @@ async function main() {
     for (const entry of placeholderEntries) {
       console.log(`📌 "${entry.name || '[EMPTY NAME]'}"`)
       console.log(`   ID: ${entry.id}`)
-      console.log(`   Incidents: ${entry._count.incidents}, Statements: ${entry._count.statements}`)
+      console.log(`   Incidents: ${entry._count.cases}, Statements: ${entry._count.statements}`)
 
       removalList.push({
         type: 'person',
         id: entry.id,
         name: entry.name,
         hasStatements: entry._count.statements > 0,
-        hasIncidents: entry._count.incidents > 0
+        hasIncidents: entry._count.cases > 0
       })
     }
   }
@@ -165,7 +165,7 @@ async function main() {
     include: {
       _count: {
         select: {
-          incidents: true,
+          cases: true,
           statements: true
         }
       }
@@ -177,14 +177,14 @@ async function main() {
     for (const entry of suspiciousEntries) {
       console.log(`📌 "${entry.name}"`)
       console.log(`   ID: ${entry.id}`)
-      console.log(`   Incidents: ${entry._count.incidents}, Statements: ${entry._count.statements}`)
+      console.log(`   Incidents: ${entry._count.cases}, Statements: ${entry._count.statements}`)
 
       removalList.push({
         type: 'person',
         id: entry.id,
         name: entry.name,
         hasStatements: entry._count.statements > 0,
-        hasIncidents: entry._count.incidents > 0
+        hasIncidents: entry._count.cases > 0
       })
     }
   }
@@ -230,7 +230,7 @@ async function main() {
           name: true
         }
       },
-      incident: {
+      case: {
         select: {
           title: true
         }
@@ -244,7 +244,7 @@ async function main() {
       console.log(`Statement ${stmt.id}:`)
       console.log(`  Person: "${stmt.person?.name || 'Unknown'}"`)
       console.log(`  Content: "${stmt.content.substring(0, 100)}..."`)
-      console.log(`  Incident: ${stmt.incident?.title || 'None'}`)
+      console.log(`  Incident: ${stmt.case?.title || 'None'}`)
       console.log()
     }
   }

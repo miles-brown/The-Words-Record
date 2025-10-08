@@ -105,7 +105,7 @@ async function main() {
           _count: {
             select: {
               statements: true,
-              incidents: true
+              cases: true
             }
           }
         }
@@ -118,8 +118,8 @@ async function main() {
           continue
         }
 
-        if (person._count.incidents > 0) {
-          console.log(`⚠️  Cannot delete "${entry.name}" - still has ${person._count.incidents} incidents`)
+        if (person._count.cases > 0) {
+          console.log(`⚠️  Cannot delete "${entry.name}" - still has ${person._count.cases} incidents`)
           continue
         }
 
@@ -154,18 +154,18 @@ async function main() {
       // Get both persons
       const primary = await prisma.person.findUnique({
         where: { id: primaryId },
-        include: { _count: { select: { statements: true, incidents: true } } }
+        include: { _count: { select: { statements: true, cases: true } } }
       })
 
       const secondary = await prisma.person.findUnique({
         where: { id: secondaryId },
-        include: { _count: { select: { statements: true, incidents: true } } }
+        include: { _count: { select: { statements: true, cases: true } } }
       })
 
       if (primary && secondary) {
         console.log(`Merging duplicate: ${dup.name}`)
-        console.log(`  Primary (${primaryId}): ${primary._count.statements} statements, ${primary._count.incidents} incidents`)
-        console.log(`  Secondary (${secondaryId}): ${secondary._count.statements} statements, ${secondary._count.incidents} incidents`)
+        console.log(`  Primary (${primaryId}): ${primary._count.statements} statements, ${primary._count.cases} incidents`)
+        console.log(`  Secondary (${secondaryId}): ${secondary._count.statements} statements, ${secondary._count.cases} incidents`)
 
         // Update all statements from secondary to primary
         await prisma.statement.updateMany({
@@ -174,13 +174,13 @@ async function main() {
         })
 
         // Update incident relations (many-to-many)
-        const secondaryIncidents = await prisma.incident.findMany({
+        const secondaryIncidents = await prisma.case.findMany({
           where: { persons: { some: { id: secondaryId } } },
           select: { id: true }
         })
 
         for (const incident of secondaryIncidents) {
-          await prisma.incident.update({
+          await prisma.case.update({
             where: { id: incident.id },
             data: {
               persons: {

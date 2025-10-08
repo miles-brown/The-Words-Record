@@ -353,7 +353,7 @@ ${incident.response || 'No response information available'}
   `.trim()
 
   // Create or update incident
-  const incidentRecord = await prisma.incident.upsert({
+  const incidentRecord = await prisma.case.upsert({
     where: { slug: incidentSlug },
     update: {
       title: incidentTitle,
@@ -365,7 +365,7 @@ ${incident.response || 'No response information available'}
       title: incidentTitle,
       summary: summary,
       description: description,
-      incidentDate: incidentDate,
+      caseDate: incidentDate,
       status: 'DOCUMENTED',
       persons: {
         connect: { id: person.id }
@@ -381,7 +381,7 @@ ${incident.response || 'No response information available'}
     medium: incident.platform,
     isVerified: true,
     personId: person.id,
-    incidentId: incidentRecord.id,
+    caseId: incidentRecord.id,
   }
 
   // Add repercussions if present
@@ -396,9 +396,9 @@ ${incident.response || 'No response information available'}
 
   await prisma.statement.upsert({
     where: {
-      personId_incidentId_content: {
+      personId_caseId_content: {
         personId: person.id,
-        incidentId: incidentRecord.id,
+        caseId: incidentRecord.id,
         content: statement
       }
     },
@@ -423,7 +423,7 @@ ${incident.response || 'No response information available'}
       })
 
       // Connect tag to incident
-      await prisma.incident.update({
+      await prisma.case.update({
         where: { id: incidentRecord.id },
         data: {
           tags: {
@@ -480,7 +480,7 @@ ${incident.response || 'No response information available'}
             statementDate: responseDate,
             statementType: 'RESPONSE',
             responseType: (responseData.responseType?.toUpperCase() || 'CRITICISM') as any,
-            incidentId: incidentRecord.id,
+            caseId: incidentRecord.id,
             personId: responderId,
             organizationId: responderOrgId,
           },
