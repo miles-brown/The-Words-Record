@@ -412,6 +412,7 @@ model Case {
   organizations          Organization[]    @relation("OrganizationCases")
   persons                Person[]          @relation("PersonCases")
   originatingStatement   Statement?        @relation("OriginatingStatement", fields: [originatingStatementId], references: [id])
+  history                CaseHistory[]
 
   @@index([caseDate])
   @@index([status])
@@ -1810,4 +1811,45 @@ enum CaseVisibility {
   PENDING_VERIFICATION
   ARCHIVED
   LOCKED
+}
+
+model CaseHistory {
+  id              String              @id @default(cuid())
+  caseId          String
+  actionType      CaseHistoryAction
+  actionBy        String
+  actionAt        DateTime            @default(now())
+  reason          String?
+  previousValue   String?
+  newValue        String?
+  metadata        Json?
+  
+  case            Case                @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@index([caseId])
+  @@index([actionAt])
+  @@index([actionType])
+}
+
+enum CaseHistoryAction {
+  CREATED
+  PROMOTED_FROM_STATEMENT
+  STATUS_CHANGED
+  VISIBILITY_CHANGED
+  ARCHIVED
+  UNARCHIVED
+  LOCKED
+  UNLOCKED
+  FEATURED
+  UNFEATURED
+  STATEMENT_LINKED
+  STATEMENT_UNLINKED
+  PERSON_ADDED
+  PERSON_REMOVED
+  ORGANIZATION_ADDED
+  ORGANIZATION_REMOVED
+  TAG_ADDED
+  TAG_REMOVED
+  EDITED
+  MERGED
 }

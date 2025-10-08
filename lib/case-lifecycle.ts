@@ -5,6 +5,7 @@
  */
 
 import { PrismaClient, CaseStatus, CaseVisibility } from '@prisma/client'
+import { logArchive, logUnarchive, logLock, logFeature } from './case-history'
 
 const prisma = new PrismaClient()
 
@@ -31,6 +32,9 @@ export async function archiveCase(
     }
   })
 
+  // Log history
+  await logArchive(caseId, archivedBy, reason || 'Case archived')
+
   return caseData
 }
 
@@ -52,6 +56,9 @@ export async function lockCase(
     }
   })
 
+  // Log history
+  await logLock(caseId, lockedBy, reason)
+
   return caseData
 }
 
@@ -70,6 +77,9 @@ export async function unarchiveCase(caseId: string, reviewedBy: string) {
       lastReviewedBy: reviewedBy,
     }
   })
+
+  // Log history
+  await logUnarchive(caseId, reviewedBy)
 
   return caseData
 }
@@ -97,6 +107,9 @@ export async function featureCase(caseId: string, featuredBy: string) {
       lastReviewedBy: featuredBy,
     }
   })
+
+  // Log history
+  await logFeature(caseId, featuredBy)
 
   return caseData
 }

@@ -10,6 +10,7 @@
  */
 
 import { PrismaClient } from '@prisma/client'
+import { logCaseCreation, logStatementLinked } from './case-history'
 
 const prisma = new PrismaClient()
 
@@ -227,6 +228,21 @@ export async function promoteStatementToCase(
       }
     })
   }
+
+  // Log history
+  await logCaseCreation(
+    newCase.id,
+    promotedBy,
+    true, // was promoted from statement
+    statementId
+  )
+
+  await logStatementLinked(
+    newCase.id,
+    statementId,
+    promotedBy,
+    'Originating statement'
+  )
 
   return newCase
 }

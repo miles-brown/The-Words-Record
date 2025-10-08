@@ -27,7 +27,7 @@ export default function CasePage({ incident }: CasePageProps) {
     )
   }
 
-  if (!caseData) {
+  if (!incident) {
     return (
       <Layout title="Incident Not Found">
         <div className="error-page">
@@ -43,12 +43,12 @@ export default function CasePage({ incident }: CasePageProps) {
             text-align: center;
             padding: 4rem 0;
           }
-          
+
           .error-page h1 {
             color: #e74c3c;
             margin-bottom: 1rem;
           }
-          
+
           button {
             background: var(--accent-primary);
             color: white;
@@ -66,19 +66,19 @@ export default function CasePage({ incident }: CasePageProps) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Event",
-    "name": caseData.title,
-    "description": caseData.summary,
-    "startDate": caseData.caseDate,
+    "name": incident.title,
+    "description": incident.summary,
+    "startDate": incident.caseDate,
     "location": {
       "@type": "Place",
-      "name": caseData.location || "Unspecified"
+      "name": incident.location || "Unspecified"
     }
   }
 
   return (
-    <Layout 
-      title={caseData.title} 
-      description={caseData.summary}
+    <Layout
+      title={incident.title}
+      description={incident.summary}
     >
       <Head>
         <script
@@ -91,29 +91,29 @@ export default function CasePage({ incident }: CasePageProps) {
         <Breadcrumbs
           items={[
             { label: 'What?', href: '/cases' },
-            { label: caseData.title }
+            { label: incident.title }
           ]}
         />
 
         <div className="case-header">
-          <h1>{caseData.title}</h1>
-          
+          <h1>{incident.title}</h1>
+
           <div className="case-meta">
             <span className="meta-item">
-              <time dateTime={caseData.caseDate}>
-                {format(new Date(caseData.caseDate), 'MMMM d, yyyy')}
+              <time dateTime={incident.caseDate}>
+                {format(new Date(incident.caseDate), 'MMMM d, yyyy')}
               </time>
             </span>
-            {caseData.location && (
+            {incident.location && (
               <span className="meta-item">
-                {caseData.location}
+                {incident.location}
               </span>
             )}
           </div>
 
-          {caseData.tags && caseData.tags.length > 0 && (
+          {incident.tags && incident.tags.length > 0 && (
             <div className="tags">
-              {caseData.tags.map((tag: any) => (
+              {incident.tags.map((tag: any) => (
                 <span key={tag.id} className="tag">{tag.name}</span>
               ))}
             </div>
@@ -122,13 +122,13 @@ export default function CasePage({ incident }: CasePageProps) {
 
         <section className="case-summary">
           <h2>Summary</h2>
-          <p>{caseData.summary}</p>
+          <p>{incident.summary}</p>
         </section>
 
         <section className="case-description">
           <h2>Full Description</h2>
           <div className="description-content markdown-content">
-            <ReactMarkdown>{caseData.description}</ReactMarkdown>
+            <ReactMarkdown>{incident.description}</ReactMarkdown>
           </div>
         </section>
 
@@ -137,14 +137,14 @@ export default function CasePage({ incident }: CasePageProps) {
           <p>Advertisement</p>
         </div>
 
-        {caseData.persons && caseData.persons.length > 0 && (
+        {incident.persons && incident.persons.length > 0 && (
           <section className="involved-persons">
             <h2>People Involved</h2>
             <div className="persons-grid">
-              {caseData.persons.filter(person => person !== null).map(person => {
+              {incident.persons.filter(person => person !== null).map(person => {
                 // Determine if person made a statement or response
-                const madeStatement = caseData.statements?.some(s => s.person?.id === person.id)
-                const madeResponse = caseData.statements?.some(s =>
+                const madeStatement = incident.statements?.some(s => s.person?.id === person.id)
+                const madeResponse = incident.statements?.some(s =>
                                      s.responses?.some(r => r.person?.id === person.id)
                                    )
 
@@ -182,11 +182,11 @@ export default function CasePage({ incident }: CasePageProps) {
           </section>
         )}
 
-        {caseData.statements && caseData.statements.length > 0 && (
+        {incident.statements && incident.statements.length > 0 && (
           <section className="statements-section">
-            <h2>Statements ({caseData.statements.length})</h2>
+            <h2>Statements ({incident.statements.length})</h2>
             <div className="statements-timeline">
-              {caseData.statements.map((statement) => (
+              {incident.statements.map((statement) => (
                 <div key={statement.id} className="statement-item stagger-item">
                   <div className="statement-header">
                     {statement.person ? (
@@ -250,11 +250,11 @@ export default function CasePage({ incident }: CasePageProps) {
           </section>
         )}
 
-        {caseData.sources && caseData.sources.length > 0 && (
+        {incident.sources && incident.sources.length > 0 && (
           <section className="sources-section">
             <h2>Sources & References</h2>
             <ol className="sources-list">
-              {caseData.sources.map((source) => (
+              {incident.sources.map((source) => (
                 <li key={source.id}>
                   {source.url ? (
                     <a href={source.url} target="_blank" rel="noopener noreferrer">
@@ -281,11 +281,11 @@ export default function CasePage({ incident }: CasePageProps) {
           </section>
         )}
 
-        {caseData.relatedCases && caseData.relatedCases.length > 0 && (
+        {incident.relatedCases && incident.relatedCases.length > 0 && (
           <section className="related-cases">
             <h2>Related Cases</h2>
             <div className="related-grid">
-              {caseData.relatedCases.map((related) => (
+              {incident.relatedCases.map((related) => (
                 <Link href={`/incidents/${related.slug}`} key={related.id}>
                   <div className="related-card">
                     <h3>{related.title}</h3>
@@ -304,19 +304,19 @@ export default function CasePage({ incident }: CasePageProps) {
           <div className="publication-info">
             <p>
               <strong>Published:</strong>{' '}
-              {format(new Date(caseData.publicationDate), 'MMMM d, yyyy')}
+              {format(new Date(incident.publicationDate), 'MMMM d, yyyy')}
             </p>
             <p>
               <strong>Last Updated:</strong>{' '}
-              {format(new Date(caseData.updatedAt), 'MMMM d, yyyy')}
+              {format(new Date(incident.updatedAt), 'MMMM d, yyyy')}
             </p>
           </div>
-          
+
           <div className="disclaimer">
             <h3>Disclaimer</h3>
             <p>
-              This case report is compiled from publicly available information and verified sources. 
-              We strive for accuracy and neutrality in our documentation. If you have corrections or 
+              This case report is compiled from publicly available information and verified sources.
+              We strive for accuracy and neutrality in our documentation. If you have corrections or
               additional verified sources, please contact us.
             </p>
           </div>
@@ -962,12 +962,14 @@ export default function CasePage({ incident }: CasePageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const caseDatas = await prisma.caseData.findMany({
+  // Fixed model name mismatch: caseData → case (prisma.case is the correct model name from schema.prisma)
+  const cases = await prisma.case.findMany({
     select: { slug: true }
   })
 
-  const paths = incidents.map((incident) => ({
-    params: { slug: caseData.slug }
+  // Fixed variable name mismatch: incidents → cases, caseData → caseItem
+  const paths = cases.map((caseItem) => ({
+    params: { slug: caseItem.slug }
   }))
 
   return {
@@ -982,7 +984,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   try {
-    const caseData = await prisma.caseData.findUnique({
+    // Fixed model name mismatch: caseData → case (prisma.case is the correct model name from schema.prisma)
+    const incident = await prisma.case.findUnique({
       where: { slug: params.slug },
       include: {
         persons: true,
@@ -1011,22 +1014,23 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       }
     })
 
-    if (!caseData) {
+    if (!incident) {
       return { notFound: true }
     }
 
+    // Fixed model name mismatch: prisma.caseData → prisma.case
     // Fetch related incidents based on shared tags or persons
-    const relatedCases = await prisma.caseData.findMany({
+    const relatedCases = await prisma.case.findMany({
       where: {
         AND: [
-          { id: { not: caseData.id } }, // Exclude current incident
+          { id: { not: incident.id } }, // Exclude current incident
           {
             OR: [
               // Incidents with shared tags
               {
                 tags: {
                   some: {
-                    id: { in: caseData.tags.map(t => t.id) }
+                    id: { in: incident.tags.map(t => t.id) }
                   }
                 }
               },
@@ -1034,7 +1038,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
               {
                 persons: {
                   some: {
-                    id: { in: caseData.persons.map(p => p.id) }
+                    id: { in: incident.persons.map(p => p.id) }
                   }
                 }
               }
