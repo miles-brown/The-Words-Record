@@ -1,0 +1,28 @@
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                        JASPIZ INGESTION SUMMARY                            ║
+╠════════════════════════════════════════════════════════════════════════════╣
+║                                                                            ║
+║  Imported:             0 new statements                        ║
+║  Updated:              0 persons                                ║
+║  Archived:             0 sources                                ║
+║  Skipped:              0 duplicates                             ║
+║  Errors:               1 failures                                ║
+║                                                                            ║
+║  Duration:             2 seconds                               ║
+║  Started:           10/7/2025, 7:04:23 PM                   ║
+║  Completed:         10/7/2025, 7:04:25 PM                   ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+
+Detailed Stats:
+{
+  "imported": 0,
+  "updated": 0,
+  "archived": 0,
+  "skipped": 0,
+  "errors": 1,
+  "startTime": "2025-10-07T18:04:23.129Z",
+  "endTime": "2025-10-07T18:04:25.504Z"
+}

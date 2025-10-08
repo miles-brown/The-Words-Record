@@ -53,3 +53,6 @@ docs/internal/
 *.temp
 .cache/
 .env.txt
+
+# Local-only to-do lists and notes
+Google AdSense to-do list.md

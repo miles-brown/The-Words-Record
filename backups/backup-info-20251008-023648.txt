@@ -1,0 +1,11 @@
+Database Backup Info
+Created: $(date)
+Purpose: Pre-refactoring backup before Incidents->Cases migration
+Database: Supabase PostgreSQL
+Connection: Via DATABASE_URL in .env
+
+Note: This is a schema backup. For full data backup, use Supabase dashboard.
+To restore schema: Copy the backed up schema.prisma file back to prisma/schema.prisma
+
+Manual data export command (if needed):
+npx prisma db execute --stdin < backups/export-data.sql
