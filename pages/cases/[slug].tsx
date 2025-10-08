@@ -963,6 +963,7 @@ export default function CasePage({ incident }: CasePageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Fixed model name mismatch: caseData → case (prisma.case is the correct model name from schema.prisma)
+  // Schema defines 'model Case' so all queries must use prisma.case, not prisma.caseData
   const cases = await prisma.case.findMany({
     select: { slug: true }
   })
