@@ -355,42 +355,59 @@ model Topic {
 }
 
 model Case {
-  id              String            @id @default(cuid())
-  slug            String            @unique
-  title           String
-  summary         String
-  description     String
-  caseDate        DateTime
-  publicationDate DateTime          @default(now())
-  status          CaseStatus        @default(DOCUMENTED)
-  severity        CaseSeverity?
-  severityScore   Int?
-  locationCity    String?
-  locationState   String?
-  locationCountry String?
-  locationDetail  String?
-  mediaFraming    String?
-  triggeringEvent String?
-  outcome         String?
-  isVerified      Boolean           @default(false)
-  verifiedBy      String?
-  verifiedAt      DateTime?
-  viewCount       Int               @default(0)
-  shareCount      Int               @default(0)
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  repercussions   Repercussion[]
-  sources         Source[]
-  statements      Statement[]
-  topics          TopicCase[]
-  tags            Tag[]             @relation("CaseTags")
-  organizations   Organization[]    @relation("OrganizationCases")
-  persons         Person[]          @relation("PersonCases")
+  id                    String            @id @default(cuid())
+  slug                  String            @unique
+  title                 String
+  summary               String
+  description           String
+  caseDate              DateTime
+  publicationDate       DateTime          @default(now())
+  status                CaseStatus        @default(DOCUMENTED)
+  severity              CaseSeverity?
+  severityScore         Int?
+  locationCity          String?
+  locationState         String?
+  locationCountry       String?
+  locationDetail        String?
+  mediaFraming          String?
+  triggeringEvent       String?
+  outcome               String?
+  isVerified            Boolean           @default(false)
+  verifiedBy            String?
+  verifiedAt            DateTime?
+  viewCount             Int               @default(0)
+  shareCount            Int               @default(0)
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  // Statement-to-Case graduation fields
+  originatingStatementId String?
+  promotedAt             DateTime?
+  promotedBy             String?
+  promotionReason        String?
+  qualificationScore     Int?              @default(0)
+  responseCount          Int?              @default(0)
+  mediaOutletCount       Int?              @default(0)
+  hasPublicReaction      Boolean?          @default(false)
+  hasRepercussion        Boolean?          @default(false)
+  wasManuallyPromoted    Boolean?          @default(false)
+
+  repercussions          Repercussion[]
+  sources                Source[]
+  statements             Statement[]
+  topics                 TopicCase[]
+  tags                   Tag[]             @relation("CaseTags")
+  organizations          Organization[]    @relation("OrganizationCases")
+  persons                Person[]          @relation("PersonCases")
+  originatingStatement   Statement?        @relation("OriginatingStatement", fields: [originatingStatementId], references: [id])
 
   @@index([caseDate])
   @@index([status])
   @@index([severity])
   @@index([slug])
+  @@index([originatingStatementId])
+  @@index([qualificationScore])
+  @@index([promotedAt])
   @@map("Incident")
 }
 
@@ -468,6 +485,7 @@ model Statement {
   StatementAuthor                                      StatementAuthor[]
   groupOrganizations                                   Organization[]     @relation("OrganizationGroupStatements")
   groupAuthors                                         Person[]           @relation("PersonGroupStatements")
+  promotedToCases                                      Case[]             @relation("OriginatingStatement")
 
   @@unique([personId, caseId, content])
   @@index([statementType])
