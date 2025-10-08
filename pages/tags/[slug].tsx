@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'

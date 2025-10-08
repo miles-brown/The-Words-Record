@@ -1,4 +1,3 @@
-// @ts-nocheck
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { getTokenFromCookie, verifyToken } from '@/lib/auth'
 

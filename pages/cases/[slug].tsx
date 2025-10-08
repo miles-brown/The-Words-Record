@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { GetStaticProps, GetStaticPaths } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -962,20 +961,35 @@ export default function CasePage({ incident }: CasePageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Fixed model name mismatch: caseData → case (prisma.case is the correct model name from schema.prisma)
-  // Schema defines 'model Case' so all queries must use prisma.case, not prisma.caseData
-  const cases = await prisma.case.findMany({
-    select: { slug: true }
-  })
+  try {
+    // Corrected Prisma model reference: using prisma.case (schema defines 'model Case')
+    const cases = await prisma.case.findMany({
+      select: { slug: true }
+    })
 
-  // Fixed variable name mismatch: incidents → cases, caseData → caseItem
-  const paths = cases.map((caseItem) => ({
-    params: { slug: caseItem.slug }
-  }))
+    // Safety check: ensure cases is defined and is an array
+    if (!cases || !Array.isArray(cases)) {
+      return {
+        paths: [],
+        fallback: true
+      }
+    }
 
-  return {
-    paths,
-    fallback: true
+    const paths = cases.map((caseItem) => ({
+      params: { slug: caseItem.slug }
+    }))
+
+    return {
+      paths,
+      fallback: true
+    }
+  } catch (error) {
+    console.error('Error in getStaticPaths:', error)
+    // Return empty paths with fallback enabled to allow dynamic generation
+    return {
+      paths: [],
+      fallback: true
+    }
   }
 }
 
@@ -985,7 +999,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   }
 
   try {
-    // Fixed model name mismatch: caseData → case (prisma.case is the correct model name from schema.prisma)
+    // Corrected Prisma model reference: using prisma.case (schema defines 'model Case')
     const incident = await prisma.case.findUnique({
       where: { slug: params.slug },
       include: {
@@ -1019,46 +1033,48 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       return { notFound: true }
     }
 
-    // Fixed model name mismatch: prisma.caseData → prisma.case
-    // Fetch related incidents based on shared tags or persons
-    const relatedCases = await prisma.case.findMany({
-      where: {
-        AND: [
-          { id: { not: incident.id } }, // Exclude current incident
-          {
-            OR: [
-              // Incidents with shared tags
+    // Corrected Prisma model reference: using prisma.case for related cases query
+    // Safety check: only fetch related cases if we have tags or persons
+    const relatedCases = (incident.tags?.length > 0 || incident.persons?.length > 0)
+      ? await prisma.case.findMany({
+          where: {
+            AND: [
+              { id: { not: incident.id } }, // Exclude current case
               {
-                tags: {
-                  some: {
-                    id: { in: incident.tags.map(t => t.id) }
-                  }
-                }
-              },
-              // Incidents with shared persons
-              {
-                persons: {
-                  some: {
-                    id: { in: incident.persons.map(p => p.id) }
-                  }
-                }
+                OR: [
+                  // Cases with shared tags (only if tags exist)
+                  ...(incident.tags?.length > 0 ? [{
+                    tags: {
+                      some: {
+                        id: { in: incident.tags.map(t => t.id) }
+                      }
+                    }
+                  }] : []),
+                  // Cases with shared persons (only if persons exist)
+                  ...(incident.persons?.length > 0 ? [{
+                    persons: {
+                      some: {
+                        id: { in: incident.persons.map(p => p.id) }
+                      }
+                    }
+                  }] : [])
+                ]
               }
             ]
-          }
-        ]
-      },
-      select: {
-        id: true,
-        slug: true,
-        title: true,
-        summary: true,
-        caseDate: true,
-      },
-      orderBy: {
-        caseDate: 'desc'
-      },
-      take: 3
-    })
+          },
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            summary: true,
+            caseDate: true,
+          },
+          orderBy: {
+            caseDate: 'desc'
+          },
+          take: 3
+        })
+      : [] // Return empty array if no tags or persons to match
 
     return {
       props: {
@@ -1066,10 +1082,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           ...incident,
           relatedCases
         })) // Serialize dates
-      }
+      },
+      revalidate: 3600 // Revalidate every hour
     }
   } catch (error) {
-    console.error('Error fetching incident:', error)
+    console.error('Error fetching case:', error)
     return { notFound: true }
   }
 }

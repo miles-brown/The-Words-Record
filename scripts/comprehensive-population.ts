@@ -20,9 +20,8 @@
 
 import { PrismaClient } from '@prisma/client'
 import { config } from 'dotenv'
-import { classifyIntoTopics, linkIncidentToTopics, discoverTopicRelationships, createTopicRelationships } from '../lib/topic-classifier'
-import { generateHarvardCitation, extractCitationFromURL } from '../lib/harvard-citation'
-import { archiveURLComprehensive, calculateArchivalPriority } from '../lib/archive-service'
+// Topic classifier functionality removed - TODO: reimplement if needed
+// import { classifyIntoTopics, linkIncidentToTopics, discoverTopicRelationships, createTopicRelationships } from '../lib/topic-classifier'
 
 config()
 
@@ -294,7 +293,7 @@ async function populatePerson(person: any, dryRun: boolean): Promise<PopulationR
 /**
  * Query comprehensive person data
  */
-async function queryComprehensivePersonData(personName: string, missingFields: string[]): Promise<any> {
+async function queryComprehensivePersonData(_personName: string, _missingFields: string[]): Promise<any> {
   // Implementation similar to enrich-missing-fields.ts but MORE comprehensive
   // This is a placeholder - full implementation would be extensive
   return null
@@ -336,20 +335,21 @@ async function populateStatement(statement: any, dryRun: boolean): Promise<Popul
   }
 
   // Step 2: Classify into topics
-  if (statement.incident) {
-    console.log('  🏷️  Classifying topics...')
-    const classification = await classifyIntoTopics(
-      statement.content,
-      statement.context || '',
-      statement.person?.name
-    )
-
-    if (!dryRun && classification.confidence > 0.7) {
-      await linkIncidentToTopics(statement.incident.id, classification)
-      result.fieldsPopulated.push('topics')
-      console.log(`  ✅ Linked to ${classification.secondaryTopics.length + 1} topics`)
-    }
-  }
+  // TODO: Re-enable when topic classifier is reimplemented
+  // if (statement.incident) {
+  //   console.log('  🏷️  Classifying topics...')
+  //   const classification = await classifyIntoTopics(
+  //     statement.content,
+  //     statement.context || '',
+  //     statement.person?.name
+  //   )
+  //
+  //   if (!dryRun && classification.confidence > 0.7) {
+  //     await linkIncidentToTopics(statement.incident.id, classification)
+  //     result.fieldsPopulated.push('topics')
+  //     console.log(`  ✅ Linked to ${classification.secondaryTopics.length + 1} topics`)
+  //   }
+  // }
 
   // Step 3: Verify and add sources
   const sourceCount = await prisma.source.count({

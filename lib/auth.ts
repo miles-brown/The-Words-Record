@@ -1,4 +1,3 @@
-// @ts-nocheck
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import type { NextApiRequest, NextApiResponse } from 'next'

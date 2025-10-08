@@ -13,8 +13,8 @@ export default function FourOhFour() {
             <button>Go to Homepage</button>
           </Link>
         </div>
-        <p>Looks like you’re lost — but at least you found this page!</p>
-        <p>But hey, this webpage was promised to the Jews thousands of years ago — guess we’re still waiting on the delivery.</p>
+        <p>Looks like you're lost — but at least you found this page!</p>
+        <p>But hey, this webpage was promised to the Jews thousands of years ago — guess we're still waiting on the delivery.</p>
       </div>
     </Layout>
   );
