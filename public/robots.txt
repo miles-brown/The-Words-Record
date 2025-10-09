@@ -137,11 +137,11 @@ Disallow: /*.dmg$
 Disallow: /*.iso$
 
 # Sitemap location
-Sitemap: https://whosaidwhat.com/sitemap.xml
-Sitemap: https://whosaidwhat.com/sitemap-cases.xml
-Sitemap: https://whosaidwhat.com/sitemap-people.xml
-Sitemap: https://whosaidwhat.com/sitemap-organizations.xml
-Sitemap: https://whosaidwhat.com/sitemap-news.xml
+Sitemap: https://thewordsrecord.com/sitemap.xml
+Sitemap: https://thewordsrecord.com/sitemap-cases.xml
+Sitemap: https://thewordsrecord.com/sitemap-people.xml
+Sitemap: https://thewordsrecord.com/sitemap-organizations.xml
+Sitemap: https://thewordsrecord.com/sitemap-news.xml
 
 # Host (optional - helps with canonicalization)
-Host: https://whosaidwhat.com
+Host: https://thewordsrecord.com
