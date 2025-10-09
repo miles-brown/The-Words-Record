@@ -107,7 +107,7 @@ export function withPermission(permission: Permission) {
         }
 
         // Verify token
-        const payload = verifyToken(token, 'access')
+        const payload = verifyToken(token) as any
         if (!payload) {
           return res.status(401).json({ error: 'Invalid or expired token' })
         }
@@ -175,7 +175,7 @@ export function withRole(allowedRoles: UserRole[]) {
           return res.status(401).json({ error: 'Authentication required' })
         }
 
-        const payload = verifyToken(token, 'access')
+        const payload = verifyToken(token) as any
         if (!payload) {
           return res.status(401).json({ error: 'Invalid or expired token' })
         }
@@ -227,7 +227,7 @@ export function withAnyPermission(permissions: Permission[]) {
           return res.status(401).json({ error: 'Authentication required' })
         }
 
-        const payload = verifyToken(token, 'access')
+        const payload = verifyToken(token) as any
         if (!payload) {
           return res.status(401).json({ error: 'Invalid or expired token' })
         }
@@ -285,7 +285,7 @@ export function withContentOwnership(contentType: 'draft' | 'apikey') {
           return res.status(401).json({ error: 'Authentication required' })
         }
 
-        const payload = verifyToken(token, 'access')
+        const payload = verifyToken(token) as any
         if (!payload) {
           return res.status(401).json({ error: 'Invalid or expired token' })
         }
