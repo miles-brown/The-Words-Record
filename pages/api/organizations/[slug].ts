@@ -56,19 +56,19 @@ export default async function handler(
           return res.status(404).json({ error: 'Organization not found' })
         }
 
-        // Add response count to _count object for each incident
+        // Add response count to _count object for each case
         // Also separate responses from statements for the organization
         const responses = organization.statements?.filter(s => s.statementType === 'RESPONSE') || []
         const organizationWithResponseCounts = {
           ...organization,
           responses,
-          cases: organization.cases.map(incident => {
-            const responseCount = incident.statements?.length || 0
-            const { statements, ...incidentWithoutStatements } = incident
+          cases: organization.cases.map(caseItem => {
+            const responseCount = caseItem.statements?.length || 0
+            const { statements, ...caseWithoutStatements } = caseItem
             return {
-              ...incidentWithoutStatements,
+              ...caseWithoutStatements,
               _count: {
-                ...incident._count,
+                ...caseItem._count,
                 responses: responseCount
               }
             }

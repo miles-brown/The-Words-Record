@@ -7,12 +7,12 @@ const nextConfig = {
   async redirects() {
     return [
       {
-        source: '/incidents',
+        source: '/cases',
         destination: '/cases',
         permanent: true,
       },
       {
-        source: '/incidents/:slug',
+        source: '/cases/:slug',
         destination: '/cases/:slug',
         permanent: true,
       },

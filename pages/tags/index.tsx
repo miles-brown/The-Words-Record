@@ -54,7 +54,7 @@ export default function TagsPage() {
                   <h2>{tag.name}</h2>
                   {tag.description && <p className="tag-description">{tag.description}</p>}
                   <div className="tag-count">
-                    {tag._count?.cases || 0} incident{tag._count?.cases !== 1 ? 's' : ''}
+                    {tag._count?.cases || 0} case{tag._count?.cases !== 1 ? 's' : ''}
                   </div>
                 </div>
               </Link>

@@ -42,8 +42,8 @@ async function main() {
     },
   })
 
-  // Create the incident
-  const incident = await prisma.case.upsert({
+  // Create the case
+  const caseItem = await prisma.case.upsert({
     where: { slug: 'emma-watson-solidarity-post-2022' },
     update: {},
     create: {
@@ -79,7 +79,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       medium: 'INSTAGRAM',
       isVerified: true,
       personId: emmaWatson.id,
-      caseId: incident.id,
+      caseId: caseItem.id,
     },
   })
 
@@ -93,7 +93,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       responseType: 'CRITICISM',
       medium: 'TWITTER_X',
       personId: dannyDanon.id,
-      caseId: incident.id,
+      caseId: caseItem.id,
       respondsToId: watsonStatement.id,
     },
   })
@@ -108,7 +108,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       responseType: 'CRITICISM',
       medium: 'TWITTER_X',
       personId: giladErdan.id,
-      caseId: incident.id,
+      caseId: caseItem.id,
       respondsToId: watsonStatement.id,
     },
   })
@@ -120,7 +120,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       publication: 'The Guardian',
       publishDate: new Date('2022-01-03'),
       credibility: 'HIGH',
-      caseId: incident.id,
+      caseId: caseItem.id,
     },
   })
 
@@ -130,7 +130,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       publication: 'The Independent',
       publishDate: new Date('2022-01-03'),
       credibility: 'HIGH',
-      caseId: incident.id,
+      caseId: caseItem.id,
     },
   })
 
@@ -141,7 +141,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
     create: {
       slug: 'antisemitism-accusations',
       name: 'Antisemitism Accusations',
-      description: 'Incidents involving accusations of antisemitism',
+      description: 'Cases involving accusations of antisemitism',
     },
   })
 
@@ -151,7 +151,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
     create: {
       slug: 'palestine-solidarity',
       name: 'Palestine Solidarity',
-      description: 'Incidents related to expressions of solidarity with Palestine',
+      description: 'Cases related to expressions of solidarity with Palestine',
     },
   })
 
@@ -161,13 +161,13 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
     create: {
       slug: 'social-media',
       name: 'Social Media',
-      description: 'Incidents originating on social media platforms',
+      description: 'Cases originating on social media platforms',
     },
   })
 
-  // Connect tags to incident
+  // Connect tags to case
   await prisma.case.update({
-    where: { id: incident.id },
+    where: { id: caseItem.id },
     data: {
       tags: {
         connect: [
@@ -182,7 +182,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
   console.log('✅ Seed data created successfully!')
   console.log('Created:')
   console.log('- 3 people (Emma Watson, Danny Danon, Gilad Erdan)')
-  console.log('- 1 incident')
+  console.log('- 1 case')
   console.log('- 1 statement')
   console.log('- 2 responses')
   console.log('- 2 sources')

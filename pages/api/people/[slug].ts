@@ -54,16 +54,16 @@ export default async function handler(
           return res.status(404).json({ error: 'Person not found' })
         }
 
-        // Add response count to _count object for each incident
+        // Add response count to _count object for each case
         const personWithResponseCounts = {
           ...person,
-          cases: person.cases.map(incident => {
-            const responseCount = incident.statements?.length || 0
-            const { statements, ...incidentWithoutStatements } = incident
+          cases: person.cases.map(caseItem => {
+            const responseCount = caseItem.statements?.length || 0
+            const { statements, ...caseWithoutStatements } = caseItem
             return {
-              ...incidentWithoutStatements,
+              ...caseWithoutStatements,
               _count: {
-                ...incident._count,
+                ...caseItem._count,
                 responses: responseCount
               }
             }

@@ -187,7 +187,7 @@ async function migrate() {
           title: caseItem.title,
           summary: caseItem.summary,
           description: caseItem.description,
-          incidentDate: new Date(caseItem.incidentDate),
+          caseDate: new Date(caseItem.caseDate),
           publicationDate: caseItem.publicationDate ? new Date(caseItem.publicationDate) : new Date(),
           status: caseItem.status === 'documented' ? 'DOCUMENTED' : 'DOCUMENTED',
           severity: caseItem.severity ?
@@ -224,7 +224,7 @@ async function migrate() {
           paintedNegatively: statement.paintedNegatively === 1,
           repercussionDetails: statement.repercussionDetails,
           personId: statement.personId,
-          incidentId: statement.incidentId,
+          caseId: statement.caseId,
           createdAt: statement.createdAt ? new Date(statement.createdAt) : new Date(),
           updatedAt: statement.updatedAt ? new Date(statement.updatedAt) : new Date()
         }
@@ -247,7 +247,7 @@ async function migrate() {
           personId: response.personId,
           organizationId: response.organizationId,
           respondsToId: response.statementId,
-          incidentId: response.incidentId,
+          caseId: response.caseId,
           createdAt: response.createdAt ? new Date(response.createdAt) : new Date(),
           updatedAt: response.updatedAt ? new Date(response.updatedAt) : new Date()
         }

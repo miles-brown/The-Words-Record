@@ -50,7 +50,7 @@ export default function StatsPage() {
   return (
     <Layout
       title="Statistics"
-      description="Overview of documented incidents, people, and statements"
+      description="Overview of documented cases, people, and statements"
     >
       <div className="stats-page">
         <header className="page-header">
@@ -99,7 +99,7 @@ export default function StatsPage() {
           <section className="stats-section">
             <h2>Recent Activity</h2>
             <div className="recent-list">
-              {stats.recentIncidents.map((caseItem: any) => (
+              {stats.recentCases.map((caseItem: any) => (
                 <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
                   <div className="recent-item">
                     <h3>{caseItem.title}</h3>
@@ -120,7 +120,7 @@ export default function StatsPage() {
                   <div className="list-item">
                     <span className="name">{person.name}</span>
                     <span className="count">
-                      {person._count.cases} incident{person._count.cases !== 1 ? 's' : ''}
+                      {person._count.cases} case{person._count.cases !== 1 ? 's' : ''}
                     </span>
                   </div>
                 </Link>

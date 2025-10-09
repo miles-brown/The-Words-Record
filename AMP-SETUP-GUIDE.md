@@ -41,12 +41,12 @@ To enable AMP on specific pages, you need to export an AMP config. Here are exam
 
 Serves both regular and AMP versions at different URLs.
 
-**Example for `pages/incidents/[slug].js`:**
+**Example for `pages/cases/[slug].js`:**
 
 ```javascript
 // At the end of the file, add:
 export const config = {
-  amp: 'hybrid' // Enables both /incidents/slug and /incidents/slug.amp
+  amp: 'hybrid' // Enables both /cases/slug and /cases/slug.amp
 }
 ```
 
@@ -56,13 +56,13 @@ Makes the entire page AMP-only.
 
 ```javascript
 export const config = {
-  amp: true // Makes /incidents/slug AMP-only
+  amp: true // Makes /cases/slug AMP-only
 }
 ```
 
-### Example: Enable AMP for Incident Pages
+### Example: Enable AMP for Case Pages
 
-Here's how to modify `pages/incidents/[slug].tsx`:
+Here's how to modify `pages/cases/[slug].tsx`:
 
 ```typescript
 // ... existing imports and component code ...
@@ -73,7 +73,7 @@ export async function getServerSideProps(context) {
 
 // Add this at the end:
 export const config = {
-  amp: 'hybrid' // Enable AMP with /incidents/slug.amp URL
+  amp: 'hybrid' // Enable AMP with /cases/slug.amp URL
 }
 ```
 
@@ -81,7 +81,7 @@ export const config = {
 
 Enable AMP on these content pages for best monetization:
 
-1. ✅ **Incident pages** - `pages/incidents/[slug].tsx`
+1. ✅ **Case pages** - `pages/cases/[slug].tsx`
 2. ✅ **Person pages** - `pages/people/[slug].tsx`
 3. ✅ **Organization pages** - `pages/organizations/[slug].tsx`
 4. ✅ **Tag pages** - `pages/tags/[slug].tsx`
@@ -99,8 +99,8 @@ export const config = { amp: 'hybrid' }
 
 Once enabled, access AMP versions by adding `.amp` to URLs:
 
-- Regular: `https://thewordsrecord.com/incidents/some-incident`
-- AMP: `https://thewordsrecord.com/incidents/some-incident.amp`
+- Regular: `https://thewordsrecord.com/cases/some-case`
+- AMP: `https://thewordsrecord.com/cases/some-case.amp`
 
 ### Validate AMP
 
@@ -203,7 +203,7 @@ If `/page.amp` returns 404:
 
 ```bash
 # Edit the page file
-nano pages/incidents/[slug].tsx
+nano pages/cases/[slug].tsx
 
 # Add at the end:
 export const config = { amp: 'hybrid' }
@@ -215,7 +215,7 @@ export const config = { amp: 'hybrid' }
 npm run dev
 
 # Visit:
-# http://localhost:3000/incidents/some-incident.amp
+# http://localhost:3000/cases/some-case.amp
 ```
 
 ### Deploy
@@ -230,7 +230,7 @@ git push
 
 ## 📚 Next Steps
 
-1. ✅ Choose pages to enable AMP (start with incident pages)
+1. ✅ Choose pages to enable AMP (start with case pages)
 2. ✅ Add `export const config = { amp: 'hybrid' }` to those pages
 3. ✅ Test AMP validation locally
 4. ✅ Deploy to production

@@ -39,7 +39,7 @@ export default function Methodology() {
             <p>
               We do not rely on anonymous sources, unverified social media accounts, or
               outlets known for spreading misinformation. Every source is linked directly
-              in the incident entry for transparency and verification.
+              in the case entry for transparency and verification.
             </p>
           </section>
 
@@ -82,14 +82,14 @@ export default function Methodology() {
           <section className="methodology-section">
             <h2>Categorization and Tagging</h2>
             <p>
-              Each incident is categorized using descriptive tags to enable filtering and discovery.
+              Each case is categorized using descriptive tags to enable filtering and discovery.
               Tags are applied based on:
             </p>
             <ul>
               <li><strong>Subject Matter:</strong> The topic or issue being discussed</li>
               <li><strong>Type of Statement:</strong> Allegation, denial, apology, clarification, etc.</li>
               <li><strong>Industry or Field:</strong> Entertainment, politics, business, sports, etc.</li>
-              <li><strong>Geographic Location:</strong> Where relevant to the incident</li>
+              <li><strong>Geographic Location:</strong> Where relevant to the case</li>
             </ul>
             <p>
               Tags are standardized to maintain consistency and improve searchability across

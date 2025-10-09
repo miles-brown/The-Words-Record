@@ -1,8 +1,8 @@
 # AI Automation Guide
 
-## 🤖 Automated Incident Research & Import
+## 🤖 Automated Case Research & Import
 
-This system uses AI to automatically research, document, and import incidents to your database **without manual work**.
+This system uses AI to automatically research, document, and import cases to your database **without manual work**.
 
 ---
 
@@ -25,13 +25,13 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxx
 ### 2. Run for a Single Person
 
 ```bash
-npx tsx scripts/ai-incident-generator.ts "Elon Musk" --auto-import
+npx tsx scripts/ai-case-generator.ts "Elon Musk" --auto-import
 ```
 
 ### 3. Done!
 
 The AI will:
-- 🔍 Research recent incidents
+- 🔍 Research recent cases
 - 📝 Write a properly formatted markdown file
 - 💾 Import directly to your database
 - ✅ Make it live on your website immediately
@@ -67,7 +67,7 @@ The script will:
 
 ## Scheduled Automation (Cron Jobs)
 
-Want incidents added automatically every day? Set up a cron job:
+Want cases added automatically every day? Set up a cron job:
 
 ### On Mac/Linux
 
@@ -96,7 +96,7 @@ If you want to review before importing:
 
 ```bash
 # Generate without auto-import
-npx tsx scripts/ai-incident-generator.ts "Person Name"
+npx tsx scripts/ai-case-generator.ts "Person Name"
 
 # Review the generated file in data/auto-generated/
 
@@ -111,7 +111,7 @@ npx tsx scripts/import-markdown.ts data/auto-generated/person-name-2025-01-15.md
 ### 1. AI Research Prompt
 
 The AI is instructed to:
-- Find verifiable, recent incidents
+- Find verifiable, recent cases
 - Use credible sources (major news outlets, court docs)
 - Be strictly neutral and factual
 - Format in the exact markdown structure needed
@@ -124,14 +124,14 @@ The AI will:
 - ✅ Cite credible sources
 - ✅ Use direct quotes when available
 - ✅ Maintain neutrality
-- ❌ Skip if no significant incident found
+- ❌ Skip if no significant case found
 - ❌ Avoid speculation or opinion
 
 ### 3. Auto-Import
 
 The system:
 - Creates Person records
-- Creates Incident records
+- Creates Case records
 - Creates Statement records
 - Auto-generates tags from categories
 - Links everything together
@@ -145,7 +145,7 @@ The system:
 
 Create `.github/workflows/ai-research.yml`:
 ```yaml
-name: AI Incident Research
+name: AI Case Research
 on:
   schedule:
     - cron: '0 2 * * *'  # Daily at 2am
@@ -185,12 +185,12 @@ Then create `pages/api/cron/ai-research.ts` that calls the batch generator.
 ### AI API Costs
 
 **Anthropic Claude:**
-- ~$0.01-0.03 per incident researched
-- 100 incidents = ~$1-3
+- ~$0.01-0.03 per case researched
+- 100 cases = ~$1-3
 
 **OpenAI GPT-4:**
-- ~$0.02-0.05 per incident researched
-- 100 incidents = ~$2-5
+- ~$0.02-0.05 per case researched
+- 100 cases = ~$2-5
 
 ### Rate Limits
 
@@ -206,8 +206,8 @@ The batch script automatically waits 5 seconds between requests to avoid:
 ### "No API key found"
 Add `ANTHROPIC_API_KEY` or `OPENAI_API_KEY` to your `.env` file.
 
-### "NO_INCIDENT_FOUND"
-The AI couldn't find a significant, verifiable incident for that person. This is normal - not everyone has documented controversies.
+### "NO_CASE_FOUND"
+The AI couldn't find a significant, verifiable case for that person. This is normal - not everyone has documented controversies.
 
 ### Import fails
 - Check database connection in `.env`
@@ -223,7 +223,7 @@ Increase `DELAY_BETWEEN_REQUESTS` in `batch-ai-generator.ts` from 5000 to 10000 
 ### 1. Start Small
 Test with 1-2 people before running batch jobs:
 ```bash
-npx tsx scripts/ai-incident-generator.ts "Test Person" --auto-import
+npx tsx scripts/ai-case-generator.ts "Test Person" --auto-import
 ```
 
 ### 2. Review First Batch
@@ -255,7 +255,7 @@ Commit auto-generated markdown files to git so you have a record of what was imp
    - Delete any questionable entries from database if needed
 
 3. **Evening**: Content is live
-   - New incidents appear on your site
+   - New cases appear on your site
    - Search indexes updated
    - Tags automatically created
 
@@ -273,11 +273,11 @@ npx tsx scripts/batch-ai-generator.ts data/weekly-list.txt --auto-import
 
 ## Files Reference
 
-- `scripts/ai-incident-generator.ts` - Single person AI research
+- `scripts/ai-case-generator.ts` - Single person AI research
 - `scripts/batch-ai-generator.ts` - Multi-person batch processing
 - `scripts/import-markdown.ts` - Import markdown to database
 - `data/auto-generated/` - Where AI-generated files are saved
-- `data/example-incidents.md` - Manual markdown examples
+- `data/example-cases.md` - Manual markdown examples
 
 ---
 

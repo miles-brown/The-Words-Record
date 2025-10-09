@@ -1,16 +1,16 @@
 # Who Said What
 
-> A comprehensive knowledge graph documenting public statements, incidents, and responses with neutral, factual analysis.
+> A comprehensive knowledge graph documenting public statements, cases, and responses with neutral, factual analysis.
 
 ## Features
 
-- 📝 **Incident Documentation** - Detailed records of public events and statements
+- 📝 **Case Documentation** - Detailed records of public events and statements
 - 👥 **Person Profiles** - Wikipedia-style profiles with biographical information and affiliations
 - 🏢 **Organizations** - Track institutional responses and affiliations
 - 🔗 **Knowledge Graph** - Relational structure connecting people, events, statements, and organizations
 - 🔍 **Full-Text Search** - Fast autocomplete search across all content
 - 📱 **Responsive Design** - Mobile-friendly interface with progressive web app support
-- 📊 **Timeline Views** - Chronological presentation of related incidents
+- 📊 **Timeline Views** - Chronological presentation of related cases
 - 🎨 **Elegant Typography** - Garamond quotes with curly quotation marks
 - 📚 **Source Citations** - Comprehensive reference system with credibility tracking
 
@@ -58,9 +58,9 @@ Visit http://localhost:3002
 
 ### Import Content
 
-Import incidents from markdown:
+Import cases from markdown:
 ```bash
-npx tsx scripts/import-markdown.ts data/example-incidents.md
+npx tsx scripts/import-markdown.ts data/example-cases.md
 ```
 
 See [IMPORT-GUIDE.md](./data/IMPORT-GUIDE.md) for content formatting.
@@ -86,7 +86,7 @@ See [IMPORT-GUIDE.md](./data/IMPORT-GUIDE.md) for content formatting.
 ├── components/          # React components
 ├── pages/              # Next.js pages and API routes
 │   ├── api/           # API endpoints
-│   ├── incidents/     # Incident pages
+│   ├── cases/         # Case pages
 │   ├── persons/       # Person profiles
 │   └── organizations/ # Organization pages
 ├── prisma/            # Database schema and migrations
@@ -102,8 +102,8 @@ See [IMPORT-GUIDE.md](./data/IMPORT-GUIDE.md) for content formatting.
 
 - **Person** - Individuals with biographical data and affiliations
 - **Organization** - Institutions with type classification
-- **Incident** - Specific events with media framing and outcomes
-- **Event** - Wider contexts grouping multiple incidents
+- **Case** - Specific events with media framing and outcomes
+- **Event** - Wider contexts grouping multiple cases
 - **Statement** - What was said, with context and verification
 - **Response** - Reactions and responses to statements
 - **Affiliation** - Person-organization relationships with roles
@@ -112,7 +112,7 @@ See [IMPORT-GUIDE.md](./data/IMPORT-GUIDE.md) for content formatting.
 
 ### Knowledge Graph Features
 
-- Hierarchical event relationships (Event → Incidents)
+- Hierarchical event relationships (Event → Cases)
 - Person-organization affiliations with roles and date ranges
 - Media framing tracking
 - Triggering events and outcomes
@@ -125,7 +125,7 @@ See [IMPORT-GUIDE.md](./data/IMPORT-GUIDE.md) for content formatting.
 ```markdown
 ## Person Name
 - **Profession:** Their role
-- **Date:** Date of incident
+- **Date:** Date of case
 - **Exact Wording:** *"The exact quote"*
 - **Context:** Background information
 - **Platform:** Where it was said

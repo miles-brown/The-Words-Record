@@ -289,9 +289,9 @@ export function OrganizationCardEnhanced({
             </div>
             <div>
               <div className="text-lg font-semibold text-gray-900 dark:text-white">
-                {organization.incidentCount || 0}
+                {organization.caseCount || 0}
               </div>
-              <div className="text-xs text-gray-500">Incidents</div>
+              <div className="text-xs text-gray-500">Cases</div>
             </div>
             <div>
               <div className="text-lg font-semibold text-gray-900 dark:text-white">

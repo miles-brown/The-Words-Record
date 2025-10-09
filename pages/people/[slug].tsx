@@ -253,16 +253,16 @@ export default function PersonPage({ person }: PersonPageProps) {
           </div>
         </div>
 
-        <section className="incidents-section">
+        <section className="cases-section">
           <h2>Related Cases ({person.cases?.length || 0})</h2>
           
           {person.cases && person.cases.length > 0 ? (
-            <div className="incidents-list">
+            <div className="cases-list">
               {person.cases.map((caseItem) => (
                 <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
-                  <article className="incident-card">
+                  <article className="case-card">
                     <h3>{caseItem.title}</h3>
-                    <div className="incident-meta">
+                    <div className="case-meta">
                       <span className="date">
                         {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
                       </span>
@@ -271,7 +271,7 @@ export default function PersonPage({ person }: PersonPageProps) {
                       </span>
                     </div>
                     <p className="summary">{caseItem.summary}</p>
-                    <div className="incident-stats">
+                    <div className="case-stats">
                       <span>{caseItem._count?.statements || 0} statements</span>
                       <span>{caseItem._count?.sources || 0} sources</span>
                     </div>
@@ -287,7 +287,7 @@ export default function PersonPage({ person }: PersonPageProps) {
               ))}
             </div>
           ) : (
-            <p className="no-incidents">No cases documented for this person.</p>
+            <p className="no-cases">No cases documented for this person.</p>
           )}
         </section>
 
@@ -310,7 +310,7 @@ export default function PersonPage({ person }: PersonPageProps) {
                     )}
                     {statement.case && (
                       <Link href={`/cases/${statement.case.slug}`}>
-                        <span className="citation-incident">
+                        <span className="citation-case">
                           Related to: {statement.case.title}
                         </span>
                       </Link>
@@ -518,7 +518,7 @@ export default function PersonPage({ person }: PersonPageProps) {
           gap: 1.5rem;
         }
 
-        .incident-card {
+        .case-card {
           border: 1px solid var(--border-primary);
           border-radius: 8px;
           padding: 1.5rem;
@@ -527,24 +527,24 @@ export default function PersonPage({ person }: PersonPageProps) {
           transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .incident-card:hover {
+        .case-card:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        .incident-card h3 {
+        .case-card h3 {
           color: var(--text-primary);
           margin-bottom: 0.5rem;
         }
 
-        .incident-meta {
+        .case-meta {
           display: flex;
           flex-wrap: wrap;
           gap: 1rem;
           margin-bottom: 1rem;
         }
 
-        .incident-meta span {
+        .case-meta span {
           font-size: 0.9rem;
           padding: 0.2rem 0.6rem;
           background: var(--background-secondary);
@@ -567,7 +567,7 @@ export default function PersonPage({ person }: PersonPageProps) {
           margin-bottom: 1rem;
         }
 
-        .incident-stats {
+        .case-stats {
           display: flex;
           gap: 1.5rem;
           font-size: 0.9rem;
@@ -589,7 +589,7 @@ export default function PersonPage({ person }: PersonPageProps) {
           font-size: 0.8rem;
         }
 
-        .no-incidents {
+        .no-cases {
           color: var(--text-secondary);
           font-style: italic;
         }
@@ -659,12 +659,12 @@ export default function PersonPage({ person }: PersonPageProps) {
           font-weight: 500;
         }
 
-        .citation-incident {
+        .citation-case {
           color: var(--accent-primary);
           cursor: pointer;
         }
 
-        .citation-incident:hover {
+        .citation-case:hover {
           text-decoration: underline;
         }
 
@@ -696,7 +696,7 @@ export default function PersonPage({ person }: PersonPageProps) {
             font-size: 2rem;
           }
 
-          .incident-meta {
+          .case-meta {
             justify-content: flex-start;
           }
         }

@@ -369,7 +369,9 @@ export default function PeoplePage() {
                         </div>
                       </div>
                       <div className="profile-stats">
-                        <span><strong>{person._count?.cases || 0}</strong> incidents</span>
+                        <span>
+                          <strong>{person._count?.cases || 0}</strong> {person._count?.cases === 1 ? 'case' : 'cases'}
+                        </span>
                         <span><strong>{person._count?.statements || 0}</strong> statements</span>
                         <span><strong>{person._count?.responses || 0}</strong> responses</span>
                       </div>
@@ -399,7 +401,7 @@ export default function PeoplePage() {
                         )}
                         <div className="card-stats">
                           <span className="stat">
-                            <strong>{person._count?.cases || 0}</strong> incidents
+                            <strong>{person._count?.cases || 0}</strong> {person._count?.cases === 1 ? 'case' : 'cases'}
                           </span>
                           <span className="stat">
                             <strong>{person._count?.statements || 0}</strong> statements

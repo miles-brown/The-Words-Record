@@ -526,7 +526,7 @@ export default function SearchPage() {
           color: #1976d2;
         }
 
-        .type-incident {
+        .type-case {
           background: #fff3e0;
           color: #f57c00;
         }

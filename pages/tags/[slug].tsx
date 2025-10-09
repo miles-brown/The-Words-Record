@@ -54,23 +54,23 @@ export default function TagPage({ tag }: TagPageProps) {
           {tag.description && (
             <p className="tag-description">{tag.description}</p>
           )}
-          <p className="incident-count">
+          <p className="case-count">
             {tag.cases.length} case{tag.cases.length !== 1 ? 's' : ''}
           </p>
         </div>
 
-        <div className="incidents-list">
+        <div className="cases-list">
           {tag.cases.map((caseItem: any) => (
             <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
-              <article className="incident-card">
-                <div className="incident-header">
+              <article className="case-card">
+                <div className="case-header">
                   <h2>{caseItem.title}</h2>
                   <span className="date">
                     {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
                   </span>
                 </div>
 
-                <p className="incident-excerpt">{caseItem.summary}</p>
+                <p className="case-excerpt">{caseItem.summary}</p>
 
                 {caseItem.people && caseItem.people.length > 0 && (
                   <div className="involved-people">
@@ -78,8 +78,8 @@ export default function TagPage({ tag }: TagPageProps) {
                   </div>
                 )}
 
-                <div className="incident-footer">
-                  <div className="incident-stats">
+                <div className="case-footer">
+                  <div className="case-stats">
                     <span>
                       {caseItem._count?.statements || 0} statement{caseItem._count?.statements !== 1 ? 's' : ''}
                     </span>
@@ -126,7 +126,7 @@ export default function TagPage({ tag }: TagPageProps) {
           margin: 0 auto 1rem;
         }
 
-        .incident-count {
+        .case-count {
           font-size: 0.95rem;
           color: var(--accent-primary);
           font-weight: 500;
@@ -138,7 +138,7 @@ export default function TagPage({ tag }: TagPageProps) {
           gap: 1.25rem;
         }
 
-        .incident-card {
+        .case-card {
           border: 1px solid var(--border-primary);
           border-radius: 6px;
           padding: 1.75rem;
@@ -147,12 +147,12 @@ export default function TagPage({ tag }: TagPageProps) {
           transition: all 0.2s ease;
         }
 
-        .incident-card:hover {
+        .case-card:hover {
           border-color: var(--border-secondary);
           box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .incident-header {
+        .case-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
@@ -160,7 +160,7 @@ export default function TagPage({ tag }: TagPageProps) {
           gap: 1rem;
         }
 
-        .incident-header h2 {
+        .case-header h2 {
           font-size: 1.4rem;
           color: var(--text-primary);
           line-height: 1.4;
@@ -174,7 +174,7 @@ export default function TagPage({ tag }: TagPageProps) {
           padding-top: 0.25rem;
         }
 
-        .incident-excerpt {
+        .case-excerpt {
           color: var(--text-secondary);
           line-height: 1.7;
           margin-bottom: 1.25rem;
@@ -192,12 +192,12 @@ export default function TagPage({ tag }: TagPageProps) {
           font-weight: 600;
         }
 
-        .incident-footer {
+        .case-footer {
           padding-top: 1rem;
           border-top: 1px solid var(--border-primary);
         }
 
-        .incident-stats {
+        .case-stats {
           display: flex;
           gap: 0.75rem;
           align-items: center;
@@ -235,7 +235,7 @@ export default function TagPage({ tag }: TagPageProps) {
             font-size: 2rem;
           }
 
-          .incident-header {
+          .case-header {
             flex-direction: column;
             gap: 0.5rem;
           }
@@ -327,4 +327,3 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     revalidate: 60,
   }
 }
-

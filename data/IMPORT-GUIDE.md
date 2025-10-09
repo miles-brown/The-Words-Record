@@ -2,7 +2,7 @@
 
 ## Quick Start
 
-1. Create your incidents in markdown format (see `example-incidents.md`)
+1. Create your cases in markdown format (see `example-cases.md`)
 2. Run the import script
 3. Verify the data on your site
 
@@ -10,12 +10,12 @@
 
 ### Format Your Data
 
-Create a `.md` file with incidents separated by `##` headings:
+Create a `.md` file with cases separated by `##` headings:
 
 ```markdown
 ## Person Name
 - **Profession:** Their role
-- **Date:** Date of incident
+- **Date:** Date of case
 - **Exact Wording:** *"The exact quote"*
 - **Context:** Background and circumstances
 - **Platform:** Where it was said (Instagram, Twitter, Court, etc.)
@@ -34,15 +34,15 @@ npx tsx scripts/import-markdown.ts data/your-file.md
 ### Example
 
 ```bash
-npx tsx scripts/import-markdown.ts data/example-incidents.md
+npx tsx scripts/import-markdown.ts data/example-cases.md
 ```
 
 ## What Gets Created
 
-For each incident, the script automatically:
+For each case, the script automatically:
 
 ✅ **Creates/Updates Person** with name and profession
-✅ **Creates Incident** with title, summary, and full description
+✅ **Creates Case** with title, summary, and full description
 ✅ **Creates Statement** with the exact quote
 ✅ **Creates Tags** from categories (auto-linked)
 ✅ **Prevents Duplicates** using unique constraints
@@ -67,7 +67,7 @@ Creates 3 tags:
 - Social Media
 - Entertainment
 
-### Multiple Incidents
+### Multiple Cases
 Add as many as you want in one file:
 ```markdown
 ## Person 1
@@ -88,7 +88,7 @@ npx tsx scripts/import-markdown.ts
 ```
 You forgot the file path. Add it:
 ```bash
-npx tsx scripts/import-markdown.ts data/incidents.md
+npx tsx scripts/import-markdown.ts data/cases.md
 ```
 
 ### "File not found"
@@ -102,8 +102,8 @@ The script will use current date if it can't parse. Format dates clearly:
 - ✅ `3 January 2022`
 - ❌ `Jan 3rd '22`
 
-### Duplicate Incidents
-The script uses `upsert` - if an incident already exists with the same slug, it updates instead of creating a new one.
+### Duplicate Cases
+The script uses `upsert` - if a case already exists with the same slug, it updates instead of creating a new one.
 
 ## Advanced: CSV Import
 
@@ -117,7 +117,7 @@ CSV format is less flexible - markdown is recommended.
 ## After Import
 
 1. Check your site: http://localhost:3002
-2. Browse "What?" to see incidents
+2. Browse "What?" to see cases
 3. Browse "Who?" to see people
 4. Search should now find your new content
 5. Tags appear in filters

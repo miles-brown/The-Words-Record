@@ -19,7 +19,7 @@ Enabled AMP hybrid mode on **all content pages**:
 | Page Type | File | AMP URL Format |
 |-----------|------|----------------|
 | **People** | `pages/people/[slug].tsx` | `/people/john-doe.amp` |
-| **Incidents** | `pages/incidents/[slug].tsx` | `/incidents/incident-name.amp` |
+| **Cases** | `pages/cases/[slug].tsx` | `/cases/case-name.amp` |
 | **Statements/Cases** | `pages/cases/[slug].js` | `/cases/statement-name.amp` |
 | **Tags** | `pages/tags/[slug].tsx` | `/tags/tag-name.amp` |
 
@@ -124,8 +124,8 @@ They'll automatically see the **fast-loading AMP version** with optimized ads.
 # Test a person page
 curl -I https://thewordsrecord.com/people/joe-biden.amp
 
-# Test an incident page
-curl -I https://thewordsrecord.com/incidents/some-incident.amp
+# Test a case page
+curl -I https://thewordsrecord.com/cases/some-case.amp
 
 # Test a tag page
 curl -I https://thewordsrecord.com/tags/israel.amp

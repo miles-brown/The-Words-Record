@@ -12,7 +12,7 @@ export default async function handler(
   try {
     // Get counts
     const [
-      incidentCount,
+      caseCount,
       personCount,
       organizationCount,
       statementCount,
@@ -30,7 +30,7 @@ export default async function handler(
     ])
 
     // Get recent activity
-    const recentIncidents = await prisma.case.findMany({
+    const recentCases = await prisma.case.findMany({
       take: 5,
       orderBy: { createdAt: 'desc' },
       select: {
@@ -57,7 +57,7 @@ export default async function handler(
       },
     })
 
-    // Get people with most incidents
+    // Get people with most cases
     const activePeople = await prisma.person.findMany({
       take: 10,
       include: {
@@ -74,7 +74,7 @@ export default async function handler(
 
     return res.status(200).json({
       counts: {
-        cases: incidentCount,
+        cases: caseCount,
         people: personCount,
         organizations: organizationCount,
         statements: statementCount,
@@ -82,7 +82,7 @@ export default async function handler(
         sources: sourceCount,
         tags: tagCount,
       },
-      recentIncidents,
+      recentCases,
       popularTags,
       activePeople,
     })

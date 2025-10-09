@@ -155,7 +155,7 @@ export default function OrganizationsPage() {
                   
                   <div className="org-stats">
                     <span>
-                      <strong>{org._count?.cases || 0}</strong> incidents
+                      <strong>{org._count?.cases || 0}</strong> cases
                     </span>
                     <span>
                       <strong>{org._count?.responses || 0}</strong> responses
