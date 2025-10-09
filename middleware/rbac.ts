@@ -131,7 +131,7 @@ export function withPermission(permission: Permission) {
           // Log unauthorized attempt (simplified for now)
           console.log('AUDIT: Unauthorized access attempt', {
             userId: user.id,
-            action: AuditAction.VIEW,
+            action: 'VIEW',
             entityType: 'permission',
             entityId: permission,
             metadata: { denied: true },
