@@ -5,9 +5,28 @@
 
 import { NextApiRequest, NextApiResponse } from 'next'
 import { verifyToken } from '@/lib/auth'
-// Temporarily define types until Prisma schema is updated
+
+// Temporarily define UserRole type until Prisma schema is updated
 type UserRole = 'ADMIN' | 'DE' | 'DBO' | 'CM' | 'CI' | 'BOT' | 'QA' | 'AI_CUR' | 'AI_ED' | 'AI_VAL' | 'AI_CITE' | 'VIEWER'
-type AuditAction = 'CREATE' | 'UPDATE' | 'DELETE' | 'VIEW' | 'EXPORT' | 'IMPORT' | 'LOGIN' | 'LOGOUT' | 'VERIFY' | 'APPROVE' | 'REJECT' | 'ARCHIVE' | 'RESTORE'
+
+// Define AuditAction enum as a const object for runtime use
+export const AuditAction = {
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+  DELETE: 'DELETE',
+  VIEW: 'VIEW',
+  EXPORT: 'EXPORT',
+  IMPORT: 'IMPORT',
+  LOGIN: 'LOGIN',
+  LOGOUT: 'LOGOUT',
+  VERIFY: 'VERIFY',
+  APPROVE: 'APPROVE',
+  REJECT: 'REJECT',
+  ARCHIVE: 'ARCHIVE',
+  RESTORE: 'RESTORE'
+} as const
+
+export type AuditActionType = typeof AuditAction[keyof typeof AuditAction]
 
 interface AuthUser {
   id: string
@@ -131,7 +150,7 @@ export function withPermission(permission: Permission) {
           // Log unauthorized attempt (simplified for now)
           console.log('AUDIT: Unauthorized access attempt', {
             userId: user.id,
-            action: 'VIEW',
+            action: AuditAction.VIEW,
             entityType: 'permission',
             entityId: permission,
             metadata: { denied: true },
