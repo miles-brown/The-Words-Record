@@ -109,7 +109,7 @@ async function importCase(record: any) {
 
   // Connect persons if provided (comma-separated slugs)
   if (record.persons) {
-    const personSlugs = record.persons.split(',').map((s: string) => s.trim()).filter(s => s)
+    const personSlugs = record.persons.split(',').map((s: string) => s.trim()).filter(Boolean)
     for (const personSlug of personSlugs) {
       if (!personSlug) continue
       const person = await prisma.person.findUnique({ where: { slug: personSlug } })
