@@ -39,7 +39,7 @@ export default function TagPage({ tag }: TagPageProps) {
   return (
     <Layout
       title={tag.name}
-      description={tag.description || `Incidents tagged with ${tag.name}`}
+      description={tag.description || `Cases tagged with ${tag.name}`}
     >
       <div className="tag-page">
         <Breadcrumbs
@@ -55,7 +55,7 @@ export default function TagPage({ tag }: TagPageProps) {
             <p className="tag-description">{tag.description}</p>
           )}
           <p className="incident-count">
-            {tag.cases.length} incident{tag.cases.length !== 1 ? 's' : ''}
+            {tag.cases.length} case{tag.cases.length !== 1 ? 's' : ''}
           </p>
         </div>
 

@@ -25,7 +25,7 @@ export default function About() {
               maintaining a thoroughly sourced record of what was said, when, and where.
             </p>
             <p>
-              Our database covers a wide range of incidents including public controversies, official
+              Our database covers a wide range of cases including public controversies, official
               statements, allegations, denials, apologies, and responses. Each entry is meticulously
               researched and backed by verifiable sources.
             </p>
@@ -49,7 +49,7 @@ export default function About() {
           <section className="about-section">
             <h2>How It Works</h2>
             <p>
-              Each incident in our database includes:
+              Each case in our database includes:
             </p>
             <ul>
               <li><strong>The Statement:</strong> The exact words that were said or written</li>
@@ -57,10 +57,10 @@ export default function About() {
               <li><strong>Platform:</strong> The medium used (interview, social media, press release, etc.)</li>
               <li><strong>Sources:</strong> Links to original reporting and primary sources</li>
               <li><strong>Responses:</strong> Official replies, denials, clarifications, or apologies</li>
-              <li><strong>Related Incidents:</strong> Connections to other relevant statements</li>
+              <li><strong>Related Cases:</strong> Connections to other relevant statements</li>
             </ul>
             <p>
-              You can browse incidents chronologically, search by person or organization,
+              You can browse cases chronologically, search by person or organization,
               filter by category tags, and explore related statements. Every claim is backed
               by citations to credible sources.
             </p>

@@ -139,7 +139,7 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
 
         {organization.cases && organization.cases.length > 0 && (
           <section className="incidents-section">
-            <h2>Related Incidents ({organization.cases.length})</h2>
+            <h2>Related Cases ({organization.cases.length})</h2>
             
             <div className="incidents-list">
               {organization.cases.map((caseItem: any) => (

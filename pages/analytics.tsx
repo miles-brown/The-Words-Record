@@ -303,7 +303,7 @@ export default function AnalyticsPage() {
                   <Tooltip />
                   <Legend />
                   <Line type="monotone" dataKey="statements" stroke="#3B82F6" strokeWidth={2} />
-                  <Line type="monotone" dataKey="incidents" stroke="#EF4444" strokeWidth={2} />
+                  <Line type="monotone" dataKey="cases" stroke="#EF4444" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

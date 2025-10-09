@@ -65,13 +65,13 @@ export default function OrganizationsPage() {
   return (
     <Layout
       title="Organizations"
-      description="Browse organizations involved in documented incidents and statements"
+      description="Browse organizations involved in documented cases and statements"
     >
       <div className="organizations-page">
         <div className="page-header">
           <h1>Organizations</h1>
           <p className="page-description">
-            Explore organizations that have been involved in documented incidents, 
+            Explore organizations that have been involved in documented cases, 
             made official statements, or responded to allegations.
           </p>
         </div>

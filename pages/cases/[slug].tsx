@@ -28,9 +28,9 @@ export default function CasePage({ caseItem }: CasePageProps) {
 
   if (!caseItem) {
     return (
-      <Layout title="Incident Not Found">
+      <Layout title="Case Not Found">
         <div className="error-page">
-          <h1>Incident Not Found</h1>
+          <h1>Case Not Found</h1>
           <p>The case you're looking for doesn't exist in our database.</p>
           <Link href="/cases">
             <button type="button">Browse All Cases</button>

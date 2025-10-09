@@ -254,7 +254,7 @@ export default function PersonPage({ person }: PersonPageProps) {
         </div>
 
         <section className="incidents-section">
-          <h2>Related Incidents ({person.cases?.length || 0})</h2>
+          <h2>Related Cases ({person.cases?.length || 0})</h2>
           
           {person.cases && person.cases.length > 0 ? (
             <div className="incidents-list">
@@ -287,7 +287,7 @@ export default function PersonPage({ person }: PersonPageProps) {
               ))}
             </div>
           ) : (
-            <p className="no-incidents">No incidents documented for this person.</p>
+            <p className="no-incidents">No cases documented for this person.</p>
           )}
         </section>
 

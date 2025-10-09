@@ -63,7 +63,7 @@ export default function StatsPage() {
         <section className="stats-grid">
           <div className="stat-card">
             <div className="stat-number">{stats.counts.cases}</div>
-            <div className="stat-label">Documented Incidents</div>
+            <div className="stat-label">Documented Cases</div>
             <Link href="/cases" className="stat-link">View all →</Link>
           </div>
 

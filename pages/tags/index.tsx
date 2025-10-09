@@ -28,13 +28,13 @@ export default function TagsPage() {
   return (
     <Layout
       title="Tags"
-      description="Browse incidents by category and topic"
+      description="Browse cases by category and topic"
     >
       <div className="tags-page">
         <div className="page-header">
           <h1>Browse by Tag</h1>
           <p className="page-description">
-            Explore incidents organized by categories and topics
+            Explore cases organized by categories and topics
           </p>
         </div>
 
