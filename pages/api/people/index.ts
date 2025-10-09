@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 export default async function handler(
   req: NextApiRequest,
@@ -91,8 +91,8 @@ export default async function handler(
     // Get total count
     const total = await prisma.person.count({ where })
 
-    // Fetch persons with counts
-    let persons = await prisma.person.findMany({
+    // Fetch people with counts
+    let people = await prisma.person.findMany({
       where,
       skip,
       take: limitNum,
@@ -112,7 +112,7 @@ export default async function handler(
     })
 
     // Add response count to _count object for each person
-    const personsWithResponseCount = persons.map(person => {
+    const peopleWithResponseCount = people.map(person => {
       const responseCount = person.statements?.length || 0
       const { statements, ...personWithoutStatements } = person
       return {
@@ -125,7 +125,7 @@ export default async function handler(
     })
 
     res.status(200).json({
-      people: personsWithResponseCount,
+      people: peopleWithResponseCount,
       pagination: {
         page: pageNum,
         limit: limitNum,
@@ -134,7 +134,7 @@ export default async function handler(
       }
     })
   } catch (error) {
-    console.error('Error fetching persons:', error)
-    res.status(500).json({ error: 'Failed to fetch persons' })
+    console.error('Error fetching people:', error)
+    res.status(500).json({ error: 'Failed to fetch people' })
   }
 }

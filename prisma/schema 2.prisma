@@ -289,7 +289,7 @@ model Topic {
   startDate             DateTime?
   endDate               DateTime?
   location              String?
-  caseCount             Int             @default(0)
+  incidentCount         Int             @default(0)
   participantCount      Int             @default(0)
   createdAt             DateTime        @default(now())
   updatedAt             DateTime        @updatedAt
@@ -531,7 +531,7 @@ model Repercussion {
   affectedPersonId      String?
   affectedOrgId         String?
   initiatingOrgs        String[]
-  initiatingPeople      String[]
+  initiatingPersons     String[]
   triggeringStatementId String?
   responseStatementId   String?
   caseId                String
@@ -971,7 +971,7 @@ enum CaseType {
   LEGAL_ACTION
   PROTEST_ACTION
   PLATFORM_ACTION
-  VIOLENCE_CASE
+  VIOLENCE_INCIDENT
   HARASSMENT_CAMPAIGN
   MEDIA_CONTROVERSY
   ACADEMIC_CONTROVERSY
@@ -1039,7 +1039,7 @@ enum TriggerType {
   POLICY
   INVESTIGATION
   MEDIA_COVERAGE
-  RESPONSE_TO_CASE
+  RESPONSE_TO_INCIDENT
   CUMULATIVE
 }
 
@@ -1130,7 +1130,7 @@ enum TagCategory {
 }
 
 enum TopicType {
-  ANTISEMITISM_CASE
+  ANTISEMITISM_INCIDENT
   ISRAEL_PALESTINE_CONFLICT
   GAZA_OPERATIONS
   WEST_BANK_SETTLEMENTS

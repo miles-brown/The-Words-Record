@@ -11,9 +11,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     // Fetch people analytics
     const [
-      personsByProfession,
-      personsByNationality,
-      personsByInfluence,
+      peopleByProfession,
+      peopleByNationality,
+      peopleByInfluence,
       controversyData,
       socialMediaData,
       orgsByType,
@@ -180,15 +180,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Format the response
     const analyticsData = {
       // People analytics
-      personsByProfession: personsByProfession.map(p => ({
+      peopleByProfession: peopleByProfession.map(p => ({
         profession: p.primaryProfession?.replace(/_/g, ' ') || 'Unknown',
         count: p._count
       })),
-      personsByNationality: personsByNationality.map(p => ({
+      peopleByNationality: peopleByNationality.map(p => ({
         nationality: p.primaryNationality || 'Unknown',
         count: p._count
       })),
-      personsByInfluence: personsByInfluence.map(p => ({
+      peopleByInfluence: peopleByInfluence.map(p => ({
         level: p.influenceLevel || 'Unknown',
         count: p._count
       })),

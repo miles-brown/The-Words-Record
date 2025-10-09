@@ -181,7 +181,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
 
   console.log('✅ Seed data created successfully!')
   console.log('Created:')
-  console.log('- 3 people (Emma Watson, Danny Danon, Gilad Erdan)')
+  console.log('- 3 persons (Emma Watson, Danny Danon, Gilad Erdan)')
   console.log('- 1 incident')
   console.log('- 1 statement')
   console.log('- 2 responses')

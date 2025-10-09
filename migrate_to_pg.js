@@ -127,11 +127,11 @@ try {
   });
   console.log(`  ✓ ${tags.length} tags`);
 
-  // 2. Persons
-  console.log('2. Migrating Persons...');
-  const persons = runSqliteQuery("SELECT * FROM Person");
-  persons.forEach(row => {
-    sql += `INSERT INTO "Person" (
+  // 2. People
+  console.log('2. Migrating People...');
+  const people = runSqliteQuery("SELECT * FROM People");
+  people.forEach(row => {
+    sql += `INSERT INTO "People" (
       id, slug, name, bio, "imageUrl",
       profession, "professionDetail", nationality, "nationalityDetail",
       "birthDate", "deathDate", "akaNames",
@@ -149,7 +149,7 @@ try {
       ${escapeDate(row.createdAt) || 'NOW()'}, ${escapeDate(row.updatedAt) || 'NOW()'}
     );\n`;
   });
-  console.log(`  ✓ ${persons.length} persons`);
+  console.log(`  ✓ ${people.length} people`);
 
   // 3. Organizations
   console.log('3. Migrating Organizations...');
@@ -168,50 +168,50 @@ try {
   });
   console.log(`  ✓ ${orgs.length} organizations`);
 
-  // 4. Incidents
-  console.log('4. Migrating Incidents...');
-  const incidents = runSqliteQuery("SELECT * FROM Incident");
-  incidents.forEach(row => {
+  // 4. Cases
+  console.log('4. Migrating Cases...');
+  const cases = runSqliteQuery("SELECT * FROM Case");
+  cases.forEach(row => {
     const severityEnum = row.severity ?
       (row.severity.toUpperCase() === 'LOW' ? "'LOW'" :
        row.severity.toUpperCase() === 'MEDIUM' ? "'MEDIUM'" :
        row.severity.toUpperCase() === 'HIGH' ? "'HIGH'" :
        row.severity.toUpperCase() === 'CRITICAL' ? "'CRITICAL'" : 'NULL') : 'NULL';
 
-    const dateValue = escapeDate(row.incidentDate) || escapeDate(row.publicationDate) || escapeDate(row.createdAt) || 'NOW()';
+    const dateValue = escapeDate(row.caseDate) || escapeDate(row.publicationDate) || escapeDate(row.createdAt) || 'NOW()';
 
-    sql += `INSERT INTO "Incident" (
+    sql += `INSERT INTO "Case" (
       id, slug, title, summary, description,
-      "incidentDate", "publicationDate", status, severity,
+      "caseDate", "publicationDate", status, severity,
       "locationDetail", "mediaFraming", "triggeringEvent", outcome,
       "createdAt", "updatedAt"
     ) VALUES (
       ${escape(row.id)}, ${escape(row.slug)}, ${escape(row.title)}, ${escape(row.summary)}, ${escape(row.description)},
-      ${dateValue}, ${escapeDate(row.publicationDate) || 'NOW()'}, 'DOCUMENTED', ${severityEnum}::\"IncidentSeverity\",
+      ${dateValue}, ${escapeDate(row.publicationDate) || 'NOW()'}, 'DOCUMENTED', ${severityEnum}::"CaseSeverity",
       ${escape(row.location)}, ${escape(row.mediaFraming)}, ${escape(row.triggeringEvent)}, ${escape(row.outcome)},
       ${escapeDate(row.createdAt) || 'NOW()'}, ${escapeDate(row.updatedAt) || 'NOW()'}
     );\n`;
   });
-  console.log(`  ✓ ${incidents.length} incidents`);
+  console.log(`  ✓ ${cases.length} cases`);
 
   // 5. Statements
   console.log('5. Migrating Statements...');
   const statements = runSqliteQuery("SELECT * FROM Statement");
   let statementCount = 0;
   statements.forEach(row => {
-    if (!row.incidentId) return; // Skip statements without incident
+    if (!row.caseId) return; // Skip statements without case
 
     sql += `INSERT INTO "Statement" (
       id, content, context, "statementType", "statementDate",
       medium, "isVerified", "lostEmployment", "lostContracts",
       "paintedNegatively", "repercussionDetails",
-      "personId", "incidentId",
+      "peopleId", "caseId",
       "createdAt", "updatedAt"
     ) VALUES (
       ${escape(row.id)}, ${escape(row.content)}, ${escape(row.context)}, 'ORIGINAL', ${escapeDate(row.statementDate)},
       ${escape(row.medium)}, ${row.isVerified ? 'true' : 'false'}, ${row.lostEmployment ? 'true' : 'false'}, ${row.lostContracts ? 'true' : 'false'},
       ${row.paintedNegatively ? 'true' : 'false'}, ${escape(row.repercussionDetails)},
-      ${row.personId ? escape(row.personId) : 'NULL'}, ${escape(row.incidentId)},
+      ${row.peopleId ? escape(row.peopleId) : 'NULL'}, ${escape(row.caseId)},
       ${escapeDate(row.createdAt) || 'NOW()'}, ${escapeDate(row.updatedAt) || 'NOW()'}
     );\n`;
     statementCount++;
@@ -223,17 +223,17 @@ try {
   const responses = runSqliteQuery("SELECT * FROM Response");
   let responseCount = 0;
   responses.forEach(row => {
-    if (!row.incidentId) return; // Skip responses without incident
+    if (!row.caseId) return; // Skip responses without case
 
     sql += `INSERT INTO "Statement" (
       id, content, "statementType", "responseType", "statementDate",
       "responseImpact", "respondsToId",
-      "personId", "organizationId", "incidentId",
+      "peopleId", "organizationId", "caseId",
       "createdAt", "updatedAt"
     ) VALUES (
       ${escape('resp_' + row.id)}, ${escape(row.content)}, 'RESPONSE', '${mapResponseType(row.type)}', ${escapeDate(row.responseDate)},
       ${escape(row.impact)}, ${row.statementId ? escape(row.statementId) : 'NULL'},
-      ${row.personId ? escape(row.personId) : 'NULL'}, ${row.organizationId ? escape(row.organizationId) : 'NULL'}, ${escape(row.incidentId)},
+      ${row.peopleId ? escape(row.peopleId) : 'NULL'}, ${row.organizationId ? escape(row.organizationId) : 'NULL'}, ${escape(row.caseId)},
       ${escapeDate(row.createdAt) || 'NOW()'}, ${escapeDate(row.updatedAt) || 'NOW()'}
     );\n`;
     responseCount++;
@@ -247,12 +247,12 @@ try {
     sql += `INSERT INTO "Affiliation" (
       id, role, "startDate", "endDate", "isActive",
       description, responsibilities,
-      "personId", "organizationId",
+      "peopleId", "organizationId",
       "createdAt", "updatedAt"
     ) VALUES (
       ${escape(row.id)}, ${escape(row.role)}, ${escapeDate(row.startDate)}, ${escapeDate(row.endDate)}, ${row.isActive ? 'true' : 'false'},
       ${escape(row.description)}, ARRAY[]::text[],
-      ${escape(row.personId)}, ${escape(row.organizationId)},
+      ${escape(row.peopleId)}, ${escape(row.organizationId)},
       ${escapeDate(row.createdAt) || 'NOW()'}, ${escapeDate(row.updatedAt) || 'NOW()'}
     );\n`;
   });
@@ -261,35 +261,35 @@ try {
   // 8. Junction tables
   console.log('8. Migrating junction tables...');
 
-  // PersonIncidents
-  const personIncidents = runSqliteQuery("SELECT * FROM _PersonIncidents");
-  personIncidents.forEach(row => {
-    sql += `INSERT INTO "_PersonIncidents" ("A", "B") VALUES (${escape(row.A)}, ${escape(row.B)});\n`;
+  // PeopleCases
+  const peopleCases = runSqliteQuery("SELECT * FROM _PeopleCases");
+  peopleCases.forEach(row => {
+    sql += `INSERT INTO "_PeopleCases" ("A", "B") VALUES (${escape(row.A)}, ${escape(row.B)});\n`;
   });
-  console.log(`  ✓ ${personIncidents.length} person-incident relations`);
+  console.log(`  ✓ ${peopleCases.length} people-case relations`);
 
-  // OrganizationIncidents
-  const orgIncidents = runSqliteQuery("SELECT * FROM _OrganizationIncidents");
-  orgIncidents.forEach(row => {
-    sql += `INSERT INTO "_OrganizationIncidents" ("A", "B") VALUES (${escape(row.A)}, ${escape(row.B)});\n`;
+  // OrganizationCases
+  const organizationCases = runSqliteQuery("SELECT * FROM _OrganizationCases");
+  organizationCases.forEach(row => {
+    sql += `INSERT INTO "_OrganizationCases" ("A", "B") VALUES (${escape(row.A)}, ${escape(row.B)});\n`;
   });
-  console.log(`  ✓ ${orgIncidents.length} organization-incident relations`);
+  console.log(`  ✓ ${organizationCases.length} organization-case relations`);
 
-  // IncidentTags
-  const incidentTags = runSqliteQuery("SELECT * FROM _IncidentTags");
-  incidentTags.forEach(row => {
-    sql += `INSERT INTO "_IncidentTags" ("A", "B") VALUES (${escape(row.A)}, ${escape(row.B)});\n`;
+  // CaseTags
+  const caseTags = runSqliteQuery("SELECT * FROM _CaseTags");
+  caseTags.forEach(row => {
+    sql += `INSERT INTO "_CaseTags" ("A", "B") VALUES (${escape(row.A)}, ${escape(row.B)});\n`;
   });
-  console.log(`  ✓ ${incidentTags.length} incident-tag relations`);
+  console.log(`  ✓ ${caseTags.length} case-tag relations`);
 
   // Add validation queries
   sql += `
 -- Validation queries
-SELECT 'Person' as table_name, COUNT(*) as count FROM "Person"
+SELECT 'People' as table_name, COUNT(*) as count FROM "People"
 UNION ALL
 SELECT 'Organization', COUNT(*) FROM "Organization"
 UNION ALL
-SELECT 'Incident', COUNT(*) FROM "Incident"
+SELECT 'Case', COUNT(*) FROM "Case"
 UNION ALL
 SELECT 'Statement (Original)', COUNT(*) FROM "Statement" WHERE "statementType" = 'ORIGINAL'
 UNION ALL

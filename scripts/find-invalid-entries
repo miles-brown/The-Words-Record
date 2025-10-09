@@ -239,7 +239,7 @@ async function main() {
   })
 
   if (statementsWithoutValidPerson.length > 0) {
-    console.log(`Found ${statementsWithoutValidPerson.length} statements linked to invalid persons:\n`)
+    console.log(`Found ${statementsWithoutValidPerson.length} statements linked to invalid people:\n`)
     for (const stmt of statementsWithoutValidPerson.slice(0, 20)) { // Show first 20
       console.log(`Statement ${stmt.id}:`)
       console.log(`  Person: "${stmt.person?.name || 'Unknown'}"`)

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 interface SearchResult {
   type: 'person' | 'case' | 'organization'
@@ -33,9 +33,9 @@ export default async function handler(
 
     const searchResults: SearchResult[] = []
 
-    // Search persons
-    if (!type || type === 'persons') {
-      const persons = await prisma.person.findMany({
+    // Search people
+    if (!type || type === 'people') {
+      const people = await prisma.person.findMany({
         where: {
           OR: [
             { name: { contains: query } },
@@ -60,7 +60,7 @@ export default async function handler(
         take: limit
       })
 
-      persons.forEach(person => {
+      people.forEach(person => {
         let score = 0
         if (person.name.toLowerCase().includes(query.toLowerCase())) score += 10
         if (person.bio?.toLowerCase().includes(query.toLowerCase())) score += 5

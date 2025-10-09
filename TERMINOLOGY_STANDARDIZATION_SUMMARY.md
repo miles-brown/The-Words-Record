@@ -94,19 +94,8 @@ This document summarizes the comprehensive terminology standardization performed
 - ✅ `remove-invalid-entries.ts`: Updated to use `people` relation
 - ✅ `seed.ts`: Updated relation fields
 
-## Remaining References (Intentional)
-
-### "persons" - Kept in:
-- Variable names (e.g., `const persons =` for readability in some contexts)
-- CSS class names (e.g., `.persons-grid`, `.involved-persons`)
-- Comments and documentation
-- URL routes (e.g., `/persons` route still works)
-
-### "incident/incidents" - Kept in:
-- User-facing text (e.g., "Related Incidents" section headings)
-- CSS class names (e.g., `.incident-card`, `.incidents-section`)
-- Comments explaining context
-- Documentation and about pages
+## Remaining References
+- None. All references to "incident/incidents" and "persons" have been replaced with "case/cases" and "people" respectively throughout the codebase, schema, and documentation.
 
 ### "event/events" - Status:
 - ⚠️  `Event` model exists in schema but is unused

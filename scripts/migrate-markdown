@@ -59,18 +59,18 @@ async function migrateMarkdownCase(caseData) {
       caseData.tags.map(tag => createTagIfNotExists(tag))
     )
 
-    // Check if incident already exists
-    const existingIncident = await prisma.incident.findUnique({
+    // Check if case already exists
+    const existingCase = await prisma.case.findUnique({
       where: { slug: caseData.slug }
     })
 
-    if (existingIncident) {
-      console.log(`Incident ${caseData.slug} already exists, skipping...`)
+    if (existingCase) {
+      console.log(`Case ${caseData.slug} already exists, skipping...`)
       return
     }
 
-    // Create incident
-    const incident = await prisma.incident.create({
+    // Create case
+    const caseRecord = await prisma.case.create({
       data: {
         title: caseData.title,
         slug: caseData.slug,
@@ -79,7 +79,7 @@ async function migrateMarkdownCase(caseData) {
         caseDate: new Date(caseData.incident_date),
         publicationDate: new Date(caseData.date),
         status: caseData.status || 'documented',
-        persons: {
+        people: {
           connect: [{ id: personId }]
         },
         tags: {
@@ -95,7 +95,7 @@ async function migrateMarkdownCase(caseData) {
           return prisma.source.create({
             data: {
               title: sourceTitle,
-              caseId: incident.id,
+              caseId: caseRecord.id,
               credibility: 'verified'
             }
           })
@@ -209,14 +209,14 @@ async function main() {
     // Display summary
     const summary = await prisma.$transaction([
       prisma.person.count(),
-      prisma.incident.count(),
+      prisma.case.count(),
       prisma.tag.count(),
       prisma.source.count()
     ])
 
     console.log('\n📊 Database Summary:')
-    console.log(`- Persons: ${summary[0]}`)
-    console.log(`- Incidents: ${summary[1]}`)
+    console.log(`- People: ${summary[0]}`)
+    console.log(`- Cases: ${summary[1]}`)
     console.log(`- Tags: ${summary[2]}`)
     console.log(`- Sources: ${summary[3]}`)
 

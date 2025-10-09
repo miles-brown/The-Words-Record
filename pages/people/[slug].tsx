@@ -7,7 +7,7 @@ import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations } from '@/types'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { getAgeString } from '@/lib/ageUtils'
 import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
 
@@ -32,7 +32,7 @@ export default function PersonPage({ person }: PersonPageProps) {
         <div className="error-page">
           <h1>Person Not Found</h1>
           <p>The person you're looking for doesn't exist in our database.</p>
-          <Link href="/persons">
+          <Link href="/people">
             <button>Browse All People</button>
           </Link>
         </div>
@@ -70,7 +70,7 @@ export default function PersonPage({ person }: PersonPageProps) {
       <article className="person-profile">
         <Breadcrumbs
           items={[
-            { label: 'Who?', href: '/persons' },
+            { label: 'Who?', href: '/people' },
             { label: person.name }
           ]}
         />
@@ -742,11 +742,11 @@ export default function PersonPage({ person }: PersonPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const persons = await prisma.person.findMany({
+  const people = await prisma.person.findMany({
     select: { slug: true }
   })
 
-  const paths = persons.map((person) => ({
+  const paths = people.map((person) => ({
     params: { slug: person.slug }
   }))
 
@@ -809,7 +809,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       return { notFound: true }
     }
 
-    // Add response count to incidents and separate responses from statements
+    // Add response count to cases and separate responses from statements
     const responses = person.statements?.filter(s => s.statementType === 'RESPONSE') || []
     const personWithResponseCounts = {
       ...person,

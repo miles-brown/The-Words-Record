@@ -6,10 +6,10 @@ import {
 } from 'recharts'
 
 interface AnalyticsData {
-  // Person analytics
-  personsByProfession: Array<{ profession: string; count: number }>
-  personsByNationality: Array<{ nationality: string; count: number }>
-  personsByInfluence: Array<{ level: string; count: number }>
+  // People analytics
+  peopleByProfession: Array<{ profession: string; count: number }>
+  peopleByNationality: Array<{ nationality: string; count: number }>
+  peopleByInfluence: Array<{ level: string; count: number }>
   controversyDistribution: Array<{ range: string; count: number }>
   socialMediaReach: Array<{ platform: string; totalReach: number }>
 
@@ -20,7 +20,7 @@ interface AnalyticsData {
   fundingSourceDistribution: Array<{ source: string; count: number }>
 
   // Temporal analytics
-  activityTimeline: Array<{ month: string; statements: number; incidents: number }>
+  activityTimeline: Array<{ month: string; statements: number; cases: number }>
 
   // Top rankings
   mostInfluential: Array<{ name: string; score: number; type: string }>
@@ -130,7 +130,7 @@ export default function AnalyticsPage() {
             <div className="chart-container">
               <h3>People by Profession</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={data.personsByProfession}>
+                <BarChart data={data.peopleByProfession}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="profession" angle={-45} textAnchor="end" height={100} />
                   <YAxis />
@@ -145,7 +145,7 @@ export default function AnalyticsPage() {
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={data.personsByNationality}
+                    data={data.peopleByNationality}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
@@ -154,7 +154,7 @@ export default function AnalyticsPage() {
                     fill="#8884d8"
                     dataKey="count"
                   >
-                    {data.personsByNationality.map((entry, index) => (
+                    {data.peopleByNationality.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
@@ -166,7 +166,7 @@ export default function AnalyticsPage() {
             <div className="chart-container">
               <h3>Influence Level Distribution</h3>
               <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={data.personsByInfluence} layout="horizontal">
+                <BarChart data={data.peopleByInfluence} layout="horizontal">
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis type="number" />
                   <YAxis dataKey="level" type="category" />

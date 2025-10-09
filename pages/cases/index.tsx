@@ -197,7 +197,7 @@ export default function CasesPage() {
                     <p className="case-excerpt">{caseItem.summary}</p>
 
                     {caseItem.people && caseItem.people.length > 0 && (
-                      <div className="involved-persons">
+                      <div className="involved-people">
                         <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
                       </div>
                     )}
@@ -470,13 +470,13 @@ export default function CasesPage() {
           font-size: 0.98rem;
         }
 
-        .involved-persons {
+        .involved-people {
           font-size: 0.9rem;
           color: var(--text-secondary);
           margin-bottom: 1rem;
         }
 
-        .involved-persons strong {
+        .involved-people strong {
           color: var(--text-primary);
           font-weight: 600;
         }

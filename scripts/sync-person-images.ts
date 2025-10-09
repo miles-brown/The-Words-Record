@@ -1,4 +1,4 @@
-import prisma from '../lib/prisma'
+import { prisma } from '../lib/prisma'
 import fs from 'fs'
 import path from 'path'
 
@@ -37,7 +37,7 @@ async function syncPersonImages() {
 
   let updated = 0
   let notFound = 0
-  const missingPersons: string[] = []
+  const missingPeople: string[] = []
 
   for (const imageFile of imageFiles) {
     const fileName = imageFile.replace(/\.(png|jpg|jpeg)$/, '')
@@ -91,7 +91,7 @@ async function syncPersonImages() {
       }
     } else {
       notFound++
-      missingPersons.push(personName)
+      missingPeople.push(personName)
       console.log(`  ❌ ${personName}: Person not found in database`)
     }
   }
@@ -100,9 +100,9 @@ async function syncPersonImages() {
   console.log(`   Images updated: ${updated}`)
   console.log(`   Images not matched: ${notFound}`)
 
-  if (missingPersons.length > 0) {
-    console.log('\n👤 Missing persons (need to be created):')
-    missingPersons.forEach(name => console.log(`   - ${name}`))
+  if (missingPeople.length > 0) {
+    console.log('\n👤 Missing people (need to be created):')
+    missingPeople.forEach(name => console.log(`   - ${name}`))
   }
 }
 

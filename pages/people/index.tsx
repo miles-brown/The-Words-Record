@@ -7,8 +7,8 @@ import { PersonWithRelations, PaginatedResponse } from '@/types'
 import { format } from 'date-fns'
 import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
 
-export default function PersonsPage() {
-  const [persons, setPersons] = useState<PersonWithRelations[]>([])
+export default function PeoplePage() {
+  const [people, setPeople] = useState<PersonWithRelations[]>([])
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -79,9 +79,9 @@ export default function PersonsPage() {
     fetchFilterOptions()
   }, [])
 
-  // Fetch persons when filters or itemsPerPage change
+  // Fetch people when filters or itemsPerPage change
   useEffect(() => {
-    fetchPersons(1)
+    fetchPeople(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters, itemsPerPage])
 
@@ -96,7 +96,8 @@ export default function PersonsPage() {
     }
   }
 
-  const fetchPersons = async (page: number) => {
+  // Fetch people list from API
+  const fetchPeople = async (page: number) => {
     setLoading(true)
     setError(null)
 
@@ -111,10 +112,10 @@ export default function PersonsPage() {
       })
 
       const response = await fetch(`/api/people?${params}`)
-      if (!response.ok) throw new Error('Failed to fetch persons')
+      if (!response.ok) throw new Error('Failed to fetch people')
 
       const data = await response.json()
-      setPersons(data.people)
+      setPeople(data.people)
       setPagination(data.pagination)
     } catch (err) {
       setError('Failed to load people. Please try again.')
@@ -142,7 +143,7 @@ export default function PersonsPage() {
       title="Who?"
       description="Browse profiles of individuals involved in documented public statements"
     >
-      <div className="persons-page">
+      <div className="people-page">
         <div className="page-header">
           <h1>Who?</h1>
           <p className="page-description">
@@ -270,11 +271,11 @@ export default function PersonsPage() {
         {error && (
           <div className="error-message" role="alert">
             <p>{error}</p>
-            <button onClick={() => fetchPersons(pagination.page)}>Try Again</button>
+            <button onClick={() => fetchPeople(pagination.page)}>Try Again</button>
           </div>
         )}
 
-        <div className={`persons-container view-${viewMode}`}>
+        <div className={`people-container view-${viewMode}`}>
           {loading ? (
             <>
               {[...Array(itemsPerPage)].map((_, i) => (
@@ -282,7 +283,7 @@ export default function PersonsPage() {
               ))}
             </>
           ) : (
-            persons.map((person) => {
+            people.map((person) => {
               const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null
               const deathYear = person.deathDate ? new Date(person.deathDate).getFullYear() : null
               const firstNationality = person.nationality ? person.nationality.split(',')[0].trim() : null
@@ -438,7 +439,7 @@ export default function PersonsPage() {
             {pagination.totalPages > 1 && (
               <div className="pagination">
                 <button
-                  onClick={() => fetchPersons(pagination.page - 1)}
+                  onClick={() => fetchPeople(pagination.page - 1)}
                   disabled={pagination.page === 1}
                   aria-label="Previous page"
                   className="pagination-prev"
@@ -451,7 +452,7 @@ export default function PersonsPage() {
                     typeof pageNum === 'number' ? (
                       <button
                         key={index}
-                        onClick={() => fetchPersons(pageNum)}
+                        onClick={() => fetchPeople(pageNum)}
                         className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
                         aria-label={`Go to page ${pageNum}`}
                         aria-current={pagination.page === pageNum ? 'page' : undefined}
@@ -467,7 +468,7 @@ export default function PersonsPage() {
                 </div>
 
                 <button
-                  onClick={() => fetchPersons(pagination.page + 1)}
+                  onClick={() => fetchPeople(pagination.page + 1)}
                   disabled={pagination.page === pagination.totalPages}
                   aria-label="Next page"
                   className="pagination-next"
@@ -481,7 +482,7 @@ export default function PersonsPage() {
       </div>
 
       <style jsx>{`
-        .persons-page {
+        .people-page {
           max-width: 1200px;
           margin: 0 auto;
         }
@@ -643,12 +644,12 @@ export default function PersonsPage() {
         }
 
         /* Container for different view modes */
-        .persons-container {
+        .people-container {
           margin-bottom: 3rem;
         }
 
         /* CARD VIEW */
-        .persons-container.view-card {
+        .people-container.view-card {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
           gap: 2rem;
@@ -699,7 +700,7 @@ export default function PersonsPage() {
         }
 
         /* LIST VIEW */
-        .persons-container.view-list {
+        .people-container.view-list {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
@@ -752,7 +753,7 @@ export default function PersonsPage() {
         }
 
         /* GRID VIEW */
-        .persons-container.view-grid {
+        .people-container.view-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
           gap: 1.5rem;
@@ -789,7 +790,7 @@ export default function PersonsPage() {
         }
 
         /* PROFILE VIEW */
-        .persons-container.view-profile {
+        .people-container.view-profile {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
           gap: 1.5rem;
@@ -1089,13 +1090,13 @@ export default function PersonsPage() {
             font-size: 2rem;
           }
 
-          .persons-container.view-card,
-          .persons-container.view-grid {
+          .people-container.view-card,
+          .people-container.view-grid {
             grid-template-columns: 1fr;
             gap: 1rem;
           }
 
-          .persons-container.view-profile {
+          .people-container.view-profile {
             grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
           }
 

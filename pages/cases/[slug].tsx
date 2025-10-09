@@ -9,7 +9,7 @@ import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { CaseWithRelations } from '@/types'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 interface CasePageProps {
   caseItem: any | null
@@ -137,9 +137,9 @@ export default function CasePage({ caseItem }: CasePageProps) {
         </div>
 
         {caseItem.people && caseItem.people.length > 0 && (
-          <section className="involved-persons">
+          <section className="involved-people">
             <h2>People Involved</h2>
-            <div className="persons-grid">
+            <div className="people-grid">
               {caseItem.people.filter((person: any): person is NonNullable<typeof person> => person !== null).map((person: any) => {
                 // Determine if person made a statement or response
                 const madeStatement = caseItem.statements?.some((s: any) => s.person?.id === person.id)
@@ -534,7 +534,7 @@ export default function CasePage({ caseItem }: CasePageProps) {
           font-weight: 600;
         }
 
-        .persons-grid {
+        .people-grid {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
           gap: 1rem;
@@ -908,7 +908,7 @@ export default function CasePage({ caseItem }: CasePageProps) {
             justify-content: center;
           }
 
-          .persons-grid {
+          .people-grid {
             grid-template-columns: 1fr;
           }
 
@@ -1074,7 +1074,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           },
           take: 3
         })
-      : [] // Return empty array if no tags or persons to match
+      : [] // Return empty array if no tags or people to match
 
     return {
       props: {

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { getCaseHistory } from '@/lib/case-history'
 
 export default async function handler(

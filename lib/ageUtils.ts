@@ -1,5 +1,5 @@
 /**
- * Age calculation utilities for persons
+ * Age calculation utilities for people
  */
 
 /**

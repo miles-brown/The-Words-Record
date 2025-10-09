@@ -73,7 +73,7 @@ function parseMarkdownCases(markdown: string): CaseData[] {
     const person: PersonData = { name }
     const caseData: any = { person }
 
-    // Track if we're in PERSON INFORMATION or STATEMENT/INCIDENT INFORMATION section
+    // Track if we're in PERSON INFORMATION or STATEMENT/CASE INFORMATION section
     let inPersonSection = false
     let inStatementSection = false
 
@@ -84,7 +84,7 @@ function parseMarkdownCases(markdown: string): CaseData[] {
         inStatementSection = false
         continue
       }
-      if (line.includes('### STATEMENT/INCIDENT INFORMATION')) {
+      if (line.includes('### STATEMENT/CASE INFORMATION')) {
         inPersonSection = false
         inStatementSection = true
         continue
@@ -129,7 +129,7 @@ function parseMarkdownCases(markdown: string): CaseData[] {
         if (affilMatch) person.affiliatedOrgs = affilMatch[1].trim()
       }
 
-      // Statement/Incident Information Fields
+      // Statement/Case Information Fields
       const dateMatch = line.match(/\*\*Date:\*\*\s*(.+)/)
       const wordingMatch = line.match(/\*\*Exact Wording:\*\*\s*(.+)/)
       const contextMatch = line.match(/\*\*Context:\*\*\s*(.+)/)

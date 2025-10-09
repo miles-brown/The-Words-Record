@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 interface TagPageProps {
   tag: any | null
@@ -73,7 +73,7 @@ export default function TagPage({ tag }: TagPageProps) {
                 <p className="incident-excerpt">{caseItem.summary}</p>
 
                 {caseItem.people && caseItem.people.length > 0 && (
-                  <div className="involved-persons">
+                  <div className="involved-people">
                     <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
                   </div>
                 )}
@@ -181,13 +181,13 @@ export default function TagPage({ tag }: TagPageProps) {
           font-size: 0.98rem;
         }
 
-        .involved-persons {
+        .involved-people {
           font-size: 0.9rem;
           color: var(--text-secondary);
           margin-bottom: 1rem;
         }
 
-        .involved-persons strong {
+        .involved-people strong {
           color: var(--text-primary);
           font-weight: 600;
         }

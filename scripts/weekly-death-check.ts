@@ -2,7 +2,7 @@
 /**
  * Weekly Death Check Script
  *
- * This script checks all living persons in the database to see if they have passed away.
+ * This script checks all living people in the database to see if they have passed away.
  * It uses the Anthropic API to search for death information.
  *
  * Usage:
@@ -104,8 +104,8 @@ async function main() {
   console.log('🔍 Starting weekly death check...\n')
 
   try {
-    // Get all living persons (those without a death date)
-    const livingPersons = await prisma.person.findMany({
+    // Get all living people (those without a death date)
+    const livingPeople = await prisma.person.findMany({
       where: {
         deathDate: null
       },
@@ -116,20 +116,20 @@ async function main() {
       }
     })
 
-    console.log(`Found ${livingPersons.length} living persons to check\n`)
+    console.log(`Found ${livingPeople.length} living people to check\n`)
 
     let checkedCount = 0
     let deathsFound = 0
     let updatedCount = 0
 
-    for (const person of livingPersons) {
+    for (const personItem of livingPeople) {
       checkedCount++
-      console.log(`[${checkedCount}/${livingPersons.length}] Checking: ${person.name}`)
+      console.log(`[${checkedCount}/${livingPeople.length}] Checking: ${personItem.name}`)
 
-      const deathInfo = await checkForDeath(person.name)
+      const deathInfo = await checkForDeath(personItem.name)
 
       if (deathInfo.isDead) {
-        console.log(`  💔 DEATH DETECTED for ${person.name}`)
+        console.log(`  💔 DEATH DETECTED for ${personItem.name}`)
         console.log(`     Date: ${deathInfo.deathDate || 'Unknown'}`)
         console.log(`     Place: ${deathInfo.deathPlace || 'Unknown'}`)
 
@@ -152,7 +152,7 @@ async function main() {
 
           if (Object.keys(updateData).length > 0) {
             await prisma.person.update({
-              where: { id: person.id },
+              where: { id: personItem.id },
               data: updateData
             })
 
@@ -167,7 +167,7 @@ async function main() {
       }
 
       // Rate limiting: wait 3 seconds between API calls
-      if (checkedCount < livingPersons.length) {
+      if (checkedCount < livingPeople.length) {
         console.log(`  ⏳ Waiting 3s before next check...\n`)
         await new Promise(resolve => setTimeout(resolve, 3000))
       }
@@ -175,7 +175,7 @@ async function main() {
 
     console.log('\n' + '='.repeat(50))
     console.log('✨ Weekly death check complete!')
-    console.log(`   Checked: ${checkedCount} persons`)
+    console.log(`   Checked: ${checkedCount} people`)
     console.log(`   Deaths found: ${deathsFound}`)
     console.log(`   Database updated: ${updatedCount}`)
     console.log('='.repeat(50))

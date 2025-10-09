@@ -117,11 +117,11 @@ async function migrate() {
     }
     console.log(`  ✓ Migrated ${tags.length} tags\n`);
 
-    // 2. Migrate Persons
-    console.log('2. Migrating Persons...');
-    const persons = await getFromSqlite('SELECT * FROM Person');
-    for (const person of persons) {
-      await postgresClient.person.create({
+    // 2. Migrate People
+    console.log('2. Migrating People...');
+    const people = await getFromSqlite('SELECT * FROM People');
+    for (const person of people) {
+      await postgresClient.people.create({
         data: {
           id: person.id,
           slug: person.slug,
@@ -152,7 +152,7 @@ async function migrate() {
         }
       });
     }
-    console.log(`  ✓ Migrated ${persons.length} persons\n`);
+    console.log(`  ✓ Migrated ${people.length} people\n`);
 
     // 3. Migrate Organizations
     console.log('3. Migrating Organizations...');
@@ -176,35 +176,35 @@ async function migrate() {
     }
     console.log(`  ✓ Migrated ${orgs.length} organizations\n`);
 
-    // 4. Migrate Incidents
-    console.log('4. Migrating Incidents...');
-    const incidents = await getFromSqlite('SELECT * FROM Incident');
-    for (const incident of incidents) {
-      await postgresClient.incident.create({
+    // 4. Migrate Cases
+    console.log('4. Migrating Cases...');
+    const cases = await getFromSqlite('SELECT * FROM Case');
+    for (const caseItem of cases) {
+      await postgresClient.case.create({
         data: {
-          id: incident.id,
-          slug: incident.slug,
-          title: incident.title,
-          summary: incident.summary,
-          description: incident.description,
-          incidentDate: new Date(incident.incidentDate),
-          publicationDate: incident.publicationDate ? new Date(incident.publicationDate) : new Date(),
-          status: incident.status === 'documented' ? 'DOCUMENTED' : 'DOCUMENTED',
-          severity: incident.severity ?
-            (incident.severity.toUpperCase() === 'LOW' ? 'LOW' :
-             incident.severity.toUpperCase() === 'MEDIUM' ? 'MEDIUM' :
-             incident.severity.toUpperCase() === 'HIGH' ? 'HIGH' :
-             incident.severity.toUpperCase() === 'CRITICAL' ? 'CRITICAL' : null) : null,
-          locationDetail: incident.location,
-          mediaFraming: incident.mediaFraming,
-          triggeringEvent: incident.triggeringEvent,
-          outcome: incident.outcome,
-          createdAt: incident.createdAt ? new Date(incident.createdAt) : new Date(),
-          updatedAt: incident.updatedAt ? new Date(incident.updatedAt) : new Date()
+          id: caseItem.id,
+          slug: caseItem.slug,
+          title: caseItem.title,
+          summary: caseItem.summary,
+          description: caseItem.description,
+          incidentDate: new Date(caseItem.incidentDate),
+          publicationDate: caseItem.publicationDate ? new Date(caseItem.publicationDate) : new Date(),
+          status: caseItem.status === 'documented' ? 'DOCUMENTED' : 'DOCUMENTED',
+          severity: caseItem.severity ?
+            (caseItem.severity.toUpperCase() === 'LOW' ? 'LOW' :
+             caseItem.severity.toUpperCase() === 'MEDIUM' ? 'MEDIUM' :
+             caseItem.severity.toUpperCase() === 'HIGH' ? 'HIGH' :
+             caseItem.severity.toUpperCase() === 'CRITICAL' ? 'CRITICAL' : null) : null,
+          locationDetail: caseItem.location,
+          mediaFraming: caseItem.mediaFraming,
+          triggeringEvent: caseItem.triggeringEvent,
+          outcome: caseItem.outcome,
+          createdAt: caseItem.createdAt ? new Date(caseItem.createdAt) : new Date(),
+          updatedAt: caseItem.updatedAt ? new Date(caseItem.updatedAt) : new Date()
         }
       });
     }
-    console.log(`  ✓ Migrated ${incidents.length} incidents\n`);
+    console.log(`  ✓ Migrated ${cases.length} cases\n`);
 
     // 5. Migrate Statements
     console.log('5. Migrating Statements...');
@@ -280,43 +280,43 @@ async function migrate() {
     // 8. Migrate junction tables
     console.log('8. Migrating junction tables...');
 
-    // PersonIncidents
-    const personIncidents = await getFromSqlite('SELECT * FROM _PersonIncidents');
-    for (const pi of personIncidents) {
+    // PeopleCases
+    const personCases = await getFromSqlite('SELECT * FROM _PeopleCases');
+    for (const pi of personCases) {
       await postgresClient.$executeRaw`
-        INSERT INTO "_PersonIncidents" ("A", "B") VALUES (${pi.A}, ${pi.B})
+        INSERT INTO "_PeopleCases" ("A", "B") VALUES (${pi.A}, ${pi.B})
       `;
     }
-    console.log(`  ✓ Migrated ${personIncidents.length} person-incident relations`);
+    console.log(`  ✓ Migrated ${personCases.length} people-case relations`);
 
-    // OrganizationIncidents
-    const orgIncidents = await getFromSqlite('SELECT * FROM _OrganizationIncidents');
-    for (const oi of orgIncidents) {
+    // OrganizationCases
+    const organizationCases = await getFromSqlite('SELECT * FROM _OrganizationCases');
+    for (const oi of organizationCases) {
       await postgresClient.$executeRaw`
-        INSERT INTO "_OrganizationIncidents" ("A", "B") VALUES (${oi.A}, ${oi.B})
+        INSERT INTO "_OrganizationCases" ("A", "B") VALUES (${oi.A}, ${oi.B})
       `;
     }
-    console.log(`  ✓ Migrated ${orgIncidents.length} organization-incident relations`);
+    console.log(`  ✓ Migrated ${organizationCases.length} organization-case relations`);
 
-    // IncidentTags
-    const incidentTags = await getFromSqlite('SELECT * FROM _IncidentTags');
-    for (const it of incidentTags) {
+    // CaseTags
+    const caseTags = await getFromSqlite('SELECT * FROM _CaseTags');
+    for (const ct of caseTags) {
       await postgresClient.$executeRaw`
-        INSERT INTO "_IncidentTags" ("A", "B") VALUES (${it.A}, ${it.B})
+        INSERT INTO "_CaseTags" ("A", "B") VALUES (${ct.A}, ${ct.B})
       `;
     }
-    console.log(`  ✓ Migrated ${incidentTags.length} incident-tag relations\n`);
+    console.log(`  ✓ Migrated ${caseTags.length} case-tag relations\n`);
 
     console.log('✅ Migration completed successfully!');
 
     // Run validation queries
     console.log('\nRunning validation queries...');
     const counts = await postgresClient.$queryRaw`
-      SELECT 'Person' as table_name, COUNT(*) as count FROM "Person"
+      SELECT 'People' as table_name, COUNT(*) as count FROM "People"
       UNION ALL
       SELECT 'Organization', COUNT(*) FROM "Organization"
       UNION ALL
-      SELECT 'Incident', COUNT(*) FROM "Incident"
+      SELECT 'Case', COUNT(*) FROM "Case"
       UNION ALL
       SELECT 'Statement (Original)', COUNT(*) FROM "Statement" WHERE "statementType" = 'ORIGINAL'
       UNION ALL

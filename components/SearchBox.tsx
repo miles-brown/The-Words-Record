@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 interface SearchResult {
-  type: 'person' | 'incident' | 'organization'
+  type: 'person' | 'case' | 'organization'
   id: string
   title: string
   slug: string
@@ -19,7 +19,7 @@ interface SearchBoxProps {
 }
 
 export default function SearchBox({ 
-  placeholder = "Search people, incidents, organizations...", 
+  placeholder = "Search people, cases, organizations...", 
   className = "",
   showQuickResults = true 
 }: SearchBoxProps) {
@@ -116,8 +116,8 @@ export default function SearchBox({
         e.preventDefault()
         if (selectedIndex >= 0 && selectedIndex < results.length) {
           const result = results[selectedIndex]
-          const url = `/${result.type === 'person' ? 'persons' : 
-                        result.type === 'incident' ? 'incidents' : 
+          const url = `/${result.type === 'person' ? 'people' : 
+                        result.type === 'case' ? 'cases' : 
                         'organizations'}/${result.slug}`
           router.push(url)
           setShowResults(false)
@@ -136,7 +136,7 @@ export default function SearchBox({
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'person': return '👤'
-      case 'incident': return '📰'
+      case 'case': return '📰'
       case 'organization': return '🏢'
       default: return '📄'
     }
@@ -145,7 +145,7 @@ export default function SearchBox({
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'person': return 'type-person'
-      case 'incident': return 'type-incident'
+      case 'case': return 'type-case'
       case 'organization': return 'type-organization'
       default: return 'type-default'
     }
@@ -187,8 +187,8 @@ export default function SearchBox({
             <>
               {results.map((result, index) => (
                 <Link 
-                  href={`/${result.type === 'person' ? 'persons' : 
-                          result.type === 'incident' ? 'incidents' : 
+                  href={`/${result.type === 'person' ? 'people' : 
+                          result.type === 'case' ? 'cases' : 
                           'organizations'}/${result.slug}`}
                   key={result.id}
                 >
@@ -363,7 +363,7 @@ export default function SearchBox({
           color: #1976d2;
         }
 
-        .type-incident {
+        .type-case {
           background: #fff3e0;
           color: #f57c00;
         }

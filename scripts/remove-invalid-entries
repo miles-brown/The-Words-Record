@@ -5,7 +5,7 @@ const prisma = new PrismaClient()
 async function main() {
   console.log('🗑️  Starting removal of invalid entries...\n')
 
-  // List of invalid person IDs and their associated statement IDs
+  // List of invalid people IDs and their associated statement IDs
   const invalidEntries = [
     {
       personId: 'cmgbdtp20000lrowu1dnfbwx7',
@@ -95,11 +95,11 @@ async function main() {
     }
   }
 
-  console.log('=== STEP 2: DELETING INVALID PERSON ENTRIES ===\n')
+  console.log('=== STEP 2: DELETING INVALID PEOPLE ENTRIES ===\n')
 
   for (const entry of invalidEntries) {
     try {
-      const person = await prisma.person.findUnique({
+      const personItem = await prisma.people.findUnique({
         where: { id: entry.personId },
         include: {
           _count: {
@@ -111,22 +111,22 @@ async function main() {
         }
       })
 
-      if (person) {
+      if (personItem) {
         // Double-check no remaining relations
-        if (person._count.statements > 0) {
-          console.log(`⚠️  Cannot delete "${entry.name}" - still has ${person._count.statements} statements`)
+        if (personItem._count.statements > 0) {
+          console.log(`⚠️  Cannot delete "${entry.name}" - still has ${personItem._count.statements} statements`)
           continue
         }
 
-        if (person._count.cases > 0) {
-          console.log(`⚠️  Cannot delete "${entry.name}" - still has ${person._count.cases} incidents`)
+        if (personItem._count.cases > 0) {
+          console.log(`⚠️  Cannot delete "${entry.name}" - still has ${personItem._count.cases} incidents`)
           continue
         }
 
-        await prisma.person.delete({
+        await prisma.people.delete({
           where: { id: entry.personId }
         })
-        console.log(`✅ Deleted person: "${entry.name}"`)
+        console.log(`✅ Deleted entry: "${entry.name}"`)
         console.log(`   ID: ${entry.personId}\n`)
         peopleDeleted++
       } else {
@@ -151,13 +151,13 @@ async function main() {
     const [primaryId, secondaryId] = dup.ids
 
     try {
-      // Get both persons
-      const primary = await prisma.person.findUnique({
+      // Get both people
+      const primary = await prisma.people.findUnique({
         where: { id: primaryId },
         include: { _count: { select: { statements: true, cases: true } } }
       })
 
-      const secondary = await prisma.person.findUnique({
+      const secondary = await prisma.people.findUnique({
         where: { id: secondaryId },
         include: { _count: { select: { statements: true, cases: true } } }
       })
@@ -192,7 +192,7 @@ async function main() {
         }
 
         // Delete the secondary person
-        await prisma.person.delete({
+        await prisma.people.delete({
           where: { id: secondaryId }
         })
 
@@ -219,11 +219,11 @@ async function main() {
   // Verify cleanup
   console.log('\n=== VERIFICATION ===\n')
 
-  const remainingVarious = await prisma.person.count({
+  const remainingVarious = await prisma.people.count({
     where: { name: { contains: 'Various' } }
   })
 
-  const remainingGroupTerms = await prisma.person.count({
+  const remainingGroupTerms = await prisma.people.count({
     where: {
       OR: [
         { name: { contains: 'users' } },

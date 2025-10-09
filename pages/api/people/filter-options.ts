@@ -5,8 +5,8 @@ const prisma = new PrismaClient()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    // Get all persons with their affiliations
-    const persons = await prisma.person.findMany({
+    // Get all people with their affiliations
+    const people = await prisma.person.findMany({
       select: {
         profession: true,
         nationality: true,
@@ -24,7 +24,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Extract unique professions (split comma-separated values)
     const professionsSet = new Set<string>()
-    persons.forEach(person => {
+    people.forEach(person => {
       if (person.profession) {
         person.profession.split(',').forEach(prof => {
           const trimmed = prof.trim()
@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Extract unique nationalities (split comma-separated values for dual nationality)
     const nationalitiesSet = new Set<string>()
-    persons.forEach(person => {
+    people.forEach(person => {
       if (person.nationality) {
         person.nationality.split(',').forEach(nat => {
           const trimmed = nat.trim()
@@ -46,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // Extract unique organizations
     const organizationsSet = new Set<string>()
-    persons.forEach(person => {
+    people.forEach(person => {
       person.affiliations.forEach(affiliation => {
         organizationsSet.add(affiliation.organization.name)
       })

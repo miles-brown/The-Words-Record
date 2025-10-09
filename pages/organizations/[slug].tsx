@@ -6,7 +6,7 @@ import Head from 'next/head'
 import { format } from 'date-fns'
 import Layout from '@/components/Layout'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 
 interface OrganizationPageProps {
   organization: any | null
@@ -138,29 +138,29 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
         </div>
 
         {organization.cases && organization.cases.length > 0 && (
-          <section className="incidents-section">
+          <section className="cases-section">
             <h2>Related Cases ({organization.cases.length})</h2>
             
-            <div className="incidents-list">
+            <div className="cases-list">
               {organization.cases.map((caseItem: any) => (
                 <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
-                  <article className="incident-card">
-                    <div className="incident-header">
+                  <article className="case-card">
+                    <div className="case-header">
                       <h3>{caseItem.title}</h3>
-                      <span className="incident-date">
+                      <span className="case-date">
                         {format(new Date(caseItem.caseDate), 'MMM d, yyyy')}
                       </span>
                     </div>
                     
-                    <p className="incident-summary">{caseItem.summary}</p>
+                    <p className="case-summary">{caseItem.summary}</p>
                     
                     {caseItem.people && caseItem.people.length > 0 && (
-                      <div className="incident-persons">
+                      <div className="case-people">
                         <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
                       </div>
                     )}
                     
-                    <div className="incident-stats">
+                    <div className="case-stats">
                       <span>{caseItem._count?.statements || 0} statements</span>
                       <span>{caseItem._count?.responses || 0} responses</span>
                       <span>{caseItem._count?.sources || 0} sources</span>
@@ -192,9 +192,9 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
                     <span className="response-date">
                       {format(new Date(response.statementDate), 'MMMM d, yyyy')}
                     </span>
-                    {response.incident && (
+                    {response.caseItem && (
                       <Link href={`/cases/${response.caseItem.slug}`}>
-                        <span className="response-incident">
+                        <span className="response-case">
                           Re: {response.caseItem.title}
                         </span>
                       </Link>
@@ -211,11 +211,11 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
                     </div>
                   )}
                   
-                  {response.statement && response.statement.person && (
+                  {response.statement && response.statement.people && (
                     <div className="response-context">
                       <span>In response to statement by{' '}</span>
-                      <Link href={`/people/${response.statement.person.slug}`}>
-                        <span className="person-link">{response.statement.person.name}</span>
+                      <Link href={`/people/${response.statement.people.slug}`}>
+                        <span className="person-link">{response.statement.people.name}</span>
                       </Link>
                     </div>
                   )}
@@ -364,13 +364,15 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
           border-bottom: 2px solid var(--border-primary);
         }
 
+        .cases-section {
+          margin: 3rem 0;
+        }
         .cases-list {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
         }
-
-        .incident-card {
+        .case-card {
           border: 1px solid var(--border-primary);
           border-radius: 8px;
           padding: 1.5rem;
@@ -378,49 +380,41 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
           cursor: pointer;
           transition: transform 0.2s, box-shadow 0.2s;
         }
-
-        .incident-card:hover {
+        .case-card:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        .incident-header {
+        .case-header {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
           gap: 1rem;
           margin-bottom: 1rem;
         }
-
-        .incident-header h3 {
+        .case-header h3 {
           color: var(--text-primary);
           margin: 0;
           flex: 1;
         }
-
-        .incident-date {
+        .case-date {
           color: var(--text-secondary);
           font-size: 0.9rem;
           white-space: nowrap;
         }
-
-        .incident-summary {
+        .case-summary {
           color: var(--text-secondary);
           line-height: 1.6;
           margin-bottom: 1rem;
         }
-
-        .incident-persons {
+        .case-people {
           font-size: 0.9rem;
           color: var(--text-secondary);
           margin-bottom: 1rem;
         }
-
-        .incident-persons strong {
+        .case-people strong {
           color: var(--text-primary);
         }
-
-        .incident-stats {
+        .case-stats {
           display: flex;
           gap: 1.5rem;
           font-size: 0.9rem;
@@ -477,13 +471,12 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
           font-size: 0.9rem;
         }
 
-        .response-incident {
+        .response-case {
           color: var(--accent-primary);
           font-size: 0.9rem;
           cursor: pointer;
         }
-
-        .response-incident:hover {
+        .response-case:hover {
           text-decoration: underline;
         }
 
@@ -512,12 +505,10 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
           font-size: 0.9rem;
           color: var(--text-secondary);
         }
-
         .person-link {
           color: var(--accent-primary);
           cursor: pointer;
         }
-
         .person-link:hover {
           text-decoration: underline;
         }
@@ -553,7 +544,7 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
             gap: 0.5rem;
           }
 
-          .incident-header {
+          .case-header {
             flex-direction: column;
           }
 
@@ -596,10 +587,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const organization = await prisma.organization.findUnique({
       where: { slug: params.slug },
       include: {
-        incidents: {
+        cases: {
           include: {
             tags: true,
-            persons: true,
+            people: true,
             _count: {
               select: {
                 statements: true,
@@ -617,8 +608,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         },
         statements: {
           include: {
-            incident: true,
-            person: true,
+            case: true,
+            people: true,
             sources: true,
             respondsTo: true,
             responses: true
@@ -634,16 +625,17 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       return { notFound: true }
     }
 
-    // Add response count to incidents and separate responses from statements
+    // Add response count to cases and separate responses from statements
+    // Note: The "people" field now replaces the previous "persons" field in included data.
     const responses = organization.statements?.filter(s => s.statementType === 'RESPONSE') || []
     const organizationWithResponseCounts = {
       ...organization,
       responses,
-      incidents: organization.cases.map(incident => {
+      cases: organization.cases.map(caseItem => {
         const responseCount = caseItem.statements?.length || 0
-        const { statements, ...incidentWithoutStatements } = incident
+        const { statements, ...caseWithoutStatements } = caseItem
         return {
-          ...incidentWithoutStatements,
+          ...caseWithoutStatements,
           _count: {
             ...caseItem._count,
             responses: responseCount

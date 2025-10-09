@@ -1,4 +1,4 @@
-import prisma from '../lib/prisma'
+import { prisma } from '../lib/prisma'
 
 // Nationality mappings to standardize
 const nationalityMappings: { [key: string]: string } = {
@@ -280,8 +280,8 @@ function standardizeProfession(profession: string | null): string | null {
 async function cleanupDatabase() {
   console.log('🧹 Starting database cleanup...\n')
 
-  // Get all persons
-  const persons = await prisma.person.findMany({
+  // Get all people
+  const people = await prisma.person.findMany({
     select: {
       id: true,
       name: true,
@@ -290,12 +290,12 @@ async function cleanupDatabase() {
     }
   })
 
-  console.log(`📊 Found ${persons.length} persons to check\n`)
+  console.log(`📊 Found ${people.length} people to check\n`)
 
   let nationalityUpdates = 0
   let professionUpdates = 0
 
-  for (const person of persons) {
+  for (const person of people) {
     const updates: any = {}
 
     // Check nationality

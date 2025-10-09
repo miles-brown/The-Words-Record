@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import prisma from '@/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { CaseVisibility } from '@prisma/client'
 
 export default async function handler(
@@ -15,7 +15,7 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        // Get an incident by slug with all related data
+        // Get a case by slug with all related data
         const caseItem = await prisma.case.findUnique({
           where: { slug },
           include: {
@@ -61,7 +61,7 @@ export default async function handler(
           return res.status(404).json({ error: 'Case not found' })
         }
 
-        // Collect all responses to this incident's statements
+        // Collect all responses to this case's statements
         const responses = caseItem.statements?.filter(s => s.statementType === 'RESPONSE') || []
 
         // Count responses
@@ -81,7 +81,7 @@ export default async function handler(
         break
 
       case 'PUT':
-        // Update an incident
+        // Update a case
         const {
           title,
           summary,
@@ -131,7 +131,7 @@ export default async function handler(
           }
         }
 
-        const updatedIncident = await prisma.case.update({
+        const updatedCase = await prisma.case.update({
           where: { slug },
           data: updateData,
           include: {
@@ -141,11 +141,11 @@ export default async function handler(
           }
         })
 
-        res.status(200).json(updatedIncident)
+        res.status(200).json(updatedCase)
         break
 
       case 'DELETE':
-        // Delete an incident
+        // Delete a case
         await prisma.case.delete({
           where: { slug }
         })

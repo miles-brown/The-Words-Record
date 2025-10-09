@@ -226,7 +226,7 @@ Contains:
 ╠════════════════════════════════════════════════════════════════════════════╣
 ║                                                                            ║
 ║  Imported:            12 new statements                                    ║
-║  Updated:              8 persons                                           ║
+║  Updated:              8 people                                            ║
 ║  Archived:            12 sources                                           ║
 ║  Skipped:              3 duplicates                                        ║
 ║  Errors:               1 failures                                          ║

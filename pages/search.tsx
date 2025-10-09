@@ -6,7 +6,7 @@ import SearchBox from '@/components/SearchBox'
 import { format } from 'date-fns'
 
 interface SearchResult {
-  type: 'person' | 'incident' | 'organization'
+  type: 'person' | 'case' | 'organization'
   id: string
   title: string
   slug: string
@@ -114,7 +114,7 @@ export default function SearchPage() {
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'person': return '👤'
-      case 'incident': return '📰'
+      case 'case': return '📰'
       case 'organization': return '🏢'
       default: return '📄'
     }
@@ -123,15 +123,15 @@ export default function SearchPage() {
   const getTypeColor = (type: string) => {
     switch (type) {
       case 'person': return 'type-person'
-      case 'incident': return 'type-incident'
+      case 'case': return 'type-case'
       case 'organization': return 'type-organization'
       default: return 'type-default'
     }
   }
 
   const renderResultCard = (result: SearchResult) => {
-    const url = `/${result.type === 'person' ? 'persons' : 
-                  result.type === 'incident' ? 'incidents' : 
+    const url = `/${result.type === 'person' ? 'people' :
+                  result.type === 'case' ? 'cases' :
                   'organizations'}/${result.slug}`
 
     return (
@@ -156,12 +156,12 @@ export default function SearchPage() {
                   <span className="meta-item">👔 {result.metadata.profession}</span>
                 )}
                 <span className="meta-item">
-                  📊 {result.metadata.incidentCount} incidents
+                  📊 {result.metadata.caseCount} cases
                 </span>
               </>
             )}
             
-            {result.type === 'incident' && (
+            {result.type === 'case' && (
               <>
                 <span className="meta-item">
                   📅 {format(new Date(result.metadata.caseDate), 'MMM d, yyyy')}
@@ -182,7 +182,7 @@ export default function SearchPage() {
                   <span className="meta-item">📍 {result.metadata.headquarters}</span>
                 )}
                 <span className="meta-item">
-                  📊 {result.metadata.incidentCount} incidents
+                  📊 {result.metadata.caseCount} cases
                 </span>
               </>
             )}
@@ -195,7 +195,7 @@ export default function SearchPage() {
   return (
     <Layout
       title={query ? `Search results for "${query}"` : 'Search'}
-      description={query ? `Search results for "${query}"` : 'Search people, incidents, and organizations'}
+      description={query ? `Search results for "${query}"` : 'Search people, cases, and organizations'}
     >
       <div className="search-page">
         <div className="search-header">
@@ -219,7 +219,7 @@ export default function SearchPage() {
                     <span className="category-count">{summary.people} people</span>
                   )}
                   {summary.cases > 0 && (
-                    <span className="category-count">{summary.cases} incidents</span>
+                    <span className="category-count">{summary.cases} cases</span>
                   )}
                   {summary.organizations > 0 && (
                     <span className="category-count">{summary.organizations} organizations</span>
@@ -239,16 +239,16 @@ export default function SearchPage() {
                     All
                   </button>
                   <button
-                    className={`filter-btn ${activeFilter === 'persons' ? 'active' : ''}`}
-                    onClick={() => handleFilterChange('persons')}
+                    className={`filter-btn ${activeFilter === 'people' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('people')}
                   >
                     👤 People
                   </button>
                   <button
-                    className={`filter-btn ${activeFilter === 'incidents' ? 'active' : ''}`}
-                    onClick={() => handleFilterChange('incidents')}
+                    className={`filter-btn ${activeFilter === 'cases' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('cases')}
                   >
-                    📰 Incidents
+                    📰 Cases
                   </button>
                   <button
                     className={`filter-btn ${activeFilter === 'organizations' ? 'active' : ''}`}
@@ -309,7 +309,7 @@ export default function SearchPage() {
           ) : (
             <div className="search-placeholder">
               <h3>Start searching</h3>
-              <p>Enter keywords to search across people, incidents, and organizations.</p>
+              <p>Enter keywords to search across people, cases, and organizations.</p>
             </div>
           )}
         </div>

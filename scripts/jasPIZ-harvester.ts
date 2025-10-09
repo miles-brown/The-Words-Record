@@ -12,7 +12,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk';
-import prisma from '../lib/prisma';
+import { prisma } from '../lib/prisma';
 import { createHash } from 'crypto';
 import * as fs from 'fs';
 import * as path from 'path';
