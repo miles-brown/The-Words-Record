@@ -19,7 +19,7 @@ export default async function handler(
         const caseItem = await prisma.case.findUnique({
           where: { slug },
           include: {
-            persons: true,
+            people: true,
             organizations: true,
             tags: true,
             statements: {
@@ -116,7 +116,7 @@ export default async function handler(
 
         // Update relationships if provided
         if (personIds) {
-          updateData.persons = {
+          updateData.people = {
             set: personIds.map((id: string) => ({ id }))
           }
         }
@@ -135,7 +135,7 @@ export default async function handler(
           where: { slug },
           data: updateData,
           include: {
-            persons: true,
+            people: true,
             organizations: true,
             tags: true
           }

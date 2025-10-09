@@ -202,7 +202,7 @@ export async function promoteStatementToCase(
       hasPublicReaction: criteria.hasPublicReaction,
       hasRepercussion: criteria.hasRepercussion,
       wasManuallyPromoted: isManualOverride,
-      persons: statement.personId ? {
+      people: statement.personId ? {
         connect: { id: statement.personId }
       } : undefined,
       organizations: statement.organizationId ? {

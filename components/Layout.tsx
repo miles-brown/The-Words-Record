@@ -95,7 +95,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
                   <SearchBox placeholder="Search..." className="header-search" />
                 </div>
                 <div className="nav-links">
-                  <Link href="/incidents">What?</Link>
+                  <Link href="/cases">What?</Link>
                   <Link href="/people">Who?</Link>
                   <Link href="/organizations">Organizations</Link>
                   <Link href="/about">About</Link>
@@ -139,7 +139,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
               </div>
 
               <nav className="menu-links">
-                <Link href="/incidents" onClick={() => setMenuOpen(false)}>
+                <Link href="/cases" onClick={() => setMenuOpen(false)}>
                   What?
                 </Link>
                 <Link href="/people" onClick={() => setMenuOpen(false)}>

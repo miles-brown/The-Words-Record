@@ -3,9 +3,9 @@ import Link from 'next/link'
 import Layout from '@/components/Layout'
 
 export default function TagsPage() {
-  const [tags, setTags] = useState([])
+  const [tags, setTags] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchTags()
@@ -54,7 +54,7 @@ export default function TagsPage() {
                   <h2>{tag.name}</h2>
                   {tag.description && <p className="tag-description">{tag.description}</p>}
                   <div className="tag-count">
-                    {tag._count?.incidents || 0} incident{tag._count?.incidents !== 1 ? 's' : ''}
+                    {tag._count?.cases || 0} incident{tag._count?.cases !== 1 ? 's' : ''}
                   </div>
                 </div>
               </Link>

@@ -20,8 +20,8 @@ interface SearchResponse {
   totalResults: number
   results: SearchResult[]
   summary: {
-    persons: number
-    incidents: number
+    people: number
+    cases: number
     organizations: number
   }
 }
@@ -34,7 +34,7 @@ export default function SearchPage() {
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [summary, setSummary] = useState({ persons: 0, incidents: 0, organizations: 0 })
+  const [summary, setSummary] = useState({ people: 0, cases: 0, organizations: 0 })
   const [activeFilter, setActiveFilter] = useState<string>('')
   const [sortBy, setSortBy] = useState<'relevance' | 'date' | 'name'>('relevance')
 
@@ -98,8 +98,8 @@ export default function SearchPage() {
         case 'relevance':
           return b.relevanceScore - a.relevanceScore
         case 'date':
-          const aDate = a.metadata.incidentDate || a.metadata.founded || 0
-          const bDate = b.metadata.incidentDate || b.metadata.founded || 0
+          const aDate = a.metadata.caseDate || a.metadata.founded || 0
+          const bDate = b.metadata.caseDate || b.metadata.founded || 0
           return new Date(bDate).getTime() - new Date(aDate).getTime()
         case 'name':
           return a.title.localeCompare(b.title)
@@ -164,7 +164,7 @@ export default function SearchPage() {
             {result.type === 'incident' && (
               <>
                 <span className="meta-item">
-                  📅 {format(new Date(result.metadata.incidentDate), 'MMM d, yyyy')}
+                  📅 {format(new Date(result.metadata.caseDate), 'MMM d, yyyy')}
                 </span>
                 {result.metadata.location && (
                   <span className="meta-item">📍 {result.metadata.location}</span>
@@ -215,11 +215,11 @@ export default function SearchPage() {
               {!loading && (
                 <div className="summary-stats">
                   <span className="total-count">{results.length} total results</span>
-                  {summary.persons > 0 && (
-                    <span className="category-count">{summary.persons} people</span>
+                  {summary.people > 0 && (
+                    <span className="category-count">{summary.people} people</span>
                   )}
-                  {summary.incidents > 0 && (
-                    <span className="category-count">{summary.incidents} incidents</span>
+                  {summary.cases > 0 && (
+                    <span className="category-count">{summary.cases} incidents</span>
                   )}
                   {summary.organizations > 0 && (
                     <span className="category-count">{summary.organizations} organizations</span>

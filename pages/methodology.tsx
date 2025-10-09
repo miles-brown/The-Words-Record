@@ -111,7 +111,7 @@ export default function Methodology() {
             </ul>
             <p>
               This creates a complete timeline of statements and responses, allowing users
-              to see the full evolution of public discourse on an incident.
+              to see the full evolution of public discourse on an caseItem.
             </p>
           </section>
 

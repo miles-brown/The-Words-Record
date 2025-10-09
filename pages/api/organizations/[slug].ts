@@ -21,7 +21,7 @@ export default async function handler(
             cases: {
               include: {
                 tags: true,
-                persons: true,
+                people: true,
                 _count: {
                   select: {
                     statements: true,

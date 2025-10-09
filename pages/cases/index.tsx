@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/Layout'
-import { IncidentCardSkeleton } from '@/components/LoadingSkeletons'
-import { IncidentWithRelations } from '@/types'
+import { CaseCardSkeleton } from '@/components/LoadingSkeletons'
+import { CaseWithRelations } from '@/types'
 import { format } from 'date-fns'
 
 export default function CasesPage() {
@@ -131,7 +131,7 @@ export default function CasesPage() {
               onChange={(e) => setSelectedTag(e.target.value)}
             >
               <option value="">All Tags</option>
-              {tags.map((tag) => (
+              {tags.map((tag: any) => (
                 <option key={tag.id} value={tag.slug}>
                   {tag.name}
                 </option>
@@ -174,7 +174,7 @@ export default function CasesPage() {
           {loading ? (
             <>
               {[...Array(10)].map((_, i) => (
-                <IncidentCardSkeleton key={i} />
+                <CaseCardSkeleton key={i} />
               ))}
             </>
           ) : cases.length === 0 ? (
@@ -183,9 +183,9 @@ export default function CasesPage() {
               <p>Try adjusting your filters or check back later.</p>
             </div>
           ) : (
-            cases.map((caseItem, index) => (
+            cases.map((caseItem: any, index: number) => (
               <>
-                <Link href={`/incidents/${caseItem.slug}`} key={caseItem.id}>
+                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
                   <article className="case-card stagger-item">
                     <div className="case-header">
                       <h2>{caseItem.title}</h2>
@@ -196,9 +196,9 @@ export default function CasesPage() {
 
                     <p className="case-excerpt">{caseItem.summary}</p>
 
-                    {caseItem.persons && caseItem.persons.length > 0 && (
+                    {caseItem.people && caseItem.people.length > 0 && (
                       <div className="involved-persons">
-                        <strong>Involved:</strong> {caseItem.persons.map(p => p.name).join(', ')}
+                        <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
                       </div>
                     )}
 
@@ -219,7 +219,7 @@ export default function CasesPage() {
 
                       {caseItem.tags && caseItem.tags.length > 0 && (
                         <div className="tags">
-                          {caseItem.tags.map(tag => (
+                          {caseItem.tags.map((tag: any) => (
                             <span key={tag.id} className="tag">{tag.name}</span>
                           ))}
                         </div>

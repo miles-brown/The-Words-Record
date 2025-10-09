@@ -46,7 +46,7 @@ interface ResponseData {
   impact?: string
 }
 
-interface IncidentData {
+interface CaseData {
   person: PersonData
   date: string
   exactWording: string
@@ -60,10 +60,10 @@ interface IncidentData {
   citations: string
 }
 
-function parseMarkdownIncidents(markdown: string): IncidentData[] {
-  const incidents: IncidentData[] = []
+function parseMarkdownCases(markdown: string): CaseData[] {
+  const cases: CaseData[] = []
 
-  // Split by ## to get individual incidents
+  // Split by ## to get individual cases
   const sections = markdown.split(/^##\s+/m).filter(s => s.trim())
 
   for (const section of sections) {
@@ -71,7 +71,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
     const name = lines[0].trim()
 
     const person: PersonData = { name }
-    const incident: any = { person }
+    const caseData: any = { person }
 
     // Track if we're in PERSON INFORMATION or STATEMENT/INCIDENT INFORMATION section
     let inPersonSection = false
@@ -146,30 +146,30 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
 
       const citationsMatch = line.match(/\*\*Citations:\*\*\s*(.+)/)
 
-      if (dateMatch) incident.date = dateMatch[1].trim()
-      if (wordingMatch) incident.exactWording = wordingMatch[1].trim()
-      if (contextMatch) incident.context = contextMatch[1].trim()
-      if (platformMatch) incident.platform = platformMatch[1].trim()
-      if (coverageMatch) incident.mediaCoverage = coverageMatch[1].trim()
-      if (categoriesMatch) incident.categories = categoriesMatch[1].trim()
-      if (responseMatch) incident.response = responseMatch[1].trim()
+      if (dateMatch) caseData.date = dateMatch[1].trim()
+      if (wordingMatch) caseData.exactWording = wordingMatch[1].trim()
+      if (contextMatch) caseData.context = contextMatch[1].trim()
+      if (platformMatch) caseData.platform = platformMatch[1].trim()
+      if (coverageMatch) caseData.mediaCoverage = coverageMatch[1].trim()
+      if (categoriesMatch) caseData.categories = categoriesMatch[1].trim()
+      if (responseMatch) caseData.response = responseMatch[1].trim()
 
       // Parse repercussions
       if (lostEmployMatch || lostContractsMatch || paintedNegMatch || repercDetailsMatch) {
-        if (!incident.repercussions) {
-          incident.repercussions = {
+        if (!caseData.repercussions) {
+          caseData.repercussions = {
             lostEmployment: false,
             lostContracts: false,
             paintedNegatively: false
           }
         }
-        if (lostEmployMatch) incident.repercussions.lostEmployment = lostEmployMatch[1].toUpperCase() === 'YES'
-        if (lostContractsMatch) incident.repercussions.lostContracts = lostContractsMatch[1].toUpperCase() === 'YES'
-        if (paintedNegMatch) incident.repercussions.paintedNegatively = paintedNegMatch[1].toUpperCase() === 'YES'
-        if (repercDetailsMatch) incident.repercussions.details = repercDetailsMatch[1].trim()
+        if (lostEmployMatch) caseData.repercussions.lostEmployment = lostEmployMatch[1].toUpperCase() === 'YES'
+        if (lostContractsMatch) caseData.repercussions.lostContracts = lostContractsMatch[1].toUpperCase() === 'YES'
+        if (paintedNegMatch) caseData.repercussions.paintedNegatively = paintedNegMatch[1].toUpperCase() === 'YES'
+        if (repercDetailsMatch) caseData.repercussions.details = repercDetailsMatch[1].trim()
       }
 
-      if (citationsMatch) incident.citations = citationsMatch[1].trim()
+      if (citationsMatch) caseData.citations = citationsMatch[1].trim()
     }
 
     // Parse responses section
@@ -177,7 +177,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
     if (responsesSection) {
       const responseBlocks = responsesSection[0].match(/---RESPONSE---[\s\S]*?---END RESPONSE---/g)
       if (responseBlocks) {
-        incident.responses = []
+        caseData.responses = []
         for (const block of responseBlocks) {
           const responderNameMatch = block.match(/\*\*Responder Name:\*\*\s*(.+)/)
           const responderTypeMatch = block.match(/\*\*Responder Type:\*\*\s*(Person|Organization)/)
@@ -188,7 +188,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
           const impactMatch = block.match(/\*\*Impact:\*\*\s*(.+)/)
 
           if (responderNameMatch && responderTypeMatch && responseDateMatch && responseContentMatch) {
-            incident.responses.push({
+            caseData.responses.push({
               responderName: responderNameMatch[1].trim(),
               responderType: responderTypeMatch[1].trim() as 'Person' | 'Organization',
               responseDate: responseDateMatch[1].trim(),
@@ -203,12 +203,12 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
     }
 
     // Only add if we have minimum required fields
-    if (incident.person.name && incident.date) {
-      incidents.push(incident as IncidentData)
+    if (caseData.person.name && caseData.date) {
+      cases.push(caseData as CaseData)
     }
   }
 
-  return incidents
+  return cases
 }
 
 function createSlug(text: string): string {
@@ -235,46 +235,46 @@ function parseDate(dateStr: string): Date | null {
   return null
 }
 
-async function importIncident(incident: IncidentData) {
-  console.log(`\nImporting: ${incident.person.name}`)
+async function importCase(caseData: CaseData) {
+  console.log(`\nImporting: ${caseData.person.name}`)
 
   // Create or update person with all fields
-  const personSlug = createSlug(incident.person.name)
+  const personSlug = createSlug(caseData.person.name)
 
   const personData: any = {
     slug: personSlug,
-    name: incident.person.name,
+    name: caseData.person.name,
   }
 
   // Add all optional person fields if they exist
-  if (incident.person.akaNames) personData.akaNames = incident.person.akaNames
-  if (incident.person.profession) personData.profession = incident.person.profession
-  if (incident.person.roleDescription) personData.roleDescription = incident.person.roleDescription
-  if (incident.person.yearsActive) personData.yearsActive = incident.person.yearsActive
-  if (incident.person.bestKnownFor) personData.bestKnownFor = incident.person.bestKnownFor
-  if (incident.person.nationality) personData.nationality = incident.person.nationality
-  if (incident.person.racialGroup) personData.racialGroup = incident.person.racialGroup
-  if (incident.person.religion) personData.religion = incident.person.religion
-  if (incident.person.birthPlace) personData.birthPlace = incident.person.birthPlace
-  if (incident.person.residence) personData.residence = incident.person.residence
-  if (incident.person.politicalParty) personData.politicalParty = incident.person.politicalParty
-  if (incident.person.politicalBeliefs) personData.politicalBeliefs = incident.person.politicalBeliefs
-  if (incident.person.bio) personData.bio = incident.person.bio
+  if (caseData.person.akaNames) personData.akaNames = caseData.person.akaNames
+  if (caseData.person.profession) personData.profession = caseData.person.profession
+  if (caseData.person.roleDescription) personData.roleDescription = caseData.person.roleDescription
+  if (caseData.person.yearsActive) personData.yearsActive = caseData.person.yearsActive
+  if (caseData.person.bestKnownFor) personData.bestKnownFor = caseData.person.bestKnownFor
+  if (caseData.person.nationality) personData.nationality = caseData.person.nationality
+  if (caseData.person.racialGroup) personData.racialGroup = caseData.person.racialGroup
+  if (caseData.person.religion) personData.religion = caseData.person.religion
+  if (caseData.person.birthPlace) personData.birthPlace = caseData.person.birthPlace
+  if (caseData.person.residence) personData.residence = caseData.person.residence
+  if (caseData.person.politicalParty) personData.politicalParty = caseData.person.politicalParty
+  if (caseData.person.politicalBeliefs) personData.politicalBeliefs = caseData.person.politicalBeliefs
+  if (caseData.person.bio) personData.bio = caseData.person.bio
 
   // Parse birth date if available
-  if (incident.person.birthDate) {
-    const birthDate = parseDate(incident.person.birthDate)
+  if (caseData.person.birthDate) {
+    const birthDate = parseDate(caseData.person.birthDate)
     if (birthDate) personData.birthDate = birthDate
   }
 
   // Parse death date if available
-  if (incident.person.deathDate) {
-    const deathDate = parseDate(incident.person.deathDate)
+  if (caseData.person.deathDate) {
+    const deathDate = parseDate(caseData.person.deathDate)
     if (deathDate) personData.deathDate = deathDate
   }
 
   // Add death place if available
-  if (incident.person.deathPlace) personData.deathPlace = incident.person.deathPlace
+  if (caseData.person.deathPlace) personData.deathPlace = caseData.person.deathPlace
 
   const person = await prisma.person.upsert({
     where: { slug: personSlug },
@@ -283,8 +283,8 @@ async function importIncident(incident: IncidentData) {
   })
 
   // Handle affiliated organizations via Affiliation model
-  if (incident.person.affiliatedOrgs) {
-    const orgs = incident.person.affiliatedOrgs.split(',').map(o => o.trim())
+  if (caseData.person.affiliatedOrgs) {
+    const orgs = caseData.person.affiliatedOrgs.split(',').map(o => o.trim())
     for (const orgEntry of orgs) {
       if (!orgEntry || orgEntry === 'N/A' || orgEntry === 'None') continue
 
@@ -328,46 +328,46 @@ async function importIncident(incident: IncidentData) {
   }
 
   // Parse the exact wording to get the statement
-  const statementMatch = incident.exactWording?.match(/\*"(.+?)"\*/)
-  const statement = statementMatch ? statementMatch[1] : (incident.exactWording || 'Statement content not available')
+  const statementMatch = caseData.exactWording?.match(/\*"(.+?)"\*/)
+  const statement = statementMatch ? statementMatch[1] : (caseData.exactWording || 'Statement content not available')
 
-  // Create incident title
-  const incidentDate = parseDate(incident.date) || new Date()
-  const incidentTitle = `${incident.person.name} - ${incident.platform} Statement (${incident.date})`
-  const incidentSlug = createSlug(incidentTitle)
+  // Create case title
+  const caseDate = parseDate(caseData.date) || new Date()
+  const caseTitle = `${caseData.person.name} - ${caseData.platform} Statement (${caseData.date})`
+  const caseSlug = createSlug(caseTitle)
 
   // Create summary from context
-  const summary = incident.context?.substring(0, 500) || 'Statement details'
+  const summary = caseData.context?.substring(0, 500) || 'Statement details'
 
   // Create full description
   const description = `
-${incident.context || ''}
+${caseData.context || ''}
 
-Platform: ${incident.platform || 'Unknown'}
+Platform: ${caseData.platform || 'Unknown'}
 
 Media Coverage:
-${incident.mediaCoverage || 'No media coverage information available'}
+${caseData.mediaCoverage || 'No media coverage information available'}
 
 Response/Outcome:
-${incident.response || 'No response information available'}
+${caseData.response || 'No response information available'}
   `.trim()
 
-  // Create or update incident
-  const incidentRecord = await prisma.case.upsert({
-    where: { slug: incidentSlug },
+  // Create or update case
+  const caseRecord = await prisma.case.upsert({
+    where: { slug: caseSlug },
     update: {
-      title: incidentTitle,
+      title: caseTitle,
       summary: summary,
       description: description,
     },
     create: {
-      slug: incidentSlug,
-      title: incidentTitle,
+      slug: caseSlug,
+      title: caseTitle,
       summary: summary,
       description: description,
-      caseDate: incidentDate,
+      caseDate: caseDate,
       status: 'DOCUMENTED',
-      persons: {
+      people: {
         connect: { id: person.id }
       }
     },
@@ -376,21 +376,21 @@ ${incident.response || 'No response information available'}
   // Create statement with repercussions
   const statementData: any = {
     content: statement,
-    context: incident.context,
-    statementDate: incidentDate,
-    medium: incident.platform,
+    context: caseData.context,
+    statementDate: caseDate,
+    medium: caseData.platform,
     isVerified: true,
     personId: person.id,
-    caseId: incidentRecord.id,
+    caseId: caseRecord.id,
   }
 
   // Add repercussions if present
-  if (incident.repercussions) {
-    statementData.lostEmployment = incident.repercussions.lostEmployment
-    statementData.lostContracts = incident.repercussions.lostContracts
-    statementData.paintedNegatively = incident.repercussions.paintedNegatively
-    if (incident.repercussions.details) {
-      statementData.repercussionDetails = incident.repercussions.details
+  if (caseData.repercussions) {
+    statementData.lostEmployment = caseData.repercussions.lostEmployment
+    statementData.lostContracts = caseData.repercussions.lostContracts
+    statementData.paintedNegatively = caseData.repercussions.paintedNegatively
+    if (caseData.repercussions.details) {
+      statementData.repercussionDetails = caseData.repercussions.details
     }
   }
 
@@ -398,7 +398,7 @@ ${incident.response || 'No response information available'}
     where: {
       personId_caseId_content: {
         personId: person.id,
-        caseId: incidentRecord.id,
+        caseId: caseRecord.id,
         content: statement
       }
     },
@@ -407,8 +407,8 @@ ${incident.response || 'No response information available'}
   })
 
   // Parse and create tags from categories
-  if (incident.categories) {
-    const categories = incident.categories.split('/').map(c => c.trim())
+  if (caseData.categories) {
+    const categories = caseData.categories.split('/').map(c => c.trim())
     for (const category of categories) {
       if (!category) continue
 
@@ -422,9 +422,9 @@ ${incident.response || 'No response information available'}
         },
       })
 
-      // Connect tag to incident
+      // Connect tag to case
       await prisma.case.update({
-        where: { id: incidentRecord.id },
+        where: { id: caseRecord.id },
         data: {
           tags: {
             connect: { id: tag.id }
@@ -435,10 +435,10 @@ ${incident.response || 'No response information available'}
   }
 
   // Import responses if they exist
-  if (incident.responses && incident.responses.length > 0) {
-    console.log(`  📥 Importing ${incident.responses.length} response(s)...`)
+  if (caseData.responses && caseData.responses.length > 0) {
+    console.log(`  📥 Importing ${caseData.responses.length} response(s)...`)
 
-    for (const responseData of incident.responses) {
+    for (const responseData of caseData.responses) {
       // Create or get responder (person or organization)
       let responderId: string | null = null
       let responderOrgId: string | null = null
@@ -480,7 +480,7 @@ ${incident.response || 'No response information available'}
             statementDate: responseDate,
             statementType: 'RESPONSE',
             responseType: (responseData.responseType?.toUpperCase() || 'CRITICISM') as any,
-            caseId: incidentRecord.id,
+            caseId: caseRecord.id,
             personId: responderId,
             organizationId: responderOrgId,
           },
@@ -492,7 +492,7 @@ ${incident.response || 'No response information available'}
     }
   }
 
-  console.log(`✅ Successfully imported: ${incident.person.name}`)
+  console.log(`✅ Successfully imported: ${caseData.person.name}`)
 }
 
 async function main() {
@@ -513,18 +513,18 @@ async function main() {
   console.log(`Reading markdown file: ${filePath}`)
   const markdown = fs.readFileSync(filePath, 'utf-8')
 
-  const incidents = parseMarkdownIncidents(markdown)
-  console.log(`Found ${incidents.length} incidents to import\n`)
+  const cases = parseMarkdownCases(markdown)
+  console.log(`Found ${cases.length} cases to import\n`)
 
-  for (const incident of incidents) {
+  for (const caseData of cases) {
     try {
-      await importIncident(incident)
+      await importCase(caseData)
     } catch (error) {
-      console.error(`Failed to import ${incident.person.name}:`, error)
+      console.error(`Failed to import ${caseData.person.name}:`, error)
     }
   }
 
-  console.log(`\n✅ Import complete! Imported ${incidents.length} incidents`)
+  console.log(`\n✅ Import complete! Imported ${cases.length} cases`)
 }
 
 main()

@@ -140,7 +140,7 @@ export async function getFeaturedCases(limit: number = 10) {
       isArchived: false,
     },
     include: {
-      persons: {
+      people: {
         select: { id: true, name: true, slug: true }
       },
       tags: {
@@ -183,7 +183,7 @@ export async function getPublicCases(
     prisma.case.findMany({
       where,
       include: {
-        persons: {
+        people: {
           select: { id: true, name: true, slug: true }
         },
         tags: {

@@ -37,7 +37,7 @@ export default async function handler(
           }
         }
         if (person) {
-          where.persons = {
+          where.people = {
             some: {
               slug: person
             }
@@ -67,7 +67,7 @@ export default async function handler(
             skip,
             take: limit,
             include: {
-              persons: true,
+              people: true,
               organizations: true,
               tags: true,
               _count: {
@@ -148,7 +148,7 @@ export default async function handler(
             locationState,
             locationCountry,
             locationDetail,
-            persons: {
+            people: {
               connect: personIds.map((id: string) => ({ id }))
             },
             organizations: {
@@ -159,7 +159,7 @@ export default async function handler(
             }
           },
           include: {
-            persons: true,
+            people: true,
             organizations: true,
             tags: true
           }

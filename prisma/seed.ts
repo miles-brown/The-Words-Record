@@ -60,7 +60,7 @@ Dozens of cultural figures including Mark Ruffalo, Maxine Peake, and Noam Chomsk
       caseDate: new Date('2022-01-03'),
       status: 'DOCUMENTED',
       severity: 'MEDIUM',
-      persons: {
+      people: {
         connect: [
           { id: emmaWatson.id },
           { id: dannyDanon.id },

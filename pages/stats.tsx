@@ -4,9 +4,9 @@ import Layout from '@/components/Layout'
 import { format } from 'date-fns'
 
 export default function StatsPage() {
-  const [stats, setStats] = useState(null)
+  const [stats, setStats] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     fetchStats()
@@ -62,13 +62,13 @@ export default function StatsPage() {
 
         <section className="stats-grid">
           <div className="stat-card">
-            <div className="stat-number">{stats.counts.incidents}</div>
+            <div className="stat-number">{stats.counts.cases}</div>
             <div className="stat-label">Documented Incidents</div>
-            <Link href="/incidents" className="stat-link">View all →</Link>
+            <Link href="/cases" className="stat-link">View all →</Link>
           </div>
 
           <div className="stat-card">
-            <div className="stat-number">{stats.counts.persons}</div>
+            <div className="stat-number">{stats.counts.people}</div>
             <div className="stat-label">People</div>
             <Link href="/people" className="stat-link">View all →</Link>
           </div>
@@ -99,12 +99,12 @@ export default function StatsPage() {
           <section className="stats-section">
             <h2>Recent Activity</h2>
             <div className="recent-list">
-              {stats.recentIncidents.map((incident) => (
-                <Link href={`/incidents/${incident.slug}`} key={incident.id}>
+              {stats.recentIncidents.map((caseItem: any) => (
+                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
                   <div className="recent-item">
-                    <h3>{incident.title}</h3>
+                    <h3>{caseItem.title}</h3>
                     <span className="date">
-                      {format(new Date(incident.incidentDate), 'MMM d, yyyy')}
+                      {format(new Date(caseItem.caseDate), 'MMM d, yyyy')}
                     </span>
                   </div>
                 </Link>
@@ -115,12 +115,12 @@ export default function StatsPage() {
           <section className="stats-section">
             <h2>Most Active People</h2>
             <div className="list-items">
-              {stats.activePeople.map((person) => (
+              {stats.activePeople.map((person: any) => (
                 <Link href={`/people/${person.slug}`} key={person.id}>
                   <div className="list-item">
                     <span className="name">{person.name}</span>
                     <span className="count">
-                      {person._count.incidents} incident{person._count.incidents !== 1 ? 's' : ''}
+                      {person._count.cases} incident{person._count.cases !== 1 ? 's' : ''}
                     </span>
                   </div>
                 </Link>
@@ -131,10 +131,10 @@ export default function StatsPage() {
           <section className="stats-section">
             <h2>Popular Tags</h2>
             <div className="tags-list">
-              {stats.popularTags.map((tag) => (
+              {stats.popularTags.map((tag: any) => (
                 <div key={tag.id} className="tag-item">
                   <span className="tag-name">{tag.name}</span>
-                  <span className="tag-count">{tag._count.incidents}</span>
+                  <span className="tag-count">{tag._count.cases}</span>
                 </div>
               ))}
             </div>

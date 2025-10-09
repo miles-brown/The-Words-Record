@@ -5,16 +5,17 @@ import type {
   Case as PrismaCase,
   Statement as PrismaStatement,
   Source as PrismaSource,
-  Tag as PrismaTag
+  Tag as PrismaTag,
+  Affiliation as PrismaAffiliation
 } from '@prisma/client'
 
 export type Person = PrismaPerson
 export type Organization = PrismaOrganization
 export type Case = PrismaCase
-export type Incident = PrismaCase  // Legacy alias for backwards compatibility
 export type Statement = PrismaStatement
 export type Source = PrismaSource
 export type Tag = PrismaTag
+export type Affiliation = PrismaAffiliation
 
 // API Response types
 export interface PaginationInfo {
@@ -32,17 +33,27 @@ export interface PaginatedResponse<T> {
 // Extended types with relations
 export interface PersonWithRelations extends Person {
   cases?: CaseWithRelations[]
-  incidents?: CaseWithRelations[]  // Legacy alias
   statements?: StatementWithRelations[]
   _count?: {
     cases: number
-    incidents: number
     statements: number
+    responses?: number
+  }
+}
+
+export interface OrganizationWithRelations extends Organization {
+  cases?: CaseWithRelations[]
+  statements?: StatementWithRelations[]
+  responses?: StatementWithRelations[]
+  _count?: {
+    cases: number
+    statements: number
+    responses: number
   }
 }
 
 export interface CaseWithRelations extends Case {
-  persons?: Person[]
+  people?: Person[]
   organizations?: Organization[]
   tags?: Tag[]
   statements?: StatementWithRelations[]
@@ -53,13 +64,10 @@ export interface CaseWithRelations extends Case {
   }
 }
 
-export interface IncidentWithRelations extends CaseWithRelations {}  // Legacy alias
-
 export interface StatementWithRelations extends Statement {
   person?: Person
   organization?: Organization
   case?: Case
-  incident?: Case  // Legacy alias
   sources?: Source[]
   responses?: Statement[]  // Responses are now Statements with type RESPONSE
   respondsTo?: Statement   // The statement this is responding to
@@ -89,8 +97,4 @@ export interface CaseFormData {
   personIds?: string[]
   organizationIds?: string[]
   tagIds?: string[]
-}
-
-export interface IncidentFormData extends CaseFormData {
-  incidentDate: string  // Legacy alias for caseDate
 }

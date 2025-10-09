@@ -76,7 +76,7 @@ async function migrateMarkdownCase(caseData) {
         slug: caseData.slug,
         summary: caseData.summary || caseData.excerpt,
         description: caseData.content,
-        incidentDate: new Date(caseData.incident_date),
+        caseDate: new Date(caseData.incident_date),
         publicationDate: new Date(caseData.date),
         status: caseData.status || 'documented',
         persons: {

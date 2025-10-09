@@ -91,7 +91,7 @@ export function PersonCardSkeleton() {
   )
 }
 
-export function IncidentCardSkeleton() {
+export function CaseCardSkeleton() {
   return (
     <div className="skeleton-card">
       <div className="skeleton-line skeleton-title" />

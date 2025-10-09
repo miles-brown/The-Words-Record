@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/Layout'
 import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
-import { Organization } from '@/types'
+import { OrganizationWithRelations } from '@/types'
 import { format } from 'date-fns'
 
 export default function OrganizationsPage() {
-  const [organizations, setOrganizations] = useState([])
+  const [organizations, setOrganizations] = useState<OrganizationWithRelations[]>([])
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -117,7 +117,7 @@ export default function OrganizationsPage() {
               <p>Try adjusting your filter or check back later.</p>
             </div>
           ) : (
-            organizations.map((org) => (
+            organizations.map((org: any) => (
               <Link href={`/organizations/${org.slug}`} key={org.id}>
                 <article className="org-card">
                   <div className="org-header">
@@ -155,10 +155,10 @@ export default function OrganizationsPage() {
                   
                   <div className="org-stats">
                     <span>
-                      <strong>{org._count.incidents}</strong> incidents
+                      <strong>{org._count?.cases || 0}</strong> incidents
                     </span>
                     <span>
-                      <strong>{org._count.responses}</strong> responses
+                      <strong>{org._count?.responses || 0}</strong> responses
                     </span>
                   </div>
                 </article>

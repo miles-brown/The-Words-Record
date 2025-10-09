@@ -88,8 +88,8 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
       return
     }
 
-    // Create incident
-    const incident = await prisma.case.create({
+    // Create case
+    const caseRecord = await prisma.case.create({
       data: {
         title: caseData.title,
         slug: caseData.slug,
@@ -98,7 +98,7 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
         caseDate: new Date(caseData.incident_date),
         publicationDate: new Date(caseData.date),
         status: (caseData.status || 'DOCUMENTED') as any,
-        persons: {
+        people: {
           connect: [{ id: personId }]
         },
         tags: {
@@ -114,7 +114,7 @@ async function migrateMarkdownCase(caseData: MarkdownCase): Promise<void> {
           return prisma.source.create({
             data: {
               title: sourceTitle,
-              caseId: incident.id,
+              caseId: caseRecord.id,
               credibility: 'HIGH'
             }
           })

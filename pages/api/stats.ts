@@ -75,7 +75,7 @@ export default async function handler(
     return res.status(200).json({
       counts: {
         cases: incidentCount,
-        persons: personCount,
+        people: personCount,
         organizations: organizationCount,
         statements: statementCount,
         responses: responseCount,

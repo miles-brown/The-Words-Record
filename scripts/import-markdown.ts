@@ -8,7 +8,7 @@ config()
 
 const prisma = new PrismaClient()
 
-interface IncidentData {
+interface CaseData {
   name: string
   profession: string
   date: string
@@ -21,8 +21,8 @@ interface IncidentData {
   citations: string
 }
 
-function parseMarkdownIncidents(markdown: string): IncidentData[] {
-  const incidents: IncidentData[] = []
+function parseMarkdownCases(markdown: string): CaseData[] {
+  const incidents: CaseData[] = []
 
   // Split by ## to get individual incidents
   const sections = markdown.split(/^##\s+/m).filter(s => s.trim())
@@ -31,7 +31,7 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
     const lines = section.split('\n')
     const name = lines[0].trim()
 
-    const incident: Partial<IncidentData> = { name }
+    const caseData: Partial<CaseData> = { name }
 
     for (const line of lines) {
       const professionMatch = line.match(/\*\*Profession:\*\*\s*(.+)/)
@@ -44,19 +44,19 @@ function parseMarkdownIncidents(markdown: string): IncidentData[] {
       const responseMatch = line.match(/\*\*Response.*:\*\*\s*(.+)/)
       const citationsMatch = line.match(/\*\*Citations:\*\*\s*(.+)/)
 
-      if (professionMatch) incident.profession = professionMatch[1].trim()
-      if (dateMatch) incident.date = dateMatch[1].trim()
-      if (wordingMatch) incident.exactWording = wordingMatch[1].trim()
-      if (contextMatch) incident.context = contextMatch[1].trim()
-      if (platformMatch) incident.platform = platformMatch[1].trim()
-      if (coverageMatch) incident.mediaCoverage = coverageMatch[1].trim()
-      if (categoriesMatch) incident.categories = categoriesMatch[1].trim()
-      if (responseMatch) incident.response = responseMatch[1].trim()
-      if (citationsMatch) incident.citations = citationsMatch[1].trim()
+      if (professionMatch) caseData.profession = professionMatch[1].trim()
+      if (dateMatch) caseData.date = dateMatch[1].trim()
+      if (wordingMatch) caseData.exactWording = wordingMatch[1].trim()
+      if (contextMatch) caseData.context = contextMatch[1].trim()
+      if (platformMatch) caseData.platform = platformMatch[1].trim()
+      if (coverageMatch) caseData.mediaCoverage = coverageMatch[1].trim()
+      if (categoriesMatch) caseData.categories = categoriesMatch[1].trim()
+      if (responseMatch) caseData.response = responseMatch[1].trim()
+      if (citationsMatch) caseData.citations = citationsMatch[1].trim()
     }
 
-    if (incident.name && incident.date) {
-      incidents.push(incident as IncidentData)
+    if (caseData.name && caseData.date) {
+      incidents.push(caseData as CaseData)
     }
   }
 
@@ -84,64 +84,64 @@ function parseDate(dateStr: string): Date {
   return new Date()
 }
 
-async function importIncident(incident: IncidentData) {
-  console.log(`\nImporting: ${incident.name}`)
+async function importCase(caseData: CaseData) {
+  console.log(`\nImporting: ${caseData.name}`)
 
   // Create or get person
-  const personSlug = createSlug(incident.name)
+  const personSlug = createSlug(caseData.name)
   const person = await prisma.person.upsert({
     where: { slug: personSlug },
     update: {},
     create: {
       slug: personSlug,
-      name: incident.name,
+      name: caseData.name,
       profession: 'OTHER' as const,
     },
   })
 
   // Parse the exact wording to get the statement and create incident title
-  const statementMatch = incident.exactWording.match(/\*"(.+?)"\*/)
-  const statement = statementMatch ? statementMatch[1] : incident.exactWording
+  const statementMatch = caseData.exactWording.match(/\*"(.+?)"\*/)
+  const statement = statementMatch ? statementMatch[1] : caseData.exactWording
 
   // Create incident title
-  const incidentDate = parseDate(incident.date)
-  const incidentTitle = `${incident.name} "${statement}" ${incident.platform} Post`
-  const incidentSlug = createSlug(incidentTitle)
+  const caseDate = parseDate(caseData.date)
+  const caseTitle = `${caseData.name} "${statement}" ${caseData.platform} Post`
+  const caseSlug = createSlug(caseTitle)
 
   // Create summary from context and media coverage
-  const summary = `${incident.context} ${incident.mediaCoverage}`.trim()
+  const summary = `${caseData.context} ${caseData.mediaCoverage}`.trim()
 
   // Create full description
   const description = `
-${incident.context}
+${caseData.context}
 
-Platform: ${incident.platform}
+Platform: ${caseData.platform}
 
 Media Coverage:
-${incident.mediaCoverage}
+${caseData.mediaCoverage}
 
-Categories: ${incident.categories}
+Categories: ${caseData.categories}
 
 Response/Outcome:
-${incident.response}
+${caseData.response}
   `.trim()
 
   // Create or update incident
-  const incidentRecord = await prisma.case.upsert({
-    where: { slug: incidentSlug },
+  const caseRecord = await prisma.case.upsert({
+    where: { slug: caseSlug },
     update: {
-      title: incidentTitle,
+      title: caseTitle,
       summary: summary,
       description: description,
     },
     create: {
-      slug: incidentSlug,
-      title: incidentTitle,
+      slug: caseSlug,
+      title: caseTitle,
       summary: summary,
       description: description,
-      caseDate: incidentDate,
+      caseDate: caseDate,
       status: 'DOCUMENTED',
-      persons: {
+      people: {
         connect: { id: person.id }
       }
     },
@@ -152,24 +152,24 @@ ${incident.response}
     where: {
       personId_caseId_content: {
         personId: person.id,
-        caseId: incidentRecord.id,
+        caseId: caseRecord.id,
         content: statement
       }
     },
     update: {},
     create: {
       content: statement,
-      context: incident.context,
-      statementDate: incidentDate,
-      medium: incident.platform as any, // Platform string needs mapping to Medium enum
+      context: caseData.context,
+      statementDate: caseDate,
+      medium: caseData.platform as any, // Platform string needs mapping to Medium enum
       isVerified: true,
       personId: person.id,
-      caseId: incidentRecord.id,
+      caseId: caseRecord.id,
     },
   })
 
   // Parse and create tags from categories
-  const categories = incident.categories.split('/').map(c => c.trim())
+  const categories = caseData.categories.split('/').map(c => c.trim())
   for (const category of categories) {
     const tagSlug = createSlug(category)
     const tag = await prisma.tag.upsert({
@@ -183,7 +183,7 @@ ${incident.response}
 
     // Connect tag to incident
     await prisma.case.update({
-      where: { id: incidentRecord.id },
+      where: { id: caseRecord.id },
       data: {
         tags: {
           connect: { id: tag.id }
@@ -192,7 +192,7 @@ ${incident.response}
     })
   }
 
-  console.log(`✅ Successfully imported: ${incident.name}`)
+  console.log(`✅ Successfully imported: ${caseData.name}`)
 }
 
 async function main() {
@@ -224,18 +224,18 @@ async function main() {
   console.log(`Reading markdown file: ${filePath}`)
   const markdown = fs.readFileSync(filePath, 'utf-8')
 
-  const incidents = parseMarkdownIncidents(markdown)
-  console.log(`Found ${incidents.length} incidents to import\n`)
+  const cases = parseMarkdownCases(markdown)
+  console.log(`Found ${cases.length} cases to import\n`)
 
-  for (const incident of incidents) {
+  for (const caseData of cases) {
     try {
-      await importIncident(incident)
+      await importCase(caseData)
     } catch (error) {
-      console.error(`Failed to import ${incident.name}:`, error)
+      console.error(`Failed to import ${caseData.name}:`, error)
     }
   }
 
-  console.log(`\n✅ Import complete! Imported ${incidents.length} incidents`)
+  console.log(`\n✅ Import complete! Imported ${cases.length} cases`)
 }
 
 main()

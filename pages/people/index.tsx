@@ -8,7 +8,7 @@ import { format } from 'date-fns'
 import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
 
 export default function PersonsPage() {
-  const [persons, setPersons] = useState([])
+  const [persons, setPersons] = useState<PersonWithRelations[]>([])
   const [pagination, setPagination] = useState({
     page: 1,
     limit: 12,
@@ -104,17 +104,17 @@ export default function PersonsPage() {
       const params = new URLSearchParams({
         page: page.toString(),
         limit: itemsPerPage.toString(),
-        ...Object.entries(filters).reduce((acc, [key, value]) => {
+        ...Object.entries(filters).reduce((acc: any, [key, value]) => {
           if (value) acc[key] = value
           return acc
-        }, {})
+        }, {} as Record<string, any>)
       })
 
       const response = await fetch(`/api/people?${params}`)
       if (!response.ok) throw new Error('Failed to fetch persons')
 
       const data = await response.json()
-      setPersons(data.persons)
+      setPersons(data.people)
       setPagination(data.pagination)
     } catch (err) {
       setError('Failed to load people. Please try again.')
@@ -330,7 +330,7 @@ export default function PersonsPage() {
                         </div>
                       </div>
                       <div className="list-stats">
-                        <span>{person._count?.incidents || 0}</span>
+                        <span>{person._count?.cases || 0}</span>
                         <span>{person._count?.statements || 0}</span>
                         <span>{person._count?.responses || 0}</span>
                       </div>
@@ -368,7 +368,7 @@ export default function PersonsPage() {
                         </div>
                       </div>
                       <div className="profile-stats">
-                        <span><strong>{person._count?.incidents || 0}</strong> incidents</span>
+                        <span><strong>{person._count?.cases || 0}</strong> incidents</span>
                         <span><strong>{person._count?.statements || 0}</strong> statements</span>
                         <span><strong>{person._count?.responses || 0}</strong> responses</span>
                       </div>
@@ -398,7 +398,7 @@ export default function PersonsPage() {
                         )}
                         <div className="card-stats">
                           <span className="stat">
-                            <strong>{person._count?.incidents || 0}</strong> incidents
+                            <strong>{person._count?.cases || 0}</strong> incidents
                           </span>
                           <span className="stat">
                             <strong>{person._count?.statements || 0}</strong> statements

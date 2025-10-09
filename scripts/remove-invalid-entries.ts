@@ -173,17 +173,17 @@ async function main() {
           data: { personId: primaryId }
         })
 
-        // Update incident relations (many-to-many)
-        const secondaryIncidents = await prisma.case.findMany({
-          where: { persons: { some: { id: secondaryId } } },
+        // Update case relations (many-to-many)
+        const secondaryCases = await prisma.case.findMany({
+          where: { people: { some: { id: secondaryId } } },
           select: { id: true }
         })
 
-        for (const incident of secondaryIncidents) {
+        for (const caseItem of secondaryCases) {
           await prisma.case.update({
-            where: { id: incident.id },
+            where: { id: caseItem.id },
             data: {
-              persons: {
+              people: {
                 disconnect: { id: secondaryId },
                 connect: { id: primaryId }
               }

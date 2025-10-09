@@ -137,38 +137,38 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
           )}
         </div>
 
-        {organization.incidents && organization.incidents.length > 0 && (
+        {organization.cases && organization.cases.length > 0 && (
           <section className="incidents-section">
-            <h2>Related Incidents ({organization.incidents.length})</h2>
+            <h2>Related Incidents ({organization.cases.length})</h2>
             
             <div className="incidents-list">
-              {organization.incidents.map((incident: any) => (
-                <Link href={`/incidents/${incident.slug}`} key={incident.id}>
+              {organization.cases.map((caseItem: any) => (
+                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
                   <article className="incident-card">
                     <div className="incident-header">
-                      <h3>{incident.title}</h3>
+                      <h3>{caseItem.title}</h3>
                       <span className="incident-date">
-                        {format(new Date(incident.incidentDate), 'MMM d, yyyy')}
+                        {format(new Date(caseItem.caseDate), 'MMM d, yyyy')}
                       </span>
                     </div>
                     
-                    <p className="incident-summary">{incident.summary}</p>
+                    <p className="incident-summary">{caseItem.summary}</p>
                     
-                    {incident.persons && incident.persons.length > 0 && (
+                    {caseItem.people && caseItem.people.length > 0 && (
                       <div className="incident-persons">
-                        <strong>Involved:</strong> {incident.persons.map((p: any) => p.name).join(', ')}
+                        <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
                       </div>
                     )}
                     
                     <div className="incident-stats">
-                      <span>{incident._count?.statements || 0} statements</span>
-                      <span>{incident._count?.responses || 0} responses</span>
-                      <span>{incident._count?.sources || 0} sources</span>
+                      <span>{caseItem._count?.statements || 0} statements</span>
+                      <span>{caseItem._count?.responses || 0} responses</span>
+                      <span>{caseItem._count?.sources || 0} sources</span>
                     </div>
                     
-                    {incident.tags && incident.tags.length > 0 && (
+                    {caseItem.tags && caseItem.tags.length > 0 && (
                       <div className="tags">
-                        {incident.tags.map((tag: any) => (
+                        {caseItem.tags.map((tag: any) => (
                           <span key={tag.id} className="tag">{tag.name}</span>
                         ))}
                       </div>
@@ -193,9 +193,9 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
                       {format(new Date(response.statementDate), 'MMMM d, yyyy')}
                     </span>
                     {response.incident && (
-                      <Link href={`/incidents/${response.incident.slug}`}>
+                      <Link href={`/cases/${response.caseItem.slug}`}>
                         <span className="response-incident">
-                          Re: {response.incident.title}
+                          Re: {response.caseItem.title}
                         </span>
                       </Link>
                     )}
@@ -364,7 +364,7 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
           border-bottom: 2px solid var(--border-primary);
         }
 
-        .incidents-list {
+        .cases-list {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
@@ -612,7 +612,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             }
           },
           orderBy: {
-            incidentDate: 'desc'
+            caseDate: 'desc'
           }
         },
         statements: {
@@ -639,13 +639,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const organizationWithResponseCounts = {
       ...organization,
       responses,
-      incidents: organization.incidents.map(incident => {
-        const responseCount = incident.statements?.length || 0
+      incidents: organization.cases.map(incident => {
+        const responseCount = caseItem.statements?.length || 0
         const { statements, ...incidentWithoutStatements } = incident
         return {
           ...incidentWithoutStatements,
           _count: {
-            ...incident._count,
+            ...caseItem._count,
             responses: responseCount
           }
         }

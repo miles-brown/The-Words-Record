@@ -55,41 +55,41 @@ export default function TagPage({ tag }: TagPageProps) {
             <p className="tag-description">{tag.description}</p>
           )}
           <p className="incident-count">
-            {tag.incidents.length} incident{tag.incidents.length !== 1 ? 's' : ''}
+            {tag.cases.length} incident{tag.cases.length !== 1 ? 's' : ''}
           </p>
         </div>
 
         <div className="incidents-list">
-          {tag.incidents.map((incident) => (
-            <Link href={`/incidents/${incident.slug}`} key={incident.id}>
+          {tag.cases.map((caseItem: any) => (
+            <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
               <article className="incident-card">
                 <div className="incident-header">
-                  <h2>{incident.title}</h2>
+                  <h2>{caseItem.title}</h2>
                   <span className="date">
-                    {format(new Date(incident.incidentDate), 'MMMM d, yyyy')}
+                    {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
                   </span>
                 </div>
 
-                <p className="incident-excerpt">{incident.summary}</p>
+                <p className="incident-excerpt">{caseItem.summary}</p>
 
-                {incident.persons && incident.persons.length > 0 && (
+                {caseItem.people && caseItem.people.length > 0 && (
                   <div className="involved-persons">
-                    <strong>Involved:</strong> {incident.persons.map(p => p.name).join(', ')}
+                    <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
                   </div>
                 )}
 
                 <div className="incident-footer">
                   <div className="incident-stats">
                     <span>
-                      {incident._count?.statements || 0} statement{incident._count?.statements !== 1 ? 's' : ''}
+                      {caseItem._count?.statements || 0} statement{caseItem._count?.statements !== 1 ? 's' : ''}
                     </span>
                     <span>•</span>
                     <span>
-                      {incident._count?.responses || 0} response{incident._count?.responses !== 1 ? 's' : ''}
+                      {caseItem._count?.responses || 0} response{caseItem._count?.responses !== 1 ? 's' : ''}
                     </span>
                     <span>•</span>
                     <span>
-                      {incident._count?.sources || 0} source{incident._count?.sources !== 1 ? 's' : ''}
+                      {caseItem._count?.sources || 0} source{caseItem._count?.sources !== 1 ? 's' : ''}
                     </span>
                   </div>
                 </div>
@@ -132,7 +132,7 @@ export default function TagPage({ tag }: TagPageProps) {
           font-weight: 500;
         }
 
-        .incidents-list {
+        .cases-list {
           display: flex;
           flex-direction: column;
           gap: 1.25rem;
@@ -270,9 +270,9 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const tag = await prisma.tag.findUnique({
     where: { slug },
     include: {
-      incidents: {
+      cases: {
         include: {
-          persons: {
+          people: {
             select: {
               id: true,
               name: true,
@@ -291,7 +291,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
           }
         },
         orderBy: {
-          incidentDate: 'desc',
+          caseDate: 'desc',
         },
       },
     },
@@ -304,16 +304,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     }
   }
 
-  // Add response count to _count object for each incident
+  // Add response count to _count object for each case
   const tagWithResponseCounts = {
     ...tag,
-    incidents: tag.incidents.map(incident => {
-      const responseCount = incident.statements?.length || 0
-      const { statements, ...incidentWithoutStatements } = incident
+    cases: tag.cases.map(caseItem => {
+      const responseCount = caseItem.statements?.length || 0
+      const { statements, ...caseWithoutStatements } = caseItem
       return {
-        ...incidentWithoutStatements,
+        ...caseWithoutStatements,
         _count: {
-          ...incident._count,
+          ...caseItem._count,
           responses: responseCount
         }
       }

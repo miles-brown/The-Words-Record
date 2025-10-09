@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
 
 interface SearchResult {
-  type: 'person' | 'incident' | 'organization'
+  type: 'person' | 'case' | 'organization'
   id: string
   title: string
   slug: string
@@ -40,17 +40,22 @@ export default async function handler(
           OR: [
             { name: { contains: query } },
             { bio: { contains: query } },
-            { profession: { contains: query } },
-            { nationality: { contains: query } }
+            { professionDetail: { contains: query } },
+            { nationalityDetail: { contains: query } },
+            { bestKnownFor: { contains: query } }
           ]
         },
-        include: {
-          _count: {
-            select: {
-              cases: true,
-              statements: true
-            }
-          }
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          bio: true,
+          profession: true,
+          professionDetail: true,
+          nationality: true,
+          nationalityDetail: true,
+          statementCount: true,
+          caseCount: true
         },
         take: limit
       })
@@ -59,29 +64,29 @@ export default async function handler(
         let score = 0
         if (person.name.toLowerCase().includes(query.toLowerCase())) score += 10
         if (person.bio?.toLowerCase().includes(query.toLowerCase())) score += 5
-        if (person.profession?.toLowerCase().includes(query.toLowerCase())) score += 3
-        if (person.nationality?.toLowerCase().includes(query.toLowerCase())) score += 2
+        if (person.professionDetail?.toLowerCase().includes(query.toLowerCase())) score += 3
+        if (person.nationalityDetail?.toLowerCase().includes(query.toLowerCase())) score += 2
 
         searchResults.push({
           type: 'person',
           id: person.id,
           title: person.name,
           slug: person.slug,
-          description: person.bio || `${person.profession || 'Individual'} with ${person._count.incidents} documented incidents`,
+          description: person.bio || `${person.professionDetail || person.profession} with ${person.caseCount} documented cases`,
           relevanceScore: score,
           metadata: {
-            profession: person.profession,
-            nationality: person.nationality,
-            incidentCount: person._count.incidents,
-            statementCount: person._count.statements
+            profession: person.professionDetail || person.profession,
+            nationality: person.nationalityDetail || person.nationality,
+            caseCount: person.caseCount,
+            statementCount: person.statementCount
           }
         })
       })
     }
 
-    // Search incidents
-    if (!type || type === 'incidents') {
-      const incidents = await prisma.case.findMany({
+    // Search cases
+    if (!type || type === 'cases') {
+      const cases = await prisma.case.findMany({
         where: {
           OR: [
             { title: { contains: query } },
@@ -94,7 +99,7 @@ export default async function handler(
           ]
         },
         include: {
-          persons: true,
+          people: true,
           tags: true,
           _count: {
             select: {
@@ -106,35 +111,35 @@ export default async function handler(
         take: limit
       })
 
-      incidents.forEach(incident => {
+      cases.forEach(caseItem => {
         let score = 0
-        if (incident.title.toLowerCase().includes(query.toLowerCase())) score += 10
-        if (incident.summary.toLowerCase().includes(query.toLowerCase())) score += 7
-        if (incident.description.toLowerCase().includes(query.toLowerCase())) score += 5
-        if (incident.locationCity?.toLowerCase().includes(query.toLowerCase())) score += 3
-        if (incident.locationState?.toLowerCase().includes(query.toLowerCase())) score += 2
-        if (incident.locationCountry?.toLowerCase().includes(query.toLowerCase())) score += 2
+        if (caseItem.title.toLowerCase().includes(query.toLowerCase())) score += 10
+        if (caseItem.summary.toLowerCase().includes(query.toLowerCase())) score += 7
+        if (caseItem.description.toLowerCase().includes(query.toLowerCase())) score += 5
+        if (caseItem.locationCity?.toLowerCase().includes(query.toLowerCase())) score += 3
+        if (caseItem.locationState?.toLowerCase().includes(query.toLowerCase())) score += 2
+        if (caseItem.locationCountry?.toLowerCase().includes(query.toLowerCase())) score += 2
 
-        const locationStr = [incident.locationCity, incident.locationState, incident.locationCountry]
+        const locationStr = [caseItem.locationCity, caseItem.locationState, caseItem.locationCountry]
           .filter(Boolean)
           .join(', ')
 
         searchResults.push({
-          type: 'incident',
-          id: incident.id,
-          title: incident.title,
-          slug: incident.slug,
-          description: incident.summary,
+          type: 'case',
+          id: caseItem.id,
+          title: caseItem.title,
+          slug: caseItem.slug,
+          description: caseItem.summary,
           relevanceScore: score,
           metadata: {
-            status: incident.status,
-            severity: incident.severity,
-            caseDate: incident.caseDate,
-            location: locationStr || incident.locationDetail,
-            persons: incident.persons.map(p => p.name),
-            tags: incident.tags.map(t => t.name),
-            statementCount: incident._count.statements,
-            sourceCount: incident._count.sources
+            status: caseItem.status,
+            severity: caseItem.severity,
+            caseDate: caseItem.caseDate,
+            location: locationStr || caseItem.locationDetail,
+            people: caseItem.people.map(p => p.name),
+            tags: caseItem.tags.map(t => t.name),
+            statementCount: caseItem._count.statements,
+            sourceCount: caseItem._count.sources
           }
         })
       })
@@ -147,21 +152,21 @@ export default async function handler(
           OR: [
             { name: { contains: query } },
             { description: { contains: query } },
-            { type: { contains: query } },
+            { legalName: { contains: query } },
             { headquarters: { contains: query } }
           ]
         },
-        include: {
-          _count: {
-            select: {
-              cases: true,
-              statements: true
-            }
-          },
-          statements: {
-            where: { statementType: 'RESPONSE' },
-            select: { id: true }
-          }
+        select: {
+          id: true,
+          slug: true,
+          name: true,
+          type: true,
+          description: true,
+          headquarters: true,
+          founded: true,
+          website: true,
+          statementCount: true,
+          caseCount: true
         },
         take: limit
       })
@@ -170,25 +175,22 @@ export default async function handler(
         let score = 0
         if (org.name.toLowerCase().includes(query.toLowerCase())) score += 10
         if (org.description?.toLowerCase().includes(query.toLowerCase())) score += 5
-        if (org.type.toLowerCase().includes(query.toLowerCase())) score += 3
         if (org.headquarters?.toLowerCase().includes(query.toLowerCase())) score += 2
-
-        const responseCount = org.statements?.length || 0
 
         searchResults.push({
           type: 'organization',
           id: org.id,
           title: org.name,
           slug: org.slug,
-          description: org.description || `${org.type} organization with ${org._count.incidents} related incidents`,
+          description: org.description || `${org.type} organization with ${org.caseCount} related cases`,
           relevanceScore: score,
           metadata: {
             type: org.type,
             headquarters: org.headquarters,
             founded: org.founded,
             website: org.website,
-            incidentCount: org._count.incidents,
-            responseCount: responseCount
+            caseCount: org.caseCount,
+            statementCount: org.statementCount
           }
         })
       })
@@ -205,8 +207,8 @@ export default async function handler(
       totalResults: limitedResults.length,
       results: limitedResults,
       summary: {
-        persons: limitedResults.filter(r => r.type === 'person').length,
-        cases: limitedResults.filter(r => r.type === 'incident').length,
+        people: limitedResults.filter(r => r.type === 'person').length,
+        cases: limitedResults.filter(r => r.type === 'case').length,
         organizations: limitedResults.filter(r => r.type === 'organization').length
       }
     })

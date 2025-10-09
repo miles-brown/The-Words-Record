@@ -410,7 +410,7 @@ model Case {
   topics                 TopicCase[]
   tags                   Tag[]             @relation("CaseTags")
   organizations          Organization[]    @relation("OrganizationCases")
-  persons                Person[]          @relation("PersonCases")
+  people                 Person[]          @relation("PersonCases")
   originatingStatement   Statement?        @relation("OriginatingStatement", fields: [originatingStatementId], references: [id])
   history                CaseHistory[]
 
@@ -425,7 +425,6 @@ model Case {
   @@index([isFeatured])
   @@index([isArchived])
   @@index([prominenceScore])
-  @@map("Incident")
 }
 
 model Statement {
@@ -466,8 +465,8 @@ model Statement {
   deletedDate                                          DateTime?
   venue                                                String?
   event                                                String?
-  becameIncidentDate                                   DateTime?
-  incidentTrigger                                      String?
+  becameCaseDate                                       DateTime?
+  caseTrigger                                          String?
   verificationDate                                     DateTime?
   isDisputed                                           Boolean?           @default(false)
   disputeNotes                                         String?
@@ -790,7 +789,6 @@ model TopicCase {
   @@index([topicId])
   @@index([caseId])
   @@index([relationType])
-  @@map("TopicIncident")
 }
 
 model TopicRelation {
@@ -965,10 +963,8 @@ enum CaseStatus {
   ACTIVE
   DORMANT
   ARCHIVED
-
-  @@map("IncidentStatus")
 }
-enum IncidentType {
+enum CaseType {
   STATEMENT_CONTROVERSY
   RESPONSE_BACKLASH
   EMPLOYMENT_ACTION
@@ -987,7 +983,7 @@ enum IncidentType {
   OTHER
 }
 
-enum IncidentCategory {
+enum CaseCategory {
   ANTISEMITISM_ALLEGATION
   ISLAMOPHOBIA_ALLEGATION
   RACISM_ALLEGATION
@@ -1011,8 +1007,6 @@ enum CaseSeverity {
   HIGH
   CRITICAL
   MINIMAL
-
-  @@map("IncidentSeverity")
 }
 
 enum ImpactScope {
@@ -1195,8 +1189,6 @@ enum TopicCaseRelation {
   BACKGROUND
   CONSEQUENCE
   EXAMPLE
-
-  @@map("TopicIncidentRelation")
 }
 
 enum RoleCategory {

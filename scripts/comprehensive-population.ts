@@ -345,7 +345,7 @@ async function populateStatement(statement: any, dryRun: boolean): Promise<Popul
   //   )
   //
   //   if (!dryRun && classification.confidence > 0.7) {
-  //     await linkIncidentToTopics(statement.incident.id, classification)
+  //     await linkIncidentToTopics(statement.caseData.id, classification)
   //     result.fieldsPopulated.push('topics')
   //     console.log(`  ✅ Linked to ${classification.secondaryTopics.length + 1} topics`)
   //   }

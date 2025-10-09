@@ -208,11 +208,12 @@ export default function PersonPage({ person }: PersonPageProps) {
                 )}
               </div>
 
-              {person.affiliations && person.affiliations.length > 0 && (
+              {/* TODO: Re-enable affiliations when field is added back to schema */}
+              {(person as any).affiliations && (person as any).affiliations.length > 0 && (
                 <div className="infobox-section">
                   <h3>Affiliations</h3>
                   <div className="affiliations-list">
-                    {person.affiliations.map((affiliation) => (
+                    {(person as any).affiliations.map((affiliation: any) => (
                       <div key={affiliation.id} className="affiliation-item">
                         <div className="affiliation-role">{affiliation.role}</div>
                         <Link href={`/organizations/${affiliation.organization.slug}`}>
@@ -253,31 +254,30 @@ export default function PersonPage({ person }: PersonPageProps) {
         </div>
 
         <section className="incidents-section">
-          <h2>Related Incidents ({person.incidents?.length || 0})</h2>
+          <h2>Related Incidents ({person.cases?.length || 0})</h2>
           
-          {person.incidents && person.incidents.length > 0 ? (
+          {person.cases && person.cases.length > 0 ? (
             <div className="incidents-list">
-              {person.incidents.map((incident) => (
-                <Link href={`/incidents/${incident.slug}`} key={incident.id}>
+              {person.cases.map((caseItem) => (
+                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
                   <article className="incident-card">
-                    <h3>{incident.title}</h3>
+                    <h3>{caseItem.title}</h3>
                     <div className="incident-meta">
                       <span className="date">
-                        {format(new Date(incident.incidentDate), 'MMMM d, yyyy')}
+                        {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
                       </span>
-                      <span className={`status status-${incident.status}`}>
-                        {incident.status}
+                      <span className={`status status-${caseItem.status}`}>
+                        {caseItem.status}
                       </span>
                     </div>
-                    <p className="summary">{incident.summary}</p>
+                    <p className="summary">{caseItem.summary}</p>
                     <div className="incident-stats">
-                      <span>{incident._count?.statements || 0} statements</span>
-                      <span>{incident._count?.responses || 0} responses</span>
-                      <span>{incident._count?.sources || 0} sources</span>
+                      <span>{caseItem._count?.statements || 0} statements</span>
+                      <span>{caseItem._count?.sources || 0} sources</span>
                     </div>
-                    {incident.tags && incident.tags.length > 0 && (
+                    {caseItem.tags && caseItem.tags.length > 0 && (
                       <div className="tags">
-                        {incident.tags.map(tag => (
+                        {caseItem.tags.map(tag => (
                           <span key={tag.id} className="tag">{tag.name}</span>
                         ))}
                       </div>
@@ -308,10 +308,10 @@ export default function PersonPage({ person }: PersonPageProps) {
                     {statement.medium && (
                       <span className="citation-medium">via {statement.medium}</span>
                     )}
-                    {statement.incident && (
-                      <Link href={`/incidents/${statement.incident.slug}`}>
+                    {statement.case && (
+                      <Link href={`/cases/${statement.case.slug}`}>
                         <span className="citation-incident">
-                          Related to: {statement.incident.title}
+                          Related to: {statement.case.title}
                         </span>
                       </Link>
                     )}
@@ -501,18 +501,18 @@ export default function PersonPage({ person }: PersonPageProps) {
           color: var(--text-secondary);
         }
 
-        .incidents-section, .statements-section {
+        .cases-section, .statements-section {
           margin: 3rem 0;
         }
 
-        .incidents-section h2, .statements-section h2 {
+        .cases-section h2, .statements-section h2 {
           font-size: 1.8rem;
           margin-bottom: 1.5rem;
           padding-bottom: 0.5rem;
           border-bottom: 2px solid var(--border-primary);
         }
 
-        .incidents-list {
+        .cases-list {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
@@ -765,7 +765,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const person = await prisma.person.findUnique({
       where: { slug: params.slug },
       include: {
-        incidents: {
+        cases: {
           include: {
             tags: true,
             _count: {
@@ -780,12 +780,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
             }
           },
           orderBy: {
-            incidentDate: 'desc'
+            caseDate: 'desc'
           }
         },
         statements: {
           include: {
-            incident: true,
+            case: true,
             sources: true,
             respondsTo: true,
             responses: true
@@ -814,13 +814,13 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const personWithResponseCounts = {
       ...person,
       responses,
-      incidents: person.incidents.map(incident => {
-        const responseCount = incident.statements?.length || 0
-        const { statements, ...incidentWithoutStatements } = incident
+      cases: person.cases.map((caseItem: any) => {
+        const responseCount = caseItem.statements?.length || 0
+        const { statements, ...caseWithoutStatements } = caseItem
         return {
-          ...incidentWithoutStatements,
+          ...caseWithoutStatements,
           _count: {
-            ...incident._count,
+            ...caseItem._count,
             responses: responseCount
           }
         }

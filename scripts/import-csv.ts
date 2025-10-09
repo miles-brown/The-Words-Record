@@ -45,7 +45,7 @@ async function importFromCSV(filePath: string) {
         await importPerson(rec)
       } else if (rec.title && rec.summary) {
         // This is an incident record
-        await importIncident(rec)
+        await importCase(rec)
       } else {
         console.warn(`Unknown record type, skipping`)
       }
@@ -82,17 +82,17 @@ async function importPerson(record: any) {
   console.log(`✅ Imported person: ${person.name}`)
 }
 
-async function importIncident(record: any) {
+async function importCase(record: any) {
   const slug = createSlug(record.title)
-  const incidentDate = record.date ? parseDate(record.date) : new Date()
+  const caseDate = record.date ? parseDate(record.date) : new Date()
 
-  const incident = await prisma.case.upsert({
+  const caseData = await prisma.case.upsert({
     where: { slug },
     update: {
       title: record.title,
       summary: record.summary,
       description: record.description || record.summary,
-      caseDate: incidentDate,
+      caseDate: caseDate,
       status: record.status || 'DOCUMENTED',
       locationDetail: record.location || null,
     },
@@ -101,7 +101,7 @@ async function importIncident(record: any) {
       title: record.title,
       summary: record.summary,
       description: record.description || record.summary,
-      caseDate: incidentDate,
+      caseDate: caseDate,
       status: record.status || 'DOCUMENTED',
       locationDetail: record.location || null,
     },
@@ -114,9 +114,9 @@ async function importIncident(record: any) {
       const person = await prisma.person.findUnique({ where: { slug: personSlug } })
       if (person) {
         await prisma.case.update({
-          where: { id: incident.id },
+          where: { id: caseData.id },
           data: {
-            persons: {
+            people: {
               connect: { id: person.id }
             }
           }
@@ -140,7 +140,7 @@ async function importIncident(record: any) {
       })
 
       await prisma.case.update({
-        where: { id: incident.id },
+        where: { id: caseData.id },
         data: {
           tags: {
             connect: { id: tag.id }
@@ -150,7 +150,7 @@ async function importIncident(record: any) {
     }
   }
 
-  console.log(`✅ Imported incident: ${incident.title}`)
+  console.log(`✅ Imported case: ${caseData.title}`)
 }
 
 async function main() {
