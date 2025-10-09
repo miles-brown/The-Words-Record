@@ -267,6 +267,10 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string
 
+  if (!slug) {
+    return { notFound: true }
+  }
+
   const tag = await prisma.tag.findUnique({
     where: { slug },
     include: {
