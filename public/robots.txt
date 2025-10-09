@@ -1,0 +1,147 @@
+# Who Said What - robots.txt
+# Enhanced robots configuration with comprehensive crawling rules
+
+# Default rules for all bots
+User-agent: *
+Allow: /
+Allow: /cases/
+Allow: /people/
+Allow: /organizations/
+Allow: /topics/
+Allow: /search
+Allow: /about
+Allow: /privacy
+Allow: /sitemap.xml
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/
+Disallow: /_next/
+Disallow: /draft/
+Disallow: /login
+Disallow: /register
+Disallow: /user/
+Disallow: /harvest/
+Disallow: /debug/
+Disallow: /*.json$
+Disallow: /*?draft=true
+Disallow: /*?preview=true
+Crawl-delay: 1
+
+# Googlebot specific rules
+User-agent: Googlebot
+Allow: /
+Allow: /cases/
+Allow: /people/
+Allow: /organizations/
+Allow: /topics/
+Allow: /api/search
+Allow: /api/stats
+Disallow: /admin/
+Disallow: /private/
+Disallow: /user/
+Crawl-delay: 0
+
+# Bingbot specific rules
+User-agent: Bingbot
+Allow: /
+Allow: /cases/
+Allow: /people/
+Allow: /organizations/
+Disallow: /admin/
+Disallow: /private/
+Crawl-delay: 1
+
+# Academic/Research crawlers
+User-agent: Googlebot-Scholar
+User-agent: AcademicBot
+User-agent: SemanticScholarBot
+Allow: /
+Allow: /cases/
+Allow: /people/
+Allow: /organizations/
+Allow: /sources/
+Crawl-delay: 1
+
+# Social media crawlers
+User-agent: facebookexternalhit
+User-agent: Twitterbot
+User-agent: LinkedInBot
+User-agent: WhatsApp
+User-agent: Slackbot
+Allow: /
+Allow: /cases/
+Allow: /people/
+Allow: /organizations/
+Disallow: /admin/
+Disallow: /api/
+Crawl-delay: 0
+
+# Archive bots (we want these!)
+User-agent: ia_archiver
+User-agent: Wayback Machine
+Allow: /
+Crawl-delay: 0
+
+# AI/ML Training - Restricted
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: CCBot
+User-agent: anthropic-ai
+User-agent: Claude-Web
+Disallow: /
+Allow: /about
+Allow: /privacy
+Allow: /robots.txt
+
+# Aggressive/Bad bots - Blocked
+User-agent: AhrefsBot
+User-agent: SemrushBot
+User-agent: DotBot
+User-agent: MJ12bot
+User-agent: Majestic-12
+User-agent: Majestic-SEO
+User-agent: SEOkicks
+User-agent: SiteExplorer
+User-agent: BLEXBot
+User-agent: Megaindex
+User-agent: Serpstat
+User-agent: SeekportBot
+Disallow: /
+
+# Image crawlers
+User-agent: Googlebot-Image
+Allow: /images/
+Allow: /people/
+Disallow: /admin/
+Disallow: /private/
+
+# News crawlers
+User-agent: Googlebot-News
+User-agent: Bingbot-News
+Allow: /
+Allow: /cases/
+Allow: /people/
+Allow: /organizations/
+Crawl-delay: 0
+
+# Prevent scraping of specific file types
+User-agent: *
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.xls$
+Disallow: /*.ppt$
+Disallow: /*.zip$
+Disallow: /*.rar$
+Disallow: /*.exe$
+Disallow: /*.dmg$
+Disallow: /*.iso$
+
+# Sitemap location
+Sitemap: https://whosaidwhat.com/sitemap.xml
+Sitemap: https://whosaidwhat.com/sitemap-cases.xml
+Sitemap: https://whosaidwhat.com/sitemap-people.xml
+Sitemap: https://whosaidwhat.com/sitemap-organizations.xml
+Sitemap: https://whosaidwhat.com/sitemap-news.xml
+
+# Host (optional - helps with canonicalization)
+Host: https://whosaidwhat.com

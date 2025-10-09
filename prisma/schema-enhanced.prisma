@@ -1,0 +1,457 @@
+// This is the enhanced schema with User management and Harvard referencing
+// Copy the contents to your main schema.prisma file when ready to migrate
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  directUrl  = env("DIRECT_URL")
+  extensions = [btree_gin, pg_trgm, uuid_ossp(map: "uuid-ossp")]
+}
+
+// ============================================
+// USER MANAGEMENT & AUTHENTICATION
+// ============================================
+
+model User {
+  id                String    @id @default(cuid())
+  email            String    @unique
+  username         String    @unique
+  passwordHash     String
+  role             UserRole
+  firstName        String?
+  lastName         String?
+  avatar           String?
+  mfaSecret        String?
+  mfaEnabled       Boolean   @default(false)
+  isActive         Boolean   @default(true)
+  emailVerified    Boolean   @default(false)
+  lastLogin        DateTime?
+  loginAttempts    Int       @default(0)
+  lockedUntil      DateTime?
+  preferences      Json?     // UI preferences, timezone, etc
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // Relations
+  auditLogs        AuditLog[]
+  sessions         Session[]
+  apiKeys          ApiKey[]
+  contentDrafts    ContentDraft[]
+  approvals        ContentApproval[]
+  verifiedPersons  Person[]  @relation("PersonVerifier")
+  verifiedCases    Case[]    @relation("CaseVerifier")
+  verifiedSources  Source[]  @relation("SourceVerifier")
+  createdSources   Source[]  @relation("SourceCreator")
+  editedSources    Source[]  @relation("SourceEditor")
+  harvestJobs      HarvestJob[] @relation("JobCreator")
+
+  @@index([email])
+  @@index([username])
+  @@index([role])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  userId       String
+  token        String   @unique
+  refreshToken String   @unique
+  ipAddress    String
+  userAgent    String?
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?
+  action      AuditAction
+  entityType  String   // 'case', 'person', 'organization', 'source'
+  entityId    String
+  changes     Json?    // Before/after values
+  metadata    Json?    // Additional context
+  ipAddress   String
+  userAgent   String?
+  timestamp   DateTime @default(now())
+
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId, timestamp])
+  @@index([entityType, entityId])
+  @@index([action])
+}
+
+model ApiKey {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  key         String   @unique
+  secret      String   // For HMAC signing
+  permissions Json     // Specific endpoints/actions allowed
+  rateLimit   Int      @default(100) // Requests per minute
+  expiresAt   DateTime?
+  lastUsed    DateTime?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([key])
+  @@index([userId])
+}
+
+model ContentDraft {
+  id          String   @id @default(cuid())
+  userId      String
+  contentType ContentType // 'case', 'person', 'organization', 'statement'
+  contentId   String?  // null for new content
+  data        Json     // The draft content
+  status      DraftStatus
+  notes       String?  // Internal notes about the draft
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id])
+  approvals   ContentApproval[]
+
+  @@index([userId, status])
+  @@index([contentType, contentId])
+}
+
+model ContentApproval {
+  id          String   @id @default(cuid())
+  draftId     String
+  reviewerId  String
+  status      ApprovalStatus
+  comments    String?
+  reviewedAt  DateTime @default(now())
+
+  draft       ContentDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  reviewer    User         @relation(fields: [reviewerId], references: [id])
+
+  @@index([draftId])
+  @@index([reviewerId])
+}
+
+model HarvestJob {
+  id          String   @id @default(cuid())
+  type        HarvestType // 'person_enrichment', 'statement_discovery', 'source_archiving'
+  status      JobStatus
+  config      Json     // Job configuration
+  results     Json?    // Results/stats
+  error       String?
+  retryCount  Int      @default(0)
+  priority    Int      @default(5) // 1-10, higher = more important
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdBy   String?
+  createdAt   DateTime @default(now())
+
+  creator     User?    @relation("JobCreator", fields: [createdBy], references: [id])
+
+  @@index([status, type])
+  @@index([scheduledAt])
+  @@index([priority])
+}
+
+// ============================================
+// ENHANCED SOURCE MODEL WITH HARVARD REFERENCING
+// ============================================
+
+model Source {
+  id                   String               @id @default(cuid())
+
+  // Harvard Reference Components
+  authors              String[]             // Primary authors array
+  publicationYear      Int?                 // Year of publication
+  title                String               // Article/page title
+  publication          String?              // Journal/newspaper/website name
+  volume               String?              // Volume number for journals
+  issue                String?              // Issue number for journals
+  pageNumbers          String?              // Page range (e.g., "12-15")
+  doi                  String?              // Digital Object Identifier
+  isbn                 String?              // For books
+  publisher            String?              // Publisher name
+  placeOfPublication   String?              // City of publication
+  edition              String?              // Edition number
+  editors              String[]             // Editor names
+  translators          String[]             // Translator names
+
+  // Harvard Citation (auto-generated)
+  harvardCitation      String?              // Full Harvard citation string
+  harvardInText        String?              // In-text citation (Author, Year)
+
+  // Original fields
+  url                  String?
+  publicationSlug      String?
+  mediaOutletId        String?
+  journalistId         String?
+  publishDate          DateTime?
+  accessDate           DateTime             @default(now())
+  lastVerified         DateTime?
+
+  // Credibility and verification
+  credibility          CredibilityRating    @default(UNKNOWN)
+  credibilityScore     Float?
+  verificationStatus   VerificationStatus?  @default(UNVERIFIED)
+  verificationDate     DateTime?            @db.Timestamptz(6)
+  verifiedBy           String?
+  verificationNotes    String?
+
+  // Archiving with Wayback Machine
+  isArchived           Boolean              @default(false)
+  archiveUrl           String?              // Wayback Machine URL
+  archiveDate          DateTime?            @db.Timestamptz(6)
+  archiveMethod        ArchiveMethod?
+  archiveHash          String?              // SHA-256 hash of content
+  archiveScreenshotUrl String?              // Screenshot URL
+  archivePdfUrl        String?              // PDF capture URL
+  requiresArchival     Boolean?             @default(true)
+  archivalPriority     Int?                 @default(5)
+
+  // Content analysis
+  qualityScore         Int?
+  hasByline            Boolean              @default(false)
+  hasMultipleSources   Boolean              @default(false)
+  sourceType           SourceType?          @default(NEWS_ARTICLE)
+  sourceLevel          SourceLevel?         @default(SECONDARY)
+  contentType          ContentType?         @default(TEXT)
+  factCheckStatus      FactCheckStatus?
+  factCheckUrl         String?
+  factCheckBy          String?
+
+  // Additional metadata
+  publicationSection   String?
+  wordCount            Int?
+  language             String?              @default("en")
+  biasRating           BiasRating?
+  biasNote             String?
+  contentSnapshot      String?              // First 500 chars
+  hasPaywall           Boolean?             @default(false)
+  isOpinion            Boolean?             @default(false)
+  isEditorial          Boolean?             @default(false)
+  isExclusive          Boolean?             @default(false)
+
+  // Content status
+  isDeleted            Boolean?             @default(false)
+  deletionDate         DateTime?            @db.Timestamptz(6)
+  deletionReason       String?
+  isBroken             Boolean?             @default(false)
+  lastCheckDate        DateTime?            @db.Timestamptz(6)
+  checkFailCount       Int?                 @default(0)
+
+  // Engagement metrics
+  citationCount        Int?                 @default(0)
+  viewCount            Int?                 @default(0)
+
+  // Notes
+  contentWarning       String?
+  isGraphic            Boolean?             @default(false)
+  isSensitive          Boolean?             @default(false)
+  publicNotes          String?
+  internalNotes        String?
+
+  // Tracking
+  createdBy            String?
+  lastEditedBy         String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  // Relations
+  caseId               String?
+  statementId          String?
+  repercussionId       String?
+  topicId              String?
+
+  AffiliationSources   AffiliationSources[]
+  case                 Case?                @relation(fields: [caseId], references: [id], map: "Source_incidentId_fkey")
+  journalist           Journalist?          @relation(fields: [journalistId], references: [id])
+  mediaOutlet          MediaOutlet?         @relation(fields: [mediaOutletId], references: [id])
+  repercussion         Repercussion?        @relation(fields: [repercussionId], references: [id])
+  statement            Statement?           @relation(fields: [statementId], references: [id])
+  primaryForStatements Statement[]          @relation("PrimaryStatementSource")
+
+  verifier             User?                @relation("SourceVerifier", fields: [verifiedBy], references: [id])
+  creator              User?                @relation("SourceCreator", fields: [createdBy], references: [id])
+  editor               User?                @relation("SourceEditor", fields: [lastEditedBy], references: [id])
+
+  @@index([mediaOutletId])
+  @@index([credibility])
+  @@index([journalistId])
+  @@index([statementId])
+  @@index([isArchived], map: "idx_source_archived")
+  @@index([credibilityLevel], map: "idx_source_credibility")
+  @@index([publishDate], map: "idx_source_publish_date")
+  @@index([sourceType, sourceLevel], map: "idx_source_type")
+  @@index([verificationStatus], map: "idx_source_verification")
+  @@index([caseId], map: "Source_incidentId_idx")
+  @@index([harvardInText])
+  @@index([doi])
+  @@index([isbn])
+}
+
+// Keep existing Person model but add verifier relation
+model Person {
+  id                      String                   @id @default(cuid())
+  slug                    String                   @unique
+  name                    String
+  bio                     String?
+  imageUrl                String?
+  profession              ProfessionType           @default(OTHER)
+  professionDetail        String?
+  nationality             NationalityType          @default(OTHER)
+  nationalityDetail       String?
+  birthDate               DateTime?
+  deathDate               DateTime?
+  akaNames                String[]
+  background              String?
+  racialGroup             String?
+  religion                String?
+  bestKnownFor            String?
+  birthPlace              String?
+  politicalBeliefs        String?
+  politicalParty          String?
+  residence               String?
+  roleDescription         String?
+  yearsActive             String?
+  deathPlace              String?
+  religionDenomination    String?
+  verificationLevel       VerificationLevel        @default(UNVERIFIED)
+  verifiedAt              DateTime?
+  verifiedBy              String?
+  verifiedByUser          User?                    @relation("PersonVerifier", fields: [verifiedBy], references: [id])
+  statementCount          Int                      @default(0)
+  incidentCount           Int                      @default(0)
+  lastActiveDate          DateTime?
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+
+  // All other existing fields remain...
+  // Relations remain the same
+
+  @@index([slug])
+  @@index([verificationLevel])
+  @@index([profession])
+  @@index([nationality])
+}
+
+// Keep existing Case model but add verifier relation
+model Case {
+  id                                 String          @id(map: "Incident_pkey") @default(cuid())
+  slug                               String          @unique(map: "Incident_slug_key")
+  title                              String
+  summary                            String
+  description                        String
+  caseDate                           DateTime
+  publicationDate                    DateTime        @default(now())
+  status                             CaseStatus      @default(DOCUMENTED)
+  severity                           CaseSeverity?
+  severityScore                      Int?
+  locationCity                       String?
+  locationState                      String?
+  locationCountry                    String?
+  locationDetail                     String?
+  mediaFraming                       String?
+  triggeringEvent                    String?
+  outcome                            String?
+  isVerified                         Boolean         @default(false)
+  verifiedBy                         String?
+  verifiedByUser                     User?           @relation("CaseVerifier", fields: [verifiedBy], references: [id])
+  verifiedAt                         DateTime?
+
+  // All other existing fields remain...
+  // Relations remain the same
+
+  @@index([slug], map: "Incident_slug_idx")
+  @@index([status], map: "Incident_status_idx")
+}
+
+// ENUMS
+
+enum UserRole {
+  ADMIN      // Super Admin
+  DE         // Data Editor
+  DBO        // Database Operator
+  CM         // Content Manager
+  CI         // Content Intern
+  BOT        // Bot/Harvester
+  QA         // Quality Assurance
+  AI_CUR     // AI Curator
+  AI_ED      // AI Editor
+  AI_VAL     // AI Validator
+  AI_CITE    // AI Citation
+  VIEWER     // Read-only access
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  VIEW
+  EXPORT
+  IMPORT
+  LOGIN
+  LOGOUT
+  VERIFY
+  APPROVE
+  REJECT
+  ARCHIVE
+  RESTORE
+}
+
+enum ContentType {
+  CASE
+  PERSON
+  ORGANIZATION
+  STATEMENT
+  SOURCE
+  TAG
+}
+
+enum DraftStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CHANGES_REQUESTED
+}
+
+enum JobStatus {
+  PENDING
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+  RETRY
+}
+
+enum HarvestType {
+  PERSON_ENRICHMENT
+  STATEMENT_DISCOVERY
+  SOURCE_ARCHIVING
+  MEDIA_MONITORING
+  SOCIAL_MEDIA_SCAN
+  FACT_CHECK
+  CITATION_VERIFY
+}
+
+// Keep all existing enums as they are...

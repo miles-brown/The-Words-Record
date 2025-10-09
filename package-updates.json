@@ -1,0 +1,34 @@
+{
+  "description": "Add these dependencies to your package.json",
+  "dependencies": {
+    "@types/speakeasy": "^2.0.10",
+    "speakeasy": "^2.0.0",
+    "qrcode": "^1.5.3",
+    "@types/qrcode": "^1.5.5",
+    "crypto": "builtin",
+    "react-hook-form": "^7.48.2",
+    "zod": "^3.22.4",
+    "@hookform/resolvers": "^3.3.4",
+    "@tanstack/react-query": "^5.17.0",
+    "zustand": "^4.4.7",
+    "recharts": "^2.10.3",
+    "@tiptap/react": "^2.1.13",
+    "@tiptap/starter-kit": "^2.1.13",
+    "@tiptap/extension-link": "^2.1.13",
+    "axios": "^1.6.5",
+    "date-fns": "^3.0.6",
+    "react-hot-toast": "^2.4.1"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/jsonwebtoken": "^9.0.5"
+  },
+  "scripts": {
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "db:seed": "tsx prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "harvest:run": "tsx scripts/harvester.ts",
+    "harvest:schedule": "tsx scripts/schedule-harvest.ts"
+  }
+}
