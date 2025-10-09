@@ -227,7 +227,7 @@ model Organization {
   Statement_Statement_onBehalfOfOrgIdToOrganization Statement[]       @relation("Statement_onBehalfOfOrgIdToOrganization")
   statements                                        Statement[]       @relation("OrganizationStatements")
   StatementAuthor                                   StatementAuthor[]
-  Case_CaseToOrganization                           Case[]            @relation("CaseToOrganization")
+  cases                                             Case[]            @relation("CaseToOrganization")
   groupStatements                                   Statement[]       @relation("OrganizationGroupStatements")
   Case_OrganizationIncidents                        Case[]            @relation("OrganizationIncidents")
 
@@ -409,7 +409,7 @@ model Case {
   statements                         Statement[]
   TopicCase                          TopicCase[]
   tags                               Tag[]           @relation("CaseTags")
-  Organization_CaseToOrganization    Organization[]  @relation("CaseToOrganization")
+  organizations                      Organization[]  @relation("CaseToOrganization")
   Organization_OrganizationIncidents Organization[]  @relation("OrganizationIncidents")
   people                             Person[]        @relation("PersonCases")
   history                            CaseHistory[]
