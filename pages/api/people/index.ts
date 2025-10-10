@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
-import { countryNameFromCode, CountryCode } from '@/lib/countries'
+import { withNormalizedNationality } from '@/lib/mappers/person-nationality'
 
 export default async function handler(
   req: NextApiRequest,
@@ -33,12 +33,13 @@ export default async function handler(
       }
     }
 
-    // Nationality filter: Convert ISO code to country name for DB query
-    // The filter dropdown sends ISO codes (e.g., "US", "GB"), but DB stores names (e.g., "United States", "United Kingdom")
+    // Nationality filter: Now uses ISO codes directly from PersonNationality table
     if (nationality) {
-      const countryName = countryNameFromCode(nationality as CountryCode)
-      where.nationality = {
-        contains: countryName
+      where.nationalities = {
+        some: {
+          countryCode: nationality as string,
+          endDate: null // Only active nationalities
+        }
       }
     }
 
@@ -95,7 +96,7 @@ export default async function handler(
     // Get total count
     const total = await prisma.person.count({ where })
 
-    // Fetch people with counts
+    // Fetch people with counts and nationality relations
     let people = await prisma.person.findMany({
       where,
       skip,
@@ -111,16 +112,25 @@ export default async function handler(
         statements: {
           where: { statementType: 'RESPONSE' },
           select: { id: true }
+        },
+        nationalities: {
+          where: { endDate: null }, // Only active nationalities
+          include: { country: true },
+          orderBy: [
+            { isPrimary: 'desc' },
+            { displayOrder: 'asc' }
+          ]
         }
       }
     })
 
-    // Add response count to _count object for each person
+    // Add response count and normalize nationality data
     const peopleWithResponseCount = people.map(person => {
       const responseCount = person.statements?.length || 0
       const { statements, ...personWithoutStatements } = person
+      const normalized = withNormalizedNationality(personWithoutStatements)
       return {
-        ...personWithoutStatements,
+        ...normalized,
         _count: {
           ...person._count,
           responses: responseCount

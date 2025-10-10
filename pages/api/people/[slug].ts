@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
+import { withNormalizedNationality } from '@/lib/mappers/person-nationality'
 
 export default async function handler(
   req: NextApiRequest,
@@ -46,6 +47,14 @@ export default async function handler(
               orderBy: {
                 statementDate: 'desc'
               }
+            },
+            nationalities: {
+              where: { endDate: null }, // Only active nationalities
+              include: { country: true },
+              orderBy: [
+                { isPrimary: 'desc' },
+                { displayOrder: 'asc' }
+              ]
             }
           }
         })
@@ -54,7 +63,7 @@ export default async function handler(
           return res.status(404).json({ error: 'Person not found' })
         }
 
-        // Add response count to _count object for each case
+        // Add response count to _count object for each case and normalize nationality
         const personWithResponseCounts = {
           ...person,
           cases: person.cases.map(caseItem => {
@@ -70,7 +79,9 @@ export default async function handler(
           })
         }
 
-        res.status(200).json(personWithResponseCounts)
+        const normalizedPerson = withNormalizedNationality(personWithResponseCounts)
+
+        res.status(200).json(normalizedPerson)
         break
 
       case 'PUT':
