@@ -6,7 +6,7 @@ import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations, PaginatedResponse } from '@/types'
 import { format } from 'date-fns'
 import { getReligionIcon, getProfessionIcon } from '@/utils/icons'
-import { getAllCountryOptions } from '@/lib/countries'
+import { getAllCountryOptions, normalizeCountry, flagEmojiFromCode } from '@/lib/countries'
 
 export default function PeoplePage() {
   const [people, setPeople] = useState<PersonWithRelations[]>([])
@@ -323,9 +323,10 @@ export default function PeoplePage() {
                           {person.profession && (
                             <span className="profession">{person.profession}</span>
                           )}
-                          {firstNationality && (
-                            <span className="nationality">{getCountryFlag(firstNationality)}</span>
-                          )}
+                          {firstNationality && (() => {
+                            const code = normalizeCountry(firstNationality);
+                            return code && <span className="nationality">{flagEmojiFromCode(code)}</span>;
+                          })()}
                           {birthYear && (
                             <span className="years">b. {birthYear}</span>
                           )}
@@ -364,12 +365,15 @@ export default function PeoplePage() {
                           <p className="profession">{person.profession}</p>
                         )}
                         <div className="profile-meta">
-                          {person.nationality && (
-                            <span className="nationality">
-                              <span className="icon">{getCountryFlag(person.nationality)}</span>
-                              {person.nationality}
-                            </span>
-                          )}
+                          {person.nationality && (() => {
+                            const code = normalizeCountry(person.nationality);
+                            return code && (
+                              <span className="nationality">
+                                <span className="icon">{flagEmojiFromCode(code)}</span>
+                                {person.nationality}
+                              </span>
+                            );
+                          })()}
                         </div>
                       </div>
                       <div className="profile-stats">
