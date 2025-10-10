@@ -48,3 +48,28 @@ export function normalizeCountries(input: string | string[] | null | undefined):
   const items = typeof input === 'string' ? input.split(',').map(s => s.trim()) : input;
   return Array.from(new Set(items.map(i => normalizeCountry(i)).filter((c): c is CountryCode => c !== null)));
 }
+
+export function flagEmojiFromCode(code: CountryCode): string {
+  return COUNTRIES[code]?.emoji || UNKNOWN_COUNTRY.emoji;
+}
+
+export function countryNameFromCode(code: CountryCode): string {
+  return COUNTRIES[code]?.name || UNKNOWN_COUNTRY.name;
+}
+
+export function getAllCountryOptions(): Array<{ code: CountryCode; name: string; emoji: string }> {
+  return Object.entries(COUNTRIES)
+    .map(([code, data]) => ({ code: code as CountryCode, name: data.name, emoji: data.emoji }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export function formatCountryDisplay(codes: CountryCode[], options: { includeFlags?: boolean; separator?: string; maxDisplay?: number } = {}): string {
+  const { includeFlags = true, separator = ', ', maxDisplay = 3 } = options;
+  if (codes.length === 0) return includeFlags ? `${UNKNOWN_COUNTRY.emoji} ${UNKNOWN_COUNTRY.name}` : UNKNOWN_COUNTRY.name;
+  const displayCodes = codes.slice(0, maxDisplay);
+  const remaining = codes.length - maxDisplay;
+  const formatted = displayCodes.map(code => includeFlags ? `${flagEmojiFromCode(code)} ${countryNameFromCode(code)}` : countryNameFromCode(code));
+  let result = formatted.join(separator);
+  if (remaining > 0) result += ` and ${remaining} more`;
+  return result;
+}
