@@ -145,8 +145,15 @@ export default function PersonPage({ person }: PersonPageProps) {
 
                 {/* Nationality */}
                 {(() => {
-                  const nationalitySources = [person.nationality, person.nationalityArray, person.primaryNationality].filter(Boolean);
-                  const codes = normalizeCountries(nationalitySources.length > 0 ? nationalitySources : null);
+                  // Collect nationality from various sources and flatten arrays
+                  const nationalityStrings: string[] = [];
+                  if (person.nationality) nationalityStrings.push(person.nationality);
+                  if (person.nationalityArray && Array.isArray(person.nationalityArray)) {
+                    nationalityStrings.push(...person.nationalityArray.map(n => String(n)));
+                  }
+                  if (person.primaryNationality) nationalityStrings.push(person.primaryNationality);
+
+                  const codes = normalizeCountries(nationalityStrings);
                   if (codes.length > 0) {
                     return (
                       <div className="info-row">
