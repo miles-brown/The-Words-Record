@@ -272,8 +272,10 @@ model Person {
   dateOfBirth             DateTime?
   age                     Int?
   gender                  Gender?
-  nationalityArray        String[]
-  primaryNationality      String?
+  nationalityArray        String[]                 // DEPRECATED: use PersonNationality
+  primaryNationality      String?                  // DEPRECATED: use PersonNationality
+  nationality_primary_code String?                 @db.VarChar(2) // Computed cache from PersonNationality
+  nationality_codes_cached String[]                @default([])    // Computed cache from PersonNationality
   ethnicity               String[]
   professionArray         Profession[]
   primaryProfession       Profession?
@@ -392,11 +394,58 @@ model Person {
   StatementAuthor         StatementAuthor[]
   cases                   Case[]                   @relation("PersonCases")
   groupStatements         Statement[]              @relation("PersonGroupStatements")
+  nationalities           PersonNationality[]
 
   @@index([slug])
   @@index([verificationLevel])
   @@index([profession])
   @@index([nationality])
+  @@index([nationality_primary_code])
+}
+
+// ISO 3166-1 Country lookup table
+model Country {
+  code              String              @id @db.VarChar(2)  // ISO 3166-1 alpha-2
+  name_en           String
+  iso3              String?             @db.VarChar(3)      // ISO 3166-1 alpha-3
+  m49               Int?                                    // UN M49 numeric code
+  flag_emoji        String?
+  active            Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  personNationalities PersonNationality[]
+
+  @@index([active])
+  @@index([name_en])
+}
+
+// Junction table for Person-Country nationality facts
+model PersonNationality {
+  id           String                @id @default(cuid())
+  personId     String
+  countryCode  String                @db.VarChar(2)
+  type         NationalityType       @default(CITIZENSHIP)
+  acquisition  AcquisitionMethod?
+  isPrimary    Boolean               @default(false)
+  displayOrder Int                   @default(0)
+  startDate    DateTime?
+  endDate      DateTime?
+  sourceId     String?
+  confidence   Int?
+  note         String?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  person  Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  country Country @relation(fields: [countryCode], references: [code])
+
+  @@unique([personId, countryCode, type, startDate, endDate])
+  @@index([personId])
+  @@index([countryCode])
+  @@index([isPrimary])
+  @@index([type])
+  @@index([endDate])
 }
 
 model Organization {
@@ -1117,12 +1166,20 @@ enum ProfessionType {
 }
 
 enum NationalityType {
-  By_Birth
-  By_Naturalization
-  By_Descent
-  By_Marriage
-  Other
-  Unknown
+  CITIZENSHIP
+  ETHNIC_ORIGIN
+  CULTURAL_IDENTITY
+  RESIDENCY_STATUS
+  HISTORICAL_STATE
+}
+
+enum AcquisitionMethod {
+  BY_BIRTH
+  BY_DESCENT
+  NATURALISATION
+  MARRIAGE
+  OTHER
+  UNKNOWN
 }
 
 enum VerificationLevel {
