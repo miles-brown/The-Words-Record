@@ -77,7 +77,7 @@ export function generateToken(user: AdminUser, options: TokenOptions = {}): stri
 
   const signOptions: SignOptions = {
     algorithm: JWT_ALGORITHM,
-    expiresIn: ACCESS_TOKEN_TTL,
+    expiresIn: ACCESS_TOKEN_TTL as string | number,
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,
     subject: payload.sub,
@@ -105,7 +105,7 @@ export function generateRefreshToken(user: AdminUser, options: TokenOptions = {}
 
   const signOptions: SignOptions = {
     algorithm: JWT_ALGORITHM,
-    expiresIn: REFRESH_TOKEN_TTL,
+    expiresIn: REFRESH_TOKEN_TTL as string | number,
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,
     subject: payload.sub,
