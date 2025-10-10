@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
+import { normalizeCountries, CountryCode, flagEmojiFromCode, countryNameFromCode } from '@/lib/countries'
 
 interface PersonCardEnhancedProps {
   person: any
@@ -128,11 +129,20 @@ export function PersonCardEnhanced({
               {person.primaryProfession.replace(/_/g, ' ')}
             </span>
           )}
-          {person.primaryNationality && (
-            <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
-              {person.primaryNationality}
-            </span>
-          )}
+          {/* Nationality */}
+          {(() => {
+            const nationalitySources = [person.nationality, person.nationalityArray, person.primaryNationality].filter(Boolean);
+            const codes = normalizeCountries(nationalitySources.length > 0 ? nationalitySources : null);
+            if (codes.length > 0) {
+              return codes.slice(0, 2).map((code: CountryCode) => (
+                <span key={code} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs flex items-center gap-1">
+                  <span>{flagEmojiFromCode(code)}</span>
+                  <span>{countryNameFromCode(code)}</span>
+                </span>
+              ));
+            }
+            return null;
+          })()}
           {person.industry && (
             <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">
               {person.industry.replace(/_/g, ' ')}

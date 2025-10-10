@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
+import { countryNameFromCode, CountryCode } from '@/lib/countries'
 
 export default async function handler(
   req: NextApiRequest,
@@ -32,9 +33,12 @@ export default async function handler(
       }
     }
 
+    // Nationality filter: Convert ISO code to country name for DB query
+    // The filter dropdown sends ISO codes (e.g., "US", "GB"), but DB stores names (e.g., "United States", "United Kingdom")
     if (nationality) {
+      const countryName = countryNameFromCode(nationality as CountryCode)
       where.nationality = {
-        contains: nationality as string
+        contains: countryName
       }
     }
 

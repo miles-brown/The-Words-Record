@@ -5,7 +5,8 @@ import Layout from '@/components/Layout'
 import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations, PaginatedResponse } from '@/types'
 import { format } from 'date-fns'
-import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
+import { getReligionIcon, getProfessionIcon } from '@/utils/icons'
+import { getAllCountryOptions } from '@/lib/countries'
 
 export default function PeoplePage() {
   const [people, setPeople] = useState<PersonWithRelations[]>([])
@@ -239,8 +240,11 @@ export default function PeoplePage() {
                   onChange={(e) => handleFilterChange('nationality', e.target.value)}
                 >
                   <option value="">All Nationalities</option>
-                  {filterOptions.nationalities.map(nat => (
-                    <option key={nat} value={nat}>{nat}</option>
+                  {/* Use canonical country options with flags */}
+                  {getAllCountryOptions().map(({ code, name, emoji }) => (
+                    <option key={code} value={code}>
+                      {emoji} {name}
+                    </option>
                   ))}
                 </select>
               </div>

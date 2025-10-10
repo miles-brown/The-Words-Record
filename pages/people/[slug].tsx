@@ -9,7 +9,8 @@ import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations } from '@/types'
 import { prisma } from '@/lib/prisma'
 import { getAgeString } from '@/lib/ageUtils'
-import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
+import { getReligionIcon, getProfessionIcon } from '@/utils/icons'
+import { normalizeCountries, formatCountryDisplay } from '@/lib/countries'
 
 interface PersonPageProps {
   person: PersonWithRelations | null
@@ -142,15 +143,22 @@ export default function PersonPage({ person }: PersonPageProps) {
                   </div>
                 )}
 
-                {person.nationality && (
-                  <div className="info-row">
-                    <span className="info-label">Nationality:</span>
-                    <span className="info-value">
-                      <span className="icon">{getCountryFlag(person.nationality)}</span>
-                      {person.nationality}
-                    </span>
-                  </div>
-                )}
+                {/* Nationality */}
+                {(() => {
+                  const nationalitySources = [person.nationality, person.nationalityArray, person.primaryNationality].filter(Boolean);
+                  const codes = normalizeCountries(nationalitySources.length > 0 ? nationalitySources : null);
+                  if (codes.length > 0) {
+                    return (
+                      <div className="info-row">
+                        <span className="info-label">Nationality:</span>
+                        <span className="info-value">
+                          {formatCountryDisplay(codes, { includeFlags: true, separator: ', ', maxDisplay: 5 })}
+                        </span>
+                      </div>
+                    );
+                  }
+                  return null;
+                })()}
 
                 {person.racialGroup && (
                   <div className="info-row">
