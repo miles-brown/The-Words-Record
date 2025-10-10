@@ -85,47 +85,22 @@ export async function validatePersonNationalityRules(
   }
 
   // Rule 2: No overlapping identical facts (same person, country, type with overlapping dates)
-  // Note: @@unique handles exact duplicates; this catches temporal overlaps
-  if (startDate || endDate) {
-    const overlapping = await prisma.personNationality.findFirst({
-      where: {
-        personId,
-        countryCode,
-        type,
-        ...(excludeId ? { NOT: { id: excludeId } } : {}),
-        OR: [
-          // New fact starts during existing fact
-          {
-            AND: [
-              startDate ? { startDate: { lte: startDate } } : {},
-              { OR: [{ endDate: null }, endDate ? { endDate: { gte: startDate } } : {}] },
-            ],
-          },
-          // New fact ends during existing fact
-          {
-            AND: [
-              endDate ? { startDate: { lte: endDate } } : {},
-              { OR: [{ endDate: null }, { endDate: { gte: endDate } }] },
-            ],
-          },
-          // New fact contains existing fact
-          {
-            AND: [
-              startDate ? { startDate: { gte: startDate } } : {},
-              endDate ? { OR: [{ endDate: null }, { endDate: { lte: endDate } }] } : {},
-            ],
-          },
-        ],
-      },
-    })
+  // Simplified: check for any active (endDate null) fact of same type
+  const existingActive = await prisma.personNationality.findFirst({
+    where: {
+      personId,
+      countryCode,
+      type,
+      endDate: null,
+      ...(excludeId ? { NOT: { id: excludeId } } : {}),
+    },
+  })
 
-    if (overlapping) {
-      errors.push(
-        `Overlapping ${type} fact for ${countryCode} already exists ` +
-        `(${overlapping.startDate?.toISOString() || 'beginning'} - ${overlapping.endDate?.toISOString() || 'present'}). ` +
-        `Close existing fact first or adjust dates.`
-      )
-    }
+  if (existingActive && !endDate) {
+    errors.push(
+      `Active ${type} fact for ${countryCode} already exists. ` +
+      `Close existing fact (set endDate) before creating a new one.`
+    )
   }
 
   return {
