@@ -1,6 +1,7 @@
 import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { UserTokenType } from '@prisma/client'
+import type { Prisma } from '@prisma/client'
 
 const TOKEN_BYTE_LENGTH = 32
 
@@ -35,7 +36,7 @@ export async function createUserToken(
       tokenType: type,
       tokenHash: generated.hash,
       expiresAt: generated.expiresAt,
-      metadata: metadata || undefined
+      metadata: (metadata as Prisma.InputJsonValue) || undefined
     }
   })
 
