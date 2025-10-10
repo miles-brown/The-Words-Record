@@ -82,7 +82,7 @@ async function migrateLegacyNationalities() {
         const isPrimary = code === primaryCode
 
         // Infer type and acquisition from detail field
-        let type = NationalityType.CITIZENSHIP
+        let type: NationalityType = NationalityType.CITIZENSHIP
         let acquisition: AcquisitionMethod | undefined = undefined
         const detail = person.nationalityDetail?.toLowerCase() || ''
 
