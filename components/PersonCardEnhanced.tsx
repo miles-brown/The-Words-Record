@@ -1,7 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
 import { format } from 'date-fns'
-import { normalizeCountries, CountryCode, flagEmojiFromCode, countryNameFromCode } from '@/lib/countries'
 
 interface PersonCardEnhancedProps {
   person: any
@@ -129,27 +128,23 @@ export function PersonCardEnhanced({
               {person.primaryProfession.replace(/_/g, ' ')}
             </span>
           )}
-          {/* Nationality */}
-          {(() => {
-            // Collect nationality from various sources and flatten arrays
-            const nationalityStrings: string[] = [];
-            if (person.nationality) nationalityStrings.push(person.nationality);
-            if (person.nationalityArray && Array.isArray(person.nationalityArray)) {
-              nationalityStrings.push(...person.nationalityArray.map((n: any) => String(n)));
-            }
-            if (person.primaryNationality) nationalityStrings.push(person.primaryNationality);
-
-            const codes = normalizeCountries(nationalityStrings);
-            if (codes.length > 0) {
-              return codes.slice(0, 2).map((code: CountryCode) => (
-                <span key={code} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs flex items-center gap-1">
-                  <span>{flagEmojiFromCode(code)}</span>
-                  <span>{countryNameFromCode(code)}</span>
+          {/* Nationality - Use new structured data from API */}
+          {person.nationalities && person.nationalities.length > 0 && (
+            <>
+              {person.nationalities.slice(0, 2).map((nat: any) => (
+                <span key={nat.code} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs flex items-center gap-1">
+                  <span>{nat.flagEmoji}</span>
+                  <span>{nat.name}</span>
+                  {nat.isPrimary && <span className="text-blue-600">★</span>}
                 </span>
-              ));
-            }
-            return null;
-          })()}
+              ))}
+              {person.nationalities.length > 2 && (
+                <span className="px-3 py-1 bg-gray-200 text-gray-600 rounded-full text-xs">
+                  +{person.nationalities.length - 2} more
+                </span>
+              )}
+            </>
+          )}
           {person.industry && (
             <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">
               {person.industry.replace(/_/g, ' ')}
