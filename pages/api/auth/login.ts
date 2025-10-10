@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { UserRole } from '@prisma/client'
 import { validateCredentials, generateToken, setAuthCookie } from '@/lib/auth'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -15,14 +16,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const isValid = await validateCredentials(username, password)
-    
+
     if (!isValid) {
       return res.status(401).json({ error: 'Invalid credentials' })
     }
 
-    const user = { username, role: 'admin' as const }
+    const user = { username, role: UserRole.ADMIN }
     const token = generateToken(user)
-    
+
     setAuthCookie(res, token)
 
     res.status(200).json({
