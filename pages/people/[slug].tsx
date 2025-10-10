@@ -149,7 +149,7 @@ export default function PersonPage({ person }: PersonPageProps) {
                   const nationalityStrings: string[] = [];
                   if (person.nationality) nationalityStrings.push(person.nationality);
                   if (person.nationalityArray && Array.isArray(person.nationalityArray)) {
-                    nationalityStrings.push(...person.nationalityArray.map(n => String(n)));
+                    nationalityStrings.push(...person.nationalityArray.map((n: any) => String(n)));
                   }
                   if (person.primaryNationality) nationalityStrings.push(person.primaryNationality);
 
