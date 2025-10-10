@@ -272,8 +272,8 @@ model Person {
   dateOfBirth             DateTime?
   age                     Int?
   gender                  Gender?
-  nationalityArray        Nationality[]
-  primaryNationality      Nationality?
+  nationalityArray        String[]
+  primaryNationality      String?
   ethnicity               String[]
   professionArray         Profession[]
   primaryProfession       Profession?
