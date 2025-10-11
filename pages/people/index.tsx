@@ -5,7 +5,8 @@ import Layout from '@/components/Layout'
 import { PersonCardSkeleton } from '@/components/LoadingSkeletons'
 import { PersonWithRelations, PaginatedResponse } from '@/types'
 import { format } from 'date-fns'
-import { getCountryFlag, getReligionIcon, getProfessionIcon } from '@/utils/icons'
+import { getReligionIcon, getProfessionIcon } from '@/utils/icons'
+import { getAllCountryOptions } from '@/lib/countries'
 
 export default function PeoplePage() {
   const [people, setPeople] = useState<PersonWithRelations[]>([])
@@ -239,8 +240,11 @@ export default function PeoplePage() {
                   onChange={(e) => handleFilterChange('nationality', e.target.value)}
                 >
                   <option value="">All Nationalities</option>
-                  {filterOptions.nationalities.map(nat => (
-                    <option key={nat} value={nat}>{nat}</option>
+                  {/* Use canonical country options with flags */}
+                  {getAllCountryOptions().map(({ code, name, emoji }) => (
+                    <option key={code} value={code}>
+                      {emoji} {name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -283,10 +287,12 @@ export default function PeoplePage() {
               ))}
             </>
           ) : (
-            people.map((person) => {
+            people.map((person: any) => {
               const birthYear = person.birthDate ? new Date(person.birthDate).getFullYear() : null
               const deathYear = person.deathDate ? new Date(person.deathDate).getFullYear() : null
-              const firstNationality = person.nationality ? person.nationality.split(',')[0].trim() : null
+              // Use new structured nationality data from API
+              const nationalities = person.nationalities || []
+              const primaryNationality = nationalities.find((n: any) => n.isPrimary) || nationalities[0]
 
               return <Link href={`/people/${person.slug}`} key={person.id}>
                 <article className={`person-item ${viewMode}-view stagger-item`}>
@@ -319,8 +325,8 @@ export default function PeoplePage() {
                           {person.profession && (
                             <span className="profession">{person.profession}</span>
                           )}
-                          {firstNationality && (
-                            <span className="nationality">{getCountryFlag(firstNationality)}</span>
+                          {primaryNationality && (
+                            <span className="nationality">{primaryNationality.flagEmoji}</span>
                           )}
                           {birthYear && (
                             <span className="years">b. {birthYear}</span>
@@ -360,10 +366,15 @@ export default function PeoplePage() {
                           <p className="profession">{person.profession}</p>
                         )}
                         <div className="profile-meta">
-                          {person.nationality && (
+                          {nationalities.length > 0 && (
                             <span className="nationality">
-                              <span className="icon">{getCountryFlag(person.nationality)}</span>
-                              {person.nationality}
+                              {nationalities.slice(0, 2).map((nat: any, idx: number) => (
+                                <span key={nat.code}>
+                                  {nat.flagEmoji}
+                                  {idx < 1 && nationalities.length > 2 && ', '}
+                                </span>
+                              ))}
+                              {nationalities.length > 2 && <span> +{nationalities.length - 2}</span>}
                             </span>
                           )}
                         </div>

@@ -128,10 +128,22 @@ export function PersonCardEnhanced({
               {person.primaryProfession.replace(/_/g, ' ')}
             </span>
           )}
-          {person.primaryNationality && (
-            <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
-              {person.primaryNationality}
-            </span>
+          {/* Nationality - Use new structured data from API */}
+          {person.nationalities && person.nationalities.length > 0 && (
+            <>
+              {person.nationalities.slice(0, 2).map((nat: any) => (
+                <span key={nat.code} className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs flex items-center gap-1">
+                  <span>{nat.flagEmoji}</span>
+                  <span>{nat.name}</span>
+                  {nat.isPrimary && <span className="text-blue-600">★</span>}
+                </span>
+              ))}
+              {person.nationalities.length > 2 && (
+                <span className="px-3 py-1 bg-gray-200 text-gray-600 rounded-full text-xs">
+                  +{person.nationalities.length - 2} more
+                </span>
+              )}
+            </>
           )}
           {person.industry && (
             <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-xs">

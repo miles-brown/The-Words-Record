@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { GetStaticProps, GetStaticPaths } from 'next'
+import { GetServerSideProps } from 'next'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
@@ -563,22 +563,7 @@ export default function OrganizationPage({ organization }: OrganizationPageProps
   )
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const organizations = await prisma.organization.findMany({
-    select: { slug: true }
-  })
-
-  const paths = organizations.map((org) => ({
-    params: { slug: org.slug }
-  }))
-
-  return {
-    paths,
-    fallback: true
-  }
-}
-
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   if (!params?.slug || typeof params.slug !== 'string') {
     return { notFound: true }
   }

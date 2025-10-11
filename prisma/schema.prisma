@@ -10,6 +10,222 @@ datasource db {
   extensions = [btree_gin, pg_trgm, uuid_ossp(map: "uuid-ossp")]
 }
 
+model User {
+  id             String            @id @default(cuid())
+  email          String            @unique
+  username       String            @unique
+  passwordHash   String
+  role           UserRole          @default(ADMIN)
+  firstName      String?
+  lastName       String?
+  avatar         String?
+  mfaSecret      String?
+  mfaEnabled     Boolean           @default(false)
+  mfaRecoveryCodes String[]       @default([])
+  isActive       Boolean           @default(true)
+  emailVerified  Boolean           @default(false)
+  lastLogin      DateTime?
+  lastLoginIp    String?
+  lastLoginUserAgent String?
+  loginAttempts  Int               @default(0)
+  lockedUntil    DateTime?
+  preferences    Json?
+  emailVerificationSentAt DateTime?
+  passwordResetSentAt     DateTime?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+  sessions       Session[]
+  apiKeys        ApiKey[]
+  contentDrafts  ContentDraft[]
+  approvals      ContentApproval[] @relation("ReviewerApprovals")
+  harvestJobs    HarvestJob[]      @relation("JobCreator")
+  auditLogs      AuditLog[]        @relation("AuditUser")
+  tokens         UserToken[]
+  groups         UserGroup[]
+
+  @@index([role])
+  @@index([isActive])
+}
+
+model Session {
+  id            String   @id @default(cuid())
+  userId        String?
+  apiKeyId      String?
+  token         String   @unique
+  refreshToken  String?  @unique
+  ipAddress     String?
+  userAgent     String?
+  issuedAt      DateTime @default(now())
+  expiresAt     DateTime
+  rotatedAt     DateTime?
+  revokedAt     DateTime?
+  invalidatedAt DateTime?
+  createdAt     DateTime @default(now())
+
+  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKey        ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([apiKeyId])
+  @@index([token])
+  @@index([refreshToken])
+  @@index([expiresAt])
+}
+
+model ApiKey {
+  id                String    @id @default(cuid())
+  userId            String?
+  name              String
+  key               String    @unique
+  secretHash        String
+  permissions       String[]  @default([])
+  rateLimit         Int       @default(100)
+  lastUsed          DateTime?
+  lastUsedIp        String?
+  lastUsedUserAgent String?
+  expiresAt         DateTime?
+  isActive          Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  revokedAt         DateTime?
+  lastRotatedAt     DateTime?
+
+  user              User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessions          Session[]
+  auditLogs         AuditLog[]
+
+  @@index([userId])
+  @@index([isActive])
+}
+
+model AuditLog {
+  id          String          @id @default(cuid())
+  action      AuditAction
+  actorId     String?
+  actorType   AuditActorType  @default(ANONYMOUS)
+  userId      String?
+  apiKeyId    String?
+  entityType  String?
+  entityId    String?
+  description String?
+  changes     Json?
+  metadata    Json?
+  ipAddress   String?
+  userAgent   String?
+  status      AuditStatus     @default(SUCCESS)
+  occuredAt   DateTime        @default(now())
+  createdAt   DateTime        @default(now())
+
+  user        User?           @relation("AuditUser", fields: [userId], references: [id], onDelete: SetNull)
+  apiKey      ApiKey?         @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+
+  @@index([actorType, actorId])
+  @@index([entityType, entityId])
+  @@index([occuredAt])
+  @@index([userId])
+  @@index([apiKeyId])
+}
+
+model ContentDraft {
+  id          String             @id @default(cuid())
+  userId      String
+  contentType AdminContentType
+  contentId   String?
+  data        Json
+  status      DraftStatus        @default(DRAFT)
+  notes       String?
+  submittedAt DateTime?
+  lastDiffHash String?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approvals   ContentApproval[]
+
+  @@index([userId])
+  @@index([contentType, status])
+  @@index([submittedAt])
+}
+
+model ContentApproval {
+  id          String          @id @default(cuid())
+  draftId     String
+  reviewerId  String
+  status      ApprovalStatus  @default(PENDING)
+  comments    String?
+  reviewedAt  DateTime        @default(now())
+
+  draft       ContentDraft    @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  reviewer    User            @relation("ReviewerApprovals", fields: [reviewerId], references: [id], onDelete: Cascade)
+
+  @@index([draftId])
+  @@index([reviewerId])
+  @@index([status])
+}
+
+model HarvestJob {
+  id          String       @id @default(cuid())
+  type        HarvestType
+  status      JobStatus    @default(PENDING)
+  config      Json
+  results     Json?
+  error       String?
+  retryCount  Int          @default(0)
+  priority    Int          @default(5)
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  createdBy   String?
+  createdAt   DateTime     @default(now())
+
+  creator     User?        @relation("JobCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([status, type])
+  @@index([scheduledAt])
+  @@index([priority])
+}
+
+model UserToken {
+  id         String         @id @default(cuid())
+  userId     String
+  tokenHash  String         @unique
+  tokenType  UserTokenType
+  expiresAt  DateTime
+  consumedAt DateTime?
+  metadata   Json?
+  createdAt  DateTime       @default(now())
+
+  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, tokenType])
+  @@index([expiresAt])
+}
+
+model Group {
+  id           String        @id @default(cuid())
+  name         String        @unique
+  description  String?
+  permissions  String[]      @default([])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  members      UserGroup[]
+
+  @@index([name])
+}
+
+model UserGroup {
+  id        String   @id @default(cuid())
+  userId    String
+  groupId   String
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+  @@index([groupId])
+}
+
 model Person {
   id                      String                   @id @default(cuid())
   slug                    String                   @unique
@@ -18,7 +234,7 @@ model Person {
   imageUrl                String?
   profession              ProfessionType           @default(OTHER)
   professionDetail        String?
-  nationality             NationalityType          @default(OTHER)
+  nationality             String?
   nationalityDetail       String?
   birthDate               DateTime?
   deathDate               DateTime?
@@ -56,8 +272,10 @@ model Person {
   dateOfBirth             DateTime?
   age                     Int?
   gender                  Gender?
-  nationalityArray        Nationality[]
-  primaryNationality      Nationality?
+  nationalityArray        String[]                 // DEPRECATED: use PersonNationality
+  primaryNationality      String?                  // DEPRECATED: use PersonNationality
+  nationality_primary_code String?                 @db.VarChar(2) // Computed cache from PersonNationality
+  nationality_codes_cached String[]                @default([])    // Computed cache from PersonNationality
   ethnicity               String[]
   professionArray         Profession[]
   primaryProfession       Profession?
@@ -176,11 +394,58 @@ model Person {
   StatementAuthor         StatementAuthor[]
   cases                   Case[]                   @relation("PersonCases")
   groupStatements         Statement[]              @relation("PersonGroupStatements")
+  nationalities           PersonNationality[]
 
   @@index([slug])
   @@index([verificationLevel])
   @@index([profession])
   @@index([nationality])
+  @@index([nationality_primary_code])
+}
+
+// ISO 3166-1 Country lookup table
+model Country {
+  code              String              @id @db.VarChar(2)  // ISO 3166-1 alpha-2
+  name_en           String
+  iso3              String?             @db.VarChar(3)      // ISO 3166-1 alpha-3
+  m49               Int?                                    // UN M49 numeric code
+  flag_emoji        String?
+  active            Boolean             @default(true)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  personNationalities PersonNationality[]
+
+  @@index([active])
+  @@index([name_en])
+}
+
+// Junction table for Person-Country nationality facts
+model PersonNationality {
+  id           String                @id @default(cuid())
+  personId     String
+  countryCode  String                @db.VarChar(2)
+  type         NationalityType       @default(CITIZENSHIP)
+  acquisition  AcquisitionMethod?
+  isPrimary    Boolean               @default(false)
+  displayOrder Int                   @default(0)
+  startDate    DateTime?
+  endDate      DateTime?
+  sourceId     String?
+  confidence   Int?
+  note         String?
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+
+  person  Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
+  country Country @relation(fields: [countryCode], references: [code])
+
+  @@unique([personId, countryCode, type, startDate, endDate])
+  @@index([personId])
+  @@index([countryCode])
+  @@index([isPrimary])
+  @@index([type])
+  @@index([endDate])
 }
 
 model Organization {
@@ -901,15 +1166,20 @@ enum ProfessionType {
 }
 
 enum NationalityType {
-  US
-  UK
-  ISRAEL
-  PALESTINE
-  FRANCE
-  GERMANY
-  CANADA
-  AUSTRALIA
+  CITIZENSHIP
+  ETHNIC_ORIGIN
+  CULTURAL_IDENTITY
+  RESIDENCY_STATUS
+  HISTORICAL_STATE
+}
+
+enum AcquisitionMethod {
+  BY_BIRTH
+  BY_DESCENT
+  NATURALISATION
+  MARRIAGE
   OTHER
+  UNKNOWN
 }
 
 enum VerificationLevel {
@@ -1843,4 +2113,102 @@ enum CaseHistoryAction {
   TAG_REMOVED
   EDITED
   MERGED
+}
+
+enum UserRole {
+  ADMIN
+  DE
+  DBO
+  CM
+  CI
+  BOT
+  QA
+  AI_CUR
+  AI_ED
+  AI_VAL
+  AI_CITE
+  VIEWER
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  VIEW
+  EXPORT
+  IMPORT
+  LOGIN
+  LOGOUT
+  VERIFY
+  APPROVE
+  REJECT
+  ARCHIVE
+  RESTORE
+}
+
+enum AuditActorType {
+  USER
+  API_KEY
+  SYSTEM
+  ANONYMOUS
+}
+
+enum AuditStatus {
+  SUCCESS
+  FAILURE
+}
+
+enum AdminContentType {
+  CASE
+  PERSON
+  ORGANIZATION
+  STATEMENT
+  SOURCE
+  TAG
+  HARVEST_JOB
+  HARVEST_CONFIG
+}
+
+enum DraftStatus {
+  DRAFT
+  SUBMITTED
+  IN_REVIEW
+  APPROVED
+  REJECTED
+  PUBLISHED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CHANGES_REQUESTED
+}
+
+enum JobStatus {
+  PENDING
+  QUEUED
+  RUNNING
+  COMPLETED
+  FAILED
+  CANCELLED
+  RETRY
+}
+
+enum HarvestType {
+  PERSON_ENRICHMENT
+  STATEMENT_DISCOVERY
+  SOURCE_ARCHIVING
+  MEDIA_MONITORING
+  SOCIAL_MEDIA_SCAN
+  FACT_CHECK
+  CITATION_VERIFY
+}
+
+enum UserTokenType {
+  PASSWORD_RESET
+  EMAIL_VERIFICATION
+  MAGIC_LINK
+  SESSION_INVALIDATION
+  MFA_RECOVERY
 }

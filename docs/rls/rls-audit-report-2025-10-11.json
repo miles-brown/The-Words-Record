@@ -1,0 +1,436 @@
+[
+  {
+    "table_name": "Affiliation",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "Affiliation_insert_owner_or_admin",
+      "Affiliation_select_owner_or_admin",
+      "Affiliation_update_owner_or_admin",
+      "Affiliation_delete_owner_or_admin"
+    ],
+    "policy_commands": ["INSERT", "SELECT", "UPDATE", "DELETE"],
+    "policy_definitions": [
+      "Affiliation_insert_owner_or_admin:INSERT",
+      "Affiliation_select_owner_or_admin:SELECT",
+      "Affiliation_update_owner_or_admin:UPDATE",
+      "Affiliation_delete_owner_or_admin:DELETE"
+    ],
+    "ownership_columns": ["organizationId", "personId", "createdBy"]
+  },
+  {
+    "table_name": "AffiliationSources",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_AffiliationSources", "admin_write_AffiliationSources"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": [
+      "public_read_AffiliationSources:SELECT",
+      "admin_write_AffiliationSources:ALL"
+    ],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "ApiKey",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": ["update_ApiKey", "select_ApiKey", "insert_ApiKey", "delete_ApiKey"],
+    "policy_commands": ["UPDATE", "SELECT", "INSERT", "DELETE"],
+    "policy_definitions": [
+      "update_ApiKey:UPDATE",
+      "select_ApiKey:SELECT",
+      "insert_ApiKey:INSERT",
+      "delete_ApiKey:DELETE"
+    ],
+    "ownership_columns": ["userId"]
+  },
+  {
+    "table_name": "AuditLog",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": ["update_AuditLog", "select_AuditLog", "insert_AuditLog", "delete_AuditLog"],
+    "policy_commands": ["UPDATE", "SELECT", "INSERT", "DELETE"],
+    "policy_definitions": [
+      "update_AuditLog:UPDATE",
+      "select_AuditLog:SELECT",
+      "insert_AuditLog:INSERT",
+      "delete_AuditLog:DELETE"
+    ],
+    "ownership_columns": ["userId"]
+  },
+  {
+    "table_name": "Case",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_Case", "admin_write_Case"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": ["public_read_Case:SELECT", "admin_write_Case:ALL"],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "CaseHistory",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_CaseHistory", "admin_write_CaseHistory"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": [
+      "public_read_CaseHistory:SELECT",
+      "admin_write_CaseHistory:ALL"
+    ],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "ContentApproval",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_ContentApproval", "admin_write_ContentApproval"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": [
+      "public_read_ContentApproval:SELECT",
+      "admin_write_ContentApproval:ALL"
+    ],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "ContentDraft",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "select_ContentDraft",
+      "insert_ContentDraft",
+      "update_ContentDraft",
+      "delete_ContentDraft"
+    ],
+    "policy_commands": ["SELECT", "INSERT", "UPDATE", "DELETE"],
+    "policy_definitions": [
+      "select_ContentDraft:SELECT",
+      "insert_ContentDraft:INSERT",
+      "update_ContentDraft:UPDATE",
+      "delete_ContentDraft:DELETE"
+    ],
+    "ownership_columns": ["userId"]
+  },
+  {
+    "table_name": "Country",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_Country", "admin_write_Country"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": ["public_read_Country:SELECT", "admin_write_Country:ALL"],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "Event",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["admin_write_Event", "public_read_Event"],
+    "policy_commands": ["ALL", "SELECT"],
+    "policy_definitions": ["admin_write_Event:ALL", "public_read_Event:SELECT"],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "HarvestJob",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "update_HarvestJob",
+      "select_HarvestJob",
+      "insert_HarvestJob",
+      "delete_HarvestJob"
+    ],
+    "policy_commands": ["UPDATE", "SELECT", "INSERT", "DELETE"],
+    "policy_definitions": [
+      "update_HarvestJob:UPDATE",
+      "select_HarvestJob:SELECT",
+      "insert_HarvestJob:INSERT",
+      "delete_HarvestJob:DELETE"
+    ],
+    "ownership_columns": ["createdBy"]
+  },
+  {
+    "table_name": "Journalist",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "update_Journalist",
+      "select_Journalist",
+      "insert_Journalist",
+      "delete_Journalist"
+    ],
+    "policy_commands": ["UPDATE", "SELECT", "INSERT", "DELETE"],
+    "policy_definitions": [
+      "update_Journalist:UPDATE",
+      "select_Journalist:SELECT",
+      "insert_Journalist:INSERT",
+      "delete_Journalist:DELETE"
+    ],
+    "ownership_columns": ["personId"]
+  },
+  {
+    "table_name": "MediaOutlet",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "update_MediaOutlet",
+      "select_MediaOutlet",
+      "insert_MediaOutlet",
+      "delete_MediaOutlet"
+    ],
+    "policy_commands": ["UPDATE", "SELECT", "INSERT", "DELETE"],
+    "policy_definitions": [
+      "update_MediaOutlet:UPDATE",
+      "select_MediaOutlet:SELECT",
+      "insert_MediaOutlet:INSERT",
+      "delete_MediaOutlet:DELETE"
+    ],
+    "ownership_columns": ["organizationId"]
+  },
+  {
+    "table_name": "Organization",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "select_Organization",
+      "delete_Organization",
+      "update_Organization",
+      "insert_Organization"
+    ],
+    "policy_commands": ["SELECT", "DELETE", "UPDATE", "INSERT"],
+    "policy_definitions": [
+      "select_Organization:SELECT",
+      "delete_Organization:DELETE",
+      "update_Organization:UPDATE",
+      "insert_Organization:INSERT"
+    ],
+    "ownership_columns": ["personId"]
+  },
+  {
+    "table_name": "Person",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": ["insert_Person", "select_Person", "update_Person", "delete_Person"],
+    "policy_commands": ["INSERT", "SELECT", "UPDATE", "DELETE"],
+    "policy_definitions": [
+      "insert_Person:INSERT",
+      "select_Person:SELECT",
+      "update_Person:UPDATE",
+      "delete_Person:DELETE"
+    ],
+    "ownership_columns": ["createdBy"]
+  },
+  {
+    "table_name": "PersonNationality",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "select_PersonNationality",
+      "delete_PersonNationality",
+      "update_PersonNationality",
+      "insert_PersonNationality"
+    ],
+    "policy_commands": ["SELECT", "DELETE", "UPDATE", "INSERT"],
+    "policy_definitions": [
+      "select_PersonNationality:SELECT",
+      "delete_PersonNationality:DELETE",
+      "update_PersonNationality:UPDATE",
+      "insert_PersonNationality:INSERT"
+    ],
+    "ownership_columns": ["personId"]
+  },
+  {
+    "table_name": "Repercussion",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["admin_write_Repercussion", "public_read_Repercussion"],
+    "policy_commands": ["ALL", "SELECT"],
+    "policy_definitions": [
+      "admin_write_Repercussion:ALL",
+      "public_read_Repercussion:SELECT"
+    ],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "Session",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": ["update_Session", "insert_Session", "select_Session", "delete_Session"],
+    "policy_commands": ["UPDATE", "INSERT", "SELECT", "DELETE"],
+    "policy_definitions": [
+      "update_Session:UPDATE",
+      "insert_Session:INSERT",
+      "select_Session:SELECT",
+      "delete_Session:DELETE"
+    ],
+    "ownership_columns": ["userId"]
+  },
+  {
+    "table_name": "Source",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": ["insert_Source", "update_Source", "delete_Source", "select_Source"],
+    "policy_commands": ["INSERT", "UPDATE", "DELETE", "SELECT"],
+    "policy_definitions": [
+      "insert_Source:INSERT",
+      "update_Source:UPDATE",
+      "delete_Source:DELETE",
+      "select_Source:SELECT"
+    ],
+    "ownership_columns": ["createdBy"]
+  },
+  {
+    "table_name": "Statement",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "update_Statement",
+      "select_Statement",
+      "insert_Statement",
+      "delete_Statement"
+    ],
+    "policy_commands": ["UPDATE", "SELECT", "INSERT", "DELETE"],
+    "policy_definitions": [
+      "update_Statement:UPDATE",
+      "select_Statement:SELECT",
+      "insert_Statement:INSERT",
+      "delete_Statement:DELETE"
+    ],
+    "ownership_columns": ["personId", "organizationId", "createdBy"]
+  },
+  {
+    "table_name": "StatementAuthor",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "insert_StatementAuthor",
+      "delete_StatementAuthor",
+      "update_StatementAuthor",
+      "select_StatementAuthor"
+    ],
+    "policy_commands": ["INSERT", "DELETE", "UPDATE", "SELECT"],
+    "policy_definitions": [
+      "insert_StatementAuthor:INSERT",
+      "delete_StatementAuthor:DELETE",
+      "update_StatementAuthor:UPDATE",
+      "select_StatementAuthor:SELECT"
+    ],
+    "ownership_columns": ["personId", "organizationId"]
+  },
+  {
+    "table_name": "Tag",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": ["delete_Tag", "select_Tag", "insert_Tag", "update_Tag"],
+    "policy_commands": ["DELETE", "SELECT", "INSERT", "UPDATE"],
+    "policy_definitions": [
+      "delete_Tag:DELETE",
+      "select_Tag:SELECT",
+      "insert_Tag:INSERT",
+      "update_Tag:UPDATE"
+    ],
+    "ownership_columns": ["createdBy"]
+  },
+  {
+    "table_name": "TagAlias",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_TagAlias", "admin_write_TagAlias"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": [
+      "public_read_TagAlias:SELECT",
+      "admin_write_TagAlias:ALL"
+    ],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "Topic",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_Topic", "admin_write_Topic"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": ["public_read_Topic:SELECT", "admin_write_Topic:ALL"],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "TopicCase",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 4,
+    "policy_names": [
+      "delete_TopicCase",
+      "select_TopicCase",
+      "insert_TopicCase",
+      "update_TopicCase"
+    ],
+    "policy_commands": ["DELETE", "SELECT", "INSERT", "UPDATE"],
+    "policy_definitions": [
+      "delete_TopicCase:DELETE",
+      "select_TopicCase:SELECT",
+      "insert_TopicCase:INSERT",
+      "update_TopicCase:UPDATE"
+    ],
+    "ownership_columns": ["addedBy"]
+  },
+  {
+    "table_name": "TopicRelation",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["public_read_TopicRelation", "admin_write_TopicRelation"],
+    "policy_commands": ["SELECT", "ALL"],
+    "policy_definitions": [
+      "public_read_TopicRelation:SELECT",
+      "admin_write_TopicRelation:ALL"
+    ],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "User",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": ["admin_write_User", "public_read_User"],
+    "policy_commands": ["ALL", "SELECT"],
+    "policy_definitions": ["admin_write_User:ALL", "public_read_User:SELECT"],
+    "ownership_columns": []
+  },
+  {
+    "table_name": "affiliation_backfill_audit",
+    "status": "✅",
+    "rls_enabled": true,
+    "policies_count": 2,
+    "policy_names": [
+      "admin_write_affiliation_backfill_audit",
+      "public_read_affiliation_backfill_audit"
+    ],
+    "policy_commands": ["ALL", "SELECT"],
+    "policy_definitions": [
+      "admin_write_affiliation_backfill_audit:ALL",
+      "public_read_affiliation_backfill_audit:SELECT"
+    ],
+    "ownership_columns": []
+  }
+]
