@@ -16,16 +16,18 @@ const prisma = new PrismaClient()
 async function migrateLegacyNationalities() {
   console.log('🔄 Starting legacy nationality migration...\n')
 
-  const people = await prisma.person.findMany({
-    select: {
-      id: true,
-      name: true,
-      nationality: true,
-      nationalityArray: true,
-      primaryNationality: true,
-      nationalityDetail: true,
-    },
-  })
+  // Use raw query to bypass Prisma's type checking for corrupted data
+  const people = await prisma.$queryRaw<Array<{
+    id: string
+    name: string
+    nationality: string | null
+    nationalityArray: any // Can be string array OR corrupted string
+    primaryNationality: string | null
+    nationalityDetail: string | null
+  }>>`
+    SELECT id, name, nationality, "nationalityArray", "primaryNationality", "nationalityDetail"
+    FROM "Person"
+  `
 
   console.log(`Found ${people.length} people\n`)
 
@@ -55,10 +57,22 @@ async function migrateLegacyNationalities() {
         }
       }
 
-      if (person.nationalityArray && person.nationalityArray.length > 0) {
-        const codes = normalizeCountries(person.nationalityArray)
-        codes.forEach(c => nationalityCodes.add(c))
-        if (!primaryCode && codes.length > 0) primaryCode = codes[0]
+      // Handle nationalityArray - might be array or corrupted string
+      if (person.nationalityArray) {
+        let arrayToProcess: string[] = []
+
+        if (Array.isArray(person.nationalityArray)) {
+          arrayToProcess = person.nationalityArray
+        } else if (typeof person.nationalityArray === 'string') {
+          // Corrupted data - single string instead of array
+          arrayToProcess = [person.nationalityArray]
+        }
+
+        if (arrayToProcess.length > 0) {
+          const codes = normalizeCountries(arrayToProcess)
+          codes.forEach(c => nationalityCodes.add(c))
+          if (!primaryCode && codes.length > 0) primaryCode = codes[0]
+        }
       }
 
       if (nationalityCodes.size === 0) {

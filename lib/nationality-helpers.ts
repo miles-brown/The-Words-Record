@@ -39,14 +39,14 @@ export async function computeCachesForPerson(personId: string): Promise<void> {
 
   const primaryCode = primaryNationality?.countryCode || null
 
-  // Update Person caches
-  await prisma.person.update({
-    where: { id: personId },
-    data: {
-      nationality_primary_code: primaryCode,
-      nationality_codes_cached: codes,
-    },
-  })
+  // Update Person caches using raw SQL to avoid validation errors from corrupted data
+  await prisma.$executeRaw`
+    UPDATE "Person"
+    SET
+      "nationality_primary_code" = ${primaryCode},
+      "nationality_codes_cached" = ${codes}::text[]
+    WHERE id = ${personId}
+  `
 }
 
 /**
