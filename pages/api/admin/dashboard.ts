@@ -90,7 +90,7 @@ async function dashboardHandler(req: NextApiRequest, res: NextApiResponse) {
       prisma.source.count(),
       prisma.source.count({
         where: {
-          harvardCitation: {
+          contentSnapshot: {
             not: null
           }
         }
