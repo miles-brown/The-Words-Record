@@ -144,27 +144,16 @@ export default function PersonPage({ person }: PersonPageProps) {
                 )}
 
                 {/* Nationality */}
-                {(() => {
-                  // Collect nationality from various sources and flatten arrays
-                  const nationalityStrings: string[] = [];
-                  if (person.nationality) nationalityStrings.push(person.nationality);
-                  if (person.nationalityArray && Array.isArray(person.nationalityArray)) {
-                    nationalityStrings.push(...person.nationalityArray.map((n: any) => String(n)));
-                  }
-                  if (person.primaryNationality) nationalityStrings.push(person.primaryNationality);
-
-                  const codes = normalizeCountries(nationalityStrings);
-                  if (codes.length > 0) {
-                    return (
-                      <div className="info-row">
-                        <span className="info-label">Nationality:</span>
-                        <span className="info-value">
-                          {formatCountryDisplay(codes, { includeFlags: true, separator: ', ', maxDisplay: 5 })}
-                        </span>
-                      </div>
-                    );
-                  }
-                  return null;
+                {person.nationalities && person.nationalities.length > 0 && (() => {
+                  const codes = person.nationalities.map(n => n.countryCode);
+                  return (
+                    <div className="info-row">
+                      <span className="info-label">Nationality:</span>
+                      <span className="info-value">
+                        {formatCountryDisplay(codes, { includeFlags: true, separator: ', ', maxDisplay: 5 })}
+                      </span>
+                    </div>
+                  );
                 })()}
 
                 {person.racialGroup && (
@@ -780,6 +769,11 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     const person = await prisma.person.findUnique({
       where: { slug: params.slug },
       include: {
+        nationalities: {
+          include: {
+            country: true
+          }
+        },
         cases: {
           include: {
             tags: true,
@@ -852,4 +846,3 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return { notFound: true }
   }
 }
-
