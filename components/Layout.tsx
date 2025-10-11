@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import Head from 'next/head'
+import Script from 'next/script'
 import { ReactNode, useState, useEffect } from 'react'
 import SearchBox from './SearchBox'
 import Analytics from './Analytics'
@@ -40,19 +41,6 @@ export default function Layout({ children, title, description }: LayoutProps) {
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
-
-        {/* Google Analytics */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-26ERR1Y5ZZ"></script>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'G-26ERR1Y5ZZ');
-            `,
-          }}
-        />
 
         {/* Basic Meta Tags */}
         <title>{pageTitle}</title>
@@ -199,6 +187,18 @@ export default function Layout({ children, title, description }: LayoutProps) {
           </div>
         </footer>
       </div>
+      <Script
+        src="https://www.googletagmanager.com/gtag/js?id=G-26ERR1Y5ZZ"
+        strategy="afterInteractive"
+      />
+      <Script id="google-analytics" strategy="afterInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-26ERR1Y5ZZ');
+        `}
+      </Script>
     </>
   )
 }
