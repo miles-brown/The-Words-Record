@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
 import { withPermission } from '@/middleware/rbac'
-import { ApprovalStatus, JobStatus } from '@prisma/client'
+import { ApprovalStatus, JobStatus, AuditAction, AuditActorType } from '@prisma/client'
 import { recordAuditEvent, extractRequestContext } from '@/lib/audit'
 
 interface DashboardResponse {
