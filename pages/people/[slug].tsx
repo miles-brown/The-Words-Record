@@ -10,7 +10,7 @@ import { PersonWithRelations } from '@/types'
 import { prisma } from '@/lib/prisma'
 import { getAgeString } from '@/lib/ageUtils'
 import { getReligionIcon, getProfessionIcon } from '@/utils/icons'
-import { normalizeCountries, formatCountryDisplay } from '@/lib/countries'
+import { normalizeCountries, formatCountryDisplay, CountryCode } from '@/lib/countries'
 
 interface PersonPageProps {
   person: PersonWithRelations | null
@@ -145,7 +145,7 @@ export default function PersonPage({ person }: PersonPageProps) {
 
                 {/* Nationality */}
                 {person.nationalities && person.nationalities.length > 0 && (() => {
-                  const codes = person.nationalities.map(n => n.countryCode);
+                  const codes = person.nationalities.map(n => n.countryCode as CountryCode);
                   return (
                     <div className="info-row">
                       <span className="info-label">Nationality:</span>
@@ -846,3 +846,4 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return { notFound: true }
   }
 }
+
