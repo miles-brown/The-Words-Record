@@ -1,58 +1,61 @@
-node_modules
-.next/
-out/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
 .DS_Store
-*.log
+*.pem
 
-# Environment files (never commit these!)
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
-# Database files
-/prisma/dev.db
-/prisma/dev.db-journal
+# vercel
+.vercel
 
-# Supabase migration (applied to cloud, don't commit)
-supabase_migration.sql
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 
-# CRITICAL: INTERNAL-ONLY DOCUMENTATION
-# These files contain internal terminology and organizational notes
-# that should NEVER be exposed publicly, in the UI, database, or repository
-INTERNAL-README.md
-INTERNAL-NOTES.md
-INTERNAL-CLASSIFICATION.md
-.internal/
-docs/internal/
-**/internal-docs/**
-**/*-internal.*
-**/*-private.*
-
-# IDE
+# custom ignores
 .vscode/
-.idea/
-*.swp
-*.swo
-
-# Backups
-*.bak
-*.backup
-
-# Archives
-*.zip
-*.tar.gz
-
-# Database dumps
-*.sql
-!schema.sql
-
-# Temporary
-*.tmp
-*.temp
-.cache/
-.env.txt
-
-# Local-only to-do lists and notes
+*.log
+logs/
+data/auto-generated/
+prisma/dev.db
+*.patch
+build.log
+BingSiteAuth.xml
 Google AdSense to-do list.md
+IMMEDIATE-VERIFICATION-QUERIES.sql
+INTERNAL-README.md
+jasPIZ-harvester
+supabase_migration.sql
+backup_full.sql
+migration_pg.sql
+
+# ignore directories, then un-ignore specific subdirectories
+docs/
+!docs/rls/
+prisma/
+!prisma/migrations/
+supabase/
+!supabase/migrations/

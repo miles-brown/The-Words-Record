@@ -94,8 +94,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
     { href: '/admin/people', label: 'People', icon: '👤' },
     { href: '/admin/cases', label: 'Cases', icon: '📰' },
     { href: '/admin/organizations', label: 'Organizations', icon: '🏢' },
-    { href: '/admin/tags', label: 'Tags', icon: '🏷️' },
-    { href: '/admin/sources', label: 'Sources', icon: '📚' },
+    { href: '/admin/drafts', label: 'Drafts', icon: '✅' }
   ]
 
   return (
@@ -131,7 +130,13 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           <nav className="sidebar-nav">
             {menuItems.map((item) => (
               <Link href={item.href} key={item.href}>
-                <a className={`nav-item ${router.pathname === item.href ? 'active' : ''}`}>
+                <a
+                  className={`nav-item ${
+                    router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
+                      ? 'active'
+                      : ''
+                  }`}
+                >
                   <span className="nav-icon">{item.icon}</span>
                   <span className="nav-label">{item.label}</span>
                 </a>
