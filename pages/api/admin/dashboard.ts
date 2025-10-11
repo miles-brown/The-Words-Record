@@ -107,7 +107,8 @@ async function dashboardHandler(req: NextApiRequest, res: NextApiResponse) {
       prisma.apiKey.count({ where: { isActive: true } }),
       prisma.auditLog.count({
         where: {
-          action: 'API_KEY_AUTH',
+          action: AuditAction.LOGIN,
+          actorType: AuditActorType.API_KEY,
           status: 'SUCCESS',
           occuredAt: {
             gte: last24Hours
