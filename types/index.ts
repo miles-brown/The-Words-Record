@@ -6,7 +6,9 @@ import type {
   Statement as PrismaStatement,
   Source as PrismaSource,
   Tag as PrismaTag,
-  Affiliation as PrismaAffiliation
+  Affiliation as PrismaAffiliation,
+  PersonNationality as PrismaPersonNationality,
+  Country as PrismaCountry
 } from '@prisma/client'
 
 export type Person = PrismaPerson
@@ -31,7 +33,12 @@ export interface PaginatedResponse<T> {
 }
 
 // Extended types with relations
+export type PersonNationalityWithCountry = PrismaPersonNationality & {
+  country: PrismaCountry;
+};
+
 export interface PersonWithRelations extends Person {
+  nationalities?: PersonNationalityWithCountry[];
   cases?: CaseWithRelations[]
   statements?: StatementWithRelations[]
   _count?: {
