@@ -655,40 +655,48 @@ model Topic {
 }
 
 model Case {
-  id                                 String          @id(map: "Incident_pkey") @default(cuid())
-  slug                               String          @unique(map: "Incident_slug_key")
-  title                              String
-  summary                            String
-  description                        String
-  caseDate                           DateTime
-  publicationDate                    DateTime        @default(now())
-  status                             CaseStatus      @default(DOCUMENTED)
-  severity                           CaseSeverity?
-  severityScore                      Int?
-  locationCity                       String?
-  locationState                      String?
-  locationCountry                    String?
-  locationDetail                     String?
-  mediaFraming                       String?
-  triggeringEvent                    String?
-  outcome                            String?
-  isVerified                         Boolean         @default(false)
-  verifiedBy                         String?
-  verifiedAt                         DateTime?
-  viewCount                          Int             @default(0)
-  shareCount                         Int             @default(0)
-  createdAt                          DateTime        @default(now())
-  updatedAt                          DateTime        @updatedAt
-  originatingStatementId             String?
-  promotedAt                         DateTime?
-  promotedBy                         String?
-  promotionReason                    String?
-  qualificationScore                 Int?            @default(0)
-  responseCount                      Int?            @default(0)
-  mediaOutletCount                   Int?            @default(0)
-  hasPublicReaction                  Boolean?        @default(false)
-  hasRepercussion                    Boolean?        @default(false)
-  wasManuallyPromoted                Boolean?        @default(false)
+  id                     String        @id(map: "Incident_pkey") @default(cuid())
+  slug                   String        @unique(map: "Incident_slug_key")
+  title                  String
+  summary                String
+  description            String
+  caseDate               DateTime
+  publicationDate        DateTime      @default(now())
+  status                 CaseStatus    @default(DOCUMENTED)
+  severity               CaseSeverity?
+  severityScore          Int?
+  locationCity           String?
+  locationState          String?
+  locationCountry        String?
+  locationDetail         String?
+  mediaFraming           String?
+  triggeringEvent        String?
+  outcome                String?
+  isVerified             Boolean       @default(false)
+  verifiedBy             String?
+  verifiedAt             DateTime?
+  viewCount              Int           @default(0)
+  shareCount             Int           @default(0)
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+  originatingStatementId String?
+
+  // Classification & Promotion
+  isRealIncident      Boolean   @default(false) // True = multi-statement case
+  wasAutoImported     Boolean   @default(true) // True = imported statement page
+  promotedAt          DateTime?
+  promotedBy          String?
+  promotionReason     String?
+  wasManuallyPromoted Boolean?  @default(false)
+
+  // Qualification & Metrics
+  qualificationScore Int?     @default(0) // 0-100 promotion eligibility
+  responseCount      Int?     @default(0)
+  mediaOutletCount   Int?     @default(0)
+  hasPublicReaction  Boolean? @default(false)
+  hasRepercussion    Boolean? @default(false)
+
+  // Display & Management
   visibility                         CaseVisibility? @default(PUBLIC)
   isFeatured                         Boolean?        @default(false)
   isArchived                         Boolean?        @default(false)
