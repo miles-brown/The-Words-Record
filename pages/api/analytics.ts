@@ -36,12 +36,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         take: 10
       }),
 
-      // People by nationality
+      // People by nationality - using cached nationality field
       prisma.person.groupBy({
-        by: ['primaryNationality'],
+        by: ['nationality_primary_code'],
         _count: true,
-        where: { primaryNationality: { not: null } },
-        orderBy: { _count: { primaryNationality: 'desc' } },
+        where: { nationality_primary_code: { not: null } },
+        orderBy: { _count: { nationality_primary_code: 'desc' } },
         take: 8
       }),
 
@@ -185,7 +185,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         count: p._count
       })),
       peopleByNationality: peopleByNationality.map(p => ({
-        nationality: p.primaryNationality || 'Unknown',
+        nationality: p.nationality_primary_code || 'Unknown',
         count: p._count
       })),
       peopleByInfluence: peopleByInfluence.map(p => ({
