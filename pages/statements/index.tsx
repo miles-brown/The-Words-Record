@@ -88,14 +88,14 @@ export default function CasesPage() {
         ...(selectedTag && { tag: selectedTag })
       })
 
-      const response = await fetch(`/api/cases?${params}`)
-      if (!response.ok) throw new Error('Failed to fetch cases')
+      const response = await fetch(`/api/statements?${params}`)
+      if (!response.ok) throw new Error('Failed to fetch statements')
 
       const data = await response.json()
       setCases(data.cases)
       setPagination(data.pagination)
     } catch (err) {
-      setError('Failed to load cases. Please try again.')
+      setError('Failed to load statements. Please try again.')
       console.error(err)
     } finally {
       setLoading(false)
@@ -179,13 +179,13 @@ export default function CasesPage() {
             </>
           ) : cases.length === 0 ? (
             <div className="no-results">
-              <h2>No cases found</h2>
+              <h2>No statements found</h2>
               <p>Try adjusting your filters or check back later.</p>
             </div>
           ) : (
             cases.map((caseItem: any, index: number) => (
               <>
-                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
+                <Link href={`/statements/${caseItem.slug}`} key={caseItem.id}>
                   <article className="case-card stagger-item">
                     <div className="case-header">
                       <h2>{caseItem.title}</h2>
