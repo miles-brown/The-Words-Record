@@ -297,7 +297,7 @@ async function checkDeathUpdates(options: { force?: boolean; ageGroup?: string }
     const result = await searchDeathInfo(
       person.name,
       birthDate.toISOString().split('T')[0],
-      person.primaryNationality || 'Unknown'
+      person.nationality_primary_code || 'Unknown'
     )
 
     // Update last check time

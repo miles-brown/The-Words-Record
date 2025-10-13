@@ -63,8 +63,8 @@ export default function StatsPage() {
         <section className="stats-grid">
           <div className="stat-card">
             <div className="stat-number">{stats.counts.cases}</div>
-            <div className="stat-label">Documented Cases</div>
-            <Link href="/cases" className="stat-link">View all →</Link>
+            <div className="stat-label">Documented Statements</div>
+            <Link href="/statements" className="stat-link">View all →</Link>
           </div>
 
           <div className="stat-card">
@@ -100,7 +100,7 @@ export default function StatsPage() {
             <h2>Recent Activity</h2>
             <div className="recent-list">
               {stats.recentCases.map((caseItem: any) => (
-                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
+                <Link href={`/statements/${caseItem.slug}`} key={caseItem.id}>
                   <div className="recent-item">
                     <h3>{caseItem.title}</h3>
                     <span className="date">

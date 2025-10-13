@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import Layout from '@/components/Layout'
 import { CaseCardSkeleton } from '@/components/LoadingSkeletons'
-import { CaseWithRelations } from '@/types'
 import { format } from 'date-fns'
 
 export default function CasesPage() {
@@ -17,6 +16,8 @@ export default function CasesPage() {
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState('date-desc')
   const [selectedTag, setSelectedTag] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [includeArchived, setIncludeArchived] = useState(false)
   const [tags, setTags] = useState([])
 
   const getPageNumbers = () => {
@@ -24,19 +25,16 @@ export default function CasesPage() {
     const { page, totalPages } = pagination
 
     if (totalPages <= 7) {
-      // Show all pages if 7 or fewer
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i)
       }
     } else {
-      // Always show first page
       pages.push(1)
 
       if (page > 3) {
         pages.push('...')
       }
 
-      // Show pages around current page
       const start = Math.max(2, page - 1)
       const end = Math.min(totalPages - 1, page + 1)
 
@@ -48,7 +46,6 @@ export default function CasesPage() {
         pages.push('...')
       }
 
-      // Always show last page
       pages.push(totalPages)
     }
 
@@ -62,7 +59,7 @@ export default function CasesPage() {
   useEffect(() => {
     fetchCases(1)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy, selectedTag])
+  }, [sortBy, selectedTag, statusFilter, includeArchived])
 
   const fetchTags = async () => {
     try {
@@ -85,7 +82,9 @@ export default function CasesPage() {
         page: page.toString(),
         limit: '10',
         sortBy: sortBy,
-        ...(selectedTag && { tag: selectedTag })
+        ...(selectedTag && { tag: selectedTag }),
+        ...(statusFilter && { status: statusFilter }),
+        ...(includeArchived && { includeArchived: 'true' })
       })
 
       const response = await fetch(`/api/cases?${params}`)
@@ -102,35 +101,53 @@ export default function CasesPage() {
     }
   }
 
+  const hasActiveFilters = selectedTag || statusFilter || includeArchived
+
   return (
     <Layout
-      title="Cases"
-      description="Browse documented statements and public responses"
+      title="Cases - Multi-Statement Incidents"
+      description="Browse high-impact cases with multiple statements, responses, and widespread coverage"
     >
       <div className="cases-page">
         <div className="page-header">
-          <h1>What?</h1>
+          <h1>Cases</h1>
           <p className="page-description">
-            Comprehensive documentation of public statements, allegations, and responses.
-            Each entry is thoroughly researched with verified sources.
+            Major incidents and controversies with multiple statements, public responses,
+            and significant coverage. Cases represent clusters of related statements
+            that have generated substantial public attention.
           </p>
-        </div>
-
-        {/* Top Ad Banner */}
-        <div className="ad-banner ad-banner-top">
-          <p>Advertisement</p>
+          <div className="cases-vs-statements">
+            <p>
+              Looking for individual statements? Visit the <Link href="/statements">Statements page</Link>.
+            </p>
+          </div>
         </div>
 
         {/* Filters and Sorting */}
         <div className="controls">
           <div className="filter-group">
-            <label htmlFor="tag-filter">Filter by tag:</label>
+            <label htmlFor="status-filter">Status:</label>
+            <select
+              id="status-filter"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="">All Statuses</option>
+              <option value="DOCUMENTED">Documented</option>
+              <option value="ONGOING">Ongoing</option>
+              <option value="RESOLVED">Resolved</option>
+              <option value="DISPUTED">Disputed</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label htmlFor="tag-filter">Topic:</label>
             <select
               id="tag-filter"
               value={selectedTag}
               onChange={(e) => setSelectedTag(e.target.value)}
             >
-              <option value="">All Tags</option>
+              <option value="">All Topics</option>
               {tags.map((tag: any) => (
                 <option key={tag.id} value={tag.slug}>
                   {tag.name}
@@ -153,12 +170,28 @@ export default function CasesPage() {
             </select>
           </div>
 
-          {selectedTag && (
+          <div className="checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                checked={includeArchived}
+                onChange={(e) => setIncludeArchived(e.target.checked)}
+              />
+              <span>Include archived</span>
+            </label>
+          </div>
+
+          {hasActiveFilters && (
             <button
-              className="clear-filter"
-              onClick={() => setSelectedTag('')}
+              type="button"
+              className="clear-filters"
+              onClick={() => {
+                setSelectedTag('')
+                setStatusFilter('')
+                setIncludeArchived(false)
+              }}
             >
-              Clear Filter
+              Clear Filters
             </button>
           )}
         </div>
@@ -166,75 +199,127 @@ export default function CasesPage() {
         {error && (
           <div className="error-message" role="alert">
             <p>{error}</p>
-            <button onClick={() => fetchCases(pagination.page)}>Try Again</button>
+            <button type="button" onClick={() => fetchCases(pagination.page)}>Try Again</button>
           </div>
         )}
 
         <div className="cases-list">
           {loading ? (
             <>
-              {[...Array(10)].map((_, i) => (
+              {[...Array(5)].map((_, i) => (
                 <CaseCardSkeleton key={i} />
               ))}
             </>
           ) : cases.length === 0 ? (
-            <div className="no-results">
-              <h2>No cases found</h2>
-              <p>Try adjusting your filters or check back later.</p>
+            <div className="empty-state">
+              <div className="empty-state-icon">📋</div>
+              <h2>No Cases Found</h2>
+              <p>
+                Cases are major incidents with multiple statements and widespread coverage.
+                {hasActiveFilters ? (
+                  <>
+                    <br />
+                    Try adjusting your filters to see more results.
+                  </>
+                ) : (
+                  <>
+                    <br />
+                    Individual statements are automatically promoted to cases when they meet
+                    certain criteria: multiple responses, media coverage, or significant public reaction.
+                    <br /><br />
+                    Currently, no statements have been promoted to case status. Check the{' '}
+                    <Link href="/statements">Statements page</Link> to see all documented statements.
+                  </>
+                )}
+              </p>
             </div>
           ) : (
-            cases.map((caseItem: any, index: number) => (
-              <>
-                <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
-                  <article className="case-card stagger-item">
-                    <div className="case-header">
+            cases.map((caseItem: any) => (
+              <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
+                <article className="case-card">
+                  <div className="case-header">
+                    <div className="case-title-section">
                       <h2>{caseItem.title}</h2>
-                      <span className="date">
-                        {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
-                      </span>
+                      <div className="case-meta">
+                        <span className="date">
+                          {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
+                        </span>
+                        {caseItem.status && (
+                          <>
+                            <span className="separator">•</span>
+                            <span className={`status status-${caseItem.status.toLowerCase()}`}>
+                              {caseItem.status}
+                            </span>
+                          </>
+                        )}
+                        {caseItem.severity && (
+                          <>
+                            <span className="separator">•</span>
+                            <span className={`severity severity-${caseItem.severity.toLowerCase()}`}>
+                              {caseItem.severity}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
+                  </div>
 
-                    <p className="case-excerpt">{caseItem.summary}</p>
+                  <p className="case-summary">{caseItem.summary}</p>
 
-                    {caseItem.people && caseItem.people.length > 0 && (
-                      <div className="involved-people">
-                        <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
+                  {caseItem.people && caseItem.people.length > 0 && (
+                    <div className="involved-section">
+                      <strong>People Involved:</strong>{' '}
+                      <span>{caseItem.people.map((p: any) => p.name).join(', ')}</span>
+                    </div>
+                  )}
+
+                  {caseItem.organizations && caseItem.organizations.length > 0 && (
+                    <div className="involved-section">
+                      <strong>Organizations:</strong>{' '}
+                      <span>{caseItem.organizations.map((o: any) => o.name).join(', ')}</span>
+                    </div>
+                  )}
+
+                  <div className="case-footer">
+                    <div className="case-metrics">
+                      <div className="metric">
+                        <span className="metric-value">{caseItem._count?.statements || 0}</span>
+                        <span className="metric-label">
+                          statement{caseItem._count?.statements !== 1 ? 's' : ''}
+                        </span>
                       </div>
-                    )}
-
-                    <div className="case-footer">
-                      <div className="case-stats">
-                        <span>
-                          {caseItem._count?.statements || 0} statement{caseItem._count?.statements !== 1 ? 's' : ''}
-                        </span>
-                        <span>•</span>
-                        <span>
-                          {caseItem._count?.responses || 0} response{caseItem._count?.responses !== 1 ? 's' : ''}
-                        </span>
-                        <span>•</span>
-                        <span>
-                          {caseItem._count?.sources || 0} source{caseItem._count?.sources !== 1 ? 's' : ''}
+                      <div className="metric">
+                        <span className="metric-value">{caseItem._count?.responses || 0}</span>
+                        <span className="metric-label">
+                          response{caseItem._count?.responses !== 1 ? 's' : ''}
                         </span>
                       </div>
-
-                      {caseItem.tags && caseItem.tags.length > 0 && (
-                        <div className="tags">
-                          {caseItem.tags.map((tag: any) => (
-                            <span key={tag.id} className="tag">{tag.name}</span>
-                          ))}
+                      <div className="metric">
+                        <span className="metric-value">{caseItem._count?.sources || 0}</span>
+                        <span className="metric-label">
+                          source{caseItem._count?.sources !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                      {caseItem._count?.people > 0 && (
+                        <div className="metric">
+                          <span className="metric-value">{caseItem._count.people}</span>
+                          <span className="metric-label">
+                            {caseItem._count.people === 1 ? 'person' : 'people'}
+                          </span>
                         </div>
                       )}
                     </div>
-                  </article>
-                </Link>
 
-                {/* Ad Banner every 2 cases */}
-                {(index + 1) % 2 === 0 && index !== cases.length - 1 && (
-                  <div className="ad-banner ad-banner-between" key={`ad-${index}`}>
-                    <p>Advertisement</p>
+                    {caseItem.tags && caseItem.tags.length > 0 && (
+                      <div className="tags">
+                        {caseItem.tags.map((tag: any) => (
+                          <span key={tag.id} className="tag">{tag.name}</span>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </>
+                </article>
+              </Link>
             ))
           )}
         </div>
@@ -242,6 +327,7 @@ export default function CasesPage() {
         {!loading && pagination.totalPages > 1 && (
           <div className="pagination">
             <button
+              type="button"
               onClick={() => fetchCases(pagination.page - 1)}
               disabled={pagination.page === 1}
               aria-label="Previous page"
@@ -254,6 +340,7 @@ export default function CasesPage() {
               {getPageNumbers().map((pageNum, index) => (
                 typeof pageNum === 'number' ? (
                   <button
+                    type="button"
                     key={index}
                     onClick={() => fetchCases(pageNum)}
                     className={`page-number ${pagination.page === pageNum ? 'active' : ''}`}
@@ -271,6 +358,7 @@ export default function CasesPage() {
             </div>
 
             <button
+              type="button"
               onClick={() => fetchCases(pagination.page + 1)}
               disabled={pagination.page === pagination.totalPages}
               aria-label="Next page"
@@ -284,7 +372,7 @@ export default function CasesPage() {
 
       <style jsx>{`
         .cases-page {
-          max-width: 900px;
+          max-width: 1000px;
           margin: 0 auto;
         }
 
@@ -303,31 +391,37 @@ export default function CasesPage() {
           font-size: 1.05rem;
           color: var(--text-secondary);
           line-height: 1.8;
-          max-width: 700px;
-          margin: 0 auto;
+          max-width: 750px;
+          margin: 0 auto 1rem;
         }
 
-        .ad-banner {
-          background: var(--background-secondary);
-          border: 1px solid var(--border-primary);
-          border-radius: 4px;
-          padding: 3rem;
-          text-align: center;
-          color: var(--text-secondary);
-          margin-bottom: 2rem;
-        }
-
-        .ad-banner-top {
+        .cases-vs-statements {
           margin-top: 1rem;
+          padding: 1rem;
+          background: var(--background-secondary);
+          border-radius: 6px;
+          display: inline-block;
         }
 
-        .ad-banner-between {
-          margin: 2rem 0;
+        .cases-vs-statements p {
+          margin: 0;
+          font-size: 0.95rem;
+          color: var(--text-secondary);
+        }
+
+        .cases-vs-statements a {
+          color: var(--accent-primary);
+          text-decoration: underline;
+          font-weight: 500;
+        }
+
+        .cases-vs-statements a:hover {
+          color: #2c3e50;
         }
 
         .controls {
           display: flex;
-          gap: 1.5rem;
+          gap: 1rem;
           align-items: flex-end;
           padding: 1.5rem;
           background: var(--background-primary);
@@ -343,7 +437,7 @@ export default function CasesPage() {
           flex-direction: column;
           gap: 0.5rem;
           flex: 1;
-          min-width: 200px;
+          min-width: 160px;
         }
 
         .filter-group label,
@@ -376,7 +470,28 @@ export default function CasesPage() {
           border-color: var(--accent-primary);
         }
 
-        .clear-filter {
+        .checkbox-group {
+          display: flex;
+          align-items: center;
+          padding-top: 1.5rem;
+        }
+
+        .checkbox-group label {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          cursor: pointer;
+          font-size: 0.9rem;
+          color: var(--text-primary);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+          cursor: pointer;
+          width: 18px;
+          height: 18px;
+        }
+
+        .clear-filters {
           background: var(--text-secondary);
           color: white;
           border: none;
@@ -387,9 +502,10 @@ export default function CasesPage() {
           font-weight: 500;
           transition: background 0.2s;
           white-space: nowrap;
+          margin-top: 1.5rem;
         }
 
-        .clear-filter:hover {
+        .clear-filters:hover {
           background: var(--text-primary);
         }
 
@@ -424,59 +540,154 @@ export default function CasesPage() {
         .cases-list {
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1.5rem;
+        }
+
+        .empty-state {
+          text-align: center;
+          padding: 5rem 2rem;
+          background: var(--background-secondary);
+          border-radius: 8px;
+          border: 1px solid var(--border-primary);
+        }
+
+        .empty-state-icon {
+          font-size: 4rem;
+          margin-bottom: 1.5rem;
+          opacity: 0.5;
+        }
+
+        .empty-state h2 {
+          color: var(--text-primary);
+          margin-bottom: 1rem;
+          font-size: 1.75rem;
+        }
+
+        .empty-state p {
+          color: var(--text-secondary);
+          line-height: 1.8;
+          max-width: 600px;
+          margin: 0 auto;
+        }
+
+        .empty-state a {
+          color: var(--accent-primary);
+          text-decoration: underline;
+          font-weight: 500;
+        }
+
+        .empty-state a:hover {
+          color: #2c3e50;
         }
 
         .case-card {
           border: 1px solid var(--border-primary);
-          border-radius: 6px;
-          padding: 1.75rem;
+          border-radius: 8px;
+          padding: 2rem;
           background: var(--background-primary);
           cursor: pointer;
           transition: all 0.2s ease;
         }
 
         .case-card:hover {
-          border-color: var(--border-secondary);
-          box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+          border-color: var(--accent-primary);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          transform: translateY(-2px);
         }
 
         .case-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 1rem;
-          gap: 1rem;
+          margin-bottom: 1.25rem;
         }
 
-        .case-header h2 {
-          font-size: 1.4rem;
+        .case-title-section h2 {
+          font-size: 1.5rem;
           color: var(--text-primary);
           line-height: 1.4;
-          flex: 1;
+          margin-bottom: 0.75rem;
+        }
+
+        .case-meta {
+          display: flex;
+          gap: 0.75rem;
+          align-items: center;
+          flex-wrap: wrap;
+          font-size: 0.9rem;
         }
 
         .date {
-          font-size: 0.85rem;
           color: var(--text-secondary);
-          white-space: nowrap;
-          padding-top: 0.25rem;
         }
 
-        .case-excerpt {
+        .separator {
+          color: var(--text-secondary);
+          opacity: 0.5;
+        }
+
+        .status,
+        .severity {
+          padding: 0.25rem 0.65rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+        }
+
+        .status-documented {
+          background: #e0f2fe;
+          color: #0369a1;
+        }
+
+        .status-ongoing {
+          background: #fef3c7;
+          color: #d97706;
+        }
+
+        .status-resolved {
+          background: #dcfce7;
+          color: #15803d;
+        }
+
+        .status-disputed {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+
+        .severity-low {
+          background: #f0fdf4;
+          color: #15803d;
+        }
+
+        .severity-moderate {
+          background: #fef3c7;
+          color: #d97706;
+        }
+
+        .severity-high {
+          background: #fee2e2;
+          color: #dc2626;
+        }
+
+        .severity-critical {
+          background: #1e1b4b;
+          color: white;
+        }
+
+        .case-summary {
           color: var(--text-secondary);
           line-height: 1.7;
           margin-bottom: 1.25rem;
-          font-size: 0.98rem;
+          font-size: 1rem;
         }
 
-        .involved-people {
+        .involved-section {
           font-size: 0.9rem;
           color: var(--text-secondary);
-          margin-bottom: 1rem;
+          margin-bottom: 0.75rem;
+          line-height: 1.6;
         }
 
-        .involved-people strong {
+        .involved-section strong {
           color: var(--text-primary);
           font-weight: 600;
         }
@@ -486,17 +697,37 @@ export default function CasesPage() {
           justify-content: space-between;
           align-items: center;
           flex-wrap: wrap;
-          gap: 1rem;
-          padding-top: 1rem;
+          gap: 1.25rem;
+          padding-top: 1.25rem;
+          margin-top: 1.25rem;
           border-top: 1px solid var(--border-primary);
         }
 
-        .case-stats {
+        .case-metrics {
           display: flex;
-          gap: 0.75rem;
+          gap: 1.5rem;
           align-items: center;
-          font-size: 0.85rem;
+          flex-wrap: wrap;
+        }
+
+        .metric {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.25rem;
+        }
+
+        .metric-value {
+          font-size: 1.5rem;
+          font-weight: 700;
+          color: var(--accent-primary);
+        }
+
+        .metric-label {
+          font-size: 0.75rem;
           color: var(--text-secondary);
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
         }
 
         .tags {
@@ -508,20 +739,11 @@ export default function CasesPage() {
         .tag {
           background: var(--background-secondary);
           color: var(--text-primary);
-          padding: 0.35rem 0.75rem;
-          border-radius: 3px;
+          padding: 0.4rem 0.8rem;
+          border-radius: 4px;
           font-size: 0.8rem;
           border: 1px solid var(--border-primary);
-        }
-
-        .no-results {
-          text-align: center;
-          padding: 4rem 0;
-        }
-
-        .no-results h2 {
-          color: var(--text-secondary);
-          margin-bottom: 1rem;
+          font-weight: 500;
         }
 
         .pagination {
@@ -600,13 +822,33 @@ export default function CasesPage() {
             font-size: 2rem;
           }
 
+          .controls {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .filter-group,
+          .sort-group {
+            min-width: auto;
+          }
+
+          .checkbox-group {
+            padding-top: 0;
+          }
+
+          .clear-filters {
+            margin-top: 0;
+          }
+
           .case-header {
             flex-direction: column;
             gap: 0.5rem;
           }
 
-          .date {
-            align-self: flex-start;
+          .case-meta {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
           }
 
           .case-footer {
@@ -614,8 +856,13 @@ export default function CasesPage() {
             align-items: flex-start;
           }
 
-          .case-stats {
+          .case-metrics {
             width: 100%;
+            justify-content: space-between;
+          }
+
+          .metric {
+            flex: 1;
           }
         }
       `}</style>

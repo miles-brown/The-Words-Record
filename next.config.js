@@ -4,20 +4,7 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  async redirects() {
-    return [
-      {
-        source: '/cases',
-        destination: '/cases',
-        permanent: true,
-      },
-      {
-        source: '/cases/:slug',
-        destination: '/cases/:slug',
-        permanent: true,
-      },
-    ]
-  },
+  // Redirects are handled by redirect pages in pages/cases/*
 }
 
 const withPWA = require('@imbios/next-pwa')({
