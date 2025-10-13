@@ -11,59 +11,59 @@ datasource db {
 }
 
 model User {
-  id             String            @id @default(cuid())
-  email          String            @unique
-  username       String            @unique
-  passwordHash   String
-  role           UserRole          @default(ADMIN)
-  firstName      String?
-  lastName       String?
-  avatar         String?
-  mfaSecret      String?
-  mfaEnabled     Boolean           @default(false)
-  mfaRecoveryCodes String[]       @default([])
-  isActive       Boolean           @default(true)
-  emailVerified  Boolean           @default(false)
-  lastLogin      DateTime?
-  lastLoginIp    String?
-  lastLoginUserAgent String?
-  loginAttempts  Int               @default(0)
-  lockedUntil    DateTime?
-  preferences    Json?
+  id                      String            @id @default(cuid())
+  email                   String            @unique
+  username                String            @unique
+  passwordHash            String
+  role                    UserRole          @default(ADMIN)
+  firstName               String?
+  lastName                String?
+  avatar                  String?
+  mfaSecret               String?
+  mfaEnabled              Boolean           @default(false)
+  mfaRecoveryCodes        String[]          @default([])
+  isActive                Boolean           @default(true)
+  emailVerified           Boolean           @default(false)
+  lastLogin               DateTime?
+  lastLoginIp             String?
+  lastLoginUserAgent      String?
+  loginAttempts           Int               @default(0)
+  lockedUntil             DateTime?
+  preferences             Json?
   emailVerificationSentAt DateTime?
   passwordResetSentAt     DateTime?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  sessions       Session[]
-  apiKeys        ApiKey[]
-  contentDrafts  ContentDraft[]
-  approvals      ContentApproval[] @relation("ReviewerApprovals")
-  harvestJobs    HarvestJob[]      @relation("JobCreator")
-  auditLogs      AuditLog[]        @relation("AuditUser")
-  tokens         UserToken[]
-  groups         UserGroup[]
+  createdAt               DateTime          @default(now())
+  updatedAt               DateTime          @updatedAt
+  sessions                Session[]
+  apiKeys                 ApiKey[]
+  contentDrafts           ContentDraft[]
+  approvals               ContentApproval[] @relation("ReviewerApprovals")
+  harvestJobs             HarvestJob[]      @relation("JobCreator")
+  auditLogs               AuditLog[]        @relation("AuditUser")
+  tokens                  UserToken[]
+  groups                  UserGroup[]
 
   @@index([role])
   @@index([isActive])
 }
 
 model Session {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   userId        String?
   apiKeyId      String?
-  token         String   @unique
-  refreshToken  String?  @unique
+  token         String    @unique
+  refreshToken  String?   @unique
   ipAddress     String?
   userAgent     String?
-  issuedAt      DateTime @default(now())
+  issuedAt      DateTime  @default(now())
   expiresAt     DateTime
   rotatedAt     DateTime?
   revokedAt     DateTime?
   invalidatedAt DateTime?
-  createdAt     DateTime @default(now())
+  createdAt     DateTime  @default(now())
 
-  user          User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKey        ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  apiKey ApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([apiKeyId])
@@ -90,19 +90,19 @@ model ApiKey {
   revokedAt         DateTime?
   lastRotatedAt     DateTime?
 
-  user              User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
-  sessions          Session[]
-  auditLogs         AuditLog[]
+  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sessions  Session[]
+  auditLogs AuditLog[]
 
   @@index([userId])
   @@index([isActive])
 }
 
 model AuditLog {
-  id          String          @id @default(cuid())
+  id          String         @id @default(cuid())
   action      AuditAction
   actorId     String?
-  actorType   AuditActorType  @default(ANONYMOUS)
+  actorType   AuditActorType @default(ANONYMOUS)
   userId      String?
   apiKeyId    String?
   entityType  String?
@@ -112,12 +112,12 @@ model AuditLog {
   metadata    Json?
   ipAddress   String?
   userAgent   String?
-  status      AuditStatus     @default(SUCCESS)
-  occuredAt   DateTime        @default(now())
-  createdAt   DateTime        @default(now())
+  status      AuditStatus    @default(SUCCESS)
+  occuredAt   DateTime       @default(now())
+  createdAt   DateTime       @default(now())
 
-  user        User?           @relation("AuditUser", fields: [userId], references: [id], onDelete: SetNull)
-  apiKey      ApiKey?         @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  user   User?   @relation("AuditUser", fields: [userId], references: [id], onDelete: SetNull)
+  apiKey ApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
 
   @@index([actorType, actorId])
   @@index([entityType, entityId])
@@ -127,20 +127,20 @@ model AuditLog {
 }
 
 model ContentDraft {
-  id          String             @id @default(cuid())
-  userId      String
-  contentType AdminContentType
-  contentId   String?
-  data        Json
-  status      DraftStatus        @default(DRAFT)
-  notes       String?
-  submittedAt DateTime?
+  id           String           @id @default(cuid())
+  userId       String
+  contentType  AdminContentType
+  contentId    String?
+  data         Json
+  status       DraftStatus      @default(DRAFT)
+  notes        String?
+  submittedAt  DateTime?
   lastDiffHash String?
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
 
-  user        User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  approvals   ContentApproval[]
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  approvals ContentApproval[]
 
   @@index([userId])
   @@index([contentType, status])
@@ -148,15 +148,15 @@ model ContentDraft {
 }
 
 model ContentApproval {
-  id          String          @id @default(cuid())
-  draftId     String
-  reviewerId  String
-  status      ApprovalStatus  @default(PENDING)
-  comments    String?
-  reviewedAt  DateTime        @default(now())
+  id         String         @id @default(cuid())
+  draftId    String
+  reviewerId String
+  status     ApprovalStatus @default(PENDING)
+  comments   String?
+  reviewedAt DateTime       @default(now())
 
-  draft       ContentDraft    @relation(fields: [draftId], references: [id], onDelete: Cascade)
-  reviewer    User            @relation("ReviewerApprovals", fields: [reviewerId], references: [id], onDelete: Cascade)
+  draft    ContentDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  reviewer User         @relation("ReviewerApprovals", fields: [reviewerId], references: [id], onDelete: Cascade)
 
   @@index([draftId])
   @@index([reviewerId])
@@ -164,21 +164,21 @@ model ContentApproval {
 }
 
 model HarvestJob {
-  id          String       @id @default(cuid())
+  id          String      @id @default(cuid())
   type        HarvestType
-  status      JobStatus    @default(PENDING)
+  status      JobStatus   @default(PENDING)
   config      Json
   results     Json?
   error       String?
-  retryCount  Int          @default(0)
-  priority    Int          @default(5)
+  retryCount  Int         @default(0)
+  priority    Int         @default(5)
   scheduledAt DateTime?
   startedAt   DateTime?
   completedAt DateTime?
   createdBy   String?
-  createdAt   DateTime     @default(now())
+  createdAt   DateTime    @default(now())
 
-  creator     User?        @relation("JobCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  creator User? @relation("JobCreator", fields: [createdBy], references: [id], onDelete: SetNull)
 
   @@index([status, type])
   @@index([scheduledAt])
@@ -186,29 +186,29 @@ model HarvestJob {
 }
 
 model UserToken {
-  id         String         @id @default(cuid())
+  id         String        @id @default(cuid())
   userId     String
-  tokenHash  String         @unique
+  tokenHash  String        @unique
   tokenType  UserTokenType
   expiresAt  DateTime
   consumedAt DateTime?
   metadata   Json?
-  createdAt  DateTime       @default(now())
+  createdAt  DateTime      @default(now())
 
-  user       User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, tokenType])
   @@index([expiresAt])
 }
 
 model Group {
-  id           String        @id @default(cuid())
-  name         String        @unique
-  description  String?
-  permissions  String[]      @default([])
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  members      UserGroup[]
+  id          String      @id @default(cuid())
+  name        String      @unique
+  description String?
+  permissions String[]    @default([])
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  members     UserGroup[]
 
   @@index([name])
 }
@@ -219,182 +219,180 @@ model UserGroup {
   groupId   String
   createdAt DateTime @default(now())
 
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
 
   @@unique([userId, groupId])
   @@index([groupId])
 }
 
 model Person {
-  id                      String                   @id @default(cuid())
-  slug                    String                   @unique
-  name                    String
-  bio                     String?
-  imageUrl                String?
-  profession              ProfessionType           @default(OTHER)
-  professionDetail        String?
-  nationality             String?
-  nationalityDetail       String?
-  birthDate               DateTime?
-  deathDate               DateTime?
-  akaNames                String[]
-  background              String?
-  racialGroup             String?
-  religion                String?
-  bestKnownFor            String?
-  birthPlace              String?
-  politicalBeliefs        String?
-  politicalParty          String?
-  residence               String?
-  roleDescription         String?
-  yearsActive             String?
-  deathPlace              String?
-  religionDenomination    String?
-  verificationLevel       VerificationLevel        @default(UNVERIFIED)
-  verifiedAt              DateTime?
-  verifiedBy              String?
-  statementCount          Int                      @default(0)
-  incidentCount           Int                      @default(0)
-  lastActiveDate          DateTime?
-  createdAt               DateTime                 @default(now())
-  updatedAt               DateTime                 @updatedAt
-  fullName                String?
-  firstName               String?
-  middleName              String?
-  lastName                String?
-  namePrefix              String?
-  nameSuffix              String?
-  aliases                 String[]
-  hebrewName              String?
-  arabicName              String?
-  nativeName              String?
-  dateOfBirth             DateTime?
-  age                     Int?
-  gender                  Gender?
-  nationalityArray        String[]                 // DEPRECATED: use PersonNationality
-  primaryNationality      String?                  // DEPRECATED: use PersonNationality
-  nationality_primary_code String?                 @db.VarChar(2) // Computed cache from PersonNationality
-  nationality_codes_cached String[]                @default([])    // Computed cache from PersonNationality
-  ethnicity               String[]
-  professionArray         Profession[]
-  primaryProfession       Profession?
-  professionDetails       String?
-  industry                Industry?
-  specialization          String?
-  yearsExperience         Int?
-  educationLevel          EducationLevel?
-  degrees                 String[]
-  universities            String[]
-  academicTitles          String[]
-  currentTitle            String?
-  currentOrganization     String?
-  currentOrgId            String?
-  employmentStatus        EmploymentStatus?
-  isRetired               Boolean?                 @default(false)
-  retirementDate          DateTime?
-  shortBio                String?                  @db.VarChar(500)
-  publicFigure            Boolean?                 @default(false)
-  celebrityStatus         CelebrityStatus?
-  notableFor              String[]
-  awards                  String[]
-  publications            String[]
-  influenceScore          Float?
-  influenceLevel          PersonInfluenceLevel?
-  hasTwitter              Boolean?                 @default(false)
-  twitterHandle           String?
-  twitterFollowers        Int?
-  twitterVerified         Boolean?                 @default(false)
-  hasLinkedIn             Boolean?                 @default(false)
-  linkedInUrl             String?
-  linkedInConnections     Int?
-  hasFacebook             Boolean?                 @default(false)
-  facebookUrl             String?
-  facebookFollowers       Int?
-  hasInstagram            Boolean?                 @default(false)
-  instagramHandle         String?
-  instagramFollowers      Int?
-  totalSocialReach        Int?
-  mediaAppearances        Int?                     @default(0)
-  citationCount           Int?                     @default(0)
-  politicalAffiliation    PoliticalAffiliation?
-  politicalLeaning        PoliticalLeaning?
-  knownPositions          String[]
-  advocacy                String[]
-  isPolitician            Boolean?                 @default(false)
-  isActivist              Boolean?                 @default(false)
-  isLobbyist              Boolean?                 @default(false)
-  boardPositions          Int?                     @default(0)
-  hasControversies        Boolean?                 @default(false)
-  controversyScore        Float?
-  controversyNotes        String?
-  reputationStatus        ReputationStatus?
-  reputationNotes         String?
-  hasBeenCancelled        Boolean?                 @default(false)
-  cancelledDate           DateTime?
-  cancelledReason         String?
-  hasBeenSuspended        Boolean?                 @default(false)
-  hasBeenFired            Boolean?                 @default(false)
-  hasResigned             Boolean?                 @default(false)
-  hasLegalIssues          Boolean?                 @default(false)
-  legalIssueNotes         String?
-  underInvestigation      Boolean?                 @default(false)
-  investigationType       String?
-  hasSanctions            Boolean?                 @default(false)
-  sanctionDetails         String?
-  hasCriminalRecord       Boolean?                 @default(false)
-  criminalNotes           String?
-  responseCount           Int?                     @default(0)
-  sourceCount             Int?                     @default(0)
-  criticismsMade          Int?                     @default(0)
-  criticismsReceived      Int?                     @default(0)
-  supportGiven            Int?                     @default(0)
-  supportReceived         Int?                     @default(0)
-  firstActivityDate       DateTime?
-  lastActivityDate        DateTime?
-  mostActiveYear          Int?
-  isVerified              Boolean?                 @default(false)
-  personVerificationLevel PersonVerificationLevel? @default(UNVERIFIED)
-  verificationDate        DateTime?
-  verificationNotes       String?
-  wikipediaUrl            String?
-  officialWebsite         String?
-  linkedInVerified        Boolean?                 @default(false)
-  residenceCountry        String?
-  residenceState          String?
-  residenceCity           String?
-  workCountry             String?
-  workCity                String?
-  publicEmail             String?
-  agentEmail              String?
-  pressContact            String?
-  isActive                Boolean?                 @default(true)
-  isDeceased              Boolean?                 @default(false)
-  deceasedDate            DateTime?
-  isBlocked               Boolean?                 @default(false)
-  isPEP                   Boolean?                 @default(false)
-  isHighProfile           Boolean?                 @default(false)
-  publicNotes             String?
-  internalNotes           String?
-  researchNotes           String?
-  editorialNotes          String?
-  createdBy               String?
-  lastEditedBy            String?
-  dataSource              String?
-  importSource            String?
-  lastReviewDate          DateTime?
-  needsReview             Boolean?                 @default(false)
-  deathCause              String?
-  lastDeathCheck          DateTime?
-  caseCount               Int?                     @default(0)
-  affiliations            Affiliation[]
-  journalistProfile       Journalist?
-  repercussions           Repercussion[]           @relation("PersonRepercussions")
-  statements              Statement[]              @relation("PersonStatements")
-  StatementAuthor         StatementAuthor[]
-  cases                   Case[]                   @relation("PersonCases")
-  groupStatements         Statement[]              @relation("PersonGroupStatements")
-  nationalities           PersonNationality[]
+  id                       String                   @id @default(cuid())
+  slug                     String                   @unique
+  name                     String
+  bio                      String?
+  imageUrl                 String?
+  profession               ProfessionType           @default(OTHER)
+  professionDetail         String?
+  nationality              String?
+  nationalityDetail        String?
+  birthDate                DateTime?
+  deathDate                DateTime?
+  akaNames                 String[]
+  background               String?
+  racialGroup              String?
+  religion                 String?
+  bestKnownFor             String?
+  birthPlace               String?
+  politicalBeliefs         String?
+  politicalParty           String?
+  residence                String?
+  roleDescription          String?
+  yearsActive              String?
+  deathPlace               String?
+  religionDenomination     String?
+  verificationLevel        VerificationLevel        @default(UNVERIFIED)
+  verifiedAt               DateTime?
+  verifiedBy               String?
+  statementCount           Int                      @default(0)
+  incidentCount            Int                      @default(0)
+  lastActiveDate           DateTime?
+  createdAt                DateTime                 @default(now())
+  updatedAt                DateTime                 @updatedAt
+  fullName                 String?
+  firstName                String?
+  middleName               String?
+  lastName                 String?
+  namePrefix               String?
+  nameSuffix               String?
+  aliases                  String[]
+  hebrewName               String?
+  arabicName               String?
+  nativeName               String?
+  dateOfBirth              DateTime?
+  age                      Int?
+  gender                   Gender?
+  nationality_primary_code String?                  @db.VarChar(2) // Computed cache from PersonNationality
+  nationality_codes_cached String[]                 @default([]) // Computed cache from PersonNationality
+  ethnicity                String[]
+  professionArray          Profession[]
+  primaryProfession        Profession?
+  professionDetails        String?
+  industry                 Industry?
+  specialization           String?
+  yearsExperience          Int?
+  educationLevel           EducationLevel?
+  degrees                  String[]
+  universities             String[]
+  academicTitles           String[]
+  currentTitle             String?
+  currentOrganization      String?
+  currentOrgId             String?
+  employmentStatus         EmploymentStatus?
+  isRetired                Boolean?                 @default(false)
+  retirementDate           DateTime?
+  shortBio                 String?                  @db.VarChar(500)
+  publicFigure             Boolean?                 @default(false)
+  celebrityStatus          CelebrityStatus?
+  notableFor               String[]
+  awards                   String[]
+  publications             String[]
+  influenceScore           Float?
+  influenceLevel           PersonInfluenceLevel?
+  hasTwitter               Boolean?                 @default(false)
+  twitterHandle            String?
+  twitterFollowers         Int?
+  twitterVerified          Boolean?                 @default(false)
+  hasLinkedIn              Boolean?                 @default(false)
+  linkedInUrl              String?
+  linkedInConnections      Int?
+  hasFacebook              Boolean?                 @default(false)
+  facebookUrl              String?
+  facebookFollowers        Int?
+  hasInstagram             Boolean?                 @default(false)
+  instagramHandle          String?
+  instagramFollowers       Int?
+  totalSocialReach         Int?
+  mediaAppearances         Int?                     @default(0)
+  citationCount            Int?                     @default(0)
+  politicalAffiliation     PoliticalAffiliation?
+  politicalLeaning         PoliticalLeaning?
+  knownPositions           String[]
+  advocacy                 String[]
+  isPolitician             Boolean?                 @default(false)
+  isActivist               Boolean?                 @default(false)
+  isLobbyist               Boolean?                 @default(false)
+  boardPositions           Int?                     @default(0)
+  hasControversies         Boolean?                 @default(false)
+  controversyScore         Float?
+  controversyNotes         String?
+  reputationStatus         ReputationStatus?
+  reputationNotes          String?
+  hasBeenCancelled         Boolean?                 @default(false)
+  cancelledDate            DateTime?
+  cancelledReason          String?
+  hasBeenSuspended         Boolean?                 @default(false)
+  hasBeenFired             Boolean?                 @default(false)
+  hasResigned              Boolean?                 @default(false)
+  hasLegalIssues           Boolean?                 @default(false)
+  legalIssueNotes          String?
+  underInvestigation       Boolean?                 @default(false)
+  investigationType        String?
+  hasSanctions             Boolean?                 @default(false)
+  sanctionDetails          String?
+  hasCriminalRecord        Boolean?                 @default(false)
+  criminalNotes            String?
+  responseCount            Int?                     @default(0)
+  sourceCount              Int?                     @default(0)
+  criticismsMade           Int?                     @default(0)
+  criticismsReceived       Int?                     @default(0)
+  supportGiven             Int?                     @default(0)
+  supportReceived          Int?                     @default(0)
+  firstActivityDate        DateTime?
+  lastActivityDate         DateTime?
+  mostActiveYear           Int?
+  isVerified               Boolean?                 @default(false)
+  personVerificationLevel  PersonVerificationLevel? @default(UNVERIFIED)
+  verificationDate         DateTime?
+  verificationNotes        String?
+  wikipediaUrl             String?
+  officialWebsite          String?
+  linkedInVerified         Boolean?                 @default(false)
+  residenceCountry         String?
+  residenceState           String?
+  residenceCity            String?
+  workCountry              String?
+  workCity                 String?
+  publicEmail              String?
+  agentEmail               String?
+  pressContact             String?
+  isActive                 Boolean?                 @default(true)
+  isDeceased               Boolean?                 @default(false)
+  deceasedDate             DateTime?
+  isBlocked                Boolean?                 @default(false)
+  isPEP                    Boolean?                 @default(false)
+  isHighProfile            Boolean?                 @default(false)
+  publicNotes              String?
+  internalNotes            String?
+  researchNotes            String?
+  editorialNotes           String?
+  createdBy                String?
+  lastEditedBy             String?
+  dataSource               String?
+  importSource             String?
+  lastReviewDate           DateTime?
+  needsReview              Boolean?                 @default(false)
+  deathCause               String?
+  lastDeathCheck           DateTime?
+  caseCount                Int?                     @default(0)
+  affiliations             Affiliation[]
+  journalistProfile        Journalist?
+  repercussions            Repercussion[]           @relation("PersonRepercussions")
+  statements               Statement[]              @relation("PersonStatements")
+  StatementAuthor          StatementAuthor[]
+  cases                    Case[]                   @relation("PersonCases")
+  groupStatements          Statement[]              @relation("PersonGroupStatements")
+  nationalities            PersonNationality[]
 
   @@index([slug])
   @@index([verificationLevel])
@@ -405,16 +403,17 @@ model Person {
 
 // ISO 3166-1 Country lookup table
 model Country {
-  code              String              @id @db.VarChar(2)  // ISO 3166-1 alpha-2
-  name_en           String
-  iso3              String?             @db.VarChar(3)      // ISO 3166-1 alpha-3
-  m49               Int?                                    // UN M49 numeric code
-  flag_emoji        String?
-  active            Boolean             @default(true)
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
+  code       String   @id @db.VarChar(2) // ISO 3166-1 alpha-2
+  name_en    String
+  iso3       String?  @db.VarChar(3) // ISO 3166-1 alpha-3
+  m49        Int? // UN M49 numeric code
+  flag_emoji String?
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 
-  personNationalities PersonNationality[]
+  personNationalities           PersonNationality[]
+  historicalNationalityMappings HistoricalNationalityToCountry[]
 
   @@index([active])
   @@index([name_en])
@@ -422,20 +421,20 @@ model Country {
 
 // Junction table for Person-Country nationality facts
 model PersonNationality {
-  id           String                @id @default(cuid())
+  id           String             @id @default(cuid())
   personId     String
-  countryCode  String                @db.VarChar(2)
-  type         NationalityType       @default(CITIZENSHIP)
+  countryCode  String             @db.VarChar(2)
+  type         NationalityType    @default(CITIZENSHIP)
   acquisition  AcquisitionMethod?
-  isPrimary    Boolean               @default(false)
-  displayOrder Int                   @default(0)
+  isPrimary    Boolean            @default(false)
+  displayOrder Int                @default(0)
   startDate    DateTime?
   endDate      DateTime?
   sourceId     String?
   confidence   Int?
   note         String?
-  createdAt    DateTime              @default(now())
-  updatedAt    DateTime              @updatedAt
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 
   person  Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
   country Country @relation(fields: [countryCode], references: [code])
@@ -446,6 +445,38 @@ model PersonNationality {
   @@index([isPrimary])
   @@index([type])
   @@index([endDate])
+}
+
+// Historical nationality reference data
+// For nationalities that no longer exist (e.g., Prussian, Austro-Hungarian, Soviet)
+model HistoricalNationality {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  earliest_year Int?     @map("earliest_year")
+  latest_year   Int?     @map("latest_year")
+  note          String?
+  createdAt     DateTime @default(now()) @map("createdat")
+
+  countryMappings HistoricalNationalityToCountry[]
+
+  @@index([name])
+}
+
+// Maps historical nationalities to modern country codes
+// Allows for multiple mappings when historical states split into multiple countries
+model HistoricalNationalityToCountry {
+  id           String   @id @default(cuid())
+  historicalId String   @map("historicalid")
+  countryCode  String?  @map("countrycode") @db.VarChar(2)
+  confidence   Int? // 0-100 confidence score for the mapping
+  note         String?
+  createdAt    DateTime @default(now()) @map("createdat")
+
+  historical HistoricalNationality @relation(fields: [historicalId], references: [id], onDelete: Cascade)
+  country    Country?              @relation(fields: [countryCode], references: [code])
+
+  @@index([historicalId])
+  @@index([countryCode])
 }
 
 model Organization {
@@ -1132,17 +1163,17 @@ model StatementAuthor {
 }
 
 model CaseHistory {
-  id              String              @id @default(cuid())
-  caseId          String
-  actionType      CaseHistoryAction
-  actionBy        String
-  actionAt        DateTime            @default(now())
-  reason          String?
-  previousValue   String?
-  newValue        String?
-  metadata        Json?
+  id            String            @id @default(cuid())
+  caseId        String
+  actionType    CaseHistoryAction
+  actionBy      String
+  actionAt      DateTime          @default(now())
+  reason        String?
+  previousValue String?
+  newValue      String?
+  metadata      Json?
 
-  case            Case                @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  case Case @relation(fields: [caseId], references: [id], onDelete: Cascade)
 
   @@index([caseId])
   @@index([actionAt])
