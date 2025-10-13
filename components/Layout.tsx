@@ -83,8 +83,8 @@ export default function Layout({ children, title, description }: LayoutProps) {
                   <SearchBox placeholder="Search..." className="header-search" />
                 </div>
                 <div className="nav-links">
-                  <Link href="/cases">What?</Link>
-                  <Link href="/people">Who?</Link>
+                  <Link href="/statements">Statements</Link>
+                  <Link href="/people">People</Link>
                   <Link href="/organizations">Organizations</Link>
                   <Link href="/about">About</Link>
                 </div>
@@ -97,7 +97,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
                 className="menu-button"
                 onClick={() => setMenuOpen(!menuOpen)}
                 aria-label="Toggle menu"
-                aria-expanded={menuOpen ? 'true' : 'false'}
+                aria-expanded={menuOpen}
               >
                 <span className="hamburger-icon">
                   <span></span>
@@ -127,11 +127,11 @@ export default function Layout({ children, title, description }: LayoutProps) {
               </div>
 
               <nav className="menu-links">
-                <Link href="/cases" onClick={() => setMenuOpen(false)}>
-                  What?
+                <Link href="/statements" onClick={() => setMenuOpen(false)}>
+                  Statements
                 </Link>
                 <Link href="/people" onClick={() => setMenuOpen(false)}>
-                  Who?
+                  People
                 </Link>
                 <Link href="/organizations" onClick={() => setMenuOpen(false)}>
                   Organizations

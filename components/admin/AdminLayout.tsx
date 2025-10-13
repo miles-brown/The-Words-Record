@@ -92,7 +92,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
   const menuItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/people', label: 'People', icon: '👤' },
-    { href: '/admin/cases', label: 'Cases', icon: '📰' },
+    { href: '/admin/statements', label: 'Statements', icon: '📰' },
     { href: '/admin/organizations', label: 'Organizations', icon: '🏢' },
     { href: '/admin/drafts', label: 'Drafts', icon: '✅' }
   ]

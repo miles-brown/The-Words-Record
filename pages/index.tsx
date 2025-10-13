@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { getAllCases } from '../lib/cases'
+import { getAllCases } from '../lib/cases' // Note: Still uses cases lib for backward compat
 import Layout from '../components/Layout'
 import { format } from 'date-fns'
 
@@ -36,10 +36,10 @@ export default function Home({ allCases }: HomeProps) {
       </div>
 
       <section className="cases-preview">
-        <h2>Recent Case Studies</h2>
+        <h2>Recent Statements</h2>
         <div className="cases-grid">
           {allCases.slice(0, 6).map((caseStudy) => (
-            <Link href={`/cases/${caseStudy.slug}`} key={caseStudy.slug}>
+            <Link href={`/statements/${caseStudy.slug}`} key={caseStudy.slug}>
               <div className="case-card">
                 <h3>{caseStudy.title}</h3>
                 <p className="case-date">
@@ -57,8 +57,8 @@ export default function Home({ allCases }: HomeProps) {
         </div>
 
         <div className="view-all">
-          <Link href="/cases">
-            <button className="btn-primary">View All Cases</button>
+          <Link href="/statements">
+            <button type="button" className="btn-primary">View All Statements</button>
           </Link>
         </div>
       </section>

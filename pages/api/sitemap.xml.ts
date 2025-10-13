@@ -26,7 +26,7 @@ function getStaticPages(): SitemapEntry[] {
       priority: 1.0
     },
     {
-      loc: `${SITE_URL}/cases`,
+      loc: `${SITE_URL}/statements`,
       changefreq: 'hourly',
       priority: 0.9
     },
@@ -121,7 +121,7 @@ async function generateSitemap(type?: string): Promise<string> {
         const priority = Math.min(0.9, 0.5 + (recencyBoost * 0.3) + (prominenceBoost * 0.2))
 
         entries.push({
-          loc: `${SITE_URL}/cases/${item.slug}`,
+          loc: `${SITE_URL}/statements/${item.slug}`,
           lastmod: item.updatedAt.toISOString(),
           changefreq: ageDays < 7 ? 'daily' : ageDays < 30 ? 'weekly' : 'monthly',
           priority: Math.round(priority * 10) / 10
@@ -192,7 +192,7 @@ async function generateSitemap(type?: string): Promise<string> {
 
       cases.forEach(item => {
         entries.push({
-          loc: `${SITE_URL}/cases/${item.slug}`,
+          loc: `${SITE_URL}/statements/${item.slug}`,
           lastmod: item.updatedAt.toISOString(),
           changefreq: 'weekly',
           priority: 0.7
@@ -262,7 +262,7 @@ async function generateSitemap(type?: string): Promise<string> {
 
       recentCases.forEach(item => {
         entries.push({
-          loc: `${SITE_URL}/cases/${item.slug}`,
+          loc: `${SITE_URL}/statements/${item.slug}`,
           lastmod: item.caseDate.toISOString(),
           changefreq: 'hourly',
           priority: 0.9
