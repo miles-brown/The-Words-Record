@@ -89,10 +89,95 @@ export default function CasePage({ caseItem }: CasePageProps) {
       <article className="case-page">
         <Breadcrumbs
           items={[
-            { label: 'What?', href: '/cases' },
+            { label: 'Statements', href: '/statements' },
             { label: caseItem.title }
           ]}
         />
+
+        {/* Response Context Banner - Show if this statement is a response */}
+        {caseItem.originatingStatement?.respondsTo && (
+          <div className="response-banner">
+            <div className="response-banner-icon">↩️</div>
+            <div className="response-banner-content">
+              <div className="response-banner-label">In Response To:</div>
+              <Link href={`/statements/${caseItem.originatingStatement.respondsTo.case?.slug}`}>
+                <div className="response-banner-statement">
+                  <div className="response-statement-author">
+                    {caseItem.originatingStatement.respondsTo.person?.name || 'Unknown'}
+                  </div>
+                  <div className="response-statement-preview">
+                    "{caseItem.originatingStatement.respondsTo.content.substring(0, 150)}..."
+                  </div>
+                  <div className="response-banner-link">
+                    → View Original Statement
+                  </div>
+                </div>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Statement Thread Timeline - Show if part of a conversation */}
+        {(caseItem.originatingStatement?.respondsTo || (caseItem.originatingStatement?.responses && caseItem.originatingStatement.responses.length > 0)) && (
+          <div className="statement-thread">
+            <h3>Statement Thread</h3>
+            <div className="thread-timeline">
+              {/* Parent statement if this is a response */}
+              {caseItem.originatingStatement?.respondsTo && (
+                <Link href={`/statements/${caseItem.originatingStatement.respondsTo.case?.slug}`}>
+                  <div className="thread-item thread-parent">
+                    <div className="thread-marker">○</div>
+                    <div className="thread-content">
+                      <div className="thread-author">
+                        {caseItem.originatingStatement.respondsTo.person?.name || 'Unknown'}
+                      </div>
+                      <div className="thread-preview">
+                        {caseItem.originatingStatement.respondsTo.content.substring(0, 80)}...
+                      </div>
+                      <div className="thread-label">Original Statement</div>
+                    </div>
+                  </div>
+                </Link>
+              )}
+
+              {/* Current statement */}
+              <div className="thread-item thread-current">
+                <div className="thread-marker thread-marker-current">●</div>
+                <div className="thread-content">
+                  <div className="thread-author">
+                    {caseItem.originatingStatement?.person?.name || 'Unknown'}
+                  </div>
+                  <div className="thread-preview">
+                    {caseItem.originatingStatement?.content.substring(0, 80)}...
+                  </div>
+                  <div className="thread-label thread-label-current">← YOU ARE HERE</div>
+                </div>
+              </div>
+
+              {/* Child responses if any */}
+              {caseItem.originatingStatement?.responses && caseItem.originatingStatement.responses.length > 0 && (
+                <>
+                  {caseItem.originatingStatement.responses.map((response: any) => (
+                    <Link href={`/statements/${response.case?.slug}`} key={response.id}>
+                      <div className="thread-item thread-child">
+                        <div className="thread-marker">○</div>
+                        <div className="thread-content">
+                          <div className="thread-author">
+                            {response.person?.name || response.organization?.name || 'Unknown'}
+                          </div>
+                          <div className="thread-preview">
+                            {response.content.substring(0, 80)}...
+                          </div>
+                          <div className="thread-label">Response</div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="case-header">
           <h1>{caseItem.title}</h1>
@@ -326,6 +411,184 @@ export default function CasePage({ caseItem }: CasePageProps) {
         .case-page {
           max-width: 900px;
           margin: 0 auto;
+        }
+
+        /* Response Banner Styles */
+        .response-banner {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          border-radius: 8px;
+          padding: 1.5rem;
+          margin: 2rem 0;
+          display: flex;
+          gap: 1rem;
+          align-items: flex-start;
+          border-left: 4px solid #5a67d8;
+          box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+
+        .response-banner-icon {
+          font-size: 2rem;
+          line-height: 1;
+          flex-shrink: 0;
+        }
+
+        .response-banner-content {
+          flex: 1;
+        }
+
+        .response-banner-label {
+          color: rgba(255, 255, 255, 0.9);
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 0.75rem;
+        }
+
+        .response-banner-statement {
+          background: rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(10px);
+          border-radius: 6px;
+          padding: 1rem;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .response-banner-statement:hover {
+          background: rgba(255, 255, 255, 0.25);
+          transform: translateY(-2px);
+        }
+
+        .response-statement-author {
+          color: white;
+          font-weight: 600;
+          font-size: 1rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .response-statement-preview {
+          color: rgba(255, 255, 255, 0.95);
+          line-height: 1.6;
+          margin-bottom: 0.75rem;
+          font-style: italic;
+        }
+
+        .response-banner-link {
+          color: white;
+          font-weight: 500;
+          font-size: 0.9rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        /* Statement Thread Timeline Styles */
+        .statement-thread {
+          background: var(--background-secondary);
+          border: 1px solid var(--border-primary);
+          border-radius: 8px;
+          padding: 2rem;
+          margin: 2rem 0;
+        }
+
+        .statement-thread h3 {
+          color: var(--text-primary);
+          font-size: 1.3rem;
+          margin-bottom: 1.5rem;
+          padding-bottom: 0.75rem;
+          border-bottom: 2px solid var(--border-primary);
+        }
+
+        .thread-timeline {
+          position: relative;
+          padding-left: 2rem;
+        }
+
+        .thread-timeline::before {
+          content: '';
+          position: absolute;
+          left: 0.5rem;
+          top: 0;
+          bottom: 0;
+          width: 2px;
+          background: linear-gradient(to bottom,
+            var(--border-secondary) 0%,
+            var(--accent-primary) 50%,
+            var(--border-secondary) 100%);
+        }
+
+        .thread-item {
+          position: relative;
+          margin-bottom: 1.5rem;
+          padding: 1rem;
+          border-radius: 6px;
+          transition: all 0.2s;
+          cursor: pointer;
+        }
+
+        .thread-item:hover {
+          background: var(--background-primary);
+          transform: translateX(4px);
+        }
+
+        .thread-marker {
+          position: absolute;
+          left: -1.5rem;
+          top: 1.25rem;
+          width: 1rem;
+          height: 1rem;
+          border-radius: 50%;
+          background: var(--background-secondary);
+          border: 2px solid var(--border-secondary);
+          z-index: 1;
+        }
+
+        .thread-marker-current {
+          background: var(--accent-primary);
+          border-color: var(--accent-primary);
+          box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.2);
+        }
+
+        .thread-content {
+          padding-left: 0.5rem;
+        }
+
+        .thread-author {
+          color: var(--text-primary);
+          font-weight: 600;
+          font-size: 0.95rem;
+          margin-bottom: 0.5rem;
+        }
+
+        .thread-preview {
+          color: var(--text-secondary);
+          font-size: 0.9rem;
+          line-height: 1.5;
+          margin-bottom: 0.5rem;
+        }
+
+        .thread-label {
+          color: var(--text-secondary);
+          font-size: 0.75rem;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          font-weight: 600;
+        }
+
+        .thread-label-current {
+          color: var(--accent-primary);
+          font-weight: 700;
+        }
+
+        .thread-current {
+          background: var(--background-primary);
+          border: 2px solid var(--accent-primary);
+          box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+        }
+
+        .thread-current:hover {
+          transform: none;
+          cursor: default;
         }
 
         .back-link {
@@ -1006,6 +1269,46 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         people: true,
         organizations: true,
         tags: true,
+        // Include originating statement with its response chain
+        originatingStatement: {
+          include: {
+            person: true,
+            case: {
+              select: {
+                slug: true,
+                title: true
+              }
+            },
+            // Parent statement (if this is a response)
+            respondsTo: {
+              include: {
+                person: true,
+                case: {
+                  select: {
+                    slug: true,
+                    title: true
+                  }
+                }
+              }
+            },
+            // Child responses (if this statement has responses)
+            responses: {
+              include: {
+                person: true,
+                organization: true,
+                case: {
+                  select: {
+                    slug: true,
+                    title: true
+                  }
+                }
+              },
+              orderBy: {
+                statementDate: 'asc'
+              }
+            }
+          }
+        },
         statements: {
           include: {
             person: true,

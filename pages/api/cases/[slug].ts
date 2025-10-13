@@ -1,162 +1,152 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { prisma } from '@/lib/prisma'
-import { CaseVisibility } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (req.method !== 'GET') {
+    res.setHeader('Allow', ['GET'])
+    return res.status(405).end(`Method ${req.method} Not Allowed`)
+  }
+
   const { slug } = req.query
 
   if (!slug || typeof slug !== 'string') {
-    return res.status(400).json({ error: 'Slug is required' })
+    return res.status(400).json({ error: 'Invalid slug parameter' })
   }
 
   try {
-    switch (req.method) {
-      case 'GET':
-        // Get a case by slug with all related data
-        const caseItem = await prisma.case.findUnique({
-          where: { slug },
+    const caseItem = await prisma.case.findUnique({
+      where: {
+        slug: slug,
+        // Only return real incidents (multi-statement cases)
+        isRealIncident: true
+      },
+      include: {
+        people: true,
+        organizations: true,
+        tags: true,
+        statements: {
           include: {
-            people: true,
-            organizations: true,
-            tags: true,
-            statements: {
+            person: true,
+            sources: true,
+            responses: {
               include: {
                 person: true,
-                organization: true,
-                sources: true,
-                responses: {
-                  include: {
-                    person: true,
-                    organization: true
-                  }
-                }
-              },
-              orderBy: {
-                statementDate: 'desc'
-              }
-            },
-            sources: {
-              orderBy: {
-                publishDate: 'desc'
-              }
-            },
-            _count: {
-              select: {
-                statements: true,
-                sources: true
+                organization: true
               }
             }
+          },
+          orderBy: {
+            statementDate: 'desc'
           }
-        })
-
-        if (!caseItem) {
-          return res.status(404).json({ error: 'Case not found' })
-        }
-
-        // Handle locked cases - return 404
-        if (caseItem.visibility === CaseVisibility.LOCKED) {
-          return res.status(404).json({ error: 'Case not found' })
-        }
-
-        // Collect all responses to this case's statements
-        const responses = caseItem.statements?.filter(s => s.statementType === 'RESPONSE') || []
-
-        // Count responses
-        const responseCount = responses.length
-
-        // Add response count to _count and responses array
-        const caseWithResponses = {
-          ...caseItem,
-          responses,
-          _count: {
-            ...caseItem._count,
-            responses: responseCount
+        },
+        sources: {
+          orderBy: {
+            publishDate: 'desc'
           }
-        }
-
-        res.status(200).json(caseWithResponses)
-        break
-
-      case 'PUT':
-        // Update a case
-        const {
-          title,
-          summary,
-          description,
-          caseDate,
-          status,
-          severity,
-          locationCity,
-          locationState,
-          locationCountry,
-          locationDetail,
-          personIds,
-          organizationIds,
-          tagIds
-        } = req.body
-
-        const updateData: any = {
-          title,
-          summary,
-          description,
-          status,
-          severity,
-          locationCity,
-          locationState,
-          locationCountry,
-          locationDetail
-        }
-
-        if (caseDate) {
-          updateData.caseDate = new Date(caseDate)
-        }
-
-        // Update relationships if provided
-        if (personIds) {
-          updateData.people = {
-            set: personIds.map((id: string) => ({ id }))
-          }
-        }
-        if (organizationIds) {
-          updateData.organizations = {
-            set: organizationIds.map((id: string) => ({ id }))
-          }
-        }
-        if (tagIds) {
-          updateData.tags = {
-            set: tagIds.map((id: string) => ({ id }))
-          }
-        }
-
-        const updatedCase = await prisma.case.update({
-          where: { slug },
-          data: updateData,
+        },
+        repercussions: {
           include: {
+            affectedPerson: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                profession: true,
+                imageUrl: true
+              }
+            },
+            affectedOrganization: {
+              select: {
+                id: true,
+                name: true,
+                slug: true,
+                type: true
+              }
+            },
+            responseStatement: {
+              select: {
+                id: true,
+                content: true,
+                statementDate: true,
+                person: {
+                  select: {
+                    name: true,
+                    slug: true
+                  }
+                }
+              }
+            }
+          },
+          orderBy: {
+            startDate: 'desc'
+          }
+        },
+        _count: {
+          select: {
+            statements: true,
+            sources: true,
             people: true,
             organizations: true,
-            tags: true
+            repercussions: true
           }
-        })
+        }
+      }
+    })
 
-        res.status(200).json(updatedCase)
-        break
-
-      case 'DELETE':
-        // Delete a case
-        await prisma.case.delete({
-          where: { slug }
-        })
-
-        res.status(204).end()
-        break
-
-      default:
-        res.setHeader('Allow', ['GET', 'PUT', 'DELETE'])
-        res.status(405).end(`Method ${req.method} Not Allowed`)
+    if (!caseItem) {
+      return res.status(404).json({ error: 'Case not found' })
     }
+
+    // Fetch related cases based on shared tags or people
+    const relatedCases = (caseItem.tags?.length > 0 || caseItem.people?.length > 0)
+      ? await prisma.case.findMany({
+          where: {
+            AND: [
+              { id: { not: caseItem.id } },
+              { isRealIncident: true }, // Only show real incidents
+              {
+                OR: [
+                  ...(caseItem.tags?.length > 0 ? [{
+                    tags: {
+                      some: {
+                        id: { in: caseItem.tags.map(t => t.id) }
+                      }
+                    }
+                  }] : []),
+                  ...(caseItem.people?.length > 0 ? [{
+                    people: {
+                      some: {
+                        id: { in: caseItem.people.map(p => p.id) }
+                      }
+                    }
+                  }] : [])
+                ]
+              }
+            ]
+          },
+          select: {
+            id: true,
+            slug: true,
+            title: true,
+            summary: true,
+            caseDate: true,
+            status: true,
+            severity: true
+          },
+          orderBy: {
+            caseDate: 'desc'
+          },
+          take: 3
+        })
+      : []
+
+    res.status(200).json({
+      ...caseItem,
+      relatedCases
+    })
   } catch (error) {
     console.error('API error:', error)
     res.status(500).json({ error: 'Internal server error' })

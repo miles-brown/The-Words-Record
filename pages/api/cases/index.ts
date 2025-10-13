@@ -19,8 +19,9 @@ export default async function handler(
         const sortBy = req.query.sortBy as string || 'date-desc'
         const includeArchived = req.query.includeArchived === 'true'
 
-        // Build filter conditions - only show public cases by default
+        // Build filter conditions - only show real incidents (not statement pages)
         const where: any = {
+          isRealIncident: true,  // CRITICAL: Only show multi-statement cases
           visibility: {
             in: includeArchived
               ? [CaseVisibility.PUBLIC, CaseVisibility.ARCHIVED]
