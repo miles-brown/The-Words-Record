@@ -68,6 +68,14 @@ async function handleGet(
         headquarters: true,
         founded: true,
         dissolved: true,
+        legalName: true,
+        employeeCount: true,
+        headquartersCity: true,
+        incorporationCountry: true,
+        incorporationState: true,
+        legalStructure: true,
+        taxStatus: true,
+        isPersonalBrand: true,
         createdAt: true,
         updatedAt: true,
         _count: {
@@ -103,7 +111,16 @@ async function handlePut(
       description,
       website,
       headquarters,
-      founded
+      founded,
+      dissolved,
+      legalName,
+      employeeCount,
+      headquartersCity,
+      incorporationCountry,
+      incorporationState,
+      legalStructure,
+      taxStatus,
+      isPersonalBrand
     } = req.body
 
     // Validation
@@ -141,7 +158,16 @@ async function handlePut(
         description: description || null,
         website: website || null,
         headquarters: headquarters || null,
-        founded: founded ? new Date(founded) : null
+        founded: founded ? new Date(founded) : null,
+        dissolved: dissolved ? new Date(dissolved) : null,
+        legalName: legalName || null,
+        employeeCount: employeeCount !== undefined && employeeCount !== null ? parseInt(employeeCount.toString()) : null,
+        headquartersCity: headquartersCity || null,
+        incorporationCountry: incorporationCountry || null,
+        incorporationState: incorporationState || null,
+        legalStructure: legalStructure || null,
+        taxStatus: taxStatus || null,
+        isPersonalBrand: isPersonalBrand || false
       },
       select: {
         id: true,
@@ -152,6 +178,15 @@ async function handlePut(
         website: true,
         headquarters: true,
         founded: true,
+        dissolved: true,
+        legalName: true,
+        employeeCount: true,
+        headquartersCity: true,
+        incorporationCountry: true,
+        incorporationState: true,
+        legalStructure: true,
+        taxStatus: true,
+        isPersonalBrand: true,
         updatedAt: true
       }
     })

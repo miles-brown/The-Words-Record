@@ -11,6 +11,15 @@ interface OrganizationForm {
   website: string
   headquarters: string
   founded: string
+  dissolved: string
+  legalName: string
+  employeeCount: string
+  headquartersCity: string
+  incorporationCountry: string
+  incorporationState: string
+  legalStructure: string
+  taxStatus: string
+  isPersonalBrand: boolean
 }
 
 export default function EditOrganization() {
@@ -26,7 +35,16 @@ export default function EditOrganization() {
     description: '',
     website: '',
     headquarters: '',
-    founded: ''
+    founded: '',
+    dissolved: '',
+    legalName: '',
+    employeeCount: '',
+    headquartersCity: '',
+    incorporationCountry: '',
+    incorporationState: '',
+    legalStructure: '',
+    taxStatus: '',
+    isPersonalBrand: false
   })
 
   useEffect(() => {
@@ -42,6 +60,31 @@ export default function EditOrganization() {
         const data = await response.json()
         const org = data.organization
 
+        // Handle founded date - extract year or full date
+        let foundedValue = ''
+        if (org.founded) {
+          const foundedDate = new Date(org.founded)
+          const year = foundedDate.getFullYear()
+          // Check if it's January 1st (likely just a year entry)
+          if (foundedDate.getMonth() === 0 && foundedDate.getDate() === 1) {
+            foundedValue = year.toString()
+          } else {
+            foundedValue = org.founded.split('T')[0]
+          }
+        }
+
+        // Handle dissolved date
+        let dissolvedValue = ''
+        if (org.dissolved) {
+          const dissolvedDate = new Date(org.dissolved)
+          const year = dissolvedDate.getFullYear()
+          if (dissolvedDate.getMonth() === 0 && dissolvedDate.getDate() === 1) {
+            dissolvedValue = year.toString()
+          } else {
+            dissolvedValue = org.dissolved.split('T')[0]
+          }
+        }
+
         setFormData({
           name: org.name || '',
           slug: org.slug || '',
@@ -49,21 +92,34 @@ export default function EditOrganization() {
           description: org.description || '',
           website: org.website || '',
           headquarters: org.headquarters || '',
-          founded: org.founded ? org.founded.split('T')[0] : ''
+          founded: foundedValue,
+          dissolved: dissolvedValue,
+          legalName: org.legalName || '',
+          employeeCount: org.employeeCount ? org.employeeCount.toString() : '',
+          headquartersCity: org.headquartersCity || '',
+          incorporationCountry: org.incorporationCountry || '',
+          incorporationState: org.incorporationState || '',
+          legalStructure: org.legalStructure || '',
+          taxStatus: org.taxStatus || '',
+          isPersonalBrand: org.isPersonalBrand || false
         })
       } else {
-        setError('Organization not found')
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
+        console.error('Failed to fetch organization:', response.status, errorData)
+        setError(errorData.error || `Failed to load organization (${response.status})`)
       }
     } catch (err) {
-      setError('Failed to load organization')
+      console.error('Error fetching organization:', err)
+      setError(`Failed to load organization: ${err instanceof Error ? err.message : 'Unknown error'}`)
     } finally {
       setLoading(false)
     }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value, type } = e.target
+    const checked = (e.target as HTMLInputElement).checked
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,6 +128,19 @@ export default function EditOrganization() {
     setError(null)
 
     try {
+      // Process founded date - convert year to full date if needed
+      let foundedDate = formData.founded ? formData.founded.trim() : undefined
+      if (foundedDate && /^\d{4}$/.test(foundedDate)) {
+        // If only year provided, use January 1st of that year
+        foundedDate = `${foundedDate}-01-01`
+      }
+
+      // Process dissolved date
+      let dissolvedDate = formData.dissolved ? formData.dissolved.trim() : undefined
+      if (dissolvedDate && /^\d{4}$/.test(dissolvedDate)) {
+        dissolvedDate = `${dissolvedDate}-01-01`
+      }
+
       const response = await fetch(`/api/admin/organizations/${slug}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -82,7 +151,16 @@ export default function EditOrganization() {
           description: formData.description || undefined,
           website: formData.website || undefined,
           headquarters: formData.headquarters || undefined,
-          founded: formData.founded || undefined
+          founded: foundedDate,
+          dissolved: dissolvedDate,
+          legalName: formData.legalName || undefined,
+          employeeCount: formData.employeeCount ? parseInt(formData.employeeCount) : undefined,
+          headquartersCity: formData.headquartersCity || undefined,
+          incorporationCountry: formData.incorporationCountry || undefined,
+          incorporationState: formData.incorporationState || undefined,
+          legalStructure: formData.legalStructure || undefined,
+          taxStatus: formData.taxStatus || undefined,
+          isPersonalBrand: formData.isPersonalBrand
         })
       })
 
@@ -235,24 +313,165 @@ export default function EditOrganization() {
                   </div>
 
                   <div className="form-group">
-                    <label>Founded Date</label>
+                    <label>Founded Year</label>
                     <input
-                      type="date"
+                      type="text"
                       name="founded"
                       value={formData.founded}
                       onChange={handleChange}
+                      placeholder="e.g., 1990 or 1990-01-15"
+                      pattern="^\d{4}(-\d{2}-\d{2})?$"
                     />
+                    <small>Enter year (e.g., 1990) or full date (e.g., 1990-01-15)</small>
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Legal Name</label>
+                    <input
+                      type="text"
+                      name="legalName"
+                      value={formData.legalName}
+                      onChange={handleChange}
+                      placeholder="Official legal name"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Dissolved Year</label>
+                    <input
+                      type="text"
+                      name="dissolved"
+                      value={formData.dissolved}
+                      onChange={handleChange}
+                      placeholder="e.g., 2020 or 2020-12-31"
+                      pattern="^\d{4}(-\d{2}-\d{2})?$"
+                    />
+                    <small>Leave empty if organization is active</small>
                   </div>
                 </div>
 
                 <div className="form-group">
-                  <label>Headquarters</label>
+                  <label style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
+                    <input
+                      type="checkbox"
+                      name="isPersonalBrand"
+                      checked={formData.isPersonalBrand}
+                      onChange={handleChange}
+                      style={{width: 'auto', margin: 0}}
+                    />
+                    Personal Brand (individual-run organization)
+                  </label>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Location Information</h3>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Headquarters</label>
+                    <input
+                      type="text"
+                      name="headquarters"
+                      value={formData.headquarters}
+                      onChange={handleChange}
+                      placeholder="e.g., New York, NY, USA"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>City</label>
+                    <input
+                      type="text"
+                      name="headquartersCity"
+                      value={formData.headquartersCity}
+                      onChange={handleChange}
+                      placeholder="e.g., New York"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Incorporation Country</label>
+                    <input
+                      type="text"
+                      name="incorporationCountry"
+                      value={formData.incorporationCountry}
+                      onChange={handleChange}
+                      placeholder="e.g., United States"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Incorporation State/Province</label>
+                    <input
+                      type="text"
+                      name="incorporationState"
+                      value={formData.incorporationState}
+                      onChange={handleChange}
+                      placeholder="e.g., Delaware, CA"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Legal & Financial Information</h3>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Legal Structure</label>
+                    <select
+                      name="legalStructure"
+                      value={formData.legalStructure}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select...</option>
+                      <option value="SOLE_PROPRIETORSHIP">Sole Proprietorship</option>
+                      <option value="PARTNERSHIP">Partnership</option>
+                      <option value="LLC">LLC</option>
+                      <option value="CORPORATION">Corporation</option>
+                      <option value="C_CORP">C Corporation</option>
+                      <option value="S_CORP">S Corporation</option>
+                      <option value="B_CORP">B Corporation</option>
+                      <option value="NONPROFIT">Non-Profit</option>
+                      <option value="COOPERATIVE">Cooperative</option>
+                      <option value="TRUST">Trust</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>Tax Status</label>
+                    <select
+                      name="taxStatus"
+                      value={formData.taxStatus}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select...</option>
+                      <option value="FOR_PROFIT">For-Profit</option>
+                      <option value="NONPROFIT_501C3">Non-Profit 501(c)(3)</option>
+                      <option value="NONPROFIT_501C4">Non-Profit 501(c)(4)</option>
+                      <option value="NONPROFIT_501C6">Non-Profit 501(c)(6)</option>
+                      <option value="NONPROFIT_OTHER">Non-Profit (Other)</option>
+                      <option value="TAX_EXEMPT">Tax Exempt</option>
+                      <option value="OTHER">Other</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label>Employee Count</label>
                   <input
-                    type="text"
-                    name="headquarters"
-                    value={formData.headquarters}
+                    type="number"
+                    name="employeeCount"
+                    value={formData.employeeCount}
                     onChange={handleChange}
-                    placeholder="e.g., New York, NY, USA"
+                    placeholder="e.g., 500"
+                    min="0"
                   />
                 </div>
               </div>
