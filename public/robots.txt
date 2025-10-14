@@ -1,7 +1,11 @@
-# Who Said What - robots.txt
-# Enhanced robots configuration with comprehensive crawling rules
+# ===========================================
+# THE WORDS RECORD — robots.txt
+# Enhanced configuration with comprehensive crawling rules
+# ===========================================
 
+# --------------------------------------------------
 # Default rules for all bots
+# --------------------------------------------------
 User-agent: *
 Allow: /
 Allow: /cases/
@@ -25,9 +29,21 @@ Disallow: /debug/
 Disallow: /*.json$
 Disallow: /*?draft=true
 Disallow: /*?preview=true
+# Prevent scraping of specific file types
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.xls$
+Disallow: /*.ppt$
+Disallow: /*.zip$
+Disallow: /*.rar$
+Disallow: /*.exe$
+Disallow: /*.dmg$
+Disallow: /*.iso$
 Crawl-delay: 1
 
-# Googlebot specific rules
+# --------------------------------------------------
+# Googlebot
+# --------------------------------------------------
 User-agent: Googlebot
 Allow: /
 Allow: /cases/
@@ -41,7 +57,9 @@ Disallow: /private/
 Disallow: /user/
 Crawl-delay: 0
 
-# Bingbot specific rules
+# --------------------------------------------------
+# Bingbot
+# --------------------------------------------------
 User-agent: Bingbot
 Allow: /
 Allow: /cases/
@@ -51,7 +69,9 @@ Disallow: /admin/
 Disallow: /private/
 Crawl-delay: 1
 
-# Academic/Research crawlers
+# --------------------------------------------------
+# Academic / Research crawlers
+# --------------------------------------------------
 User-agent: Googlebot-Scholar
 User-agent: AcademicBot
 User-agent: SemanticScholarBot
@@ -62,7 +82,9 @@ Allow: /organizations/
 Allow: /sources/
 Crawl-delay: 1
 
+# --------------------------------------------------
 # Social media crawlers
+# --------------------------------------------------
 User-agent: facebookexternalhit
 User-agent: Twitterbot
 User-agent: LinkedInBot
@@ -76,13 +98,17 @@ Disallow: /admin/
 Disallow: /api/
 Crawl-delay: 0
 
-# Archive bots (we want these!)
+# --------------------------------------------------
+# Archival crawlers (banned)
+# --------------------------------------------------
 User-agent: ia_archiver
+User-agent: archive.org_bot
 User-agent: Wayback Machine
-Allow: /
-Crawl-delay: 0
+Disallow: /
 
-# AI/ML Training - Restricted
+# --------------------------------------------------
+# AI / ML training crawlers (restricted)
+# --------------------------------------------------
 User-agent: GPTBot
 User-agent: ChatGPT-User
 User-agent: CCBot
@@ -93,7 +119,9 @@ Allow: /about
 Allow: /privacy
 Allow: /robots.txt
 
-# Aggressive/Bad bots - Blocked
+# --------------------------------------------------
+# Aggressive / unwanted crawlers (blocked)
+# --------------------------------------------------
 User-agent: AhrefsBot
 User-agent: SemrushBot
 User-agent: DotBot
@@ -108,14 +136,18 @@ User-agent: Serpstat
 User-agent: SeekportBot
 Disallow: /
 
-# Image crawlers
+# --------------------------------------------------
+# Image indexing
+# --------------------------------------------------
 User-agent: Googlebot-Image
 Allow: /images/
 Allow: /people/
 Disallow: /admin/
 Disallow: /private/
 
+# --------------------------------------------------
 # News crawlers
+# --------------------------------------------------
 User-agent: Googlebot-News
 User-agent: Bingbot-News
 Allow: /
@@ -124,24 +156,21 @@ Allow: /people/
 Allow: /organizations/
 Crawl-delay: 0
 
-# Prevent scraping of specific file types
-User-agent: *
-Disallow: /*.pdf$
-Disallow: /*.doc$
-Disallow: /*.xls$
-Disallow: /*.ppt$
-Disallow: /*.zip$
-Disallow: /*.rar$
-Disallow: /*.exe$
-Disallow: /*.dmg$
-Disallow: /*.iso$
-
-# Sitemap location
+# --------------------------------------------------
+# Sitemap locations
+# --------------------------------------------------
 Sitemap: https://thewordsrecord.com/sitemap.xml
 Sitemap: https://thewordsrecord.com/sitemap-cases.xml
 Sitemap: https://thewordsrecord.com/sitemap-people.xml
 Sitemap: https://thewordsrecord.com/sitemap-organizations.xml
 Sitemap: https://thewordsrecord.com/sitemap-news.xml
+Sitemap: https://thewordsrecord.org/sitemap.xml
+Sitemap: https://thewordsrecord.org/sitemap-cases.xml
+Sitemap: https://thewordsrecord.org/sitemap-people.xml
+Sitemap: https://thewordsrecord.org/sitemap-organizations.xml
+Sitemap: https://thewordsrecord.org/sitemap-news.xml
 
-# Host (optional - helps with canonicalization)
-Host: https://thewordsrecord.com
+# --------------------------------------------------
+# Canonical host declaration
+# --------------------------------------------------
+Host: thewordsrecord.com
