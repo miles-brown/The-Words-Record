@@ -80,7 +80,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
           _count: {
             select: {
               statements: true,
-              casesAsSubject: true
+              cases: true
             }
           }
         },

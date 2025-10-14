@@ -79,7 +79,7 @@ async function handleGet(
         _count: {
           select: {
             statements: true,
-            casesAsSubject: true
+            cases: true
           }
         }
       }
@@ -213,7 +213,7 @@ async function handleDelete(
         _count: {
           select: {
             statements: true,
-            casesAsSubject: true
+            cases: true
           }
         }
       }
