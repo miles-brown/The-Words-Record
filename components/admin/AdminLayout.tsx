@@ -119,10 +119,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         {/* Sidebar */}
         <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
           <div className="sidebar-header">
-            <Link href="/admin">
+            <Link href="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>
               <h1>WSW Admin</h1>
             </Link>
-            <button 
+            <button
               className="sidebar-close"
               onClick={() => setSidebarOpen(false)}
             >
@@ -132,17 +132,17 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
           <nav className="sidebar-nav">
             {menuItems.map((item) => (
-              <Link href={item.href} key={item.href}>
-                <a
-                  className={`nav-item ${
-                    router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
-                      ? 'active'
-                      : ''
-                  }`}
-                >
-                  <span className="nav-icon">{item.icon}</span>
-                  <span className="nav-label">{item.label}</span>
-                </a>
+              <Link
+                href={item.href}
+                key={item.href}
+                className={`nav-item ${
+                  router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
+                    ? 'active'
+                    : ''
+                }`}
+              >
+                <span className="nav-icon">{item.icon}</span>
+                <span className="nav-label">{item.label}</span>
               </Link>
             ))}
           </nav>
@@ -170,10 +170,8 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
             </button>
             <h1>{title}</h1>
             <div className="top-bar-actions">
-              <Link href="/">
-                <button className="view-site-btn">
-                  🌐 View Site
-                </button>
+              <Link href="/" className="view-site-btn">
+                🌐 View Site
               </Link>
             </div>
           </header>
