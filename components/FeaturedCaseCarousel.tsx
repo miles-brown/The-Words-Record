@@ -9,9 +9,9 @@ interface FeaturedCase {
   excerpt?: string
   date?: string
   caseDate?: string
-  _count: {
-    sources: number
-    statements: number
+  _count?: {
+    sources?: number
+    statements?: number
   }
   tags?: Array<{
     name: string
@@ -82,13 +82,13 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                 </svg>
-                {currentCase._count.statements} statements
+                {currentCase._count?.statements || 0} statements
               </span>
               <span className="meta-item">
                 <svg className="meta-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
                 </svg>
-                {currentCase._count.sources} sources
+                {currentCase._count?.sources || 0} sources
               </span>
             </div>
 
