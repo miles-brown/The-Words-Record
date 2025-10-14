@@ -193,6 +193,9 @@ export default function AdminDashboard() {
     <>
       <Head>
         <title>Admin Dashboard - The Words Record</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </Head>
 
       <AdminLayout title="Dashboard">
@@ -338,13 +341,14 @@ export default function AdminDashboard() {
         <style jsx>{`
           /* Admin Dashboard Container with CSS Variables */
           .dashboard {
-            --spacing-unit: 1.5rem;
+            --spacing-unit: 2rem;
             --radius-sm: 8px;
             --radius-md: 12px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
-            --shadow-md: 0 2px 8px rgba(0,0,0,0.1);
-            --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
-            max-width: 1400px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 1440px;
             margin: 0 auto;
             padding: 0;
           }
@@ -355,6 +359,11 @@ export default function AdminDashboard() {
             box-sizing: border-box;
             cursor: pointer;
             user-select: none;
+            font-family: inherit;
+          }
+
+          .dashboard * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
           }
 
           .loading-container, .error-container {
@@ -381,7 +390,7 @@ export default function AdminDashboard() {
           .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: var(--spacing-unit);
+            gap: 1.5rem;
             margin-bottom: var(--spacing-unit);
           }
 
@@ -389,22 +398,23 @@ export default function AdminDashboard() {
           .workflow-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
-            gap: var(--spacing-unit);
-            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            gap: 1.5rem;
+            margin-bottom: var(--spacing-unit);
           }
 
           /* Stat Card - Fixed height for alignment */
           .stat-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
             border-radius: var(--radius-md);
             padding: 1.5rem;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
             display: flex;
             align-items: center;
             gap: 1rem;
             min-height: 120px;
-            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+            border: 1px solid rgba(0, 0, 0, 0.06);
             position: relative;
           }
 
@@ -462,17 +472,17 @@ export default function AdminDashboard() {
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.03);
+            border-radius: 10px;
             flex-shrink: 0;
           }
 
           .stat-card.subtle .stat-icon {
-            width: 48px;
-            height: 48px;
-            min-width: 48px;
-            font-size: 1.75rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
+            font-size: 1.5rem;
+            background: rgba(0, 0, 0, 0.025);
           }
 
           /* Typography Hierarchy */
@@ -482,8 +492,8 @@ export default function AdminDashboard() {
           }
 
           .stat-content h3 {
-            margin: 0 0 0.5rem 0;
-            font-size: 0.75rem;
+            margin: 0 0 0.375rem 0;
+            font-size: 0.6875rem;
             color: #64748b;
             font-weight: 600;
             text-transform: uppercase;
@@ -493,14 +503,16 @@ export default function AdminDashboard() {
 
           .stat-number {
             margin: 0;
-            font-size: 1.875rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #0f172a;
             line-height: 1;
+            font-variant-numeric: tabular-nums;
           }
 
           .stat-card.subtle .stat-number {
             font-size: 1.5rem;
+            font-weight: 600;
           }
 
           .stat-subtitle {
@@ -516,13 +528,13 @@ export default function AdminDashboard() {
             background: white;
             border-radius: var(--radius-md);
             padding: 2rem;
-            box-shadow: var(--shadow-md);
-            margin-bottom: calc(var(--spacing-unit) * 1.5);
-            border: 1px solid #f3f4f6;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: var(--spacing-unit);
+            border: 1px solid rgba(0, 0, 0, 0.06);
           }
 
           .quick-actions h2 {
-            margin: 0 0 1.25rem 0;
+            margin: 0 0 1.5rem 0;
             font-size: 1.125rem;
             font-weight: 700;
             color: #0f172a;
@@ -531,8 +543,8 @@ export default function AdminDashboard() {
 
           .action-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 1rem;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.5rem;
           }
 
           .action-btn {
@@ -587,19 +599,23 @@ export default function AdminDashboard() {
           .panels {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-unit);
-            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            gap: 1.5rem;
+            margin-bottom: var(--spacing-unit);
           }
 
           .panel {
             background: white;
             border-radius: var(--radius-md);
             padding: 2rem;
-            box-shadow: var(--shadow-md);
-            border: 1px solid #f3f4f6;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(0, 0, 0, 0.06);
             display: flex;
             flex-direction: column;
             min-height: 400px;
+          }
+
+          .audit-panel {
+            grid-column: 1 / -1;
           }
 
           .panel h2 {
@@ -826,6 +842,10 @@ export default function AdminDashboard() {
             .workflow-grid {
               grid-template-columns: repeat(3, 1fr);
             }
+
+            .action-buttons {
+              grid-template-columns: repeat(3, 1fr);
+            }
           }
 
           @media (max-width: 968px) {
@@ -837,18 +857,28 @@ export default function AdminDashboard() {
               grid-template-columns: repeat(2, 1fr);
             }
 
+            .action-buttons {
+              grid-template-columns: repeat(2, 1fr);
+            }
+
             .panels {
               grid-template-columns: 1fr;
             }
           }
 
           @media (max-width: 640px) {
+            .dashboard {
+              --spacing-unit: 1.5rem;
+            }
+
             .stats-grid {
               grid-template-columns: 1fr;
+              gap: 1rem;
             }
 
             .workflow-grid {
               grid-template-columns: 1fr;
+              gap: 1rem;
             }
 
             .stat-card.wide {
@@ -857,6 +887,7 @@ export default function AdminDashboard() {
 
             .panels {
               grid-template-columns: 1fr;
+              gap: 1rem;
             }
 
             .panel {
@@ -869,12 +900,14 @@ export default function AdminDashboard() {
             }
 
             .action-buttons {
-              flex-direction: column;
+              grid-template-columns: 1fr;
+              gap: 1rem;
             }
 
             .action-btn {
               width: 100%;
               justify-content: center;
+              min-height: 80px;
             }
 
             .stat-card {
@@ -883,14 +916,14 @@ export default function AdminDashboard() {
             }
 
             .stat-icon {
-              width: 48px;
-              height: 48px;
-              min-width: 48px;
+              width: 44px;
+              height: 44px;
+              min-width: 44px;
               font-size: 1.5rem;
             }
 
             .stat-number {
-              font-size: 1.5rem;
+              font-size: 1.75rem;
             }
           }
         `}</style>
