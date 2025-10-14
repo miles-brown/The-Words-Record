@@ -26,9 +26,26 @@ interface CaseStudy {
   caseDate?: string
 }
 
+interface FeaturedCase {
+  slug: string
+  title: string
+  summary?: string
+  excerpt?: string
+  date?: string
+  caseDate?: string
+  _count?: {
+    sources?: number
+    statements?: number
+  }
+  tags?: Array<{
+    name: string
+    slug: string
+  }>
+}
+
 interface HomeProps {
   allCases: CaseStudy[]
-  featuredCases: CaseStudy[]
+  featuredCases: FeaturedCase[]
 }
 
 // Transform tags to proper format if they're strings
@@ -193,7 +210,7 @@ export async function getStaticProps() {
 
   // Filter featured cases (you can add a featured field to your markdown frontmatter)
   // For now, just use the first 3-5 most recent cases as featured
-  const featuredCases = allCases
+  const featuredCases: FeaturedCase[] = allCases
     .slice(0, 5)
     .map(c => ({
       slug: c.slug,
