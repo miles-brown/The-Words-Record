@@ -58,6 +58,7 @@ export default function AuditLogsPage() {
 
   useEffect(() => {
     fetchAuditLogs()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page, filters])
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function AuditLogsPage() {
       const interval = setInterval(fetchAuditLogs, refreshInterval * 1000)
       return () => clearInterval(interval)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refreshInterval])
 
   const fetchAuditLogs = async () => {

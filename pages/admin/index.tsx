@@ -3,17 +3,10 @@
  * Comprehensive admin interface with metrics, activity tracking, and management tools
  */
 
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import AdminLayout from '@/components/admin/AdminLayout'
 import Head from 'next/head'
-import dynamic from 'next/dynamic'
-
-// Dynamic imports for heavy components
-const ChartComponent = dynamic(() => import('@/components/admin/ChartWidget'), {
-  ssr: false,
-  loading: () => <div className="chart-placeholder">Loading chart...</div>
-})
 
 interface DashboardStats {
   // Core Metrics
@@ -238,6 +231,7 @@ export default function EnhancedAdminDashboard() {
     // Set up auto-refresh
     const interval = setInterval(fetchDashboardData, 60000) // Refresh every minute
     return () => clearInterval(interval)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchDashboardData = async () => {
