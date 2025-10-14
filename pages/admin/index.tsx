@@ -69,11 +69,25 @@ interface MetricCardProps {
   label: string
   value: number
   subtle?: boolean
+  href?: string
+  color?: string
 }
 
-function MetricCard({ icon, label, value, subtle = false }: MetricCardProps) {
+function MetricCard({ icon, label, value, subtle = false, href, color }: MetricCardProps) {
+  const router = useRouter()
+
+  const handleClick = () => {
+    if (href) {
+      router.push(href)
+    }
+  }
+
   return (
-    <div className={`stat-card ${subtle ? 'subtle' : ''}`}>
+    <div
+      className={`stat-card ${subtle ? 'subtle' : ''} ${href ? 'clickable' : ''}`}
+      onClick={handleClick}
+      style={color ? { background: color } : undefined}
+    >
       <div className="stat-icon">{icon}</div>
       <div className="stat-content">
         <h3>{label}</h3>
@@ -184,14 +198,14 @@ export default function AdminDashboard() {
       <AdminLayout title="Dashboard">
         <div className="dashboard">
           <div className="stats-grid">
-            <MetricCard icon="📰" label="Total Cases" value={stats.totalCases} />
-            <MetricCard icon="👤" label="People" value={stats.totalPeople} />
-            <MetricCard icon="🏢" label="Organizations" value={stats.totalOrganizations} />
-            <MetricCard icon="💬" label="Statements" value={stats.totalStatements} />
-            <MetricCard icon="🧑‍🤝‍🧑" label="Users" value={stats.totalUsers} />
-            <MetricCard icon="🔥" label="Active (30d)" value={stats.activeUsers30d} />
-            <MetricCard icon="🔐" label="MFA Enabled" value={stats.mfaEnabledUsers} />
-            <MetricCard icon="🗝️" label="Active API Keys" value={stats.activeApiKeys} />
+            <MetricCard icon="📰" label="Total Cases" value={stats.totalCases} href="/admin/cases" color="linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)" />
+            <MetricCard icon="👤" label="People" value={stats.totalPeople} href="/admin/people" color="linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)" />
+            <MetricCard icon="🏢" label="Organizations" value={stats.totalOrganizations} href="/admin/organizations" color="linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)" />
+            <MetricCard icon="💬" label="Statements" value={stats.totalStatements} href="/admin/statements" color="linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)" />
+            <MetricCard icon="🧑‍🤝‍🧑" label="Users" value={stats.totalUsers} href="/admin/users" color="linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)" />
+            <MetricCard icon="🔥" label="Active (30d)" value={stats.activeUsers30d} color="linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)" />
+            <MetricCard icon="🔐" label="MFA Enabled" value={stats.mfaEnabledUsers} color="linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%)" />
+            <MetricCard icon="🗝️" label="Active API Keys" value={stats.activeApiKeys} color="linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%)" />
             <div className="stat-card wide">
               <div className="stat-icon">📚</div>
               <div className="stat-content">
@@ -389,14 +403,37 @@ export default function AdminDashboard() {
             align-items: center;
             gap: 1rem;
             min-height: 120px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            border: 1px solid transparent;
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            position: relative;
+          }
+
+          .stat-card.clickable {
+            cursor: pointer;
+          }
+
+          .stat-card.clickable::after {
+            content: '→';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: rgba(0, 0, 0, 0.4);
           }
 
           .stat-card:hover {
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
-            border-color: #e5e7eb;
+            filter: brightness(0.98);
+          }
+
+          .stat-card.clickable:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) translateX(3px);
           }
 
           .stat-card.subtle {
@@ -493,50 +530,57 @@ export default function AdminDashboard() {
           }
 
           .action-buttons {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
           }
 
           .action-btn {
-            padding: 0.875rem 1.5rem;
-            background: white;
-            border: 1.5px solid #e5e7eb;
-            border-radius: var(--radius-sm);
+            padding: 1.25rem 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
             font-size: 0.9375rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.25s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 0.625rem;
+            justify-content: center;
+            gap: 0.75rem;
             color: #475569;
-            line-height: 1;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            min-height: 100px;
           }
 
           .action-btn span {
-            font-size: 1.125rem;
+            font-size: 2rem;
             line-height: 1;
+            display: block;
           }
 
           .action-btn:hover {
-            background: #f8fafc;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-color: #3b82f6;
             color: #3b82f6;
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
           }
 
           .action-btn.primary {
             background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
             border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
           }
 
           .action-btn.primary:hover {
             background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
             border-color: #2563eb;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
+            transform: translateY(-3px);
           }
 
           /* Panels Grid */
