@@ -79,11 +79,18 @@ export default function WhatWeDoSection() {
 
         <div className="cta-footer">
           <p>Every statement is meticulously sourced and verified.</p>
-          <Link href="/about">
-            <button type="button" className="btn-learn-more">
-              Learn More About Our Mission
-            </button>
-          </Link>
+          <div className="cta-buttons">
+            <Link href="/statements">
+              <button type="button" className="btn-browse-cases">
+                Browse All Cases
+              </button>
+            </Link>
+            <Link href="/about">
+              <button type="button" className="btn-learn-more">
+                Learn More About Our Mission
+              </button>
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -187,7 +194,14 @@ export default function WhatWeDoSection() {
           margin-bottom: 1.5rem;
         }
 
-        .btn-learn-more {
+        .cta-buttons {
+          display: flex;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .btn-browse-cases {
           background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
           color: white;
           border: none;
@@ -199,9 +213,27 @@ export default function WhatWeDoSection() {
           transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .btn-learn-more:hover {
+        .btn-browse-cases:hover {
           transform: translateY(-2px);
           box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-learn-more {
+          background: white;
+          color: #667eea;
+          border: 2px solid #667eea;
+          padding: 1rem 2rem;
+          border-radius: 8px;
+          font-size: 1.05rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+        }
+
+        .btn-learn-more:hover {
+          transform: translateY(-2px);
+          background: #f5f7fa;
+          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
         }
 
         @media (max-width: 968px) {
