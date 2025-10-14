@@ -86,7 +86,7 @@ async function handlePost(
         creator: {
           select: {
             id: true,
-            name: true,
+            username: true,
             email: true
           }
         }

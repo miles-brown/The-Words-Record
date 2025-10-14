@@ -67,7 +67,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
         creator: {
           select: {
             id: true,
-            name: true,
+            username: true,
             email: true
           }
         }
@@ -120,7 +120,7 @@ async function handlePost(
         creator: {
           select: {
             id: true,
-            name: true,
+            username: true,
             email: true
           }
         }
