@@ -121,7 +121,7 @@ export default async function handler(
       email: user.email || undefined,
       role: user.role
     }, {
-      sessionId: session.id
+      sessionId: session.sessionId
     })
 
     // Update user last login info
@@ -143,7 +143,7 @@ export default async function handler(
       actorId: user.id,
       details: {
         username: user.username,
-        sessionId: session.id
+        sessionId: session.sessionId
       }
     })
 
