@@ -250,37 +250,50 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         .sidebar-nav {
           flex: 1;
-          padding: 1rem 0;
+          padding: 0.75rem 0;
+          overflow-y: auto;
         }
 
         .nav-item {
           display: flex;
           align-items: center;
-          gap: 0.75rem;
-          padding: 0.75rem 1.5rem;
-          color: #bdc3c7;
+          gap: 1rem;
+          padding: 1rem 1.5rem;
+          margin: 0.25rem 0.75rem;
+          color: #cbd5e0;
           text-decoration: none;
           transition: all 0.2s;
+          border-radius: 8px;
+          line-height: 1.5;
+          font-size: 0.9375rem;
         }
 
         .nav-item:hover {
-          background: #34495e;
+          background: rgba(255, 255, 255, 0.1);
           color: white;
+          transform: translateX(2px);
         }
 
         .nav-item.active {
-          background: #3498db;
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
+          font-weight: 600;
+          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
         }
 
         .nav-icon {
-          font-size: 1.1rem;
-          width: 20px;
-          text-align: center;
+          font-size: 1.25rem;
+          width: 24px;
+          height: 24px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
         }
 
         .nav-label {
           font-weight: 500;
+          letter-spacing: 0.01em;
         }
 
         .sidebar-footer {
