@@ -359,13 +359,11 @@ function mapOrganizationData(row: any) {
   return {
     slug: row.slug || generateSlug(row.name),
     name: row.name,
+    type: row.type || row.orgType || row.org_type || 'OTHER',
     description: row.description || null,
-    logoUrl: row.logoUrl || row.logo_url || null,
-    websiteUrl: row.websiteUrl || row.website_url || null,
-    orgType: row.orgType || row.org_type || 'OTHER',
-    foundedDate: row.foundedDate ? new Date(row.foundedDate) : null,
-    locationCity: row.locationCity || row.location_city || null,
-    locationCountry: row.locationCountry || row.location_country || null
+    website: row.website || row.websiteUrl || row.website_url || null,
+    founded: row.founded || row.foundedDate ? new Date(row.founded || row.foundedDate) : null,
+    headquarters: row.headquarters || row.locationCity || row.location_city || null
   }
 }
 
