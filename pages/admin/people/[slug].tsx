@@ -7,13 +7,35 @@ interface PersonForm {
   firstName: string
   middleName: string
   lastName: string
+  namePrefix: string
+  nameSuffix: string
   slug: string
   bio: string
+  shortBio: string
   profession: string
   professionDetail: string
+  currentTitle: string
+  currentOrganization: string
   nationality: string
   birthDate: string
+  deathDate: string
+  birthPlace: string
+  deathPlace: string
   imageUrl: string
+  gender: string
+  background: string
+  bestKnownFor: string
+  politicalParty: string
+  politicalBeliefs: string
+  religion: string
+  religionDenomination: string
+  residence: string
+  roleDescription: string
+  yearsActive: string
+  twitterHandle: string
+  linkedInUrl: string
+  officialWebsite: string
+  wikipediaUrl: string
 }
 
 export default function EditPerson() {
@@ -26,13 +48,35 @@ export default function EditPerson() {
     firstName: '',
     middleName: '',
     lastName: '',
+    namePrefix: '',
+    nameSuffix: '',
     slug: '',
     bio: '',
+    shortBio: '',
     profession: 'OTHER',
     professionDetail: '',
+    currentTitle: '',
+    currentOrganization: '',
     nationality: '',
     birthDate: '',
-    imageUrl: ''
+    deathDate: '',
+    birthPlace: '',
+    deathPlace: '',
+    imageUrl: '',
+    gender: '',
+    background: '',
+    bestKnownFor: '',
+    politicalParty: '',
+    politicalBeliefs: '',
+    religion: '',
+    religionDenomination: '',
+    residence: '',
+    roleDescription: '',
+    yearsActive: '',
+    twitterHandle: '',
+    linkedInUrl: '',
+    officialWebsite: '',
+    wikipediaUrl: ''
   })
 
   useEffect(() => {
@@ -52,13 +96,35 @@ export default function EditPerson() {
           firstName: person.firstName || '',
           middleName: person.middleName || '',
           lastName: person.lastName || '',
+          namePrefix: person.namePrefix || '',
+          nameSuffix: person.nameSuffix || '',
           slug: person.slug || '',
           bio: person.bio || '',
+          shortBio: person.shortBio || '',
           profession: person.profession || 'OTHER',
           professionDetail: person.professionDetail || '',
+          currentTitle: person.currentTitle || '',
+          currentOrganization: person.currentOrganization || '',
           nationality: person.nationality || '',
-          birthDate: person.dateOfBirth ? person.dateOfBirth.split('T')[0] : '',
-          imageUrl: person.imageUrl || ''
+          birthDate: (person.birthDate || person.dateOfBirth) ? (person.birthDate || person.dateOfBirth).split('T')[0] : '',
+          deathDate: person.deathDate ? person.deathDate.split('T')[0] : '',
+          birthPlace: person.birthPlace || '',
+          deathPlace: person.deathPlace || '',
+          imageUrl: person.imageUrl || '',
+          gender: person.gender || '',
+          background: person.background || '',
+          bestKnownFor: person.bestKnownFor || '',
+          politicalParty: person.politicalParty || '',
+          politicalBeliefs: person.politicalBeliefs || '',
+          religion: person.religion || '',
+          religionDenomination: person.religionDenomination || '',
+          residence: person.residence || '',
+          roleDescription: person.roleDescription || '',
+          yearsActive: person.yearsActive || '',
+          twitterHandle: person.twitterHandle || '',
+          linkedInUrl: person.linkedInUrl || '',
+          officialWebsite: person.officialWebsite || '',
+          wikipediaUrl: person.wikipediaUrl || ''
         })
       } else {
         setError('Person not found')
@@ -88,15 +154,37 @@ export default function EditPerson() {
           firstName: formData.firstName,
           middleName: formData.middleName || undefined,
           lastName: formData.lastName,
-          fullName: `${formData.firstName} ${formData.middleName || ''} ${formData.lastName}`.trim(),
+          namePrefix: formData.namePrefix || undefined,
+          nameSuffix: formData.nameSuffix || undefined,
+          fullName: `${formData.namePrefix || ''} ${formData.firstName} ${formData.middleName || ''} ${formData.lastName} ${formData.nameSuffix || ''}`.replace(/\s+/g, ' ').trim(),
           name: `${formData.firstName} ${formData.lastName}`.trim(),
           slug: formData.slug,
           bio: formData.bio || undefined,
+          shortBio: formData.shortBio || undefined,
           profession: formData.profession,
           professionDetail: formData.professionDetail || undefined,
+          currentTitle: formData.currentTitle || undefined,
+          currentOrganization: formData.currentOrganization || undefined,
           nationality: formData.nationality || undefined,
-          dateOfBirth: formData.birthDate || undefined,
-          imageUrl: formData.imageUrl || undefined
+          birthDate: formData.birthDate || undefined,
+          deathDate: formData.deathDate || undefined,
+          birthPlace: formData.birthPlace || undefined,
+          deathPlace: formData.deathPlace || undefined,
+          imageUrl: formData.imageUrl || undefined,
+          gender: formData.gender || undefined,
+          background: formData.background || undefined,
+          bestKnownFor: formData.bestKnownFor || undefined,
+          politicalParty: formData.politicalParty || undefined,
+          politicalBeliefs: formData.politicalBeliefs || undefined,
+          religion: formData.religion || undefined,
+          religionDenomination: formData.religionDenomination || undefined,
+          residence: formData.residence || undefined,
+          roleDescription: formData.roleDescription || undefined,
+          yearsActive: formData.yearsActive || undefined,
+          twitterHandle: formData.twitterHandle || undefined,
+          linkedInUrl: formData.linkedInUrl || undefined,
+          officialWebsite: formData.officialWebsite || undefined,
+          wikipediaUrl: formData.wikipediaUrl || undefined
         })
       })
 
@@ -192,6 +280,17 @@ export default function EditPerson() {
 
                 <div className="form-row">
                   <div className="form-group">
+                    <label>Name Prefix</label>
+                    <input
+                      type="text"
+                      name="namePrefix"
+                      value={formData.namePrefix}
+                      onChange={handleChange}
+                      placeholder="Dr., Mr., Ms., etc."
+                    />
+                  </div>
+
+                  <div className="form-group">
                     <label>First Name *</label>
                     <input
                       type="text"
@@ -211,7 +310,9 @@ export default function EditPerson() {
                       onChange={handleChange}
                     />
                   </div>
+                </div>
 
+                <div className="form-row">
                   <div className="form-group">
                     <label>Last Name *</label>
                     <input
@@ -221,6 +322,33 @@ export default function EditPerson() {
                       onChange={handleChange}
                       required
                     />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Name Suffix</label>
+                    <input
+                      type="text"
+                      name="nameSuffix"
+                      value={formData.nameSuffix}
+                      onChange={handleChange}
+                      placeholder="Jr., Sr., III, PhD, etc."
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Gender</label>
+                    <select
+                      name="gender"
+                      value={formData.gender}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select...</option>
+                      <option value="MALE">Male</option>
+                      <option value="FEMALE">Female</option>
+                      <option value="NON_BINARY">Non-Binary</option>
+                      <option value="OTHER">Other</option>
+                      <option value="PREFER_NOT_TO_SAY">Prefer Not to Say</option>
+                    </select>
                   </div>
                 </div>
 
@@ -238,14 +366,51 @@ export default function EditPerson() {
                 </div>
 
                 <div className="form-group">
-                  <label>Biography</label>
+                  <label>Short Bio (max 500 chars)</label>
+                  <textarea
+                    name="shortBio"
+                    value={formData.shortBio}
+                    onChange={handleChange}
+                    rows={2}
+                    maxLength={500}
+                    placeholder="Brief one-line description..."
+                  />
+                  <small>{formData.shortBio.length}/500 characters</small>
+                </div>
+
+                <div className="form-group">
+                  <label>Full Biography</label>
                   <textarea
                     name="bio"
                     value={formData.bio}
                     onChange={handleChange}
                     rows={5}
-                    placeholder="Brief biography..."
+                    placeholder="Detailed biography..."
                   />
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Best Known For</label>
+                    <input
+                      type="text"
+                      name="bestKnownFor"
+                      value={formData.bestKnownFor}
+                      onChange={handleChange}
+                      placeholder="e.g., Author of..., Former President of..."
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Background</label>
+                    <input
+                      type="text"
+                      name="background"
+                      value={formData.background}
+                      onChange={handleChange}
+                      placeholder="Brief background summary"
+                    />
+                  </div>
                 </div>
 
                 <div className="form-group">
@@ -294,6 +459,58 @@ export default function EditPerson() {
 
                 <div className="form-row">
                   <div className="form-group">
+                    <label>Current Title</label>
+                    <input
+                      type="text"
+                      name="currentTitle"
+                      value={formData.currentTitle}
+                      onChange={handleChange}
+                      placeholder="e.g., Chief Executive Officer"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Current Organization</label>
+                    <input
+                      type="text"
+                      name="currentOrganization"
+                      value={formData.currentOrganization}
+                      onChange={handleChange}
+                      placeholder="e.g., Acme Corporation"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Role Description</label>
+                    <input
+                      type="text"
+                      name="roleDescription"
+                      value={formData.roleDescription}
+                      onChange={handleChange}
+                      placeholder="Brief description of role"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Years Active</label>
+                    <input
+                      type="text"
+                      name="yearsActive"
+                      value={formData.yearsActive}
+                      onChange={handleChange}
+                      placeholder="e.g., 2005-present, 1990-2020"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Personal Information</h3>
+
+                <div className="form-row">
+                  <div className="form-group">
                     <label>Nationality</label>
                     <input
                       type="text"
@@ -305,12 +522,163 @@ export default function EditPerson() {
                   </div>
 
                   <div className="form-group">
+                    <label>Residence</label>
+                    <input
+                      type="text"
+                      name="residence"
+                      value={formData.residence}
+                      onChange={handleChange}
+                      placeholder="e.g., New York, NY"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
                     <label>Date of Birth</label>
                     <input
                       type="date"
                       name="birthDate"
                       value={formData.birthDate}
                       onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Birth Place</label>
+                    <input
+                      type="text"
+                      name="birthPlace"
+                      value={formData.birthPlace}
+                      onChange={handleChange}
+                      placeholder="e.g., Boston, MA, USA"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Date of Death</label>
+                    <input
+                      type="date"
+                      name="deathDate"
+                      value={formData.deathDate}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Death Place</label>
+                    <input
+                      type="text"
+                      name="deathPlace"
+                      value={formData.deathPlace}
+                      onChange={handleChange}
+                      placeholder="e.g., Los Angeles, CA, USA"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Political & Religious Information</h3>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Political Party</label>
+                    <input
+                      type="text"
+                      name="politicalParty"
+                      value={formData.politicalParty}
+                      onChange={handleChange}
+                      placeholder="e.g., Democratic Party, Independent"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Political Beliefs</label>
+                    <input
+                      type="text"
+                      name="politicalBeliefs"
+                      value={formData.politicalBeliefs}
+                      onChange={handleChange}
+                      placeholder="e.g., Progressive, Conservative"
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Religion</label>
+                    <input
+                      type="text"
+                      name="religion"
+                      value={formData.religion}
+                      onChange={handleChange}
+                      placeholder="e.g., Christianity, Judaism, Islam"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Religious Denomination</label>
+                    <input
+                      type="text"
+                      name="religionDenomination"
+                      value={formData.religionDenomination}
+                      onChange={handleChange}
+                      placeholder="e.g., Catholic, Methodist, Sunni"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-section">
+                <h3>Online Presence</h3>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Official Website</label>
+                    <input
+                      type="url"
+                      name="officialWebsite"
+                      value={formData.officialWebsite}
+                      onChange={handleChange}
+                      placeholder="https://example.com"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Wikipedia URL</label>
+                    <input
+                      type="url"
+                      name="wikipediaUrl"
+                      value={formData.wikipediaUrl}
+                      onChange={handleChange}
+                      placeholder="https://en.wikipedia.org/wiki/..."
+                    />
+                  </div>
+                </div>
+
+                <div className="form-row">
+                  <div className="form-group">
+                    <label>Twitter Handle</label>
+                    <input
+                      type="text"
+                      name="twitterHandle"
+                      value={formData.twitterHandle}
+                      onChange={handleChange}
+                      placeholder="@username"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>LinkedIn URL</label>
+                    <input
+                      type="url"
+                      name="linkedInUrl"
+                      value={formData.linkedInUrl}
+                      onChange={handleChange}
+                      placeholder="https://linkedin.com/in/username"
                     />
                   </div>
                 </div>

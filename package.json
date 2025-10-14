@@ -27,7 +27,7 @@
     "csv-parse": "^6.1.0",
     "date-fns": "^2.29.3",
     "firecrawl": "^4.3.8",
-    "formidable": "^3.5.1",
+    "formidable": "^3.5.4",
     "gray-matter": "^4.0.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",

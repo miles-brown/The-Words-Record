@@ -212,7 +212,10 @@ async function uploadToS3(
 
   try {
     // Dynamic import of AWS SDK (only when needed)
-    const { S3Client, PutObjectCommand } = await import('@aws-sdk/client-s3')
+    // @ts-ignore - AWS SDK is an optional dependency
+    const awsSdk = await import('@aws-sdk/client-s3')
+    const S3Client = awsSdk.S3Client
+    const PutObjectCommand = awsSdk.PutObjectCommand
 
     const s3 = new S3Client({
       region,
@@ -265,6 +268,7 @@ async function uploadToCloudinary(
 
   try {
     // Dynamic import of Cloudinary SDK
+    // @ts-ignore - Cloudinary is an optional dependency
     const cloudinary = await import('cloudinary')
     cloudinary.v2.config({
       cloud_name: cloudName,
