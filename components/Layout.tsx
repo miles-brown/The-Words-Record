@@ -64,6 +64,14 @@ export default function Layout({ children, title, description }: LayoutProps) {
         <link rel="canonical" href={siteUrl} />
       </Head>
 
+      {/* Google AdSense */}
+      <Script
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5418171625369886"
+        crossOrigin="anonymous"
+        strategy="afterInteractive"
+      />
+
       <Analytics />
 
       <div className="container">
