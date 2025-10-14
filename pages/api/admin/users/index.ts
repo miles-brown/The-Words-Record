@@ -44,32 +44,50 @@ export default async function handler(
 
 async function handleGet(req: NextApiRequest, res: NextApiResponse) {
   try {
-    const users = await prisma.user.findMany({
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        role: true,
-        firstName: true,
-        lastName: true,
-        isActive: true,
-        mfaEnabled: true,
-        emailVerified: true,
-        lastLogin: true,
-        createdAt: true,
-        _count: {
-          select: {
-            sessions: true,
-            apiKeys: true
+    const { page = '1', limit = '50' } = req.query
+    const pageNum = parseInt(page as string, 10)
+    const limitNum = parseInt(limit as string, 10)
+    const skip = (pageNum - 1) * limitNum
+
+    const [users, total] = await Promise.all([
+      prisma.user.findMany({
+        select: {
+          id: true,
+          username: true,
+          email: true,
+          role: true,
+          firstName: true,
+          lastName: true,
+          isActive: true,
+          mfaEnabled: true,
+          emailVerified: true,
+          lastLogin: true,
+          createdAt: true,
+          _count: {
+            select: {
+              sessions: true,
+              apiKeys: true
+            }
           }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc'
+        },
+        orderBy: {
+          createdAt: 'desc'
+        },
+        skip,
+        take: limitNum
+      }),
+      prisma.user.count()
+    ])
+
+    return res.status(200).json({
+      users,
+      pagination: {
+        page: pageNum,
+        limit: limitNum,
+        total,
+        totalPages: Math.ceil(total / limitNum)
       }
     })
-
-    return res.status(200).json({ users })
   } catch (error) {
     console.error('Error fetching users:', error)
     return res.status(500).json({ error: 'Failed to fetch users' })
