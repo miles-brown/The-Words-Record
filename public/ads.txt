@@ -1,0 +1,16 @@
+# ads.txt - Authorized Digital Sellers
+# This file helps prevent advertising fraud by declaring authorized sellers
+# More info: https://iabtechlab.com/ads-txt/
+
+# Google AdSense
+google.com, pub-5418171625369886, DIRECT, f08c47fec0942fa0
+
+# Google Ad Manager (if using)
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+
+# Add other ad networks here as needed
+# Format: domain, publisher_id, relationship_type, certification_authority_id
+
+# Variables (optional - for dynamic seller data)
+# contact=admin@thewordsrecord.com
+# subdomain=adtech

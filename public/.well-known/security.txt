@@ -1,0 +1,24 @@
+# Our security address
+Contact: mailto:security@thewordsrecord.com
+Contact: https://thewordsrecord.com/security
+
+# Our security policy
+Policy: https://thewordsrecord.com/security-policy
+
+# Our OpenPGP key
+# Encryption: https://thewordsrecord.com/pgp-key.txt
+
+# Our preferred languages
+Preferred-Languages: en, es
+
+# Our canonical URL
+Canonical: https://thewordsrecord.com/.well-known/security.txt
+
+# Acknowledgments page
+Acknowledgments: https://thewordsrecord.com/security/hall-of-fame
+
+# Hiring
+Hiring: https://thewordsrecord.com/careers
+
+# Expires on December 31, 2025 (update annually)
+Expires: 2025-12-31T23:59:59.000Z

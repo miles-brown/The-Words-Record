@@ -5,6 +5,43 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
+        {/* PWA Manifest */}
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2c3e50" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Words Record" />
+
+        {/* Icons */}
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+
+        {/* Google Consent Mode v2 - Load BEFORE any analytics */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+
+              // Default consent to 'denied' for everything (GDPR-compliant)
+              gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'denied',
+                'functionality_storage': 'denied',
+                'personalization_storage': 'denied',
+                'security_storage': 'granted',
+                'wait_for_update': 500
+              });
+
+              // EU-specific settings
+              gtag('set', 'ads_data_redaction', true);
+              gtag('set', 'url_passthrough', true);
+            `
+          }}
+        />
+
         {/* Google AdSense Account Meta Tag */}
         {/* This meta tag verifies ownership for Google AdSense monetization */}
         <meta name="google-adsense-account" content="ca-pub-5418171625369886" />
