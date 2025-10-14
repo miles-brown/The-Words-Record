@@ -70,7 +70,7 @@ export default function DonatePage() {
                 <span className="cost-description">pays for our domain name for one year.</span>
               </div>
               <div className="cost-item">
-                <span className="cost-amount">£40</span>
+                <span className="cost-amount">£30</span>
                 <span className="cost-description">
                   pays for our database to stay alive and all content to remain free for the public for one year.
                 </span>
@@ -95,24 +95,8 @@ export default function DonatePage() {
                 </p>
               </div>
               <div className="method-card">
-                <div className="method-icon">🧾</div>
-                <h3>Institutional or academic support</h3>
-                <p>
-                  Universities, journalists, and libraries can fund specific areas of our archive or case
-                  documentation.
-                </p>
-              </div>
-              <div className="method-card">
-                <div className="method-icon">🧠</div>
-                <h3>Contribute research or time</h3>
-                <p>
-                  Volunteers can assist with source-checking, transcription, or translation of verified
-                  materials.
-                </p>
-              </div>
-              <div className="method-card">
                 <div className="method-icon">🔗</div>
-                <h3>Share and reference our work</h3>
+                <h3>Share on social media, spread the word and reference the site</h3>
                 <p>
                   Citing The Words Record helps maintain factual visibility in search results and archives.
                 </p>

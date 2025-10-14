@@ -310,7 +310,7 @@ header.scrolled .nav-brand h1 {
 }
 
 .nav-btn-accent {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white;
   border-color: transparent;
 }
@@ -318,7 +318,7 @@ header.scrolled .nav-brand h1 {
 .nav-btn-accent:hover {
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
 }
 
 /* Hamburger Menu Button */
@@ -447,7 +447,7 @@ header.scrolled .nav-brand h1 {
 }
 
 .menu-link-accent {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color: white !important;
   border-radius: 8px;
   margin: 0.5rem 0;
@@ -457,7 +457,7 @@ header.scrolled .nav-brand h1 {
 .menu-link-accent:hover {
   color: white !important;
   padding-left: 1rem !important;
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
 }
 
 /* Footer styles */
