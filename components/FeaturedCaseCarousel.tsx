@@ -5,13 +5,14 @@ import { format } from 'date-fns'
 interface FeaturedCase {
   slug: string
   title: string
-  summary: string
+  summary?: string
+  excerpt?: string
   caseDate: string
   _count: {
     sources: number
     statements: number
   }
-  tags: Array<{
+  tags?: Array<{
     name: string
     slug: string
   }>
@@ -41,6 +42,7 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
   }
 
   const currentCase = featuredCases[currentIndex]
+  const displaySummary = currentCase.summary || currentCase.excerpt || 'No summary available'
 
   const handlePrevious = () => {
     setIsAutoPlaying(false)
@@ -70,7 +72,7 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
               {format(new Date(currentCase.caseDate), 'MMMM d, yyyy')}
             </p>
 
-            <p className="case-summary">{currentCase.summary}</p>
+            <p className="case-summary">{displaySummary}</p>
 
             <div className="case-meta">
               <span className="meta-item">
@@ -90,8 +92,8 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
             {currentCase.tags && currentCase.tags.length > 0 && (
               <div className="case-tags">
-                {currentCase.tags.slice(0, 3).map((tag) => (
-                  <span key={tag.slug} className="tag">
+                {currentCase.tags.slice(0, 3).map((tag, idx) => (
+                  <span key={tag.slug || idx} className="tag">
                     {tag.name}
                   </span>
                 ))}

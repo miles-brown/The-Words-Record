@@ -196,13 +196,16 @@ export async function getStaticProps() {
   const featuredCases = allCases
     .slice(0, 5)
     .map(c => ({
-      ...c,
-      summary: c.excerpt,
+      slug: c.slug,
+      title: c.title,
+      summary: c.excerpt || c.summary || '',
+      excerpt: c.excerpt,
       caseDate: c.date,
       _count: {
         sources: 0, // These would come from the database
         statements: 0
-      }
+      },
+      tags: normalizeTags(c.tags)
     }))
 
   return {
