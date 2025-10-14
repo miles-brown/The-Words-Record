@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -17,14 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       controversyData,
       socialMediaData,
       orgsByType,
-      orgsByPoliticalLeaning,
-      orgsByStanceOnIsrael,
-      fundingData,
+      orgsByRegion,
+      casesByCountry,
+      statementVelocity,
       mostInfluentialPeople,
       mostControversialPeople,
       mostActivePeople,
       mostInfluentialOrgs,
-      mostControversialOrgs,
       mostActiveOrgs
     ] = await Promise.all([
       // People by profession
@@ -100,14 +97,39 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         take: 10
       }),
 
-      // Organizations by political leaning - placeholder until field is added
-      Promise.resolve([]),
+      // Organizations by region (based on statements)
+      prisma.$queryRaw`
+        SELECT
+          COALESCE(o."locationCountry", 'Unknown') as region,
+          COUNT(DISTINCT o.id) as count
+        FROM "Organization" o
+        GROUP BY o."locationCountry"
+        ORDER BY count DESC
+        LIMIT 10
+      `,
 
-      // Organizations by stance on Israel - placeholder until field is added
-      Promise.resolve([]),
+      // Case distribution by country
+      prisma.$queryRaw`
+        SELECT
+          COALESCE("locationCountry", 'Unknown') as country,
+          COUNT(*) as count
+        FROM "Case"
+        WHERE "locationCountry" IS NOT NULL
+        GROUP BY "locationCountry"
+        ORDER BY count DESC
+        LIMIT 10
+      `,
 
-      // Funding sources - placeholder until field is added
-      Promise.resolve([]),
+      // Statement velocity (last 30 days)
+      prisma.$queryRaw`
+        SELECT
+          DATE("statementDate") as date,
+          COUNT(*) as count
+        FROM "Statement"
+        WHERE "statementDate" >= NOW() - INTERVAL '30 days'
+        GROUP BY DATE("statementDate")
+        ORDER BY date DESC
+      `,
 
       // Most influential people
       prisma.person.findMany({
@@ -151,9 +173,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       }),
 
-      // Organizations with most controversies - placeholder
-      Promise.resolve([]),
-
       // Most active organizations
       prisma.organization.findMany({
         orderBy: { statementCount: 'desc' },
@@ -169,12 +188,56 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const activityTimeline = await prisma.$queryRaw`
       SELECT
         TO_CHAR(DATE_TRUNC('month', "statementDate"), 'Mon YYYY') as month,
-        COUNT(CASE WHEN "statementType" = 'STATEMENT' THEN 1 END) as statements,
+        COUNT(CASE WHEN "statementType" = 'ORIGINAL' THEN 1 END) as statements,
         COUNT(CASE WHEN "statementType" = 'RESPONSE' THEN 1 END) as responses
       FROM "Statement"
       WHERE "statementDate" >= NOW() - INTERVAL '12 months'
       GROUP BY DATE_TRUNC('month', "statementDate")
       ORDER BY DATE_TRUNC('month', "statementDate")
+    `
+
+    // Enhanced Metrics - Response & Verification Rates
+    const [statementStats, verificationStats, caseStats] = await Promise.all([
+      // Statement response ratio
+      prisma.$queryRaw<Array<{ total: bigint; with_responses: bigint }>>`
+        SELECT
+          COUNT(*) as total,
+          COUNT(CASE WHEN EXISTS (
+            SELECT 1 FROM "Statement" s2 WHERE s2."respondsToId" = s1.id
+          ) THEN 1 END) as with_responses
+        FROM "Statement" s1
+        WHERE s1."statementType" = 'ORIGINAL'
+      `,
+
+      // Verification rate
+      prisma.$queryRaw<Array<{ total: bigint; verified: bigint; unverified: bigint }>>`
+        SELECT
+          COUNT(*) as total,
+          COUNT(CASE WHEN "isVerified" = true THEN 1 END) as verified,
+          COUNT(CASE WHEN "isVerified" = false THEN 1 END) as unverified
+        FROM "Statement"
+      `,
+
+      // Case statistics
+      prisma.$queryRaw<Array<{ total: bigint; real_cases: bigint; promoted: bigint }>>`
+        SELECT
+          COUNT(*) as total,
+          COUNT(CASE WHEN "isRealIncident" = true THEN 1 END) as real_cases,
+          COUNT(CASE WHEN "wasManuallyPromoted" = true THEN 1 END) as promoted
+        FROM "Case"
+      `
+    ])
+
+    // Top media outlets
+    const topMediaOutlets = await prisma.$queryRaw<Array<{ publication: string; count: bigint }>>`
+      SELECT
+        publication,
+        COUNT(*) as count
+      FROM "Source"
+      WHERE publication IS NOT NULL AND publication != ''
+      GROUP BY publication
+      ORDER BY count DESC
+      LIMIT 10
     `
 
     // Format the response
@@ -200,12 +263,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         type: o.orgType?.replace(/_/g, ' ') || 'Unknown',
         count: o._count
       })),
-      orgsByPoliticalLeaning: [], // Placeholder - field not in schema yet
-      orgsByStanceOnIsrael: [], // Placeholder - field not in schema yet
-      fundingSourceDistribution: [], // Placeholder - field not in schema yet
+      orgsByRegion: orgsByRegion,
+      casesByCountry: casesByCountry,
 
-      // Timeline
+      // Timeline & Velocity
       activityTimeline,
+      statementVelocity: statementVelocity,
+
+      // Enhanced Metrics
+      responseRate: {
+        total: Number(statementStats[0]?.total || 0),
+        withResponses: Number(statementStats[0]?.with_responses || 0),
+        percentage: statementStats[0]
+          ? Math.round((Number(statementStats[0].with_responses) / Number(statementStats[0].total)) * 100)
+          : 0
+      },
+      verificationRate: {
+        total: Number(verificationStats[0]?.total || 0),
+        verified: Number(verificationStats[0]?.verified || 0),
+        unverified: Number(verificationStats[0]?.unverified || 0),
+        percentage: verificationStats[0]
+          ? Math.round((Number(verificationStats[0].verified) / Number(verificationStats[0].total)) * 100)
+          : 0
+      },
+      caseStatistics: {
+        total: Number(caseStats[0]?.total || 0),
+        realCases: Number(caseStats[0]?.real_cases || 0),
+        promotedStatements: Number(caseStats[0]?.promoted || 0)
+      },
+      topMediaOutlets: topMediaOutlets.map(m => ({
+        publication: m.publication,
+        count: Number(m.count)
+      })),
 
       // Rankings
       mostInfluential: [
@@ -221,18 +310,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }))
       ].sort((a, b) => b.score - a.score).slice(0, 10),
 
-      mostControversial: [
-        ...mostControversialPeople.map(p => ({
-          name: p.name,
-          score: p.controversyScore || 0,
-          type: 'Person'
-        })),
-        ...(mostControversialOrgs as any[]).map(o => ({
-          name: o.name,
-          score: o.controversy_count * 20, // Scale controversy count
-          type: 'Organization'
-        }))
-      ].sort((a, b) => b.score - a.score).slice(0, 10),
+      mostControversial: mostControversialPeople.map(p => ({
+        name: p.name,
+        score: p.controversyScore || 0,
+        type: 'Person'
+      })),
 
       mostActive: [
         ...mostActivePeople.map(p => ({
@@ -255,7 +337,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       message: 'Failed to fetch analytics data',
       error: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.message : 'Unknown error') : undefined
     })
-  } finally {
-    await prisma.$disconnect()
   }
 }
