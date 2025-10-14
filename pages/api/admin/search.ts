@@ -148,8 +148,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       where: {
         OR: [
           { title: { contains: query, mode: 'insensitive' } },
-          { url: { contains: query, mode: 'insensitive' } },
-          { sourceType: { contains: query, mode: 'insensitive' } }
+          { url: { contains: query, mode: 'insensitive' } }
         ]
       },
       take: 5,
@@ -161,7 +160,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: s.id,
         type: 'source',
         title: s.title,
-        description: s.sourceType,
+        description: s.sourceType || undefined,
         url: `/admin/sources/${s.id}`
       })
     })
