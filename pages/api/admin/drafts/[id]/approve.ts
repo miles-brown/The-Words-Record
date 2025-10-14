@@ -125,10 +125,10 @@ async function publishDraft(draft: any) {
       if (draft.contentId) {
         await prisma.case.update({
           where: { id: draft.contentId },
-          data
+          data: data as any
         })
       } else {
-        await prisma.case.create({ data })
+        await prisma.case.create({ data: data as any })
       }
       break
 
@@ -136,10 +136,10 @@ async function publishDraft(draft: any) {
       if (draft.contentId) {
         await prisma.person.update({
           where: { id: draft.contentId },
-          data
+          data: data as any
         })
       } else {
-        await prisma.person.create({ data })
+        await prisma.person.create({ data: data as any })
       }
       break
 
@@ -147,10 +147,10 @@ async function publishDraft(draft: any) {
       if (draft.contentId) {
         await prisma.organization.update({
           where: { id: draft.contentId },
-          data
+          data: data as any
         })
       } else {
-        await prisma.organization.create({ data })
+        await prisma.organization.create({ data: data as any })
       }
       break
 
@@ -158,10 +158,10 @@ async function publishDraft(draft: any) {
       if (draft.contentId) {
         await prisma.statement.update({
           where: { id: draft.contentId },
-          data
+          data: data as any
         })
       } else {
-        await prisma.statement.create({ data })
+        await prisma.statement.create({ data: data as any })
       }
       break
   }
