@@ -88,12 +88,12 @@ export default async function handler(
 
     // Date range filter
     if (startDate || endDate) {
-      where.timestamp = {}
+      where.actionAt = {}
       if (startDate) {
-        where.timestamp.gte = new Date(startDate as string)
+        where.actionAt.gte = new Date(startDate as string)
       }
       if (endDate) {
-        where.timestamp.lte = new Date(endDate as string)
+        where.actionAt.lte = new Date(endDate as string)
       }
     }
 
@@ -118,7 +118,7 @@ export default async function handler(
             }
           }
         },
-        orderBy: { timestamp: 'desc' },
+        orderBy: { actionAt: 'desc' },
         skip,
         take: limitNum
       }),
@@ -127,7 +127,7 @@ export default async function handler(
       prisma.auditLog.groupBy({
         by: ['action'],
         _count: true,
-        where: where.timestamp ? { timestamp: where.timestamp } : undefined
+        where: where.actionAt ? { actionAt: where.actionAt } : undefined
       })
     ])
 
