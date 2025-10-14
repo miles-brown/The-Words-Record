@@ -10,6 +10,7 @@ export interface AuditLogEntry {
   entityType?: string
   entityId?: string
   description?: string
+  details?: Record<string, unknown> | null  // Alias for changes/metadata
   changes?: Record<string, unknown> | null
   metadata?: Record<string, unknown> | null
   ipAddress?: string
@@ -23,8 +24,10 @@ export interface AuditLogEntry {
  * is not yet available (e.g., prior to running migrations).
  */
 export async function recordAuditEvent(entry: AuditLogEntry): Promise<void> {
+  // Map 'details' to 'metadata' for backwards compatibility
   const payload: AuditLogEntry = {
     ...entry,
+    metadata: entry.metadata ?? entry.details ?? null,
     occuredAt: entry.occuredAt ?? new Date(),
     actorType: entry.actorType ?? (entry.actorId ? 'USER' : 'ANONYMOUS'),
     status: entry.status ?? 'SUCCESS'
@@ -85,3 +88,6 @@ export function extractRequestContext(req: NextApiRequest | null | undefined) {
     userAgent
   }
 }
+
+// Alias for backwards compatibility
+export const logAuditEvent = recordAuditEvent
