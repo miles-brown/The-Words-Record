@@ -300,19 +300,25 @@ export default function AdminDashboard() {
         </div>
 
         <style jsx>{`
-          /* Design System Variables */
-          :root {
+          /* Admin Dashboard Container with CSS Variables */
+          .dashboard {
             --spacing-unit: 1.5rem;
             --radius-sm: 8px;
             --radius-md: 12px;
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
             --shadow-md: 0 2px 8px rgba(0,0,0,0.1);
             --shadow-lg: 0 4px 16px rgba(0,0,0,0.12);
-          }
-
-          .dashboard {
             max-width: 1400px;
             margin: 0 auto;
+            padding: 0;
+          }
+
+          /* Reset global button styles for admin */
+          .dashboard button {
+            all: unset;
+            box-sizing: border-box;
+            cursor: pointer;
+            user-select: none;
           }
 
           .loading-container, .error-container {

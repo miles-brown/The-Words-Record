@@ -339,7 +339,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           flex: 1;
           display: flex;
           flex-direction: column;
-          margin-left: 0;
+          min-width: 0;
         }
 
         .top-bar {
