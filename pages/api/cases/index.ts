@@ -18,6 +18,7 @@ export default async function handler(
         const person = req.query.person as string
         const sortBy = req.query.sortBy as string || 'date-desc'
         const includeArchived = req.query.includeArchived === 'true'
+        const featuredOnly = req.query.featured === 'true'
 
         // Build filter conditions - only show real incidents (not statement pages)
         const where: any = {
@@ -27,6 +28,10 @@ export default async function handler(
               ? [CaseVisibility.PUBLIC, CaseVisibility.ARCHIVED]
               : [CaseVisibility.PUBLIC]
           }
+        }
+
+        if (featuredOnly) {
+          where.isFeatured = true
         }
 
         if (statusFilter) where.status = statusFilter

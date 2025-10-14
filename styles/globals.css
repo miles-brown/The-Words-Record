@@ -195,6 +195,47 @@ button:active, .button:active, input[type="submit"]:active {
   animation: successPulse 0.3s ease-out;
 }
 
+/* Utility Bar Styles */
+.utility-bar {
+  background: var(--background-secondary);
+  border-bottom: 1px solid var(--border-primary);
+  padding: 0.5rem 0;
+}
+
+.utility-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.utility-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.utility-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.utility-link:hover {
+  color: var(--accent-primary);
+}
+
+.utility-icon {
+  width: 16px;
+  height: 16px;
+}
+
 header {
   background: var(--background-primary);
   border-bottom: 1px solid var(--border-primary);
@@ -462,6 +503,23 @@ footer {
 }
 
 @media (max-width: 768px) {
+  .utility-content {
+    padding: 0 1rem;
+  }
+
+  .utility-links {
+    gap: 1rem;
+  }
+
+  .utility-link {
+    font-size: 0.8rem;
+  }
+
+  .utility-icon {
+    width: 14px;
+    height: 14px;
+  }
+
   nav {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
