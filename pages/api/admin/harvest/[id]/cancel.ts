@@ -68,7 +68,8 @@ async function handlePost(
     }
 
     // Only allow cancellation of jobs that are pending, queued, or running
-    if (![JobStatus.PENDING, JobStatus.QUEUED, JobStatus.RUNNING].includes(job.status)) {
+    const cancellableStatuses = [JobStatus.PENDING, JobStatus.QUEUED, JobStatus.RUNNING] as const
+    if (!cancellableStatuses.includes(job.status as any)) {
       return res.status(400).json({
         error: `Cannot cancel job with status ${job.status}. Only PENDING, QUEUED, or RUNNING jobs can be cancelled.`
       })
