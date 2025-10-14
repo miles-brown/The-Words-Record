@@ -224,12 +224,12 @@ async function handleDelete(
     }
 
     // Check if person has related records
-    if (person._count.statements > 0 || person._count.casesAsSubject > 0) {
+    if (person._count.statements > 0 || person._count.cases > 0) {
       return res.status(400).json({
         error: 'Cannot delete person with existing statements or cases. Please remove related records first.',
         details: {
           statements: person._count.statements,
-          cases: person._count.casesAsSubject
+          cases: person._count.cases
         }
       })
     }
