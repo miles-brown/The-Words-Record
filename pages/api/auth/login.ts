@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { verifyPassword, generateToken, setAuthCookie } from '@/lib/auth'
 import { createSession } from '@/lib/session'
 import { logAuditEvent } from '@/lib/audit'
-import { AuditAction, AuditActorType } from '@prisma/client'
+import { AuditAction } from '@prisma/client'
 
 export default async function handler(
   req: NextApiRequest,
@@ -39,7 +39,7 @@ export default async function handler(
     if (!user.isActive) {
       await logAuditEvent({
         action: 'LOGIN_FAILED',
-        actorType: AuditActorType.USER,
+        actorType: 'USER',
         actorId: user.id,
         details: { reason: 'Account disabled', username }
       })
@@ -50,7 +50,7 @@ export default async function handler(
     if (user.lockedUntil && new Date(user.lockedUntil) > new Date()) {
       await logAuditEvent({
         action: 'LOGIN_FAILED',
-        actorType: AuditActorType.USER,
+        actorType: 'USER',
         actorId: user.id,
         details: { reason: 'Account locked', username, lockedUntil: user.lockedUntil }
       })
@@ -82,7 +82,7 @@ export default async function handler(
 
       await logAuditEvent({
         action: 'LOGIN_FAILED',
-        actorType: AuditActorType.USER,
+        actorType: 'USER',
         actorId: user.id,
         details: {
           reason: 'Invalid password',
@@ -139,7 +139,7 @@ export default async function handler(
     // Log successful login
     await logAuditEvent({
       action: AuditAction.LOGIN,
-      actorType: AuditActorType.USER,
+      actorType: 'USER',
       actorId: user.id,
       details: {
         username: user.username,
