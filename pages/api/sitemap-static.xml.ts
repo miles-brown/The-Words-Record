@@ -67,6 +67,16 @@ function getStaticPages(): SitemapEntry[] {
       loc: `${SITE_URL}/terms`,
       changefreq: 'monthly',
       priority: 0.3
+    },
+    {
+      loc: `${SITE_URL}/donate`,
+      changefreq: 'monthly',
+      priority: 0.8
+    },
+    {
+      loc: `${SITE_URL}/methodology`,
+      changefreq: 'monthly',
+      priority: 0.6
     }
   ]
 }
