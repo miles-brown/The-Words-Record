@@ -87,7 +87,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
           updatedAt: true,
           _count: {
             select: {
-              statements: true
+              primaryForStatements: true
             }
           }
         },

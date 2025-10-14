@@ -77,7 +77,7 @@ async function handleGet(
         updatedAt: true,
         _count: {
           select: {
-            statements: true
+            primaryForStatements: true
           }
         }
       }
@@ -212,7 +212,7 @@ async function handleDelete(
         url: true,
         _count: {
           select: {
-            statements: true
+            primaryForStatements: true
           }
         }
       }
@@ -223,11 +223,11 @@ async function handleDelete(
     }
 
     // Check if source has related records
-    if (source._count.statements > 0) {
+    if (source._count.primaryForStatements > 0) {
       return res.status(400).json({
         error: 'Cannot delete source with existing statements. Please remove related records first.',
         details: {
-          statements: source._count.statements
+          statements: source._count.primaryForStatements
         }
       })
     }
