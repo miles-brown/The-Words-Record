@@ -93,7 +93,7 @@ async function handleGet(
 
     // Log audit event
     await logAuditEvent({
-      action: AuditAction.READ,
+      action: AuditAction.EXPORT,
       actorType: AuditActorType.USER,
       actorId,
       entityType: 'Export',
