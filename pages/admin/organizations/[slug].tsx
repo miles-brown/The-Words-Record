@@ -55,7 +55,22 @@ export default function EditOrganization() {
 
   const fetchOrganization = async () => {
     try {
-      const response = await fetch(`/api/admin/organizations/${slug}`)
+      const response = await fetch(`/api/admin/organizations/${slug}`, {
+        credentials: 'include', // Important: send cookies
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+
+      // Check if response is JSON before parsing
+      const contentType = response.headers.get('content-type')
+      if (!contentType || !contentType.includes('application/json')) {
+        console.error('Response is not JSON:', await response.text())
+        setError(`Server error: Expected JSON but received ${contentType || 'unknown content type'}. You may not be logged in.`)
+        setLoading(false)
+        return
+      }
+
       if (response.ok) {
         const data = await response.json()
         const org = data.organization
@@ -143,6 +158,7 @@ export default function EditOrganization() {
 
       const response = await fetch(`/api/admin/organizations/${slug}`, {
         method: 'PUT',
+        credentials: 'include', // Important: send cookies
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
@@ -184,7 +200,8 @@ export default function EditOrganization() {
 
     try {
       const response = await fetch(`/api/admin/organizations/${slug}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        credentials: 'include' // Important: send cookies
       })
 
       if (response.ok) {
