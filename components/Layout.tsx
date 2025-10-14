@@ -111,9 +111,11 @@ export default function Layout({ children, title, description }: LayoutProps) {
                   <SearchBox placeholder="Search..." className="header-search" />
                 </div>
                 <div className="nav-links">
-                  <Link href="/statements">Statements</Link>
-                  <Link href="/people">People</Link>
-                  <Link href="/organizations">Organizations</Link>
+                  <Link href="/statements" className="nav-btn">Statements</Link>
+                  <Link href="/cases" className="nav-btn">Cases</Link>
+                  <Link href="/topics" className="nav-btn">Topics</Link>
+                  <Link href="/people" className="nav-btn">People</Link>
+                  <Link href="/donate" className="nav-btn nav-btn-accent">Donate</Link>
                 </div>
               </>
             )}
@@ -157,11 +159,17 @@ export default function Layout({ children, title, description }: LayoutProps) {
                 <Link href="/statements" onClick={() => setMenuOpen(false)}>
                   Statements
                 </Link>
+                <Link href="/cases" onClick={() => setMenuOpen(false)}>
+                  Cases
+                </Link>
+                <Link href="/topics" onClick={() => setMenuOpen(false)}>
+                  Topics
+                </Link>
                 <Link href="/people" onClick={() => setMenuOpen(false)}>
                   People
                 </Link>
-                <Link href="/organizations" onClick={() => setMenuOpen(false)}>
-                  Organizations
+                <Link href="/donate" onClick={() => setMenuOpen(false)} className="menu-link-accent">
+                  Donate
                 </Link>
                 <Link href="/about" onClick={() => setMenuOpen(false)}>
                   About

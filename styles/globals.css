@@ -284,19 +284,41 @@ header.scrolled .nav-brand h1 {
 
 .nav-links {
   display: flex;
-  gap: 1.5rem;
+  gap: 0.5rem;
   white-space: nowrap;
+  align-items: center;
 }
 
-.nav-links a {
-  color: var(--text-secondary);
+.nav-btn {
+  color: var(--text-primary);
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.625rem 1.25rem;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.nav-links a:hover {
-  color: var(--accent-primary);
+.nav-btn:hover {
+  color: #667eea;
+  border-color: #667eea;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.nav-btn-accent {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: transparent;
+}
+
+.nav-btn-accent:hover {
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3);
 }
 
 /* Hamburger Menu Button */
@@ -422,6 +444,20 @@ header.scrolled .nav-brand h1 {
 
 .menu-links a:last-child {
   border-bottom: none;
+}
+
+.menu-link-accent {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white !important;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  padding: 1rem !important;
+}
+
+.menu-link-accent:hover {
+  color: white !important;
+  padding-left: 1rem !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
 }
 
 /* Footer styles */
