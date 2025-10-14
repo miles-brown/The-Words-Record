@@ -7,7 +7,8 @@ interface FeaturedCase {
   title: string
   summary?: string
   excerpt?: string
-  caseDate: string
+  date?: string
+  caseDate?: string
   _count: {
     sources: number
     statements: number
@@ -43,6 +44,7 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
   const currentCase = featuredCases[currentIndex]
   const displaySummary = currentCase.summary || currentCase.excerpt || 'No summary available'
+  const displayDate = currentCase.caseDate || currentCase.date || new Date().toISOString()
 
   const handlePrevious = () => {
     setIsAutoPlaying(false)
@@ -69,7 +71,7 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
             <h2 className="case-title">{currentCase.title}</h2>
 
             <p className="case-date">
-              {format(new Date(currentCase.caseDate), 'MMMM d, yyyy')}
+              {format(new Date(displayDate), 'MMMM d, yyyy')}
             </p>
 
             <p className="case-summary">{displaySummary}</p>
