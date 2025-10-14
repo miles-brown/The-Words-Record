@@ -62,14 +62,13 @@ const DEV_PASSWORD = process.env.ADMIN_DEV_PASSWORD || 'admin123'
 
 export function generateToken(user: AdminUser, options: TokenOptions = {}): string {
   const { sessionId, ...signOverrides } = options
-  const payload: TokenPayload = {
-    sub: user.id || user.username,
+
+  // Don't include sub, iss, aud in payload - they're set in signOptions
+  const payload: any = {
     username: user.username,
     role: user.role,
     email: user.email,
-    permissions: user.permissions,
-    iss: JWT_ISSUER,
-    aud: JWT_AUDIENCE
+    permissions: user.permissions
   }
 
   if (sessionId) {
@@ -81,7 +80,7 @@ export function generateToken(user: AdminUser, options: TokenOptions = {}): stri
     expiresIn: ACCESS_TOKEN_TTL as StringValue | number,
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,
-    subject: payload.sub,
+    subject: user.id || user.username,
     ...signOverrides
   }
 
@@ -90,14 +89,13 @@ export function generateToken(user: AdminUser, options: TokenOptions = {}): stri
 
 export function generateRefreshToken(user: AdminUser, options: TokenOptions = {}): string {
   const { sessionId, ...signOverrides } = options
-  const payload: TokenPayload = {
-    sub: user.id || user.username,
+
+  // Don't include sub, iss, aud in payload - they're set in signOptions
+  const payload: any = {
     username: user.username,
     role: user.role,
     email: user.email,
-    permissions: user.permissions,
-    iss: JWT_ISSUER,
-    aud: JWT_AUDIENCE
+    permissions: user.permissions
   }
 
   if (sessionId) {
@@ -109,7 +107,7 @@ export function generateRefreshToken(user: AdminUser, options: TokenOptions = {}
     expiresIn: REFRESH_TOKEN_TTL as StringValue | number,
     issuer: JWT_ISSUER,
     audience: JWT_AUDIENCE,
-    subject: payload.sub,
+    subject: user.id || user.username,
     ...signOverrides
   }
 
