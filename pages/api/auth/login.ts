@@ -38,7 +38,7 @@ export default async function handler(
     // Check if account is active
     if (!user.isActive) {
       await logAuditEvent({
-        action: AuditAction.LOGIN_FAILED,
+        action: 'LOGIN_FAILED',
         actorType: AuditActorType.USER,
         actorId: user.id,
         details: { reason: 'Account disabled', username }
@@ -49,7 +49,7 @@ export default async function handler(
     // Check if account is locked
     if (user.lockedUntil && new Date(user.lockedUntil) > new Date()) {
       await logAuditEvent({
-        action: AuditAction.LOGIN_FAILED,
+        action: 'LOGIN_FAILED',
         actorType: AuditActorType.USER,
         actorId: user.id,
         details: { reason: 'Account locked', username, lockedUntil: user.lockedUntil }
@@ -81,7 +81,7 @@ export default async function handler(
       })
 
       await logAuditEvent({
-        action: AuditAction.LOGIN_FAILED,
+        action: 'LOGIN_FAILED',
         actorType: AuditActorType.USER,
         actorId: user.id,
         details: {

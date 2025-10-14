@@ -80,7 +80,7 @@ async function handlePatch(
 
     // Log audit event
     await logAuditEvent({
-      action: AuditAction.USER_UPDATED,
+      action: AuditAction.UPDATE,
       actorType: AuditActorType.USER,
       actorId,
       entityType: 'User',
@@ -131,7 +131,7 @@ async function handleDelete(
 
     // Log audit event
     await logAuditEvent({
-      action: AuditAction.USER_DELETED,
+      action: AuditAction.DELETE,
       actorType: AuditActorType.USER,
       actorId,
       entityType: 'User',

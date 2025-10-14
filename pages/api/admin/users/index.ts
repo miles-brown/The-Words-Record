@@ -132,7 +132,7 @@ async function handlePost(req: NextApiRequest, res: NextApiResponse, actorId: st
 
     // Log audit event
     await logAuditEvent({
-      action: AuditAction.USER_CREATED,
+      action: AuditAction.CREATE,
       actorType: AuditActorType.USER,
       actorId,
       entityType: 'User',

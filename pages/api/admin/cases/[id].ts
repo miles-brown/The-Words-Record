@@ -79,7 +79,7 @@ async function handlePatch(
 
     // Log audit event
     await logAuditEvent({
-      action: AuditAction.CASE_UPDATED,
+      action: AuditAction.UPDATE,
       actorType: AuditActorType.USER,
       actorId,
       entityType: 'Case',
