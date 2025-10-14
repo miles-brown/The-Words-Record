@@ -34,7 +34,7 @@ interface DashboardStats {
     content: string
     statementDate: string
     statementType: string
-    person: { id: string; slug: string; fullName: string } | null
+    person: { id: string; slug: string; fullName: string | null } | null
     organization: { id: string; slug: string; name: string } | null
   }>
   draftQueue: Array<{
@@ -257,7 +257,7 @@ export default function AdminDashboard() {
                   <div key={statement.id} className="recent-item">
                     <div className="item-main">
                       <span className="item-title">
-                        {statement.person ? statement.person.fullName :
+                        {statement.person ? (statement.person.fullName || 'Unnamed Person') :
                          statement.organization ? statement.organization.name : 'Unknown'}
                       </span>
                       <p className="item-content">{statement.content}</p>

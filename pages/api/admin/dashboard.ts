@@ -34,7 +34,7 @@ interface DashboardResponse {
     content: string
     statementDate: string
     statementType: string
-    person: { id: string; slug: string; fullName: string } | null
+    person: { id: string; slug: string; fullName: string | null } | null
     organization: { id: string; slug: string; name: string } | null
   }>
   draftQueue: Array<{
