@@ -27,6 +27,15 @@ interface DashboardResponse {
     slug: string
     caseDate: string
     status: string
+    isRealIncident: boolean
+  }>
+  recentStatements: Array<{
+    id: string
+    content: string
+    statementDate: string
+    statementType: string
+    person: { id: string; slug: string; fullName: string } | null
+    organization: { id: string; slug: string; name: string } | null
   }>
   draftQueue: Array<{
     id: string
@@ -76,6 +85,7 @@ async function dashboardHandler(req: NextApiRequest, res: NextApiResponse) {
       apiKeyAuth24h,
       errorEvents24h,
       recentCases,
+      recentStatements,
       auditTimeline,
       pendingApprovals,
       draftsPending,
@@ -125,13 +135,41 @@ async function dashboardHandler(req: NextApiRequest, res: NextApiResponse) {
       }),
       prisma.case.findMany({
         take: 5,
+        where: {
+          isRealIncident: true  // Only show actual multi-statement cases
+        },
         orderBy: { caseDate: 'desc' },
         select: {
           id: true,
           title: true,
           slug: true,
           caseDate: true,
-          status: true
+          status: true,
+          isRealIncident: true
+        }
+      }),
+      prisma.statement.findMany({
+        take: 10,
+        orderBy: { statementDate: 'desc' },
+        select: {
+          id: true,
+          content: true,
+          statementDate: true,
+          statementType: true,
+          person: {
+            select: {
+              id: true,
+              slug: true,
+              fullName: true
+            }
+          },
+          organization: {
+            select: {
+              id: true,
+              slug: true,
+              name: true
+            }
+          }
         }
       }),
       prisma.auditLog.findMany({
@@ -215,7 +253,16 @@ async function dashboardHandler(req: NextApiRequest, res: NextApiResponse) {
         title: item.title,
         slug: item.slug,
         caseDate: item.caseDate?.toISOString() ?? new Date().toISOString(),
-        status: item.status
+        status: item.status,
+        isRealIncident: item.isRealIncident
+      })),
+      recentStatements: recentStatements.map(item => ({
+        id: item.id,
+        content: item.content.substring(0, 150) + (item.content.length > 150 ? '...' : ''),
+        statementDate: item.statementDate.toISOString(),
+        statementType: item.statementType,
+        person: item.person,
+        organization: item.organization
       })),
       draftQueue: draftQueue.map(item => ({
         id: item.id,

@@ -27,6 +27,15 @@ interface DashboardStats {
     slug: string
     caseDate: string
     status: string
+    isRealIncident: boolean
+  }>
+  recentStatements: Array<{
+    id: string
+    content: string
+    statementDate: string
+    statementType: string
+    person: { id: string; slug: string; fullName: string } | null
+    organization: { id: string; slug: string; name: string } | null
   }>
   draftQueue: Array<{
     id: string
@@ -228,6 +237,39 @@ export default function AdminDashboard() {
 
           <div className="panels">
             <section className="panel">
+              <h2>Recent Statements</h2>
+              <div className="recent-list">
+                {stats.recentStatements && stats.recentStatements.map(statement => (
+                  <div key={statement.id} className="recent-item">
+                    <div className="item-main">
+                      <span className="item-title">
+                        {statement.person ? statement.person.fullName :
+                         statement.organization ? statement.organization.name : 'Unknown'}
+                      </span>
+                      <p className="item-content">{statement.content}</p>
+                      <p className="item-meta">
+                        {formatDate(statement.statementDate)} •
+                        <span className={`status status-${statement.statementType.toLowerCase()}`}>
+                          {statement.statementType}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="item-actions">
+                      <button
+                        onClick={() => router.push(`/admin/statements?id=${statement.id}`)}
+                        className="mini-btn"
+                      >
+                        View
+                      </button>
+                    </div>
+                  </div>
+                ))}
+                {(!stats.recentStatements || stats.recentStatements.length === 0) &&
+                  <p className="no-data">No recent statements</p>}
+              </div>
+            </section>
+
+            <section className="panel">
               <h2>Recent Cases</h2>
               <div className="recent-list">
                 {stats.recentCases.map(caseItem => (
@@ -239,11 +281,12 @@ export default function AdminDashboard() {
                         <span className={`status status-${caseItem.status.toLowerCase()}`}>
                           {caseItem.status}
                         </span>
+                        {caseItem.isRealIncident && <span className="badge-incident">Multi-Statement Case</span>}
                       </p>
                     </div>
                     <div className="item-actions">
                       <button
-                        onClick={() => router.push(`/admin/cases/${caseItem.slug}/edit`)}
+                        onClick={() => router.push(`/admin/cases/${caseItem.slug}`)}
                         className="mini-btn"
                       >
                         Open
@@ -252,27 +295,6 @@ export default function AdminDashboard() {
                   </div>
                 ))}
                 {stats.recentCases.length === 0 && <p className="no-data">No recent cases</p>}
-              </div>
-            </section>
-
-            <section className="panel">
-              <h2>Draft Review Queue</h2>
-              <div className="recent-list">
-                {stats.draftQueue.map(draft => (
-                  <div key={draft.id} className="recent-item">
-                    <div className="item-main">
-                      <span className="item-title">{draft.contentType}</span>
-                      <p className="item-meta">
-                        {draft.owner ? draft.owner.username : 'system'} •
-                        <span className={`status status-${draft.status.toLowerCase()}`}>
-                          {draft.status}
-                        </span>
-                        • {formatTime(draft.updatedAt)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-                {stats.draftQueue.length === 0 && <p className="no-data">No drafts awaiting review</p>}
               </div>
             </section>
           </div>
@@ -584,6 +606,19 @@ export default function AdminDashboard() {
             font-size: 0.9375rem;
             line-height: 1.4;
             margin: 0 0 0.375rem 0;
+            display: block;
+          }
+
+          .item-content {
+            font-size: 0.875rem;
+            color: #475569;
+            line-height: 1.5;
+            margin: 0.5rem 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
           }
 
           .item-meta {
@@ -704,6 +739,29 @@ export default function AdminDashboard() {
           .status-failed {
             background: #fee2e2;
             color: #991b1b;
+          }
+
+          .status-original {
+            background: #e0e7ff;
+            color: #3730a3;
+          }
+
+          .status-response {
+            background: #fef3c7;
+            color: #78350f;
+          }
+
+          .badge-incident {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.625rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            line-height: 1;
+            background: #ddd6fe;
+            color: #5b21b6;
+            margin-left: 0.5rem;
           }
 
           .no-data {
