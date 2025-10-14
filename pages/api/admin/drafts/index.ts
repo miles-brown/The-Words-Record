@@ -66,7 +66,8 @@ async function handleGet(
     const where: any = {}
 
     // Regular users can only see their own drafts
-    if (auth.role !== UserRole.ADMIN && auth.role !== UserRole.MODERATOR) {
+    // ADMIN, CM (Content Manager), and DBO (Database Officer) can see all drafts
+    if (auth.role !== UserRole.ADMIN && auth.role !== UserRole.CM && auth.role !== UserRole.DBO) {
       where.userId = auth.userId
     } else if (filterUserId) {
       where.userId = filterUserId

@@ -17,7 +17,8 @@ async function requireReviewer(req: NextApiRequest): Promise<{ userId: string } 
   })
 
   if (!user || !user.isActive) return null
-  if (user.role !== UserRole.ADMIN && user.role !== UserRole.MODERATOR) return null
+  // Allow ADMIN, CM (Content Manager), and DBO (Database Officer) to reject drafts
+  if (user.role !== UserRole.ADMIN && user.role !== UserRole.CM && user.role !== UserRole.DBO) return null
 
   return { userId: user.id }
 }
