@@ -63,9 +63,7 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     if (verified === 'true') {
       where.verificationStatus = VerificationStatus.VERIFIED
     } else if (verified === 'false') {
-      where.verificationStatus = {
-        in: [VerificationStatus.UNVERIFIED, VerificationStatus.PENDING]
-      }
+      where.verificationStatus = VerificationStatus.UNVERIFIED
     }
 
     const [sources, total] = await Promise.all([
