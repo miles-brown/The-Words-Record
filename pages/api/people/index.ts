@@ -25,7 +25,9 @@ export default async function handler(
     const skip = (pageNum - 1) * limitNum
 
     // Build where clause for filters
-    const where: any = {}
+    const where: any = {
+      isActive: true // Only show active people
+    }
 
     if (profession) {
       where.profession = {

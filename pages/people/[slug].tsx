@@ -747,6 +747,9 @@ export default function PersonPage({ person }: PersonPageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const people = await prisma.person.findMany({
+    where: {
+      isActive: true
+    },
     select: { slug: true }
   })
 
