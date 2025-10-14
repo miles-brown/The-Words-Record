@@ -151,7 +151,7 @@ export default async function handler(
             // Special handling - can only soft delete users
             await prisma.user.update({
               where: { id },
-              data: { isActive: false, deletedAt: new Date() }
+              data: { isActive: false }
             })
             break
         }
