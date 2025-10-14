@@ -30,12 +30,15 @@ const DEFAULT_CONSENT: ConsentPreferences = {
 }
 
 export default function CookieConsent() {
+  const [mounted, setMounted] = useState(false)
   const [showBanner, setShowBanner] = useState(false)
   const [showSettings, setShowSettings] = useState(false)
   const [preferences, setPreferences] = useState<ConsentPreferences>(DEFAULT_CONSENT)
   const [isEU, setIsEU] = useState(false)
 
   useEffect(() => {
+    setMounted(true)
+
     // Check if user has already consented
     const savedConsent = localStorage.getItem('cookie-consent')
 
@@ -121,7 +124,8 @@ export default function CookieConsent() {
     saveConsent(preferences)
   }
 
-  if (!showBanner) {
+  // Prevent SSR/hydration issues by only rendering on client
+  if (!mounted || !showBanner) {
     return null
   }
 
