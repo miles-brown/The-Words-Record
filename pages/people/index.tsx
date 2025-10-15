@@ -297,7 +297,7 @@ export default function PeoplePage() {
               return <Link href={`/people/${person.slug}`} key={person.id}>
                 <article className={`person-item ${viewMode}-view stagger-item`}>
                   {viewMode === 'grid' ? (
-                    // GRID VIEW: Only image + name (clean layout)
+                    // GRID VIEW: Large image + name + profession + nationality
                     <div className="grid-layout">
                       {person.imageUrl ? (
                         <div className="person-image">
@@ -314,7 +314,18 @@ export default function PeoplePage() {
                           <span>{person.name[0]}</span>
                         </div>
                       )}
-                      <h3 className="person-name">{person.name}</h3>
+                      <div className="grid-info">
+                        <h3 className="person-name">{person.name}</h3>
+                        {person.profession && (
+                          <p className="grid-profession">{person.profession}</p>
+                        )}
+                        {primaryNationality && (
+                          <p className="grid-nationality">
+                            <span className="flag-emoji">{primaryNationality.flagEmoji}</span>
+                            <span className="country-name">{primaryNationality.name}</span>
+                          </p>
+                        )}
+                      </div>
                     </div>
                   ) : viewMode === 'list' ? (
                     // LIST VIEW: No images, compact data row
@@ -343,7 +354,7 @@ export default function PeoplePage() {
                       </div>
                     </div>
                   ) : viewMode === 'profile' ? (
-                    // PROFILE VIEW: Image, name, centered profession, flag + country name
+                    // PROFILE VIEW: Image, name, profession, nationality, stats
                     <div className="profile-layout">
                       {person.imageUrl ? (
                         <div className="person-image">
@@ -365,14 +376,19 @@ export default function PeoplePage() {
                         {person.profession && (
                           <p className="profession">{person.profession}</p>
                         )}
-                        {primaryNationality && (
-                          <div className="profile-nationality">
-                            <span className="flag-emoji">{primaryNationality.flagEmoji}</span>
-                            <span className="country-name">
-                              {primaryNationality.displayName || primaryNationality.name}
+                        <div className="profile-meta">
+                          {nationalities.length > 0 && (
+                            <span className="nationality">
+                              {nationalities.slice(0, 2).map((nat: any, idx: number) => (
+                                <span key={nat.code}>
+                                  {nat.flagEmoji}
+                                  {idx < 1 && nationalities.length > 2 && ', '}
+                                </span>
+                              ))}
+                              {nationalities.length > 2 && <span> +{nationalities.length - 2}</span>}
                             </span>
-                          </div>
-                        )}
+                          )}
+                        </div>
                       </div>
                       <div className="profile-stats">
                         <span>
@@ -790,13 +806,45 @@ export default function PeoplePage() {
           background: var(--background-secondary);
         }
 
+        .grid-info {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+          gap: 0.35rem;
+        }
+
         .grid-layout .person-name {
           font-size: 1rem;
           margin: 0;
           color: var(--text-primary);
           font-weight: 600;
-          text-align: center;
-          width: 100%;
+        }
+
+        .grid-profession {
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          margin: 0;
+          font-weight: 400;
+          text-transform: none;
+        }
+
+        .grid-nationality {
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          margin: 0;
+          display: flex;
+          align-items: center;
+          gap: 0.4rem;
+        }
+
+        .grid-nationality .flag-emoji {
+          font-size: 1.2rem;
+        }
+
+        .grid-nationality .country-name {
+          font-weight: 400;
         }
 
         /* PROFILE VIEW */
@@ -838,25 +886,6 @@ export default function PeoplePage() {
           font-size: 0.9rem;
           color: var(--text-secondary);
           margin: 0 0 0.75rem 0;
-          text-align: center;
-        }
-
-        .profile-nationality {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 0.9rem;
-          color: var(--text-secondary);
-        }
-
-        .profile-nationality .flag-emoji {
-          font-size: 1.2rem;
-          line-height: 1;
-        }
-
-        .profile-nationality .country-name {
-          font-weight: 400;
         }
 
         .profile-meta {

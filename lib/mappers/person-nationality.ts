@@ -36,8 +36,8 @@ export function withNormalizedNationality(person: PersonWithNationalities) {
         .filter(n => !n.endDate) // Active only
         .map(n => ({
           code: n.countryCode,
-          name: countryNameFromCode(n.countryCode as any),
-          flagEmoji: flagEmojiFromCode(n.countryCode as any),
+          name: n.country.name_en,
+          flagEmoji: n.country.flag_emoji || '🌐',
           type: n.type,
           acquisition: n.acquisition || undefined,
           isPrimary: n.isPrimary,
