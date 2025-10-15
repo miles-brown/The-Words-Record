@@ -89,14 +89,26 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
     return null // Redirecting to login
   }
 
-  const menuItems = [
+  const dashboardItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
+    { href: '/admin/advanced', label: 'Advanced View', icon: '🔬' }
+  ]
+
+  const contentItems = [
     { href: '/admin/cases', label: 'Cases', icon: '📁' },
     { href: '/admin/statements', label: 'Statements', icon: '💬' },
     { href: '/admin/people', label: 'People', icon: '👤' },
     { href: '/admin/organizations', label: 'Organizations', icon: '🏢' },
-    { href: '/admin/sources', label: 'Sources', icon: '📰' },
+    { href: '/admin/topics', label: 'Topics', icon: '🧩' },
+    { href: '/admin/sources', label: 'Sources', icon: '📰' }
+  ]
+
+  const adminItems = [
+    { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
+    { href: '/admin/apps', label: 'Apps', icon: '📱' },
+    { href: '/admin/export', label: 'Export', icon: '📥' },
     { href: '/admin/users', label: 'Users', icon: '👥' },
+    { href: '/admin/security', label: 'Security', icon: '🔐' },
     { href: '/admin/settings', label: 'Settings', icon: '⚙️' }
   ]
 
@@ -120,9 +132,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         <aside className={`sidebar ${sidebarOpen ? 'sidebar-open' : ''}`}>
           <div className="sidebar-header">
             <Link href="/admin" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <h1>WSW Admin</h1>
+              <h1>TWR Admin</h1>
             </Link>
             <button
+              type="button"
               className="sidebar-close"
               onClick={() => setSidebarOpen(false)}
             >
@@ -131,20 +144,65 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           </div>
 
           <nav className="sidebar-nav">
-            {menuItems.map((item) => (
-              <Link
-                href={item.href}
-                key={item.href}
-                className={`nav-item ${
-                  router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
-                    ? 'active'
-                    : ''
-                }`}
-              >
-                <span className="nav-icon">{item.icon}</span>
-                <span className="nav-label">{item.label}</span>
-              </Link>
-            ))}
+            {/* Dashboard Section - No background box */}
+            <div className="nav-section">
+              {dashboardItems.map((item) => (
+                <Link
+                  href={item.href}
+                  key={item.href}
+                  className={`nav-item-card ${
+                    router.pathname === item.href ? 'active' : ''
+                  }`}
+                >
+                  <span className="nav-icon">{item.icon}</span>
+                  <span className="nav-label">{item.label}</span>
+                </Link>
+              ))}
+            </div>
+
+            <div className="nav-divider-small"></div>
+
+            {/* Content Management Section - Grey/Blue background */}
+            <div className="nav-section-box content-box">
+              <div className="nav-section">
+                {contentItems.map((item) => (
+                  <Link
+                    href={item.href}
+                    key={item.href}
+                    className={`nav-item-card ${
+                      router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
+                        ? 'active'
+                        : ''
+                    }`}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="nav-divider-small"></div>
+
+            {/* Admin Settings Section - Dark grey background */}
+            <div className="nav-section-box admin-box">
+              <div className="nav-section">
+                {adminItems.map((item) => (
+                  <Link
+                    href={item.href}
+                    key={item.href}
+                    className={`nav-item-card ${
+                      router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
+                        ? 'active'
+                        : ''
+                    }`}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </nav>
 
           <div className="sidebar-footer">
@@ -152,7 +210,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
               <span className="user-name">{user.username}</span>
               <span className="user-role">{user.role}</span>
             </div>
-            <button className="logout-btn" onClick={handleLogout}>
+            <button type="button" className="logout-btn" onClick={handleLogout}>
               🚪 Logout
             </button>
           </div>
@@ -162,7 +220,8 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         <div className="main-content">
           {/* Top bar */}
           <header className="top-bar">
-            <button 
+            <button
+              type="button"
               className="sidebar-toggle"
               onClick={() => setSidebarOpen(true)}
             >
@@ -202,18 +261,19 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         }
 
         .sidebar {
-          width: 260px;
+          width: 240px;
           background: #2c3e50;
           color: white;
+          position: fixed;
+          left: 0;
+          top: 0;
+          height: 100vh;
           display: flex;
           flex-direction: column;
-          position: fixed;
-          height: 100vh;
           transform: translateX(-100%);
           transition: transform 0.3s ease;
           z-index: 1000;
-          left: 0;
-          top: 0;
+          overflow: hidden;
         }
 
         .sidebar-open {
@@ -221,11 +281,12 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         }
 
         .sidebar-header {
-          padding: 1.5rem;
+          padding: 1.25rem 1rem;
           border-bottom: 1px solid #34495e;
           display: flex;
           justify-content: space-between;
           align-items: center;
+          flex-shrink: 0;
         }
 
         .sidebar-header h1 {
@@ -252,50 +313,102 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         .sidebar-nav {
           flex: 1;
-          padding: 0.5rem 0;
+          padding: 0.75rem;
           overflow-y: auto;
+          overflow-x: hidden;
+          display: flex;
+          flex-direction: column;
         }
 
-        .nav-item {
+        .nav-section {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.5rem;
+          padding: 0.5rem 0;
+          width: 100%;
+        }
+
+        .nav-section-box {
+          border-radius: 10px;
+          padding: 0.5rem;
+          margin: 0;
+        }
+
+        .nav-section-box.content-box {
+          background: rgba(59, 130, 246, 0.1);
+          border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .nav-section-box.admin-box {
+          background: rgba(0, 0, 0, 0.2);
+          border: 1px solid rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-divider {
+          height: 1px;
+          background: #34495e;
+          margin: 0.75rem 0;
+          width: 100%;
+        }
+
+        .nav-divider-small {
+          height: 1px;
+          background: #34495e;
+          margin: 0.375rem 0;
+          width: 100%;
+        }
+
+        .nav-item-card {
           display: flex;
+          flex-direction: column;
           align-items: center;
-          gap: 0.875rem;
-          padding: 0.75rem 1.25rem;
-          margin: 0.125rem 0.875rem;
+          justify-content: center;
+          gap: 0.25rem;
+          padding: 0.75rem 0.25rem;
           color: #cbd5e0;
           text-decoration: none;
           transition: all 0.2s;
-          border-radius: 8px;
-          line-height: 1.3;
-          font-size: 0.9rem;
+          border-radius: 12px;
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          text-align: center;
+          min-height: 70px;
+          width: 100%;
+          box-sizing: border-box;
         }
 
-        .nav-item:hover {
-          background: rgba(255, 255, 255, 0.1);
+        .nav-item-card:hover {
+          background: rgba(255, 255, 255, 0.12);
           color: white;
-          transform: translateX(2px);
+          transform: scale(1.02);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .nav-item.active {
+        .nav-item-card.active {
           background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
           color: white;
           font-weight: 600;
-          box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+          border-color: #3b82f6;
+          box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
         }
 
         .nav-icon {
           font-size: 1.25rem;
-          width: 24px;
-          height: 24px;
           display: flex;
           align-items: center;
           justify-content: center;
           flex-shrink: 0;
+          width: 24px;
+          height: 24px;
         }
 
         .nav-label {
           font-weight: 500;
           letter-spacing: 0.01em;
+          font-size: 0.7rem;
+          line-height: 1.2;
+          word-break: break-word;
+          max-width: 100%;
         }
 
         .sidebar-footer {
@@ -405,8 +518,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         @media (min-width: 768px) {
           .sidebar {
-            position: static;
-            transform: none;
+            transform: translateX(0);
           }
 
           .sidebar-close {
@@ -418,7 +530,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           }
 
           .main-content {
-            margin-left: 0;
+            margin-left: 240px;
           }
         }
 
