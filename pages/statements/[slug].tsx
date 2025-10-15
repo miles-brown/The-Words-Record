@@ -10,6 +10,8 @@ import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
 import { CaseWithRelations } from '@/types'
 import { prisma } from '@/lib/prisma'
+import { generateHarvardCitation, type CitationData } from '@/lib/harvard-citation'
+import { useState } from 'react'
 
 interface CasePageProps {
   caseItem: any | null
@@ -17,6 +19,55 @@ interface CasePageProps {
 
 export default function CasePage({ caseItem }: CasePageProps) {
   const router = useRouter()
+  const [copiedSource, setCopiedSource] = useState<string | null>(null)
+
+  function copyToClipboard(text: string, sourceId: string) {
+    navigator.clipboard.writeText(text)
+    setCopiedSource(sourceId)
+    setTimeout(() => setCopiedSource(null), 2000)
+  }
+
+  function generateSourceCitation(source: any): string {
+    const citationData: CitationData = {
+      title: source.title,
+      url: source.url || '',
+      accessDate: new Date(source.accessDate || source.createdAt),
+      archiveUrl: source.archiveUrl || undefined
+    }
+
+    if (source.author) {
+      citationData.author = source.author
+    } else if (source.mediaOutlet) {
+      citationData.authorOrg = source.mediaOutlet.name
+    }
+
+    if (source.publication) {
+      citationData.publication = source.publication
+    } else if (source.mediaOutlet) {
+      citationData.publication = source.mediaOutlet.name
+    }
+
+    if (source.publishDate) {
+      citationData.publicationDate = new Date(source.publishDate)
+      citationData.year = citationData.publicationDate.getFullYear()
+    }
+
+    if (source.sourceType === 'SOCIAL_MEDIA') {
+      citationData.medium = 'social'
+    } else if (source.sourceType === 'VIDEO') {
+      citationData.medium = 'video'
+    } else if (source.sourceType === 'BOOK') {
+      citationData.medium = 'book'
+    } else if (source.sourceType === 'ACADEMIC_PAPER') {
+      citationData.medium = 'academic'
+    } else if (source.sourceType === 'GOVERNMENT_DOCUMENT') {
+      citationData.medium = 'government'
+    } else {
+      citationData.medium = 'web'
+    }
+
+    return generateHarvardCitation(citationData)
+  }
 
   if (router.isFallback) {
     return (
@@ -337,30 +388,43 @@ export default function CasePage({ caseItem }: CasePageProps) {
         {caseItem.sources && caseItem.sources.length > 0 && (
           <section className="sources-section">
             <h2>Sources & References</h2>
+            <p className="sources-intro">All sources cited in Harvard referencing style</p>
             <ol className="sources-list">
-              {caseItem.sources.map((source: any) => (
-                <li key={source.id}>
-                  {source.url ? (
-                    <a href={source.url} target="_blank" rel="noopener noreferrer">
-                      {source.title}
-                    </a>
-                  ) : (
-                    <span>{source.title}</span>
-                  )}
-                  {source.publication && <span className="publication"> - {source.publication}</span>}
-                  {source.author && <span className="author"> by {source.author}</span>}
-                  {source.publishDate && (
-                    <span className="publish-date">
-                      {' '}({format(new Date(source.publishDate), 'MMMM yyyy')})
-                    </span>
-                  )}
-                  {source.credibility && (
-                    <span className={`credibility credibility-${source.credibility}`}>
-                      [{source.credibility}]
-                    </span>
-                  )}
-                </li>
-              ))}
+              {caseItem.sources.map((source: any) => {
+                const harvardCitation = generateSourceCitation(source)
+                return (
+                  <li key={source.id} className="source-item">
+                    <div className="source-citation">
+                      <p className="citation-text">{harvardCitation}</p>
+                      <div className="source-actions">
+                        <button
+                          onClick={() => copyToClipboard(harvardCitation, source.id)}
+                          className="copy-citation-btn"
+                          title="Copy citation to clipboard"
+                        >
+                          {copiedSource === source.id ? '✓ Copied' : '📋 Copy'}
+                        </button>
+                        <Link href={`/sources/${source.id}`} className="view-source-link">
+                          View Details
+                        </Link>
+                      </div>
+                    </div>
+                    <div className="source-badges">
+                      {source.credibility && (
+                        <span className={`credibility-badge credibility-${source.credibility.toLowerCase()}`}>
+                          {source.credibility}
+                        </span>
+                      )}
+                      {source.isArchived && (
+                        <span className="archived-badge">Archived</span>
+                      )}
+                      {source.verificationStatus === 'VERIFIED' && (
+                        <span className="verified-badge">Verified</span>
+                      )}
+                    </div>
+                  </li>
+                )
+              })}
             </ol>
           </section>
         )}
@@ -1027,49 +1091,109 @@ export default function CasePage({ caseItem }: CasePageProps) {
           border-radius: 8px;
         }
 
+        .sources-intro {
+          color: var(--text-secondary);
+          font-size: 0.95rem;
+          margin: 0.5rem 0 1.5rem 0;
+          font-style: italic;
+        }
+
         .sources-list {
           margin: 0;
           padding-left: 1.5rem;
         }
 
-        .sources-list li {
-          margin-bottom: 0.75rem;
-          line-height: 1.6;
+        .source-item {
+          margin-bottom: 1.5rem;
+          padding-bottom: 1.5rem;
+          border-bottom: 1px solid var(--border-primary);
         }
 
-        .sources-list a {
+        .source-item:last-child {
+          border-bottom: none;
+          padding-bottom: 0;
+        }
+
+        .source-citation {
+          margin-bottom: 0.75rem;
+        }
+
+        .citation-text {
+          font-family: 'Georgia', serif;
+          font-size: 0.95rem;
+          line-height: 1.7;
+          color: var(--text-primary);
+          margin: 0 0 0.75rem 0;
+        }
+
+        .source-actions {
+          display: flex;
+          gap: 0.75rem;
+          align-items: center;
+        }
+
+        .copy-citation-btn {
+          background: var(--accent-primary);
+          color: white;
+          border: none;
+          padding: 0.4rem 0.9rem;
+          border-radius: 4px;
+          font-size: 0.85rem;
+          cursor: pointer;
+          transition: opacity 0.2s;
+        }
+
+        .copy-citation-btn:hover {
+          opacity: 0.9;
+        }
+
+        .view-source-link {
           color: var(--accent-primary);
           text-decoration: none;
+          font-size: 0.85rem;
         }
 
-        .sources-list a:hover {
+        .view-source-link:hover {
           text-decoration: underline;
         }
 
-        .publication, .author, .publish-date {
-          color: var(--text-secondary);
+        .source-badges {
+          display: flex;
+          gap: 0.5rem;
+          flex-wrap: wrap;
+          margin-top: 0.5rem;
         }
 
-        .credibility {
-          font-size: 0.85rem;
-          margin-left: 0.5rem;
+        .credibility-badge, .archived-badge, .verified-badge {
+          padding: 0.25rem 0.6rem;
+          border-radius: 4px;
+          font-size: 0.8rem;
           font-weight: 500;
+          color: white;
         }
 
-        .credibility-primary {
-          color: #27ae60;
+        .credibility-badge.credibility-high {
+          background: #22c55e;
         }
 
-        .credibility-verified {
-          color: #3498db;
+        .credibility-badge.credibility-medium {
+          background: #eab308;
         }
 
-        .credibility-secondary {
-          color: #f39c12;
+        .credibility-badge.credibility-low {
+          background: #ef4444;
         }
 
-        .credibility-unverified {
-          color: #e74c3c;
+        .credibility-badge.credibility-unknown {
+          background: #94a3b8;
+        }
+
+        .archived-badge {
+          background: #3b82f6;
+        }
+
+        .verified-badge {
+          background: #22c55e;
         }
 
         .related-cases {
