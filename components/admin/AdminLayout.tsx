@@ -329,19 +329,20 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         }
 
         .nav-section-box {
-          border-radius: 10px;
+          border-radius: 8px;
           padding: 0.5rem;
-          margin: 0;
+          margin: 0 0.25rem;
+          width: calc(100% - 0.5rem);
         }
 
         .nav-section-box.content-box {
-          background: rgba(59, 130, 246, 0.1);
-          border: 1px solid rgba(59, 130, 246, 0.2);
+          background: rgba(52, 73, 94, 0.15);
+          border: 1px solid rgba(52, 73, 94, 0.3);
         }
 
         .nav-section-box.admin-box {
-          background: rgba(0, 0, 0, 0.2);
-          border: 1px solid rgba(0, 0, 0, 0.3);
+          background: rgba(0, 0, 0, 0.25);
+          border: 1px solid rgba(0, 0, 0, 0.4);
         }
 
         .nav-divider {
@@ -364,17 +365,18 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           align-items: center;
           justify-content: center;
           gap: 0.25rem;
-          padding: 0.75rem 0.25rem;
+          padding: 0.625rem 0.25rem;
           color: #cbd5e0;
           text-decoration: none;
           transition: all 0.2s;
-          border-radius: 12px;
+          border-radius: 10px;
           background: rgba(255, 255, 255, 0.05);
           border: 1px solid rgba(255, 255, 255, 0.1);
           text-align: center;
-          min-height: 70px;
+          min-height: 65px;
           width: 100%;
           box-sizing: border-box;
+          position: relative;
         }
 
         .nav-item-card:hover {
@@ -412,8 +414,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         }
 
         .sidebar-footer {
-          padding: 1.5rem;
+          padding: 1rem;
           border-top: 1px solid #34495e;
+          margin-top: auto;
+          flex-shrink: 0;
         }
 
         .user-info {
@@ -534,7 +538,29 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           }
         }
 
+        @media (max-width: 1200px) {
+          .sidebar {
+            width: 220px;
+          }
+
+          .main-content {
+            margin-left: 220px;
+          }
+
+          .nav-icon {
+            font-size: 1.125rem;
+          }
+
+          .nav-label {
+            font-size: 0.65rem;
+          }
+        }
+
         @media (max-width: 767px) {
+          .sidebar {
+            z-index: 1001;
+          }
+
           .sidebar-overlay {
             display: block !important;
           }
@@ -545,6 +571,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
           .sidebar-toggle {
             display: block !important;
+          }
+
+          .main-content {
+            margin-left: 0;
           }
 
           .page-content {
