@@ -109,7 +109,7 @@ export default function ContactPage() {
               <h3>GitHub</h3>
               <p>Report technical issues or contribute to our open source project</p>
               <a href="https://github.com/miles-brown/Who-Said-What" target="_blank" rel="noopener noreferrer" className="method-link">
-                View on GitHub ’
+                View on GitHub â†’
               </a>
             </div>
 
@@ -117,7 +117,7 @@ export default function ContactPage() {
               <h3>Documentation</h3>
               <p>Learn more about our verification process and standards</p>
               <Link href="/methodology" className="method-link">
-                Read Methodology ’
+                Read Methodology â†’
               </Link>
             </div>
 
@@ -125,7 +125,7 @@ export default function ContactPage() {
               <h3>About</h3>
               <p>Understand our mission and values</p>
               <Link href="/about" className="method-link">
-                About Us ’
+                About Us â†’
               </Link>
             </div>
           </div>
