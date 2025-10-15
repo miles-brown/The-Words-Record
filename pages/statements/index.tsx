@@ -109,7 +109,7 @@ export default function CasesPage() {
     >
       <div className="cases-page">
         <div className="page-header">
-          <h1>What?</h1>
+          <h1>Statements</h1>
           <p className="page-description">
             Comprehensive documentation of public statements, allegations, and responses.
             Each entry is thoroughly researched with verified sources.
