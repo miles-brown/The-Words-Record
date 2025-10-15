@@ -194,83 +194,77 @@ export default function AnalyticsPage() {
       </Head>
 
       <AdminLayout title="Analytics Dashboard">
-        <div className="max-w-[1600px] mx-auto space-y-8">
+        <div className="admin-section">
           {/* Header with controls */}
-          <div className="bg-gray-800 rounded-2xl shadow-lg p-6">
-            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-              <div>
-                <h1 className="text-2xl font-bold text-white">Analytics Dashboard</h1>
-                <p className="text-gray-400 mt-1">System Performance • User Behaviour • Integrations</p>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                <select
-                  value={timeRange}
-                  onChange={(e) => setTimeRange(e.target.value)}
-                  aria-label="Time range selector"
-                  className="px-4 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="24h">Last 24 hours</option>
-                  <option value="7d">Last 7 days</option>
-                  <option value="30d">Last 30 days</option>
-                </select>
-                <button
-                  type="button"
-                  onClick={() => setAutoRefresh(!autoRefresh)}
-                  className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                    autoRefresh
-                      ? 'bg-green-600 text-white hover:bg-green-700'
-                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                  }`}
-                >
-                  {autoRefresh ? '🔄 Auto-refresh ON' : '🔄 Auto-refresh OFF'}
-                </button>
-                <button
-                  type="button"
-                  onClick={fetchAllData}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                >
-                  Refresh Now
-                </button>
-              </div>
+          <div className="admin-header">
+            <div>
+              <h1 className="admin-title">Analytics Dashboard</h1>
+              <p className="admin-subtitle">System Performance • User Behaviour • Integrations</p>
+            </div>
+            <div className="flex flex-wrap gap-3">
+              <select
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value)}
+                aria-label="Time range selector"
+                className="admin-select"
+              >
+                <option value="24h">Last 24 hours</option>
+                <option value="7d">Last 7 days</option>
+                <option value="30d">Last 30 days</option>
+              </select>
+              <button
+                type="button"
+                onClick={() => setAutoRefresh(!autoRefresh)}
+                className={autoRefresh ? 'admin-btn admin-btn-success' : 'admin-btn admin-btn-secondary'}
+              >
+                {autoRefresh ? '🔄 Auto-refresh ON' : '🔄 Auto-refresh OFF'}
+              </button>
+              <button
+                type="button"
+                onClick={fetchAllData}
+                className="admin-btn admin-btn-primary"
+              >
+                Refresh Now
+              </button>
             </div>
           </div>
 
           {/* SECTION 1: System Performance */}
-          <div className="space-y-6">
-            <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <div className="admin-content-section">
+            <h2 className="admin-section-title">
               <span>⚙️</span> System Performance
             </h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="admin-grid">
               {/* Build Performance Monitor */}
-              <div className="bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+              <div className="admin-card">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Build Performance Monitor</h3>
-                    <p className="text-sm text-gray-400 mt-1">Latest build metrics and history</p>
+                    <h3 className="admin-card-title">Build Performance Monitor</h3>
+                    <p className="admin-card-subtitle">Latest build metrics and history</p>
                   </div>
-                  <div className={`w-3 h-3 rounded-full ${
-                    buildData?.health === 'good' ? 'bg-green-500' :
-                    buildData?.health === 'warning' ? 'bg-yellow-500' : 'bg-red-500'
-                  } animate-pulse`} title={`Build Health: ${buildData?.health}`}></div>
+                  <div className={`admin-status-indicator ${
+                    buildData?.health === 'good' ? 'admin-status-success' :
+                    buildData?.health === 'warning' ? 'admin-status-warning' : 'admin-status-error'
+                  }`} title={`Build Health: ${buildData?.health}`}></div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">Duration</p>
-                    <p className="text-xl font-bold text-white mt-1">{buildData?.latest.duration}s</p>
+                  <div className="admin-stat-box">
+                    <p className="admin-stat-label">Duration</p>
+                    <p className="admin-stat-value">{buildData?.latest.duration}s</p>
                   </div>
-                  <div className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">Bundle Size</p>
-                    <p className="text-xl font-bold text-white mt-1">{buildData?.latest.bundleSize} MB</p>
+                  <div className="admin-stat-box">
+                    <p className="admin-stat-label">Bundle Size</p>
+                    <p className="admin-stat-value">{buildData?.latest.bundleSize} MB</p>
                   </div>
-                  <div className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">JS Assets</p>
-                    <p className="text-xl font-bold text-white mt-1">{buildData?.latest.jsAssets}</p>
+                  <div className="admin-stat-box">
+                    <p className="admin-stat-label">JS Assets</p>
+                    <p className="admin-stat-value">{buildData?.latest.jsAssets}</p>
                   </div>
-                  <div className="bg-gray-700/50 rounded-lg p-3">
-                    <p className="text-xs text-gray-400 uppercase tracking-wider">CSS Assets</p>
-                    <p className="text-xl font-bold text-white mt-1">{buildData?.latest.cssAssets}</p>
+                  <div className="admin-stat-box">
+                    <p className="admin-stat-label">CSS Assets</p>
+                    <p className="admin-stat-value">{buildData?.latest.cssAssets}</p>
                   </div>
                 </div>
 
@@ -295,13 +289,13 @@ export default function AnalyticsPage() {
               </div>
 
               {/* Lighthouse Metrics */}
-              <div className="bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+              <div className="admin-card">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-lg font-semibold text-white">Lighthouse Metrics</h3>
-                    <p className="text-sm text-gray-400 mt-1">Core Web Vitals performance</p>
+                    <h3 className="admin-card-title">Lighthouse Metrics</h3>
+                    <p className="admin-card-subtitle">Core Web Vitals performance</p>
                   </div>
-                  <button type="button" className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors">
+                  <button type="button" className="admin-btn admin-btn-sm admin-btn-primary">
                     Run Audit
                   </button>
                 </div>

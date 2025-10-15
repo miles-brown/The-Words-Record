@@ -2,6 +2,7 @@ import { useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
+import '@/styles/admin.css'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -217,9 +218,9 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         </aside>
 
         {/* Main content */}
-        <div className="main-content">
+        <div className="main-content admin-main">
           {/* Top bar */}
-          <header className="top-bar">
+          <header className="top-bar admin-page-header">
             <button
               type="button"
               className="sidebar-toggle"
@@ -227,17 +228,21 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
             >
               ☰
             </button>
-            <h1>{title}</h1>
+            <div>
+              <h1 className="admin-page-title">{title}</h1>
+            </div>
             <div className="top-bar-actions">
-              <Link href="/" className="view-site-btn">
+              <Link href="/" className="admin-btn admin-btn-primary">
                 🌐 View Site
               </Link>
             </div>
           </header>
 
           {/* Page content */}
-          <main className="page-content">
-            {children}
+          <main className="page-content admin-content-wrapper">
+            <div className="admin-container">
+              {children}
+            </div>
           </main>
         </div>
       </div>

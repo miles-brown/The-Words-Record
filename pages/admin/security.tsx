@@ -113,7 +113,7 @@ export default function SecurityPage() {
     return (
       <AdminLayout title="Security">
         <div className="flex items-center justify-center py-20">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+          <div className="admin-spinner admin-spinner-lg"></div>
         </div>
       </AdminLayout>
     )
@@ -126,120 +126,110 @@ export default function SecurityPage() {
       </Head>
 
       <AdminLayout title="Security">
-        <div className="max-w-7xl mx-auto">
+        <div className="admin-section">
           {/* Header */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Security Center</h1>
-            <p className="text-gray-500 mt-1">Monitor security events and manage access controls</p>
-
-            {/* Tab Navigation */}
-            <div className="flex gap-4 mt-4 border-b border-gray-200">
-              <button
-                onClick={() => setActiveTab('overview')}
-                className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === 'overview'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Overview
-              </button>
-              <button
-                onClick={() => setActiveTab('events')}
-                className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === 'events'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Security Events
-              </button>
-              <button
-                onClick={() => setActiveTab('settings')}
-                className={`px-4 py-2 font-medium text-sm border-b-2 transition-colors ${
-                  activeTab === 'settings'
-                    ? 'border-blue-600 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
-                }`}
-              >
-                Settings
-              </button>
+          <div className="admin-header">
+            <div>
+              <h1 className="admin-title">Security Center</h1>
+              <p className="admin-subtitle">Monitor security events and manage access controls</p>
             </div>
+          </div>
+
+          {/* Tab Navigation */}
+          <div className="admin-tabs-container mb-8">
+            <button
+              onClick={() => setActiveTab('overview')}
+              className={`admin-tab ${activeTab === 'overview' ? 'admin-tab-active' : ''}`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab('events')}
+              className={`admin-tab ${activeTab === 'events' ? 'admin-tab-active' : ''}`}
+            >
+              Security Events
+            </button>
+            <button
+              onClick={() => setActiveTab('settings')}
+              className={`admin-tab ${activeTab === 'settings' ? 'admin-tab-active' : ''}`}
+            >
+              Settings
+            </button>
           </div>
 
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <>
               {/* Security Score */}
-              <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg shadow-sm p-6 mb-6 border border-green-200">
+              <div className="admin-card admin-card-gradient mb-8">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-semibold text-gray-900">Security Score</h2>
-                    <p className="text-3xl font-bold text-green-600 mt-2">85/100</p>
-                    <p className="text-sm text-gray-600 mt-1">Good - Some improvements recommended</p>
+                    <h2 className="admin-card-title">Security Score</h2>
+                    <p className="text-4xl font-bold text-green-400 mt-2">85/100</p>
+                    <p className="text-sm text-gray-400 mt-1">Good - Some improvements recommended</p>
                   </div>
                   <div className="text-6xl">🛡️</div>
                 </div>
               </div>
 
               {/* Security Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                <div className="bg-white rounded-lg shadow-sm p-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="admin-metric-card admin-metric-green">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500">Active Sessions</p>
-                      <p className="text-2xl font-bold text-gray-900">23</p>
+                      <p className="admin-metric-label">Active Sessions</p>
+                      <p className="admin-metric-value">23</p>
                     </div>
-                    <span className="text-2xl">👥</span>
+                    <span className="text-3xl">👥</span>
                   </div>
                 </div>
-                <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="admin-metric-card admin-metric-amber">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500">Failed Logins (24h)</p>
-                      <p className="text-2xl font-bold text-yellow-600">7</p>
+                      <p className="admin-metric-label">Failed Logins (24h)</p>
+                      <p className="admin-metric-value text-yellow-600 dark:text-yellow-400">7</p>
                     </div>
-                    <span className="text-2xl">⚠️</span>
+                    <span className="text-3xl">⚠️</span>
                   </div>
                 </div>
-                <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="admin-metric-card admin-metric-green">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500">MFA Enabled</p>
-                      <p className="text-2xl font-bold text-green-600">89%</p>
+                      <p className="admin-metric-label">MFA Enabled</p>
+                      <p className="admin-metric-value text-green-600 dark:text-green-400">89%</p>
                     </div>
-                    <span className="text-2xl">🔐</span>
+                    <span className="text-3xl">🔐</span>
                   </div>
                 </div>
-                <div className="bg-white rounded-lg shadow-sm p-4">
+                <div className="admin-metric-card admin-metric-blue">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-gray-500">API Keys</p>
-                      <p className="text-2xl font-bold text-gray-900">12</p>
+                      <p className="admin-metric-label">API Keys</p>
+                      <p className="admin-metric-value">12</p>
                     </div>
-                    <span className="text-2xl">🔑</span>
+                    <span className="text-3xl">🔑</span>
                   </div>
                 </div>
               </div>
 
               {/* Recent Security Events */}
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
+              <div className="admin-card">
+                <h2 className="admin-card-title mb-6">Recent Activity</h2>
                 <div className="space-y-3">
                   {events.slice(0, 3).map((event) => (
-                    <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                    <div key={event.id} className="admin-list-item">
                       <div className="flex items-center gap-3">
-                        <span className={`w-2 h-2 rounded-full ${
-                          event.risk === 'high' ? 'bg-red-500' :
-                          event.risk === 'medium' ? 'bg-yellow-500' :
-                          'bg-green-500'
+                        <span className={`admin-status-indicator ${
+                          event.risk === 'high' ? 'admin-status-error' :
+                          event.risk === 'medium' ? 'admin-status-warning' :
+                          'admin-status-success'
                         }`}></span>
                         <div>
-                          <p className="font-medium text-gray-900">{event.description}</p>
-                          <p className="text-sm text-gray-500">{event.user} • {event.timestamp}</p>
+                          <p className="font-medium text-gray-900 dark:text-white">{event.description}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">{event.user} • {event.timestamp}</p>
                         </div>
                       </div>
-                      <span className="text-sm text-gray-500">{event.ipAddress}</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">{event.ipAddress}</span>
                     </div>
                   ))}
                 </div>
@@ -249,42 +239,42 @@ export default function SecurityPage() {
 
           {/* Events Tab */}
           {activeTab === 'events' && (
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-900">Security Events Log</h2>
-                <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+            <div className="admin-card">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="admin-card-title">Security Events Log</h2>
+                <button className="admin-btn admin-btn-primary">
                   Export Logs
                 </button>
               </div>
-              <div className="overflow-x-auto">
-                <table className="w-full">
+              <div className="admin-table-container">
+                <table className="admin-table">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Risk</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Event</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">User</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">IP Address</th>
-                      <th className="text-left py-3 px-4 text-sm font-medium text-gray-700">Time</th>
+                    <tr>
+                      <th>Risk</th>
+                      <th>Event</th>
+                      <th>User</th>
+                      <th>IP Address</th>
+                      <th>Time</th>
                     </tr>
                   </thead>
                   <tbody>
                     {events.map((event) => (
-                      <tr key={event.id} className="border-b border-gray-100 hover:bg-gray-50">
-                        <td className="py-3 px-4">
-                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            event.risk === 'high' ? 'bg-red-100 text-red-700' :
-                            event.risk === 'medium' ? 'bg-yellow-100 text-yellow-700' :
-                            'bg-green-100 text-green-700'
+                      <tr key={event.id}>
+                        <td>
+                          <span className={`admin-badge ${
+                            event.risk === 'high' ? 'admin-badge-danger' :
+                            event.risk === 'medium' ? 'admin-badge-warning' :
+                            'admin-badge-success'
                           }`}>
                             {event.risk}
                           </span>
                         </td>
-                        <td className="py-3 px-4">
-                          <p className="text-sm font-medium text-gray-900">{event.description}</p>
+                        <td>
+                          <p className="text-sm font-medium">{event.description}</p>
                         </td>
-                        <td className="py-3 px-4 text-sm text-gray-600">{event.user}</td>
-                        <td className="py-3 px-4 text-sm text-gray-600">{event.ipAddress}</td>
-                        <td className="py-3 px-4 text-sm text-gray-600">{event.timestamp}</td>
+                        <td className="text-sm">{event.user}</td>
+                        <td className="text-sm">{event.ipAddress}</td>
+                        <td className="text-sm">{event.timestamp}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -296,45 +286,44 @@ export default function SecurityPage() {
           {/* Settings Tab */}
           {activeTab === 'settings' && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Authentication</h2>
-                <div className="space-y-4">
+              <div className="admin-card">
+                <h2 className="admin-card-title mb-6">Authentication</h2>
+                <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-700">Require MFA</p>
-                      <p className="text-sm text-gray-500">Two-factor authentication for all users</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Require MFA</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Two-factor authentication for all users</p>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="admin-toggle">
                       <input
                         type="checkbox"
                         checked={settings.mfaRequired}
                         onChange={(e) => updateSetting('mfaRequired', e.target.checked)}
-                        className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <span className="admin-toggle-slider"></span>
                     </label>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="admin-label">
                       Session Timeout (minutes)
                     </label>
                     <input
                       type="number"
                       value={settings.sessionTimeout}
                       onChange={(e) => updateSetting('sessionTimeout', parseInt(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="admin-input"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="admin-label">
                       Password Complexity
                     </label>
                     <select
                       value={settings.passwordComplexity}
                       onChange={(e) => updateSetting('passwordComplexity', e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="admin-select"
                     >
                       <option value="low">Low - 8+ characters</option>
                       <option value="medium">Medium - 10+ chars with mixed case</option>
@@ -344,57 +333,55 @@ export default function SecurityPage() {
                 </div>
               </div>
 
-              <div className="bg-white rounded-lg shadow-sm p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Access Control</h2>
-                <div className="space-y-4">
+              <div className="admin-card">
+                <h2 className="admin-card-title mb-6">Access Control</h2>
+                <div className="space-y-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-700">IP Whitelist</p>
-                      <p className="text-sm text-gray-500">Restrict access to specific IP addresses</p>
+                      <p className="font-medium text-gray-900 dark:text-white">IP Whitelist</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Restrict access to specific IP addresses</p>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="admin-toggle">
                       <input
                         type="checkbox"
                         checked={settings.ipWhitelist}
                         onChange={(e) => updateSetting('ipWhitelist', e.target.checked)}
-                        className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <span className="admin-toggle-slider"></span>
                     </label>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                    <label className="admin-label">
                       API Rate Limit (per hour)
                     </label>
                     <input
                       type="number"
                       value={settings.apiRateLimit}
                       onChange={(e) => updateSetting('apiRateLimit', parseInt(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      className="admin-input"
                     />
                   </div>
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="font-medium text-gray-700">Data Encryption</p>
-                      <p className="text-sm text-gray-500">Encrypt sensitive data at rest</p>
+                      <p className="font-medium text-gray-900 dark:text-white">Data Encryption</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Encrypt sensitive data at rest</p>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label className="admin-toggle">
                       <input
                         type="checkbox"
                         checked={settings.dataEncryption}
                         onChange={(e) => updateSetting('dataEncryption', e.target.checked)}
-                        className="sr-only peer"
                       />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                      <span className="admin-toggle-slider"></span>
                     </label>
                   </div>
                 </div>
               </div>
 
               <div className="lg:col-span-2">
-                <button className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium">
+                <button className="admin-btn admin-btn-primary admin-btn-lg w-full">
                   Save Security Settings
                 </button>
               </div>
