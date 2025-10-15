@@ -8,30 +8,33 @@ interface Topic {
   name: string
   slug: string
   description: string
-  category: string
+  topicType: string
+  startDate?: string
+  endDate?: string
+  isFeatured?: boolean
+  trendingScore?: number
+  controversyScore?: number
   _count: {
     cases: number
   }
-  isControversial?: boolean
-  lastUsedAt?: string
-  createdAt?: string
-}
-
-interface Case {
-  id: string
-  title: string
-  slug: string
-  caseDate: string
-  summary: string
+  cases?: {
+    Case: {
+      id: string
+      title: string
+      slug: string
+      caseDate: string
+      summary: string
+    }
+  }[]
 }
 
 export default function TopicsPage() {
-  const [selectedTags, setSelectedTags] = useState<string[]>([])
+  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([])
   const [allTopics, setAllTopics] = useState<Topic[]>([])
-  const [developingStories, setDevelopingStories] = useState<Case[]>([])
+  const [developingStories, setDevelopingStories] = useState<Topic[]>([])
   const [trendingTopics, setTrendingTopics] = useState<Topic[]>([])
   const [highlightedTopics, setHighlightedTopics] = useState<Topic[]>([])
-  const [topicsByCategory, setTopicsByCategory] = useState<Record<string, Topic[]>>({})
+  const [topicsByType, setTopicsByType] = useState<Record<string, Topic[]>>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -41,45 +44,43 @@ export default function TopicsPage() {
 
   const fetchTopicsData = async () => {
     try {
-      // Fetch all topics
-      const topicsRes = await fetch('/api/tags')
-      if (!topicsRes.ok) throw new Error('Failed to fetch topics')
-      const topicsData = await topicsRes.json()
-      const topics = topicsData.tags || []
+      // Fetch all active topics
+      const allRes = await fetch('/api/topics?limit=100')
+      if (!allRes.ok) throw new Error('Failed to fetch topics')
+      const allData = await allRes.json()
+      const topics = allData.topics || []
       setAllTopics(topics)
 
-      // Group topics by category
-      const byCategory: Record<string, Topic[]> = {}
+      // Group topics by type
+      const byType: Record<string, Topic[]> = {}
       topics.forEach((topic: Topic) => {
-        const category = topic.category || 'Other'
-        if (!byCategory[category]) {
-          byCategory[category] = []
+        const type = topic.topicType || 'OTHER'
+        if (!byType[type]) {
+          byType[type] = []
         }
-        byCategory[category].push(topic)
+        byType[type].push(topic)
       })
-      setTopicsByCategory(byCategory)
+      setTopicsByType(byType)
 
-      // Get trending topics (those with most cases or recently used)
-      const trending = [...topics]
-        .sort((a, b) => (b._count?.cases || 0) - (a._count?.cases || 0))
-        .slice(0, 6)
-      setTrendingTopics(trending)
+      // Fetch developing stories (topics with recent start dates)
+      const developingRes = await fetch('/api/topics?developing=true&limit=5')
+      if (developingRes.ok) {
+        const developingData = await developingRes.json()
+        setDevelopingStories(developingData.topics || [])
+      }
 
-      // Get highlighted topics (controversial or featured)
-      const highlighted = topics.filter((t: Topic) => t.isControversial).slice(0, 3)
-      setHighlightedTopics(highlighted)
+      // Fetch trending topics
+      const trendingRes = await fetch('/api/topics?trending=true&limit=6')
+      if (trendingRes.ok) {
+        const trendingData = await trendingRes.json()
+        setTrendingTopics(trendingData.topics || [])
+      }
 
-      // Fetch recent cases for developing stories
-      const casesRes = await fetch('/api/cases?page=1&limit=5&sortBy=date-desc')
-      if (casesRes.ok) {
-        const casesData = await casesRes.json()
-        // Filter for cases from the last 30 days
-        const thirtyDaysAgo = new Date()
-        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-        const recent = (casesData.cases || []).filter((c: Case) =>
-          new Date(c.caseDate) > thirtyDaysAgo
-        )
-        setDevelopingStories(recent)
+      // Fetch highlighted topics (high controversy/featured)
+      const highlightedRes = await fetch('/api/topics?highlighted=true&limit=3')
+      if (highlightedRes.ok) {
+        const highlightedData = await highlightedRes.json()
+        setHighlightedTopics(highlightedData.topics || [])
       }
 
     } catch (err) {
@@ -90,27 +91,28 @@ export default function TopicsPage() {
     }
   }
 
-  const toggleTag = (tagId: string) => {
-    setSelectedTags(prev =>
-      prev.includes(tagId)
-        ? prev.filter(id => id !== tagId)
-        : [...prev, tagId]
+  const toggleTopicSelection = (topicId: string) => {
+    setSelectedTopicIds(prev =>
+      prev.includes(topicId)
+        ? prev.filter(id => id !== topicId)
+        : [...prev, topicId]
     )
   }
 
-  const filteredTopics = selectedTags.length > 0
-    ? allTopics.filter(topic => selectedTags.includes(topic.id))
-    : []
-
   const didYouKnowFacts = [
-    "Our database contains statements from over 500 public figures",
-    "The most documented topic has over 100 verified statements",
-    "We verify every statement with multiple credible sources",
+    "Topics are major events or issues that span multiple cases and statements",
+    "Each topic tracks key figures, affected organizations, and geographic scope",
+    "Topics can have parent-child relationships to show how issues evolve",
+    "Trending scores are calculated based on recent activity and media attention",
   ]
+
+  const formatTopicType = (type: string) => {
+    return type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+  }
 
   if (loading) {
     return (
-      <Layout title="Topics" description="Explore topics and developing stories">
+      <Layout title="Topics" description="Explore major topics and developing stories">
         <div className="topics-page">
           <div className="loading">Loading topics...</div>
         </div>
@@ -124,6 +126,7 @@ export default function TopicsPage() {
             text-align: center;
             padding: 4rem 0;
             color: var(--text-secondary);
+            font-size: 1.1rem;
           }
         `}</style>
       </Layout>
@@ -133,14 +136,14 @@ export default function TopicsPage() {
   return (
     <Layout
       title="Topics"
-      description="Explore featured topics, developing stories, and curated collections"
+      description="Explore major topics, developing stories, and curated collections of related cases"
     >
       <div className="topics-page">
         {/* Hero Header */}
         <div className="hero-header">
           <h1>Topics</h1>
           <p className="hero-description">
-            Explore our comprehensive collection of documented statements, organized by topic and category
+            Major events, issues, and ongoing stories documented through verified statements and sources
           </p>
         </div>
 
@@ -157,15 +160,31 @@ export default function TopicsPage() {
             {developingStories.length > 0 && (
               <section className="section developing-stories">
                 <h2 className="section-title">🔴 Developing Stories</h2>
+                <p className="section-subtitle">Recently initiated topics with ongoing developments</p>
                 <div className="stories-list">
-                  {developingStories.map((story) => (
-                    <Link href={`/cases/${story.slug}`} key={story.id}>
+                  {developingStories.map((topic) => (
+                    <Link href={`/topics/${topic.slug}`} key={topic.id}>
                       <div className="story-card">
                         <div className="story-meta">
-                          {format(new Date(story.caseDate), 'MMM d, yyyy')}
+                          {topic.startDate && (
+                            <span>Started {format(new Date(topic.startDate), 'MMM d, yyyy')}</span>
+                          )}
+                          <span className="case-badge">{topic._count?.cases || 0} cases</span>
                         </div>
-                        <h3>{story.title}</h3>
-                        {story.summary && <p className="story-summary">{story.summary}</p>}
+                        <h3>{topic.name}</h3>
+                        {topic.description && (
+                          <p className="story-description">{topic.description}</p>
+                        )}
+                        {topic.cases && topic.cases.length > 0 && (
+                          <div className="recent-cases">
+                            <strong>Recent cases:</strong>
+                            <ul>
+                              {topic.cases.slice(0, 2).map((tc) => (
+                                <li key={tc.Case.id}>{tc.Case.title}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
                       </div>
                     </Link>
                   ))}
@@ -176,26 +195,42 @@ export default function TopicsPage() {
             {/* Topics by Category Section */}
             <section className="section topics-by-category">
               <h2 className="section-title">Topics by Category</h2>
-              {Object.entries(topicsByCategory).map(([category, topics]) => (
-                <div key={category} className="category-group">
-                  <h3 className="category-title">{category}</h3>
-                  <div className="topics-grid">
-                    {topics.slice(0, 6).map((topic) => (
-                      <Link href={`/tags/${topic.slug}`} key={topic.id}>
-                        <div className="topic-card">
-                          <h4>{topic.name}</h4>
-                          <span className="case-count">{topic._count?.cases || 0} cases</span>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
-                  {topics.length > 6 && (
-                    <Link href="/tags">
-                      <span className="view-more">View all {category} topics →</span>
-                    </Link>
-                  )}
+              <p className="section-subtitle">Browse topics organized by type and subject matter</p>
+
+              {Object.keys(topicsByType).length === 0 ? (
+                <div className="empty-state">
+                  <p>No topics have been created yet. Topics are major events or issues that tie together multiple cases and statements.</p>
                 </div>
-              ))}
+              ) : (
+                Object.entries(topicsByType).map(([type, topics]) => (
+                  <div key={type} className="category-group">
+                    <h3 className="category-title">{formatTopicType(type)}</h3>
+                    <div className="topics-grid">
+                      {topics.slice(0, 6).map((topic) => (
+                        <Link href={`/topics/${topic.slug}`} key={topic.id}>
+                          <div className="topic-card">
+                            <h4>{topic.name}</h4>
+                            <p className="topic-description">{topic.description}</p>
+                            <div className="topic-meta">
+                              <span className="case-count">{topic._count?.cases || 0} cases</span>
+                              {topic.startDate && (
+                                <span className="topic-date">
+                                  {format(new Date(topic.startDate), 'MMM yyyy')}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+                    </div>
+                    {topics.length > 6 && (
+                      <Link href={`/topics?type=${type}`}>
+                        <span className="view-more">View all {formatTopicType(type)} topics →</span>
+                      </Link>
+                    )}
+                  </div>
+                ))
+              )}
             </section>
           </div>
 
@@ -205,15 +240,23 @@ export default function TopicsPage() {
             {highlightedTopics.length > 0 && (
               <section className="section highlights">
                 <h2 className="section-title">⭐ Highlights</h2>
+                <p className="section-subtitle">Featured and high-impact topics</p>
                 <div className="highlights-list">
                   {highlightedTopics.map((topic) => (
-                    <Link href={`/tags/${topic.slug}`} key={topic.id}>
+                    <Link href={`/topics/${topic.slug}`} key={topic.id}>
                       <div className="highlight-card">
                         <h4>{topic.name}</h4>
                         {topic.description && (
                           <p className="highlight-description">{topic.description}</p>
                         )}
-                        <span className="case-count">{topic._count?.cases || 0} cases</span>
+                        <div className="highlight-meta">
+                          <span className="case-count">{topic._count?.cases || 0} cases</span>
+                          {topic.controversyScore && (
+                            <span className="controversy-badge">
+                              Controversy: {topic.controversyScore.toFixed(1)}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </Link>
                   ))}
@@ -234,45 +277,58 @@ export default function TopicsPage() {
             </section>
 
             {/* Trending and Updated Section */}
-            <section className="section trending">
-              <h2 className="section-title">📈 Trending & Updated</h2>
-              <div className="trending-list">
-                {trendingTopics.map((topic) => (
-                  <Link href={`/tags/${topic.slug}`} key={topic.id}>
-                    <div className="trending-item">
-                      <h4>{topic.name}</h4>
-                      <span className="case-count">{topic._count?.cases || 0} cases</span>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </section>
-
-            {/* Multi-Tag Filter Section */}
-            <section className="section tag-filter">
-              <h2 className="section-title">🔍 Find Topics</h2>
-              <p className="filter-description">Select multiple topics to find related cases</p>
-              <div className="tag-checkboxes">
-                {allTopics.slice(0, 12).map((topic) => (
-                  <label key={topic.id} className="tag-checkbox">
-                    <input
-                      type="checkbox"
-                      checked={selectedTags.includes(topic.id)}
-                      onChange={() => toggleTag(topic.id)}
-                    />
-                    <span>{topic.name}</span>
-                  </label>
-                ))}
-              </div>
-              {selectedTags.length > 0 && (
-                <div className="filter-results">
-                  <h4>Selected Topics ({selectedTags.length})</h4>
-                  <Link href={`/tags?ids=${selectedTags.join(',')}`}>
-                    <button className="view-results-btn">View Matching Cases →</button>
-                  </Link>
+            {trendingTopics.length > 0 && (
+              <section className="section trending">
+                <h2 className="section-title">📈 Trending & Updated</h2>
+                <p className="section-subtitle">Most active topics</p>
+                <div className="trending-list">
+                  {trendingTopics.map((topic) => (
+                    <Link href={`/topics/${topic.slug}`} key={topic.id}>
+                      <div className="trending-item">
+                        <div>
+                          <h4>{topic.name}</h4>
+                          <span className="trending-meta">{topic._count?.cases || 0} cases</span>
+                        </div>
+                        {topic.trendingScore && (
+                          <span className="trending-score">
+                            {topic.trendingScore.toFixed(1)}
+                          </span>
+                        )}
+                      </div>
+                    </Link>
+                  ))}
                 </div>
-              )}
-            </section>
+              </section>
+            )}
+
+            {/* Multi-Topic Filter Section */}
+            {allTopics.length > 0 && (
+              <section className="section topic-filter">
+                <h2 className="section-title">🔍 Find by Topics</h2>
+                <p className="filter-description">Select multiple topics to find cases covering these issues</p>
+                <div className="topic-checkboxes">
+                  {allTopics.slice(0, 15).map((topic) => (
+                    <label key={topic.id} className="topic-checkbox">
+                      <input
+                        type="checkbox"
+                        checked={selectedTopicIds.includes(topic.id)}
+                        onChange={() => toggleTopicSelection(topic.id)}
+                      />
+                      <span>{topic.name}</span>
+                      <span className="checkbox-count">({topic._count?.cases || 0})</span>
+                    </label>
+                  ))}
+                </div>
+                {selectedTopicIds.length > 0 && (
+                  <div className="filter-results">
+                    <h4>Selected Topics ({selectedTopicIds.length})</h4>
+                    <Link href={`/cases?topics=${selectedTopicIds.join(',')}`}>
+                      <button className="view-results-btn">View Matching Cases →</button>
+                    </Link>
+                  </div>
+                )}
+              </section>
+            )}
           </div>
         </div>
       </div>
@@ -340,9 +396,21 @@ export default function TopicsPage() {
         .section-title {
           font-size: 1.5rem;
           color: var(--text-primary);
+          margin: 0 0 0.5rem 0;
+        }
+
+        .section-subtitle {
+          font-size: 0.9rem;
+          color: var(--text-secondary);
           margin: 0 0 1.5rem 0;
-          padding-bottom: 0.75rem;
-          border-bottom: 2px solid var(--border-color);
+        }
+
+        .empty-state {
+          padding: 3rem 2rem;
+          text-align: center;
+          color: var(--text-secondary);
+          background: var(--bg-secondary);
+          border-radius: 6px;
         }
 
         /* Developing Stories */
@@ -353,8 +421,9 @@ export default function TopicsPage() {
         }
 
         .story-card {
-          padding: 1rem;
+          padding: 1.25rem;
           border: 1px solid var(--border-color);
+          border-left: 4px solid #ef4444;
           border-radius: 6px;
           background: var(--bg-primary);
           cursor: pointer;
@@ -362,27 +431,52 @@ export default function TopicsPage() {
         }
 
         .story-card:hover {
-          border-color: var(--primary);
+          border-color: #ef4444;
           background: var(--bg-secondary);
+          box-shadow: 0 4px 12px rgba(239, 68, 68, 0.1);
         }
 
         .story-meta {
+          display: flex;
+          gap: 1rem;
           font-size: 0.85rem;
           color: var(--text-secondary);
-          margin-bottom: 0.5rem;
+          margin-bottom: 0.75rem;
+        }
+
+        .case-badge {
+          background: var(--bg-secondary);
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
         }
 
         .story-card h3 {
-          font-size: 1.1rem;
+          font-size: 1.2rem;
           color: var(--text-primary);
           margin: 0 0 0.5rem 0;
         }
 
-        .story-summary {
-          font-size: 0.9rem;
+        .story-description {
+          font-size: 0.95rem;
           color: var(--text-secondary);
           line-height: 1.6;
-          margin: 0;
+          margin: 0 0 0.75rem 0;
+        }
+
+        .recent-cases {
+          font-size: 0.85rem;
+          color: var(--text-secondary);
+          padding-top: 0.75rem;
+          border-top: 1px solid var(--border-color);
+        }
+
+        .recent-cases ul {
+          margin: 0.5rem 0 0 1rem;
+          padding: 0;
+        }
+
+        .recent-cases li {
+          margin: 0.25rem 0;
         }
 
         /* Topics by Category */
@@ -398,23 +492,27 @@ export default function TopicsPage() {
           font-size: 1.3rem;
           color: var(--text-primary);
           margin: 0 0 1rem 0;
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid var(--border-color);
         }
 
         .topics-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
           gap: 1rem;
           margin-bottom: 1rem;
         }
 
         .topic-card {
-          padding: 1rem;
+          padding: 1.25rem;
           border: 1px solid var(--border-color);
           border-radius: 6px;
           background: var(--bg-primary);
           cursor: pointer;
           transition: all 0.2s;
-          text-align: center;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
         }
 
         .topic-card:hover {
@@ -424,14 +522,36 @@ export default function TopicsPage() {
         }
 
         .topic-card h4 {
-          font-size: 1rem;
+          font-size: 1.05rem;
           color: var(--text-primary);
           margin: 0 0 0.5rem 0;
         }
 
-        .case-count {
+        .topic-description {
           font-size: 0.85rem;
           color: var(--text-secondary);
+          line-height: 1.5;
+          margin: 0 0 0.75rem 0;
+          flex-grow: 1;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .topic-meta {
+          display: flex;
+          gap: 0.75rem;
+          font-size: 0.8rem;
+          color: var(--text-secondary);
+        }
+
+        .case-count {
+          font-weight: 500;
+        }
+
+        .topic-date {
+          opacity: 0.8;
         }
 
         .view-more {
@@ -440,6 +560,7 @@ export default function TopicsPage() {
           font-weight: 500;
           cursor: pointer;
           transition: color 0.2s;
+          font-size: 0.95rem;
         }
 
         .view-more:hover {
@@ -457,7 +578,7 @@ export default function TopicsPage() {
         .highlight-card {
           padding: 1rem;
           border: 1px solid var(--border-color);
-          border-left: 4px solid var(--primary);
+          border-left: 4px solid #f59e0b;
           border-radius: 6px;
           background: var(--bg-primary);
           cursor: pointer;
@@ -465,7 +586,7 @@ export default function TopicsPage() {
         }
 
         .highlight-card:hover {
-          border-color: var(--primary);
+          border-color: #f59e0b;
           background: var(--bg-secondary);
         }
 
@@ -480,6 +601,24 @@ export default function TopicsPage() {
           color: var(--text-secondary);
           margin: 0 0 0.5rem 0;
           line-height: 1.5;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        .highlight-meta {
+          display: flex;
+          gap: 0.75rem;
+          font-size: 0.8rem;
+        }
+
+        .controversy-badge {
+          background: #fef3c7;
+          color: #92400e;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-weight: 500;
         }
 
         /* Did You Know */
@@ -530,21 +669,35 @@ export default function TopicsPage() {
         .trending-item h4 {
           font-size: 0.95rem;
           color: var(--text-primary);
-          margin: 0;
+          margin: 0 0 0.25rem 0;
         }
 
-        /* Tag Filter */
+        .trending-meta {
+          font-size: 0.8rem;
+          color: var(--text-secondary);
+        }
+
+        .trending-score {
+          background: var(--primary);
+          color: white;
+          padding: 0.25rem 0.5rem;
+          border-radius: 4px;
+          font-size: 0.85rem;
+          font-weight: 600;
+        }
+
+        /* Topic Filter */
         .filter-description {
           font-size: 0.9rem;
           color: var(--text-secondary);
           margin: 0 0 1rem 0;
         }
 
-        .tag-checkboxes {
+        .topic-checkboxes {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
-          max-height: 300px;
+          max-height: 350px;
           overflow-y: auto;
           padding: 0.5rem;
           border: 1px solid var(--border-color);
@@ -552,7 +705,7 @@ export default function TopicsPage() {
           background: var(--bg-primary);
         }
 
-        .tag-checkbox {
+        .topic-checkbox {
           display: flex;
           align-items: center;
           gap: 0.5rem;
@@ -562,17 +715,23 @@ export default function TopicsPage() {
           transition: background 0.2s;
         }
 
-        .tag-checkbox:hover {
+        .topic-checkbox:hover {
           background: var(--bg-secondary);
         }
 
-        .tag-checkbox input[type="checkbox"] {
+        .topic-checkbox input[type="checkbox"] {
           cursor: pointer;
         }
 
-        .tag-checkbox span {
+        .topic-checkbox span {
           font-size: 0.9rem;
           color: var(--text-primary);
+        }
+
+        .checkbox-count {
+          font-size: 0.8rem !important;
+          color: var(--text-secondary) !important;
+          margin-left: auto;
         }
 
         .filter-results {
@@ -634,7 +793,7 @@ export default function TopicsPage() {
           }
 
           .topics-grid {
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            grid-template-columns: 1fr;
           }
         }
       `}</style>
