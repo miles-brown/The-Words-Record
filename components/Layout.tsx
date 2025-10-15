@@ -115,6 +115,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
                   <Link href="/cases" className="nav-btn">Cases</Link>
                   <Link href="/topics" className="nav-btn">Topics</Link>
                   <Link href="/people" className="nav-btn">People</Link>
+                  <Link href="/sources" className="nav-btn">Sources</Link>
                   <Link href="/donate" className="nav-btn nav-btn-accent">Donate</Link>
                 </div>
               </>
@@ -168,11 +169,17 @@ export default function Layout({ children, title, description }: LayoutProps) {
                 <Link href="/people" onClick={() => setMenuOpen(false)}>
                   People
                 </Link>
+                <Link href="/sources" onClick={() => setMenuOpen(false)}>
+                  Sources
+                </Link>
                 <Link href="/donate" onClick={() => setMenuOpen(false)} className="menu-link-accent">
                   Donate
                 </Link>
                 <Link href="/about" onClick={() => setMenuOpen(false)}>
                   About
+                </Link>
+                <Link href="/contact" onClick={() => setMenuOpen(false)}>
+                  Contact
                 </Link>
               </nav>
             </div>
