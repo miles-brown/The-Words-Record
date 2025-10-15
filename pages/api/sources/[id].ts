@@ -19,51 +19,7 @@ export default async function handler(
 
   try {
     const source = await prisma.source.findUnique({
-      where: { id },
-      include: {
-        mediaOutlet: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            country: true,
-            website: true,
-            type: true
-          }
-        },
-        journalist: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            nationality: true
-          }
-        },
-        statement: {
-          select: {
-            id: true,
-            text: true,
-            slug: true,
-            statementDate: true,
-            person: {
-              select: {
-                id: true,
-                name: true,
-                slug: true
-              }
-            }
-          }
-        },
-        case: {
-          select: {
-            id: true,
-            title: true,
-            slug: true,
-            caseDate: true,
-            summary: true
-          }
-        }
-      }
+      where: { id }
     })
 
     if (!source) {

@@ -50,7 +50,7 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
 
       <div className="source-detail">
         <div className="breadcrumbs">
-          <Link href="/sources">ê Back to Sources</Link>
+          <Link href="/sources">ÔøΩ Back to Sources</Link>
         </div>
 
         <article className="source-content">
@@ -82,33 +82,17 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
             <div className="metadata-section">
               <h3>Source Information</h3>
 
-              {(source.author || source.journalist) && (
+              {source.author && (
                 <div className="metadata-item">
                   <label>Author</label>
-                  <div>
-                    {source.journalist ? (
-                      <Link href={`/journalists/${source.journalist.slug}`}>
-                        {source.journalist.name}
-                      </Link>
-                    ) : (
-                      source.author
-                    )}
-                  </div>
+                  <div>{source.author}</div>
                 </div>
               )}
 
-              {(source.publication || source.mediaOutlet) && (
+              {source.publication && (
                 <div className="metadata-item">
                   <label>Publication</label>
-                  <div>
-                    {source.mediaOutlet ? (
-                      <Link href={`/media-outlets/${source.mediaOutlet.slug}`}>
-                        {source.mediaOutlet.name}
-                      </Link>
-                    ) : (
-                      source.publication
-                    )}
-                  </div>
+                  <div>{source.publication}</div>
                 </div>
               )}
 
@@ -150,7 +134,7 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
                   <label>Original URL</label>
                   <div>
                     <a href={source.url} target="_blank" rel="noopener noreferrer">
-                      View original source í
+                      View original source ÔøΩ
                     </a>
                   </div>
                 </div>
@@ -161,7 +145,7 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
                   <label>Archive Snapshot</label>
                   <div>
                     <a href={source.archiveUrl} target="_blank" rel="noopener noreferrer">
-                      View archived version í
+                      View archived version ÔøΩ
                     </a>
                   </div>
                 </div>
@@ -184,7 +168,7 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
               {source.isBroken && (
                 <div className="metadata-item">
                   <label>Status</label>
-                  <div className="warning-text">† Link may be broken</div>
+                  <div className="warning-text">ÔøΩ Link may be broken</div>
                 </div>
               )}
             </div>
@@ -197,7 +181,7 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
               {source.statement && (
                 <div className="related-card">
                   <h4>Statement</h4>
-                  <p>{source.statement.text}</p>
+                  <p>{source.statement.content}</p>
                   {source.statement.person && (
                     <p className="person-name">
                       By{' '}
@@ -207,7 +191,7 @@ export default function SourceDetail({ source, harvardCitation }: SourceDetailPr
                     </p>
                   )}
                   <Link href={`/statements/${source.statement.slug}`} className="view-link">
-                    View statement í
+                    View statement ÔøΩ
                   </Link>
                 </div>
               )}
@@ -516,51 +500,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { id } = params as { id: string }
 
   const source = await prisma.source.findUnique({
-    where: { id },
-    include: {
-      mediaOutlet: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          country: true,
-          website: true,
-          type: true
-        }
-      },
-      journalist: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-          nationality: true
-        }
-      },
-      statement: {
-        select: {
-          id: true,
-          text: true,
-          slug: true,
-          statementDate: true,
-          person: {
-            select: {
-              id: true,
-              name: true,
-              slug: true
-            }
-          }
-        }
-      },
-      case: {
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          caseDate: true,
-          summary: true
-        }
-      }
-    }
+    where: { id }
   })
 
   if (!source || source.isDeleted) {
@@ -579,16 +519,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   if (source.author) {
     citationData.author = source.author
-  } else if (source.journalist) {
-    citationData.author = source.journalist.name
-  } else if (source.mediaOutlet) {
-    citationData.authorOrg = source.mediaOutlet.name
+  } else if (source.publication) {
+    citationData.authorOrg = source.publication
   }
 
   if (source.publication) {
     citationData.publication = source.publication
-  } else if (source.mediaOutlet) {
-    citationData.publication = source.mediaOutlet.name
   }
 
   if (source.publishDate) {

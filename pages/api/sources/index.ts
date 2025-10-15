@@ -81,37 +81,6 @@ export default async function handler(
 
     const sources = await prisma.source.findMany({
       where,
-      include: {
-        mediaOutlet: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-            country: true
-          }
-        },
-        journalist: {
-          select: {
-            id: true,
-            name: true,
-            slug: true
-          }
-        },
-        statement: {
-          select: {
-            id: true,
-            text: true,
-            slug: true
-          }
-        },
-        case: {
-          select: {
-            id: true,
-            title: true,
-            slug: true
-          }
-        }
-      },
       orderBy,
       take: parseInt(limit as string),
       skip: parseInt(offset as string)

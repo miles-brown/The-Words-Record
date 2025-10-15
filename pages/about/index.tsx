@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import Layout from '@/components/Layout'
 
 export default function AboutPage() {
@@ -46,7 +47,7 @@ export default function AboutPage() {
               </div>
 
               <div className="value-card">
-                <div className="value-icon">–</div>
+                <div className="value-icon">ï¿½</div>
                 <h3>Neutrality</h3>
                 <p>
                   We document statements without editorial commentary. Our role is to preserve
@@ -64,7 +65,7 @@ export default function AboutPage() {
               </div>
 
               <div className="value-card">
-                <div className="value-icon">=Ú</div>
+                <div className="value-icon">=ï¿½</div>
                 <h3>Preservation</h3>
                 <p>
                   We archive sources to ensure that statements remain verifiable even if
@@ -167,8 +168,8 @@ export default function AboutPage() {
               information that should be added to our database, please contact us.
             </p>
             <div className="contact-links">
-              <a href="/contact" className="contact-link">Contact Us</a>
-              <a href="/methodology" className="contact-link">Our Methodology</a>
+              <Link href="/contact" className="contact-link">Contact Us</Link>
+              <Link href="/methodology" className="contact-link">Our Methodology</Link>
             </div>
           </section>
         </div>
@@ -323,7 +324,7 @@ export default function AboutPage() {
         }
 
         .standards-section li:before {
-          content: "’";
+          content: "ï¿½";
           position: absolute;
           left: 0;
           color: var(--accent-color);

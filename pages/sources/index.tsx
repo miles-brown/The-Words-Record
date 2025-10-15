@@ -15,20 +15,9 @@ interface Source {
   verificationStatus?: string
   isArchived: boolean
   archiveUrl?: string
-  mediaOutlet?: {
-    id: string
-    name: string
-    slug: string
-    country?: string
-  }
-  journalist?: {
-    id: string
-    name: string
-    slug: string
-  }
   statement?: {
     id: string
-    text: string
+    content: string
     slug: string
   }
   case?: {
@@ -164,7 +153,7 @@ export default function SourcesIndex() {
               onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
               className="sort-toggle"
             >
-              {sortOrder === 'asc' ? '‘' : '“'}
+              {sortOrder === 'asc' ? 'ï¿½' : 'ï¿½'}
             </button>
           </div>
         </div>
@@ -194,29 +183,15 @@ export default function SourcesIndex() {
                 </div>
 
                 <div className="source-meta">
-                  {(source.author || source.journalist) && (
+                  {source.author && (
                     <div className="meta-item">
-                      <strong>Author:</strong>{' '}
-                      {source.journalist ? (
-                        <Link href={`/journalists/${source.journalist.slug}`}>
-                          {source.journalist.name}
-                        </Link>
-                      ) : (
-                        source.author
-                      )}
+                      <strong>Author:</strong> {source.author}
                     </div>
                   )}
 
-                  {(source.publication || source.mediaOutlet) && (
+                  {source.publication && (
                     <div className="meta-item">
-                      <strong>Publication:</strong>{' '}
-                      {source.mediaOutlet ? (
-                        <Link href={`/media-outlets/${source.mediaOutlet.slug}`}>
-                          {source.mediaOutlet.name}
-                        </Link>
-                      ) : (
-                        source.publication
-                      )}
+                      <strong>Publication:</strong> {source.publication}
                     </div>
                   )}
 
@@ -245,7 +220,7 @@ export default function SourcesIndex() {
                 {source.url && (
                   <div className="source-url">
                     <a href={source.url} target="_blank" rel="noopener noreferrer">
-                      View original source ’
+                      View original source ï¿½
                     </a>
                   </div>
                 )}
@@ -256,7 +231,7 @@ export default function SourcesIndex() {
                       <div className="related-item">
                         Related to statement:{' '}
                         <Link href={`/statements/${source.statement.slug}`}>
-                          {source.statement.text.slice(0, 100)}...
+                          {source.statement.content.slice(0, 100)}...
                         </Link>
                       </div>
                     )}
