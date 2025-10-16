@@ -1,6 +1,8 @@
 # Who Said What
 
 > A comprehensive knowledge graph documenting public statements, cases, and responses with neutral, factual analysis.
+>
+> **Latest Update:** Unified visual design system implemented across admin dashboard.
 
 ## Features
 
