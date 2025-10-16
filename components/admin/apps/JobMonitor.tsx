@@ -1,4 +1,10 @@
-import { useState, useEffect } from 'react'
+/**
+ * JobMonitor Component
+ * Monitor background jobs and queues
+ * Redesigned to match admin design system
+ */
+
+import { useState } from 'react'
 
 interface Job {
   id: string
@@ -49,76 +55,84 @@ export default function JobMonitor() {
   }
 
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-white">Background Job Monitor</h2>
-
-      {/* Metrics */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-gray-800 rounded-xl p-4">
-          <p className="text-sm text-gray-400">Queued</p>
-          <p className="text-2xl font-bold text-white">{metrics.queued}</p>
-        </div>
-        <div className="bg-gray-800 rounded-xl p-4">
-          <p className="text-sm text-gray-400">Active</p>
-          <p className="text-2xl font-bold text-yellow-400">{metrics.active}</p>
-        </div>
-        <div className="bg-gray-800 rounded-xl p-4">
-          <p className="text-sm text-gray-400">Completed</p>
-          <p className="text-2xl font-bold text-green-400">{metrics.completed}</p>
-        </div>
-        <div className="bg-gray-800 rounded-xl p-4">
-          <p className="text-sm text-gray-400">Failed</p>
-          <p className="text-2xl font-bold text-red-400">{metrics.failed}</p>
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Overview</h2>
+        <div className="admin-grid admin-grid-cols-4">
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-grey)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⏳</div>
+            <div className="admin-metric-value">{metrics.queued}</div>
+            <div className="admin-metric-label">Queued</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-amber)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⚡</div>
+            <div className="admin-metric-value">{metrics.active}</div>
+            <div className="admin-metric-label">Active</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>✓</div>
+            <div className="admin-metric-value">{metrics.completed}</div>
+            <div className="admin-metric-label">Completed</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-pink)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>❌</div>
+            <div className="admin-metric-value">{metrics.failed}</div>
+            <div className="admin-metric-label">Failed</div>
+          </div>
         </div>
       </div>
 
       {/* Jobs Table */}
-      <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Queue</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Status</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Attempts</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Created</th>
-              <th className="text-right py-3 px-6 text-sm font-medium text-gray-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {jobs.map(job => (
-              <tr key={job.id} className="border-b border-gray-700 hover:bg-gray-700/50">
-                <td className="py-3 px-6 text-white">{job.queue}</td>
-                <td className="py-3 px-6">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    job.status === 'completed' ? 'bg-green-900/50 text-green-400' :
-                    job.status === 'active' ? 'bg-yellow-900/50 text-yellow-400' :
-                    job.status === 'failed' ? 'bg-red-900/50 text-red-400' :
-                    'bg-gray-700 text-gray-400'
-                  }`}>
-                    {job.status}
-                  </span>
-                </td>
-                <td className="py-3 px-6 text-gray-300">{job.attempts}/3</td>
-                <td className="py-3 px-6 text-gray-400 text-sm">
-                  {new Date(job.createdAt).toLocaleString()}
-                </td>
-                <td className="py-3 px-6">
-                  <div className="flex justify-end gap-2">
-                    {job.status === 'failed' && (
-                      <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">
-                        Retry
-                      </button>
-                    )}
-                    <button className="px-3 py-1 bg-gray-700 text-white rounded-md text-sm">
-                      View
-                    </button>
-                  </div>
-                </td>
+      <div className="admin-section">
+        <h2 className="admin-section-header">Background Jobs</h2>
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Queue</th>
+                <th>Status</th>
+                <th>Attempts</th>
+                <th>Created</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {jobs.map(job => (
+                <tr key={job.id}>
+                  <td className="admin-font-semibold">{job.queue}</td>
+                  <td>
+                    <span className={`admin-badge ${
+                      job.status === 'completed' ? 'admin-badge-success' :
+                      job.status === 'active' ? 'admin-badge-warning' :
+                      job.status === 'failed' ? 'admin-badge-error' :
+                      'admin-badge-info'
+                    }`}>
+                      {job.status}
+                    </span>
+                  </td>
+                  <td className="admin-text-sm">{job.attempts}/3</td>
+                  <td className="admin-text-sm">
+                    {new Date(job.createdAt).toLocaleString()}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                      {job.status === 'failed' && (
+                        <button className="admin-btn admin-btn-primary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}>
+                          Retry
+                        </button>
+                      )}
+                      <button className="admin-btn admin-btn-secondary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}>
+                        View
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   )
 }

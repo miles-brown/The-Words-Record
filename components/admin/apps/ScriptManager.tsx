@@ -1,6 +1,7 @@
 /**
  * ScriptManager Component
  * Manages scheduled scripts and code execution
+ * Redesigned to match admin design system
  */
 
 import { useState, useEffect } from 'react'
@@ -75,7 +76,6 @@ export default function ScriptManager() {
       })
 
       if (response.ok) {
-        // Update script status
         setScripts(scripts.map(s =>
           s.id === id ? { ...s, lastRunAt: new Date().toISOString(), lastRunStatus: 'ok' } : s
         ))
@@ -97,115 +97,194 @@ export default function ScriptManager() {
     setShowLogsModal(true)
   }
 
+  const stats = {
+    total: scripts.length,
+    enabled: scripts.filter(s => s.enabled).length,
+    successful: scripts.filter(s => s.lastRunStatus === 'ok').length,
+    errors: scripts.filter(s => s.lastRunStatus === 'error').length
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-white">Script Manager</h2>
-        <button
-          type="button"
-          onClick={() => setShowCreateModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + New Script
-        </button>
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Overview</h2>
+        <div className="admin-grid admin-grid-cols-4">
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-blue)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>📜</div>
+            <div className="admin-metric-value">{stats.total}</div>
+            <div className="admin-metric-label">Total Scripts</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>✅</div>
+            <div className="admin-metric-value">{stats.enabled}</div>
+            <div className="admin-metric-label">Enabled</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-indigo)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>✓</div>
+            <div className="admin-metric-value">{stats.successful}</div>
+            <div className="admin-metric-label">Successful Runs</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-pink)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⚠️</div>
+            <div className="admin-metric-value">{stats.errors}</div>
+            <div className="admin-metric-label">Errors</div>
+          </div>
+        </div>
       </div>
 
-      <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Name</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Schedule</th>
-              <th className="text-center py-3 px-6 text-sm font-medium text-gray-400">Enabled</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Last Run</th>
-              <th className="text-center py-3 px-6 text-sm font-medium text-gray-400">Status</th>
-              <th className="text-right py-3 px-6 text-sm font-medium text-gray-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scripts.map((script) => (
-              <tr key={script.id} className="border-b border-gray-700 hover:bg-gray-700/50">
-                <td className="py-3 px-6">
-                  <div>
-                    <div className="font-medium text-white">{script.name}</div>
-                    <div className="text-sm text-gray-400">{script.description}</div>
-                  </div>
-                </td>
-                <td className="py-3 px-6">
-                  <code className="text-sm text-gray-300 bg-gray-900 px-2 py-1 rounded">
-                    {script.schedule || 'Manual'}
-                  </code>
-                </td>
-                <td className="py-3 px-6 text-center">
-                  <button
-                    type="button"
-                    className={`w-12 h-6 rounded-full ${script.enabled ? 'bg-green-600' : 'bg-gray-600'}`}
-                  >
-                    <div className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                      script.enabled ? 'translate-x-6' : 'translate-x-0.5'
-                    }`} />
-                  </button>
-                </td>
-                <td className="py-3 px-6 text-sm text-gray-400">
-                  {script.lastRunAt ? new Date(script.lastRunAt).toLocaleString() : 'Never'}
-                </td>
-                <td className="py-3 px-6 text-center">
-                  {script.lastRunStatus && (
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                      script.lastRunStatus === 'ok'
-                        ? 'bg-green-900/50 text-green-400 border border-green-800'
-                        : 'bg-red-900/50 text-red-400 border border-red-800'
-                    }`}>
-                      {script.lastRunStatus}
-                    </span>
-                  )}
-                </td>
-                <td className="py-3 px-6">
-                  <div className="flex justify-end gap-2">
-                    <button
-                      type="button"
-                      onClick={() => handleRunNow(script.id)}
-                      className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 text-sm"
-                    >
-                      Run Now
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleViewLogs(script)}
-                      className="px-3 py-1 bg-gray-700 text-white rounded-md hover:bg-gray-600 text-sm"
-                    >
-                      View Logs
-                    </button>
-                  </div>
-                </td>
+      {/* Scripts Table */}
+      <div className="admin-section">
+        <div className="admin-flex-between admin-mb-4">
+          <h2 className="admin-section-header" style={{ margin: 0 }}>Scripts</h2>
+          <button
+            type="button"
+            onClick={() => setShowCreateModal(true)}
+            className="admin-btn admin-btn-primary"
+          >
+            + New Script
+          </button>
+        </div>
+
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Schedule</th>
+                <th style={{ textAlign: 'center' }}>Enabled</th>
+                <th>Last Run</th>
+                <th style={{ textAlign: 'center' }}>Status</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {scripts.map((script) => (
+                <tr key={script.id}>
+                  <td>
+                    <div>
+                      <div className="admin-font-semibold">{script.name}</div>
+                      <div className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>
+                        {script.description}
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <code className="admin-text-sm" style={{
+                      backgroundColor: 'var(--admin-bg)',
+                      padding: '0.25rem 0.5rem',
+                      borderRadius: '0.25rem'
+                    }}>
+                      {script.schedule || 'Manual'}
+                    </code>
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    <button
+                      type="button"
+                      style={{
+                        width: '3rem',
+                        height: '1.5rem',
+                        borderRadius: '9999px',
+                        backgroundColor: script.enabled ? '#10B981' : 'var(--admin-border)',
+                        position: 'relative',
+                        border: 'none',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.2s'
+                      }}
+                    >
+                      <div style={{
+                        width: '1.25rem',
+                        height: '1.25rem',
+                        backgroundColor: 'white',
+                        borderRadius: '50%',
+                        position: 'absolute',
+                        top: '0.125rem',
+                        left: script.enabled ? '1.625rem' : '0.125rem',
+                        transition: 'left 0.2s'
+                      }} />
+                    </button>
+                  </td>
+                  <td className="admin-text-sm">
+                    {script.lastRunAt ? new Date(script.lastRunAt).toLocaleString() : 'Never'}
+                  </td>
+                  <td style={{ textAlign: 'center' }}>
+                    {script.lastRunStatus && (
+                      <span className={`admin-badge ${
+                        script.lastRunStatus === 'ok' ? 'admin-badge-success' : 'admin-badge-error'
+                      }`}>
+                        {script.lastRunStatus}
+                      </span>
+                    )}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleRunNow(script.id)}
+                        className="admin-btn admin-btn-primary"
+                        style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
+                      >
+                        Run Now
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleViewLogs(script)}
+                        className="admin-btn admin-btn-secondary"
+                        style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
+                      >
+                        View Logs
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Logs Modal */}
       {showLogsModal && selectedScript && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-2xl w-full mx-4">
-            <h3 className="text-lg font-semibold text-white mb-4">
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 50
+        }}>
+          <div className="admin-card" style={{ maxWidth: '42rem', width: '100%', margin: '1rem' }}>
+            <h3 className="admin-section-header" style={{ fontSize: '1.125rem', marginBottom: '1rem' }}>
               Logs: {selectedScript.name}
             </h3>
-            <div className="bg-gray-900 rounded-lg p-4 max-h-96 overflow-y-auto">
-              <pre className="text-sm text-gray-300 font-mono">
+            <div style={{
+              backgroundColor: 'var(--admin-bg)',
+              borderRadius: '0.5rem',
+              padding: '1rem',
+              maxHeight: '24rem',
+              overflowY: 'auto'
+            }}>
+              <pre className="admin-text-sm" style={{
+                fontFamily: 'Monaco, monospace',
+                color: 'var(--admin-text-secondary)',
+                margin: 0
+              }}>
                 {logs.join('\n')}
               </pre>
             </div>
             <button
               type="button"
               onClick={() => setShowLogsModal(false)}
-              className="mt-4 w-full px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600"
+              className="admin-btn admin-btn-secondary"
+              style={{ marginTop: '1rem', width: '100%' }}
             >
               Close
             </button>
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }

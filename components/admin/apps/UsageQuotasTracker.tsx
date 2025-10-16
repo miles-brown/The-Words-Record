@@ -1,3 +1,9 @@
+/**
+ * UsageQuotasTracker Component
+ * Track usage quotas for integrations
+ * Redesigned to match admin design system
+ */
+
 import { useState } from 'react'
 
 interface Quota {
@@ -19,102 +25,126 @@ export default function UsageQuotasTracker() {
     { provider: 'Discord', unit: 'messages', used: 4500, limit: 5000, period: 'daily', resetAt: '2024-01-16' }
   ])
 
-  const getUsageColor = (percentage: number) => {
-    if (percentage < 50) return 'bg-green-500'
-    if (percentage < 80) return 'bg-yellow-500'
-    if (percentage < 95) return 'bg-orange-500'
-    return 'bg-red-500'
-  }
-
-  const getBadgeColor = (percentage: number) => {
-    if (percentage < 50) return 'bg-green-900/50 text-green-400 border-green-800'
-    if (percentage < 80) return 'bg-yellow-900/50 text-yellow-400 border-yellow-800'
-    if (percentage < 95) return 'bg-orange-900/50 text-orange-400 border-orange-800'
-    return 'bg-red-900/50 text-red-400 border-red-800'
+  const stats = {
+    atRisk: quotas.filter(q => (q.used / q.limit) * 100 >= 80).length,
+    avgUsage: (quotas.reduce((acc, q) => acc + (q.used / q.limit) * 100, 0) / quotas.length).toFixed(1),
+    total: quotas.length
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-white">Usage & Quotas</h2>
-        <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Export Report
-        </button>
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <div className="admin-flex-between">
+          <h2 className="admin-section-header" style={{ margin: 0 }}>Overview</h2>
+          <button className="admin-btn admin-btn-primary">
+            Export Report
+          </button>
+        </div>
+
+        <div className="admin-grid admin-grid-cols-3" style={{ marginTop: '1.5rem' }}>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-amber)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⚠️</div>
+            <div className="admin-metric-value">{stats.atRisk}</div>
+            <div className="admin-metric-label">Services at Risk</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-blue)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>📊</div>
+            <div className="admin-metric-value">{stats.avgUsage}%</div>
+            <div className="admin-metric-label">Average Usage</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>🔌</div>
+            <div className="admin-metric-value">{stats.total}</div>
+            <div className="admin-metric-label">Total Services</div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {quotas.map(quota => {
-          const percentage = (quota.used / quota.limit) * 100
+      {/* Quotas Grid */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Usage & Quotas</h2>
+        <div className="admin-grid admin-grid-cols-2">
+          {quotas.map(quota => {
+            const percentage = (quota.used / quota.limit) * 100
 
-          return (
-            <div key={`${quota.provider}-${quota.unit}`} className="bg-gray-800 rounded-2xl p-6">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h3 className="font-semibold text-white">{quota.provider}</h3>
-                  <p className="text-sm text-gray-400">{quota.unit}</p>
-                </div>
-                {percentage >= 80 && (
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getBadgeColor(percentage)}`}>
-                    {percentage >= 95 ? 'Critical' : 'Warning'}
-                  </span>
-                )}
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">Usage:</span>
-                  <span className="text-white">
-                    {quota.used.toLocaleString()} / {quota.limit.toLocaleString()} {quota.unit}
-                  </span>
-                </div>
-
-                <div className="w-full bg-gray-700 rounded-full h-3 overflow-hidden">
-                  <div
-                    className={`h-full transition-all duration-500 ${getUsageColor(percentage)}`}
-                    style={{ width: `${Math.min(percentage, 100)}%` }}
-                  />
+            return (
+              <div key={`${quota.provider}-${quota.unit}`} className="admin-card">
+                <div className="admin-flex-between" style={{ marginBottom: '1rem' }}>
+                  <div>
+                    <h3 className="admin-font-semibold" style={{ fontSize: '1.125rem', color: 'var(--admin-text-primary)', margin: 0, marginBottom: '0.25rem' }}>
+                      {quota.provider}
+                    </h3>
+                    <p className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)', margin: 0 }}>
+                      {quota.unit}
+                    </p>
+                  </div>
+                  {percentage >= 80 && (
+                    <span className={`admin-badge ${
+                      percentage >= 95 ? 'admin-badge-error' : 'admin-badge-warning'
+                    }`}>
+                      {percentage >= 95 ? 'Critical' : 'Warning'}
+                    </span>
+                  )}
                 </div>
 
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-500">{percentage.toFixed(1)}% used</span>
-                  <span className="text-gray-500">Resets {quota.period}</span>
+                <div style={{
+                  padding: '0.75rem',
+                  backgroundColor: 'var(--admin-bg)',
+                  borderRadius: '0.5rem',
+                  marginBottom: '1rem'
+                }}>
+                  <div className="admin-flex-between admin-mb-3">
+                    <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Usage</span>
+                    <span className="admin-text-sm admin-font-semibold">
+                      {quota.used.toLocaleString()} / {quota.limit.toLocaleString()} {quota.unit}
+                    </span>
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div style={{
+                    width: '100%',
+                    height: '0.75rem',
+                    backgroundColor: 'var(--admin-card-bg)',
+                    borderRadius: '9999px',
+                    overflow: 'hidden',
+                    marginBottom: '0.75rem'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      width: `${Math.min(percentage, 100)}%`,
+                      backgroundColor: percentage < 50 ? '#10B981' :
+                                      percentage < 80 ? '#F59E0B' :
+                                      percentage < 95 ? '#F97316' : '#EF4444',
+                      transition: 'width 0.5s'
+                    }} />
+                  </div>
+
+                  <div className="admin-flex-between">
+                    <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>
+                      {percentage.toFixed(1)}% used
+                    </span>
+                    <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>
+                      Resets {quota.period}
+                    </span>
+                  </div>
                 </div>
 
                 {quota.resetAt && (
-                  <div className="pt-2 border-t border-gray-700">
-                    <p className="text-xs text-gray-500">
+                  <div style={{
+                    paddingTop: '0.75rem',
+                    borderTop: '1px solid var(--admin-border)'
+                  }}>
+                    <p className="admin-text-sm" style={{ color: 'var(--admin-text-muted)', margin: 0 }}>
                       Next reset: {new Date(quota.resetAt).toLocaleDateString()}
                     </p>
                   </div>
                 )}
               </div>
-            </div>
-          )
-        })}
-      </div>
-
-      {/* Summary Stats */}
-      <div className="bg-gray-800 rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Summary</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div>
-            <p className="text-sm text-gray-400">Services at Risk</p>
-            <p className="text-2xl font-bold text-yellow-400">
-              {quotas.filter(q => (q.used / q.limit) * 100 >= 80).length}
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-400">Average Usage</p>
-            <p className="text-2xl font-bold text-white">
-              {(quotas.reduce((acc, q) => acc + (q.used / q.limit) * 100, 0) / quotas.length).toFixed(1)}%
-            </p>
-          </div>
-          <div>
-            <p className="text-sm text-gray-400">Total Services</p>
-            <p className="text-2xl font-bold text-white">{quotas.length}</p>
-          </div>
+            )
+          })}
         </div>
       </div>
-    </div>
+    </>
   )
 }

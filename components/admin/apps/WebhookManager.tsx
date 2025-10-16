@@ -1,6 +1,7 @@
 /**
  * WebhookManager Component
  * Manages incoming and outgoing webhooks
+ * Redesigned to match admin design system
  */
 
 import { useState, useEffect } from 'react'
@@ -16,11 +17,6 @@ interface Webhook {
   lastFired?: string
   createdAt: string
   updatedAt: string
-}
-
-interface TestPayload {
-  event: string
-  data: any
 }
 
 export default function WebhookManager() {
@@ -195,219 +191,299 @@ export default function WebhookManager() {
     navigator.clipboard.writeText(url)
   }
 
-  const getStatusBadge = (status?: string) => {
-    if (!status) return null
-
-    const colors = {
-      '200': 'bg-green-900/50 text-green-400 border-green-800',
-      'timeout': 'bg-yellow-900/50 text-yellow-400 border-yellow-800',
-      'error': 'bg-red-900/50 text-red-400 border-red-800'
-    }
-
-    return (
-      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${colors[status as keyof typeof colors] || colors.error}`}>
-        {status}
-      </span>
-    )
-  }
-
   const filteredWebhooks = webhooks.filter(w => w.direction === activeTab)
+
+  const stats = {
+    total: webhooks.length,
+    incoming: webhooks.filter(w => w.direction === 'incoming').length,
+    outgoing: webhooks.filter(w => w.direction === 'outgoing').length,
+    active: webhooks.filter(w => w.enabled).length
+  }
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-12 h-12 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="admin-flex-center" style={{ minHeight: '60vh' }}>
+        <div style={{ width: '3rem', height: '3rem', border: '4px solid var(--admin-border)', borderTopColor: 'var(--admin-accent)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-white">Webhook Manager</h2>
-        <button
-          type="button"
-          onClick={handleCreate}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Create Webhook
-        </button>
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Overview</h2>
+        <div className="admin-grid admin-grid-cols-4">
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-blue)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>🔔</div>
+            <div className="admin-metric-value">{stats.total}</div>
+            <div className="admin-metric-label">Total Webhooks</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>📥</div>
+            <div className="admin-metric-value">{stats.incoming}</div>
+            <div className="admin-metric-label">Incoming</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-purple)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>📤</div>
+            <div className="admin-metric-value">{stats.outgoing}</div>
+            <div className="admin-metric-label">Outgoing</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-amber)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>✅</div>
+            <div className="admin-metric-value">{stats.active}</div>
+            <div className="admin-metric-label">Active</div>
+          </div>
+        </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex gap-1 bg-gray-800 p-1 rounded-lg w-fit">
-        <button
-          type="button"
-          onClick={() => setActiveTab('incoming')}
-          className={`px-4 py-2 rounded-md font-medium transition-colors ${
-            activeTab === 'incoming'
-              ? 'bg-gray-700 text-white'
-              : 'text-gray-400 hover:text-white'
-          }`}
-        >
-          Incoming
-        </button>
-        <button
-          type="button"
-          onClick={() => setActiveTab('outgoing')}
-          className={`px-4 py-2 rounded-md font-medium transition-colors ${
-            activeTab === 'outgoing'
-              ? 'bg-gray-700 text-white'
-              : 'text-gray-400 hover:text-white'
-          }`}
-        >
-          Outgoing
-        </button>
-      </div>
+      {/* Direction Tabs & Table */}
+      <div className="admin-section">
+        <div className="admin-flex-between admin-mb-4">
+          <h2 className="admin-section-header" style={{ margin: 0 }}>Webhooks</h2>
+          <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+            {/* Direction Toggle */}
+            <div style={{ display: 'flex', gap: '0.25rem', padding: '0.25rem', backgroundColor: 'var(--admin-bg)', borderRadius: '0.5rem' }}>
+              <button
+                type="button"
+                onClick={() => setActiveTab('incoming')}
+                className="admin-btn"
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: activeTab === 'incoming' ? 'var(--admin-accent)' : 'transparent',
+                  color: activeTab === 'incoming' ? 'white' : 'var(--admin-text-secondary)'
+                }}
+              >
+                Incoming
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveTab('outgoing')}
+                className="admin-btn"
+                style={{
+                  padding: '0.5rem 1rem',
+                  backgroundColor: activeTab === 'outgoing' ? 'var(--admin-accent)' : 'transparent',
+                  color: activeTab === 'outgoing' ? 'white' : 'var(--admin-text-secondary)'
+                }}
+              >
+                Outgoing
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={handleCreate}
+              className="admin-btn admin-btn-primary"
+            >
+              + Create Webhook
+            </button>
+          </div>
+        </div>
 
-      {/* Webhook Table */}
-      <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Name</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">URL</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Secret</th>
-              <th className="text-center py-3 px-6 text-sm font-medium text-gray-400">Enabled</th>
-              <th className="text-center py-3 px-6 text-sm font-medium text-gray-400">Status</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Last Fired</th>
-              <th className="text-right py-3 px-6 text-sm font-medium text-gray-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredWebhooks.length === 0 ? (
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
               <tr>
-                <td colSpan={7} className="text-center py-8 text-gray-500">
-                  No {activeTab} webhooks configured
-                </td>
+                <th>Name</th>
+                <th>URL</th>
+                <th>Secret</th>
+                <th style={{ textAlign: 'center' }}>Enabled</th>
+                <th style={{ textAlign: 'center' }}>Status</th>
+                <th>Last Fired</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
-            ) : (
-              filteredWebhooks.map((webhook) => (
-                <tr key={webhook.id} className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
-                  <td className="py-3 px-6">
-                    <div className="font-medium text-white">{webhook.name}</div>
-                  </td>
-                  <td className="py-3 px-6">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-300 text-sm font-mono truncate max-w-xs">
-                        {webhook.url}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => copyUrl(webhook.url)}
-                        className="text-gray-400 hover:text-white"
-                        title="Copy URL"
-                      >
-                        📋
-                      </button>
-                    </div>
-                  </td>
-                  <td className="py-3 px-6">
-                    <span className="text-gray-400 font-mono text-sm">
-                      {webhook.secretLast4 || 'None'}
-                    </span>
-                  </td>
-                  <td className="py-3 px-6 text-center">
-                    <button
-                      type="button"
-                      onClick={() => handleToggle(webhook.id, !webhook.enabled)}
-                      className={`w-12 h-6 rounded-full transition-colors ${
-                        webhook.enabled ? 'bg-green-600' : 'bg-gray-600'
-                      }`}
-                    >
-                      <div className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                        webhook.enabled ? 'translate-x-6' : 'translate-x-0.5'
-                      }`} />
-                    </button>
-                  </td>
-                  <td className="py-3 px-6 text-center">
-                    {getStatusBadge(webhook.lastStatus)}
-                  </td>
-                  <td className="py-3 px-6 text-gray-400 text-sm">
-                    {webhook.lastFired || 'Never'}
-                  </td>
-                  <td className="py-3 px-6">
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleTest(webhook)}
-                        className="px-3 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm"
-                      >
-                        Test
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDelete(webhook.id)}
-                        className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors text-sm"
-                      >
-                        Delete
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {filteredWebhooks.length === 0 ? (
+                <tr>
+                  <td colSpan={7} style={{ textAlign: 'center', color: 'var(--admin-text-muted)', padding: '2rem' }}>
+                    No {activeTab} webhooks configured
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                filteredWebhooks.map((webhook) => (
+                  <tr key={webhook.id}>
+                    <td className="admin-font-semibold">{webhook.name}</td>
+                    <td>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <code className="admin-text-sm" style={{ maxWidth: '300px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                          {webhook.url}
+                        </code>
+                        <button
+                          type="button"
+                          onClick={() => copyUrl(webhook.url)}
+                          className="admin-text-sm"
+                          style={{ cursor: 'pointer', border: 'none', background: 'none', padding: 0 }}
+                          title="Copy URL"
+                        >
+                          📋
+                        </button>
+                      </div>
+                    </td>
+                    <td className="admin-text-sm"><code>{webhook.secretLast4 || 'None'}</code></td>
+                    <td style={{ textAlign: 'center' }}>
+                      <button
+                        type="button"
+                        onClick={() => handleToggle(webhook.id, !webhook.enabled)}
+                        style={{
+                          width: '3rem',
+                          height: '1.5rem',
+                          borderRadius: '9999px',
+                          backgroundColor: webhook.enabled ? '#10B981' : 'var(--admin-border)',
+                          position: 'relative',
+                          border: 'none',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s'
+                        }}
+                      >
+                        <div style={{
+                          width: '1.25rem',
+                          height: '1.25rem',
+                          backgroundColor: 'white',
+                          borderRadius: '50%',
+                          position: 'absolute',
+                          top: '0.125rem',
+                          left: webhook.enabled ? '1.625rem' : '0.125rem',
+                          transition: 'left 0.2s'
+                        }} />
+                      </button>
+                    </td>
+                    <td style={{ textAlign: 'center' }}>
+                      {webhook.lastStatus && (
+                        <span className={`admin-badge ${
+                          webhook.lastStatus === '200' ? 'admin-badge-success' :
+                          webhook.lastStatus === 'timeout' ? 'admin-badge-warning' :
+                          'admin-badge-error'
+                        }`}>
+                          {webhook.lastStatus}
+                        </span>
+                      )}
+                    </td>
+                    <td className="admin-text-sm">{webhook.lastFired || 'Never'}</td>
+                    <td>
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                        <button
+                          type="button"
+                          onClick={() => handleTest(webhook)}
+                          className="admin-btn admin-btn-secondary"
+                          style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}
+                        >
+                          Test
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleDelete(webhook.id)}
+                          className="admin-btn"
+                          style={{
+                            padding: '0.375rem 0.75rem',
+                            fontSize: '0.8125rem',
+                            backgroundColor: '#FEE2E2',
+                            color: '#991B1B',
+                            border: '1px solid #FECACA'
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-white mb-4">Create {activeTab} Webhook</h3>
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 50
+        }}>
+          <div className="admin-card" style={{ maxWidth: '28rem', width: '100%', margin: '1rem' }}>
+            <h3 className="admin-section-header" style={{ fontSize: '1.125rem', marginBottom: '1rem' }}>
+              Create {activeTab} Webhook
+            </h3>
 
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Name <span className="text-red-400">*</span>
+                <label className="admin-text-sm admin-font-semibold" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                  Name <span style={{ color: '#EF4444' }}>*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid var(--admin-border)',
+                    borderRadius: '0.5rem',
+                    backgroundColor: 'var(--admin-card-bg)',
+                    color: 'var(--admin-text-primary)'
+                  }}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  URL <span className="text-red-400">*</span>
+                <label className="admin-text-sm admin-font-semibold" style={{ display: 'block', marginBottom: '0.5rem' }}>
+                  URL <span style={{ color: '#EF4444' }}>*</span>
                 </label>
                 <input
                   type="url"
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   placeholder="https://"
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid var(--admin-border)',
+                    borderRadius: '0.5rem',
+                    backgroundColor: 'var(--admin-card-bg)',
+                    color: 'var(--admin-text-primary)'
+                  }}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="admin-text-sm admin-font-semibold" style={{ display: 'block', marginBottom: '0.5rem' }}>
                   Secret (optional)
                 </label>
                 <input
                   type="password"
                   value={formData.secret}
                   onChange={(e) => setFormData({ ...formData, secret: e.target.value })}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid var(--admin-border)',
+                    borderRadius: '0.5rem',
+                    backgroundColor: 'var(--admin-card-bg)',
+                    color: 'var(--admin-text-primary)'
+                  }}
                 />
               </div>
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                className="admin-btn admin-btn-secondary"
+                style={{ flex: 1 }}
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleSave}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="admin-btn admin-btn-primary"
+                style={{ flex: 1 }}
               >
                 Create Webhook
               </button>
@@ -416,49 +492,69 @@ export default function WebhookManager() {
         </div>
       )}
 
-      {/* Test Modal */}
+      {/* Test Modal - Similar pattern as Create Modal */}
       {showTestModal && selectedWebhook && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-semibold text-white mb-4">
+        <div style={{
+          position: 'fixed',
+          inset: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          backdropFilter: 'blur(4px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 50
+        }}>
+          <div className="admin-card" style={{ maxWidth: '42rem', width: '100%', margin: '1rem', maxHeight: '90vh', overflowY: 'auto' }}>
+            <h3 className="admin-section-header" style={{ fontSize: '1.125rem', marginBottom: '1rem' }}>
               Test Webhook: {selectedWebhook.name}
             </h3>
 
-            <div className="space-y-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
+                <label className="admin-text-sm admin-font-semibold" style={{ display: 'block', marginBottom: '0.5rem' }}>
                   Test Payload (JSON)
                 </label>
                 <textarea
                   value={testPayload}
                   onChange={(e) => setTestPayload(e.target.value)}
                   rows={10}
-                  className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg font-mono text-sm focus:ring-2 focus:ring-blue-500"
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid var(--admin-border)',
+                    borderRadius: '0.5rem',
+                    backgroundColor: 'var(--admin-card-bg)',
+                    color: 'var(--admin-text-primary)',
+                    fontFamily: 'Monaco, monospace',
+                    fontSize: '0.875rem'
+                  }}
                 />
               </div>
 
               {testResult && (
-                <div className="bg-gray-900 rounded-lg p-4">
-                  <h4 className="text-sm font-medium text-gray-300 mb-2">Response:</h4>
-                  <pre className="text-sm text-gray-400 overflow-x-auto">
+                <div style={{ backgroundColor: 'var(--admin-bg)', borderRadius: '0.5rem', padding: '1rem' }}>
+                  <h4 className="admin-text-sm admin-font-semibold" style={{ marginBottom: '0.5rem' }}>Response:</h4>
+                  <pre className="admin-text-sm" style={{ overflow: 'auto' }}>
                     {JSON.stringify(testResult, null, 2)}
                   </pre>
                 </div>
               )}
             </div>
 
-            <div className="flex gap-3 mt-6">
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.5rem' }}>
               <button
                 type="button"
                 onClick={() => setShowTestModal(false)}
-                className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
+                className="admin-btn admin-btn-secondary"
+                style={{ flex: 1 }}
               >
                 Close
               </button>
               <button
                 type="button"
                 onClick={handleSendTest}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                className="admin-btn admin-btn-primary"
+                style={{ flex: 1 }}
               >
                 Send Test
               </button>
@@ -466,6 +562,12 @@ export default function WebhookManager() {
           </div>
         </div>
       )}
-    </div>
+
+      <style jsx>{`
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+    </>
   )
 }

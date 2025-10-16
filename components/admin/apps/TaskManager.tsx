@@ -1,59 +1,121 @@
+/**
+ * TaskManager Component
+ * Manage background tasks
+ * Redesigned to match admin design system
+ */
+
 import { useState } from 'react'
 
+interface Task {
+  id: string
+  name: string
+  type: 'scheduled' | 'manual'
+  status: 'idle' | 'running' | 'paused'
+  lastRun?: string
+  nextRun?: string
+}
+
 export default function TaskManager() {
-  const [tasks] = useState([
+  const [tasks] = useState<Task[]>([
     { id: '1', name: 'Database Backup', type: 'scheduled', status: 'idle', lastRun: '2024-01-15T00:00:00Z', nextRun: '2024-01-16T00:00:00Z' },
     { id: '2', name: 'Cache Clear', type: 'manual', status: 'running', lastRun: '2024-01-15T10:00:00Z' },
-    { id: '3', name: 'Report Generation', type: 'scheduled', status: 'paused', lastRun: '2024-01-14T09:00:00Z' }
+    { id: '3', name: 'Report Generation', type: 'scheduled', status: 'paused', lastRun: '2024-01-14T09:00:00Z', nextRun: '2024-01-21T09:00:00Z' }
   ])
 
+  const stats = {
+    total: tasks.length,
+    scheduled: tasks.filter(t => t.type === 'scheduled').length,
+    running: tasks.filter(t => t.status === 'running').length,
+    paused: tasks.filter(t => t.status === 'paused').length
+  }
+
   return (
-    <div className="space-y-6">
-      <h2 className="text-xl font-semibold text-white">Task Manager</h2>
-      <div className="bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
-        <table className="w-full">
-          <thead>
-            <tr className="border-b border-gray-700">
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Name</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Type</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Status</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Last Run</th>
-              <th className="text-left py-3 px-6 text-sm font-medium text-gray-400">Next Run</th>
-              <th className="text-right py-3 px-6 text-sm font-medium text-gray-400">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {tasks.map(task => (
-              <tr key={task.id} className="border-b border-gray-700 hover:bg-gray-700/50">
-                <td className="py-3 px-6 text-white">{task.name}</td>
-                <td className="py-3 px-6 text-gray-300">{task.type}</td>
-                <td className="py-3 px-6">
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    task.status === 'running' ? 'bg-yellow-900/50 text-yellow-400' :
-                    task.status === 'paused' ? 'bg-gray-700 text-gray-400' :
-                    'bg-gray-700 text-gray-300'
-                  }`}>
-                    {task.status}
-                  </span>
-                </td>
-                <td className="py-3 px-6 text-gray-400 text-sm">
-                  {task.lastRun ? new Date(task.lastRun).toLocaleString() : '-'}
-                </td>
-                <td className="py-3 px-6 text-gray-400 text-sm">
-                  {task.nextRun ? new Date(task.nextRun).toLocaleString() : '-'}
-                </td>
-                <td className="py-3 px-6">
-                  <div className="flex justify-end gap-2">
-                    <button className="px-3 py-1 bg-blue-600 text-white rounded-md text-sm">
-                      {task.status === 'paused' ? 'Resume' : task.status === 'running' ? 'Pause' : 'Run'}
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Overview</h2>
+        <div className="admin-grid admin-grid-cols-4">
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-blue)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>📋</div>
+            <div className="admin-metric-value">{stats.total}</div>
+            <div className="admin-metric-label">Total Tasks</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-purple)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>📅</div>
+            <div className="admin-metric-value">{stats.scheduled}</div>
+            <div className="admin-metric-label">Scheduled</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>▶️</div>
+            <div className="admin-metric-value">{stats.running}</div>
+            <div className="admin-metric-label">Running</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-amber)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⏸️</div>
+            <div className="admin-metric-value">{stats.paused}</div>
+            <div className="admin-metric-label">Paused</div>
+          </div>
+        </div>
       </div>
-    </div>
+
+      {/* Tasks Table */}
+      <div className="admin-section">
+        <div className="admin-flex-between admin-mb-4">
+          <h2 className="admin-section-header" style={{ margin: 0 }}>Tasks</h2>
+          <button className="admin-btn admin-btn-primary">
+            + New Task
+          </button>
+        </div>
+
+        <div className="admin-table-wrapper">
+          <table className="admin-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Last Run</th>
+                <th>Next Run</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {tasks.map(task => (
+                <tr key={task.id}>
+                  <td className="admin-font-semibold">{task.name}</td>
+                  <td>
+                    <span className="admin-badge admin-badge-info">
+                      {task.type}
+                    </span>
+                  </td>
+                  <td>
+                    <span className={`admin-badge ${
+                      task.status === 'running' ? 'admin-badge-warning' :
+                      task.status === 'paused' ? 'admin-badge-info' :
+                      'admin-badge-success'
+                    }`}>
+                      {task.status}
+                    </span>
+                  </td>
+                  <td className="admin-text-sm">
+                    {task.lastRun ? new Date(task.lastRun).toLocaleString() : '-'}
+                  </td>
+                  <td className="admin-text-sm">
+                    {task.nextRun ? new Date(task.nextRun).toLocaleString() : '-'}
+                  </td>
+                  <td>
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
+                      <button className="admin-btn admin-btn-primary" style={{ padding: '0.375rem 0.75rem', fontSize: '0.8125rem' }}>
+                        {task.status === 'paused' ? 'Resume' : task.status === 'running' ? 'Pause' : 'Run'}
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </>
   )
 }

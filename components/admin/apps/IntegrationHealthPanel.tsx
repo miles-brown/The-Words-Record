@@ -1,3 +1,9 @@
+/**
+ * IntegrationHealthPanel Component
+ * Monitor integration health and dependencies
+ * Redesigned to match admin design system
+ */
+
 import { useState, useEffect } from 'react'
 
 interface HealthCheck {
@@ -20,7 +26,6 @@ export default function IntegrationHealthPanel() {
 
   useEffect(() => {
     const handleRefresh = async () => {
-      // Fetch health status
       try {
         const response = await fetch('/api/admin/apps/health')
         if (response.ok) {
@@ -36,87 +41,137 @@ export default function IntegrationHealthPanel() {
     return () => window.removeEventListener('refresh-health', handleRefresh)
   }, [])
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'ok': return 'text-green-400'
-      case 'error': return 'text-red-400'
-      case 'timeout': return 'text-yellow-400'
-      default: return 'text-gray-400'
-    }
-  }
-
-  const getLatencyColor = (ms: number) => {
-    if (ms < 50) return 'text-green-400'
-    if (ms < 200) return 'text-yellow-400'
-    return 'text-red-400'
-  }
-
   const overallHealth = healthChecks.filter(h => h.status === 'ok').length / healthChecks.length * 100
 
+  const stats = {
+    healthy: healthChecks.filter(h => h.status === 'ok').length,
+    errors: healthChecks.filter(h => h.status === 'error').length,
+    timeout: healthChecks.filter(h => h.status === 'timeout').length,
+    avgLatency: Math.round(healthChecks.filter(h => h.status === 'ok').reduce((acc, h) => acc + h.latencyMs, 0) / healthChecks.filter(h => h.status === 'ok').length)
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-white">Integration Health</h2>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-400">
-            Overall Health: <span className={`font-bold ${overallHealth >= 80 ? 'text-green-400' : overallHealth >= 50 ? 'text-yellow-400' : 'text-red-400'}`}>
-              {overallHealth.toFixed(0)}%
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <div className="admin-flex-between">
+          <h2 className="admin-section-header" style={{ margin: 0 }}>Overview</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>
+              Overall Health: <span style={{
+                fontWeight: 600,
+                color: overallHealth >= 80 ? '#10B981' : overallHealth >= 50 ? '#F59E0B' : '#EF4444'
+              }}>
+                {overallHealth.toFixed(0)}%
+              </span>
             </span>
-          </span>
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-            Ping All
-          </button>
+            <button className="admin-btn admin-btn-primary">
+              Ping All
+            </button>
+          </div>
+        </div>
+
+        <div className="admin-grid admin-grid-cols-4" style={{ marginTop: '1.5rem' }}>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>✅</div>
+            <div className="admin-metric-value">{stats.healthy}</div>
+            <div className="admin-metric-label">Healthy</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-pink)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>❌</div>
+            <div className="admin-metric-value">{stats.errors}</div>
+            <div className="admin-metric-label">Errors</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-amber)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⏱️</div>
+            <div className="admin-metric-value">{stats.timeout}</div>
+            <div className="admin-metric-label">Timeouts</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-blue)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>⚡</div>
+            <div className="admin-metric-value">{stats.avgLatency}ms</div>
+            <div className="admin-metric-label">Avg Latency</div>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {healthChecks.map(check => (
-          <div key={check.provider} className="bg-gray-800 rounded-2xl p-6">
-            <div className="flex items-start justify-between mb-4">
-              <h3 className="font-semibold text-white">{check.provider}</h3>
-              <span className={`text-2xl ${getStatusColor(check.status)}`}>
-                {check.status === 'ok' ? '✓' : check.status === 'error' ? '✗' : '⚠'}
-              </span>
-            </div>
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-gray-500">Status:</span>
-                <span className={`font-medium ${getStatusColor(check.status)}`}>{check.status}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-gray-500">Latency:</span>
-                <span className={`font-medium ${getLatencyColor(check.latencyMs)}`}>
-                  {check.latencyMs}ms
+      {/* Health Checks Grid */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Service Health</h2>
+        <div className="admin-grid admin-grid-auto">
+          {healthChecks.map(check => (
+            <div key={check.provider} className="admin-card">
+              <div className="admin-flex-between" style={{ marginBottom: '1rem' }}>
+                <h3 className="admin-font-semibold" style={{ fontSize: '1.125rem', color: 'var(--admin-text-primary)', margin: 0 }}>
+                  {check.provider}
+                </h3>
+                <span style={{
+                  fontSize: '1.5rem',
+                  color: check.status === 'ok' ? '#10B981' : check.status === 'error' ? '#EF4444' : '#F59E0B'
+                }}>
+                  {check.status === 'ok' ? '✓' : check.status === 'error' ? '✗' : '⚠'}
                 </span>
               </div>
-              {check.message && (
-                <div className="mt-3 p-2 bg-gray-900 rounded">
-                  <p className="text-xs text-gray-400">{check.message}</p>
+
+              <div style={{
+                padding: '0.75rem',
+                backgroundColor: 'var(--admin-bg)',
+                borderRadius: '0.5rem',
+                marginBottom: '1rem'
+              }}>
+                <div className="admin-flex-between admin-mb-2">
+                  <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Status</span>
+                  <span className={`admin-badge ${
+                    check.status === 'ok' ? 'admin-badge-success' :
+                    check.status === 'error' ? 'admin-badge-error' :
+                    'admin-badge-warning'
+                  }`} style={{ fontSize: '0.75rem' }}>
+                    {check.status}
+                  </span>
                 </div>
-              )}
-            </div>
-            <div className="mt-4">
-              <button className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 text-sm">
+                <div className="admin-flex-between">
+                  <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Latency</span>
+                  <span className="admin-text-sm admin-font-semibold" style={{
+                    color: check.latencyMs < 50 ? '#10B981' : check.latencyMs < 200 ? '#F59E0B' : '#EF4444'
+                  }}>
+                    {check.latencyMs}ms
+                  </span>
+                </div>
+                {check.message && (
+                  <div style={{
+                    marginTop: '0.75rem',
+                    padding: '0.5rem',
+                    backgroundColor: 'var(--admin-card-bg)',
+                    borderRadius: '0.25rem'
+                  }}>
+                    <p className="admin-text-sm" style={{ color: 'var(--admin-text-muted)', margin: 0 }}>
+                      {check.message}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              <button className="admin-btn admin-btn-secondary" style={{ width: '100%' }}>
                 Test Connection
               </button>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
-      {/* Dependency Map (simplified) */}
-      <div className="bg-gray-800 rounded-2xl p-6">
-        <h3 className="text-lg font-semibold text-white mb-4">Dependency Map</h3>
-        <div className="bg-gray-900 rounded-lg p-4">
-          <div className="text-sm text-gray-400">
-            <div className="mb-2">• Authentication → Supabase</div>
-            <div className="mb-2">• Hosting → Vercel</div>
-            <div className="mb-2">• CDN → Cloudflare</div>
-            <div className="mb-2">• AI Features → OpenAI</div>
-            <div className="mb-2">• Notifications → Discord, Gmail</div>
+      {/* Dependency Map */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Dependency Map</h2>
+        <div className="admin-card">
+          <div className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)', lineHeight: 1.8 }}>
+            <div style={{ marginBottom: '0.5rem' }}>• Authentication → Supabase</div>
+            <div style={{ marginBottom: '0.5rem' }}>• Hosting → Vercel</div>
+            <div style={{ marginBottom: '0.5rem' }}>• CDN → Cloudflare</div>
+            <div style={{ marginBottom: '0.5rem' }}>• AI Features → OpenAI</div>
+            <div>• Notifications → Discord, Gmail</div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }

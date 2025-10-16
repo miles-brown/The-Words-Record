@@ -1,26 +1,33 @@
 /**
  * IntegrationManager Component
- * Manages external service integrations (Supabase, Gmail, Discord, OpenAI, Vercel, Cloudflare, etc.)
+ * Manages external service integrations with full CRUD operations
+ * Redesigned to match admin design system
  */
 
 import { useState, useEffect } from 'react'
+import LoadingSpinner from './components/common/LoadingSpinner'
+import Modal from './components/common/Modal'
+import StatusBadge from './components/common/StatusBadge'
+import ConfirmDialog from './components/common/ConfirmDialog'
 
 interface Integration {
   id: string
   provider: string
   name: string
-  description: string
-  status: 'connected' | 'disconnected' | 'error'
-  logo: string
-  lastPing?: number
+  description?: string | null
+  status: string
+  logo?: string | null
+  lastPing?: number | null
+  lastPingAt?: string | Date | null
   config?: any
-  createdAt: string
-  updatedAt: string
+  createdAt: string | Date
+  updatedAt: string | Date
 }
 
 interface IntegrationConfig {
   [key: string]: {
     name: string
+    description: string
     fields: { name: string; label: string; type: string; required?: boolean; placeholder?: string }[]
   }
 }
@@ -31,11 +38,16 @@ export default function IntegrationManager() {
   const [showConnectModal, setShowConnectModal] = useState(false)
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null)
   const [configValues, setConfigValues] = useState<Record<string, string>>({})
+  const [editingIntegration, setEditingIntegration] = useState<Integration | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState<Integration | null>(null)
+  const [pinging, setPinging] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
 
   // Provider configurations
   const providers: IntegrationConfig = {
     supabase: {
       name: 'Supabase',
+      description: 'Database and backend services',
       fields: [
         { name: 'projectUrl', label: 'Project URL', type: 'url', required: true, placeholder: 'https://xxx.supabase.co' },
         { name: 'anonKey', label: 'Anon Key', type: 'password', required: true },
@@ -44,6 +56,7 @@ export default function IntegrationManager() {
     },
     gmail: {
       name: 'Gmail',
+      description: 'Email sending and notifications',
       fields: [
         { name: 'clientId', label: 'Client ID', type: 'text', required: true },
         { name: 'clientSecret', label: 'Client Secret', type: 'password', required: true },
@@ -52,6 +65,7 @@ export default function IntegrationManager() {
     },
     discord: {
       name: 'Discord',
+      description: 'Notifications and community',
       fields: [
         { name: 'botToken', label: 'Bot Token', type: 'password', required: true },
         { name: 'webhookUrl', label: 'Webhook URL', type: 'url', required: false },
@@ -60,6 +74,7 @@ export default function IntegrationManager() {
     },
     openai: {
       name: 'OpenAI',
+      description: 'AI-powered features',
       fields: [
         { name: 'apiKey', label: 'API Key', type: 'password', required: true },
         { name: 'organizationId', label: 'Organization ID', type: 'text', required: false },
@@ -68,6 +83,7 @@ export default function IntegrationManager() {
     },
     vercel: {
       name: 'Vercel',
+      description: 'Deployment and hosting',
       fields: [
         { name: 'token', label: 'Access Token', type: 'password', required: true },
         { name: 'teamId', label: 'Team ID', type: 'text', required: false },
@@ -76,6 +92,7 @@ export default function IntegrationManager() {
     },
     cloudflare: {
       name: 'Cloudflare',
+      description: 'CDN and security',
       fields: [
         { name: 'apiToken', label: 'API Token', type: 'password', required: true },
         { name: 'zoneId', label: 'Zone ID', type: 'text', required: false },
@@ -96,10 +113,10 @@ export default function IntegrationManager() {
   const fetchIntegrations = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/apps/integrations')
+      const response = await fetch('/api/apps/integrations')
       if (response.ok) {
-        const data = await response.json()
-        setIntegrations(data)
+        const result = await response.json()
+        setIntegrations(result.data || [])
       }
     } catch (error) {
       console.error('Failed to fetch integrations:', error)
@@ -111,18 +128,31 @@ export default function IntegrationManager() {
   const handleConnect = (provider: string) => {
     setSelectedProvider(provider)
     setConfigValues({})
+    setEditingIntegration(null)
     setShowConnectModal(true)
   }
 
-  const handleDisconnect = async (id: string) => {
-    if (!confirm('Are you sure you want to disconnect this integration?')) return
+  const handleEdit = (integration: Integration) => {
+    setSelectedProvider(integration.provider)
+    setConfigValues(integration.config || {})
+    setEditingIntegration(integration)
+    setShowConnectModal(true)
+  }
+
+  const handleDisconnect = async (integration: Integration) => {
+    setDeleteConfirm(integration)
+  }
+
+  const confirmDelete = async () => {
+    if (!deleteConfirm) return
 
     try {
-      const response = await fetch(`/api/admin/apps/integrations/${id}`, {
+      const response = await fetch(`/api/apps/integrations/${deleteConfirm.id}`, {
         method: 'DELETE'
       })
       if (response.ok) {
-        fetchIntegrations()
+        await fetchIntegrations()
+        setDeleteConfirm(null)
       }
     } catch (error) {
       console.error('Failed to disconnect integration:', error)
@@ -131,17 +161,17 @@ export default function IntegrationManager() {
 
   const handlePing = async (id: string) => {
     try {
-      const response = await fetch(`/api/admin/apps/integrations/${id}/ping`, {
+      setPinging(id)
+      const response = await fetch(`/api/apps/integrations/${id}/ping`, {
         method: 'POST'
       })
       if (response.ok) {
-        const data = await response.json()
-        setIntegrations(integrations.map(i =>
-          i.id === id ? { ...i, lastPing: data.latency, status: data.status } : i
-        ))
+        await fetchIntegrations()
       }
     } catch (error) {
       console.error('Ping failed:', error)
+    } finally {
+      setPinging(null)
     }
   }
 
@@ -149,30 +179,58 @@ export default function IntegrationManager() {
     if (!selectedProvider) return
 
     try {
-      const response = await fetch('/api/admin/apps/integrations', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          provider: selectedProvider,
-          name: providers[selectedProvider].name,
-          config: configValues
-        })
-      })
+      setSaving(true)
 
-      if (response.ok) {
-        setShowConnectModal(false)
-        fetchIntegrations()
+      if (editingIntegration) {
+        // Update existing
+        const response = await fetch(`/api/apps/integrations/${editingIntegration.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            config: configValues
+          })
+        })
+
+        if (response.ok) {
+          setShowConnectModal(false)
+          await fetchIntegrations()
+        }
+      } else {
+        // Create new
+        const response = await fetch('/api/apps/integrations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            provider: selectedProvider,
+            name: providers[selectedProvider].name,
+            description: providers[selectedProvider].description,
+            config: configValues,
+            logo: getProviderLogo(selectedProvider)
+          })
+        })
+
+        if (response.ok) {
+          setShowConnectModal(false)
+          await fetchIntegrations()
+        } else {
+          const error = await response.json()
+          alert(error.message || 'Failed to save integration')
+        }
       }
     } catch (error) {
       console.error('Failed to save integration:', error)
+      alert('Failed to save integration')
+    } finally {
+      setSaving(false)
     }
   }
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'connected': return 'bg-green-900/50 text-green-400 border-green-800'
-      case 'error': return 'bg-red-900/50 text-red-400 border-red-800'
-      default: return 'bg-gray-900/50 text-gray-400 border-gray-800'
+      case 'connected': return 'success'
+      case 'degraded': return 'warning'
+      case 'error': return 'error'
+      default: return 'default'
     }
   }
 
@@ -188,122 +246,240 @@ export default function IntegrationManager() {
     return logos[provider] || '🔌'
   }
 
+  const formatDate = (date: string | Date | null | undefined) => {
+    if (!date) return 'Never'
+    return new Date(date).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric'
+    })
+  }
+
+  const formatDateTime = (date: string | Date | null | undefined) => {
+    if (!date) return 'Never'
+    return new Date(date).toLocaleString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <div className="w-12 h-12 border-4 border-gray-600 border-t-blue-500 rounded-full animate-spin"></div>
+      <div className="admin-flex-center" style={{ minHeight: '60vh' }}>
+        <LoadingSpinner />
       </div>
     )
   }
 
+  const stats = {
+    total: integrations.length,
+    connected: integrations.filter(i => i.status === 'connected').length,
+    degraded: integrations.filter(i => i.status === 'degraded').length,
+    errors: integrations.filter(i => i.status === 'error').length
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-white">Integration Manager</h2>
-        <button
-          type="button"
-          onClick={() => setShowConnectModal(true)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          + Add Integration
-        </button>
+    <>
+      {/* Stats Overview */}
+      <div className="admin-section">
+        <h2 className="admin-section-header">Overview</h2>
+        <div className="admin-grid admin-grid-cols-4">
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-blue)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
+              🔌
+            </div>
+            <div className="admin-metric-value">{stats.total}</div>
+            <div className="admin-metric-label">Total Integrations</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-green)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
+              ✅
+            </div>
+            <div className="admin-metric-value">{stats.connected}</div>
+            <div className="admin-metric-label">Connected</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-amber)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
+              ⚠️
+            </div>
+            <div className="admin-metric-value">{stats.degraded}</div>
+            <div className="admin-metric-label">Degraded</div>
+          </div>
+          <div className="admin-metric-card" style={{ backgroundColor: 'var(--metric-pink)' }}>
+            <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
+              ❌
+            </div>
+            <div className="admin-metric-value">{stats.errors}</div>
+            <div className="admin-metric-label">Errors</div>
+          </div>
+        </div>
       </div>
 
       {/* Integration Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Object.entries(providers).map(([key, provider]) => {
-          const integration = integrations.find(i => i.provider === key)
-          const isConnected = integration?.status === 'connected'
+      <div className="admin-section">
+        <h2 className="admin-section-header">Available Integrations</h2>
+        <div className="admin-grid admin-grid-auto">
+          {Object.entries(providers).map(([key, provider]) => {
+            const integration = integrations.find(i => i.provider === key)
+            const isPinging = pinging === integration?.id
 
-          return (
-            <div key={key} className="bg-gray-800 rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="text-3xl">{getProviderLogo(key)}</div>
-                  <div>
-                    <h3 className="font-semibold text-white">{provider.name}</h3>
-                    <p className="text-sm text-gray-400">
-                      {integration ? 'Connected' : 'Not connected'}
-                    </p>
+            return (
+              <div key={key} className="admin-card">
+                {/* Header with logo and name */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '1rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{ fontSize: '2rem', lineHeight: 1 }}>{getProviderLogo(key)}</div>
+                    <div>
+                      <h3 className="admin-font-semibold" style={{ fontSize: '1.125rem', color: 'var(--admin-text-primary)', marginBottom: '0.25rem', lineHeight: 1.2 }}>
+                        {provider.name}
+                      </h3>
+                      <p className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)', margin: 0, lineHeight: 1.4 }}>
+                        {provider.description}
+                      </p>
+                    </div>
                   </div>
+                  {integration && (
+                    <StatusBadge status={getStatusColor(integration.status)} text={integration.status} />
+                  )}
                 </div>
+
+                {/* Integration details if connected */}
                 {integration && (
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusColor(integration.status)}`}>
-                    {integration.status}
-                  </span>
+                  <div className="admin-mb-4" style={{ padding: '0.75rem', backgroundColor: 'var(--admin-bg)', borderRadius: '0.5rem', borderTop: '1px solid var(--admin-border)', paddingTop: '0.75rem' }}>
+                    <div className="admin-flex-between admin-mb-2">
+                      <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Last ping</span>
+                      <span className="admin-text-sm admin-font-semibold">
+                        {integration.lastPing ? (
+                          <span style={{
+                            color: integration.lastPing < 100 ? '#10B981' :
+                                   integration.lastPing < 200 ? '#F59E0B' : '#EF4444'
+                          }}>
+                            {integration.lastPing}ms
+                          </span>
+                        ) : (
+                          'Never'
+                        )}
+                      </span>
+                    </div>
+                    <div className="admin-flex-between admin-mb-2">
+                      <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Last checked</span>
+                      <span className="admin-text-sm" style={{ color: 'var(--admin-text-primary)' }}>
+                        {formatDateTime(integration.lastPingAt)}
+                      </span>
+                    </div>
+                    <div className="admin-flex-between">
+                      <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Connected</span>
+                      <span className="admin-text-sm" style={{ color: 'var(--admin-text-primary)' }}>
+                        {formatDate(integration.createdAt)}
+                      </span>
+                    </div>
+                  </div>
                 )}
-              </div>
 
-              {integration && (
-                <div className="space-y-2 mb-4 text-sm">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Last ping:</span>
-                    <span className="text-gray-300">
-                      {integration.lastPing ? `${integration.lastPing}ms` : 'Never'}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Connected:</span>
-                    <span className="text-gray-300">
-                      {new Date(integration.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <div className="flex gap-2">
-                {integration ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => handlePing(integration.id)}
-                      className="flex-1 px-3 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors text-sm"
-                    >
-                      Ping
-                    </button>
+                {/* Action buttons */}
+                <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                  {integration ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => handlePing(integration.id)}
+                        disabled={isPinging}
+                        className="admin-btn admin-btn-secondary"
+                        style={{ flex: '1 1 auto', minWidth: 'fit-content' }}
+                      >
+                        {isPinging ? 'Pinging...' : 'Ping'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(integration)}
+                        className="admin-btn admin-btn-primary"
+                        style={{ flex: '1 1 auto', minWidth: 'fit-content' }}
+                      >
+                        Configure
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDisconnect(integration)}
+                        className="admin-btn"
+                        style={{
+                          flex: '1 1 auto',
+                          minWidth: 'fit-content',
+                          backgroundColor: '#FEE2E2',
+                          color: '#991B1B',
+                          border: '1px solid #FECACA'
+                        }}
+                      >
+                        Disconnect
+                      </button>
+                    </>
+                  ) : (
                     <button
                       type="button"
                       onClick={() => handleConnect(key)}
-                      className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+                      className="admin-btn"
+                      style={{
+                        width: '100%',
+                        backgroundColor: '#111827',
+                        color: 'white'
+                      }}
                     >
-                      Configure
+                      Connect
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDisconnect(integration.id)}
-                      className="flex-1 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm"
-                    >
-                      Disconnect
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => handleConnect(key)}
-                    className="w-full px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Connect
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
-            </div>
-          )
-        })}
+            )
+          })}
+        </div>
       </div>
 
-      {/* Connect Modal */}
-      {showConnectModal && selectedProvider && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4">
-            <h3 className="text-lg font-semibold text-white mb-4">
-              Connect {providers[selectedProvider].name}
-            </h3>
-
-            <div className="space-y-4">
+      {/* Connect/Edit Modal */}
+      {showConnectModal && (
+        <Modal
+          isOpen={showConnectModal}
+          onClose={() => setShowConnectModal(false)}
+          title={editingIntegration ? `Configure ${editingIntegration.name}` : selectedProvider ? `Connect ${providers[selectedProvider]?.name}` : 'Select Provider'}
+        >
+          {!selectedProvider ? (
+            <div className="admin-grid admin-grid-cols-2" style={{ gap: '1rem' }}>
+              {Object.entries(providers).map(([key, provider]) => (
+                <button
+                  key={key}
+                  onClick={() => setSelectedProvider(key)}
+                  className="admin-card"
+                  style={{
+                    cursor: 'pointer',
+                    textAlign: 'left',
+                    border: '2px solid var(--admin-border)',
+                    padding: '1rem'
+                  }}
+                >
+                  <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{getProviderLogo(key)}</div>
+                  <div className="admin-font-semibold" style={{ color: 'var(--admin-text-primary)', marginBottom: '0.25rem' }}>
+                    {provider.name}
+                  </div>
+                  <div className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>
+                    {provider.description}
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               {providers[selectedProvider].fields.map((field) => (
                 <div key={field.name}>
-                  <label className="block text-sm font-medium text-gray-300 mb-1">
-                    {field.label} {field.required && <span className="text-red-400">*</span>}
+                  <label
+                    className="admin-text-sm admin-font-semibold"
+                    style={{
+                      display: 'block',
+                      color: 'var(--admin-text-primary)',
+                      marginBottom: '0.5rem'
+                    }}
+                  >
+                    {field.label}
+                    {field.required && <span style={{ color: '#EF4444', marginLeft: '0.25rem' }}>*</span>}
                   </label>
                   <input
                     type={field.type}
@@ -313,31 +489,56 @@ export default function IntegrationManager() {
                       ...configValues,
                       [field.name]: e.target.value
                     })}
-                    className="w-full px-3 py-2 bg-gray-700 border border-gray-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      border: '2px solid var(--admin-border)',
+                      borderRadius: '0.5rem',
+                      fontSize: '0.9375rem',
+                      transition: 'border-color 0.2s',
+                      backgroundColor: 'var(--admin-card-bg)',
+                      color: 'var(--admin-text-primary)'
+                    }}
                   />
                 </div>
               ))}
-            </div>
 
-            <div className="flex gap-3 mt-6">
-              <button
-                type="button"
-                onClick={() => setShowConnectModal(false)}
-                className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
-                onClick={handleSaveConnection}
-                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Save Connection
-              </button>
+              <div style={{ display: 'flex', gap: '0.75rem', paddingTop: '1rem', borderTop: '1px solid var(--admin-border)', marginTop: '0.5rem' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowConnectModal(false)}
+                  className="admin-btn admin-btn-secondary"
+                  style={{ flex: 1 }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleSaveConnection}
+                  disabled={saving}
+                  className="admin-btn admin-btn-primary"
+                  style={{ flex: 1, opacity: saving ? 0.5 : 1, cursor: saving ? 'not-allowed' : 'pointer' }}
+                >
+                  {saving ? 'Saving...' : editingIntegration ? 'Update Connection' : 'Save Connection'}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+        </Modal>
       )}
-    </div>
+
+      {/* Delete Confirmation */}
+      {deleteConfirm && (
+        <ConfirmDialog
+          isOpen={!!deleteConfirm}
+          onClose={() => setDeleteConfirm(null)}
+          onConfirm={confirmDelete}
+          title="Disconnect Integration"
+          message={`Are you sure you want to disconnect ${deleteConfirm.name}? This action cannot be undone.`}
+          confirmText="Disconnect"
+          confirmStyle="danger"
+        />
+      )}
+    </>
   )
 }
