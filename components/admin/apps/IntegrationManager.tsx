@@ -341,7 +341,7 @@ export default function IntegrationManager() {
                     </div>
                   </div>
                   {integration && (
-                    <StatusBadge status={getStatusColor(integration.status)} text={integration.status} />
+                    <StatusBadge status={integration.status} />
                   )}
                 </div>
 
