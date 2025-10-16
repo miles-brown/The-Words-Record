@@ -2,7 +2,6 @@ import { useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
-import '@/styles/admin.css'
 
 interface AdminLayoutProps {
   children: ReactNode
