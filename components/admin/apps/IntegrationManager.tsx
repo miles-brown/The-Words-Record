@@ -536,7 +536,7 @@ export default function IntegrationManager() {
           title="Disconnect Integration"
           message={`Are you sure you want to disconnect ${deleteConfirm.name}? This action cannot be undone.`}
           confirmText="Disconnect"
-          confirmStyle="danger"
+          variant="danger"
         />
       )}
     </>
