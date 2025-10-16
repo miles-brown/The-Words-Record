@@ -144,32 +144,34 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           </div>
 
           <nav className="sidebar-nav">
-            {/* Dashboard Section - No background box */}
-            <div className="nav-section">
-              {dashboardItems.map((item) => (
-                <Link
-                  href={item.href}
-                  key={item.href}
-                  className={`nav-item-card ${
-                    router.pathname === item.href ? 'active' : ''
-                  }`}
-                >
-                  <span className="nav-icon">{item.icon}</span>
-                  <span className="nav-label">{item.label}</span>
-                </Link>
-              ))}
+            {/* Dashboard Section - Light blue-grey background */}
+            <div className="nav-section-box dashboard-box">
+              <div className="nav-section">
+                {dashboardItems.map((item) => (
+                  <Link
+                    href={item.href}
+                    key={item.href}
+                    className={`nav-item-card dashboard-item ${
+                      router.pathname === item.href ? 'active' : ''
+                    }`}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
             </div>
 
             <div className="nav-divider-small"></div>
 
-            {/* Content Management Section - Grey/Blue background */}
+            {/* Content Management Section - Mid blue-grey background */}
             <div className="nav-section-box content-box">
               <div className="nav-section">
                 {contentItems.map((item) => (
                   <Link
                     href={item.href}
                     key={item.href}
-                    className={`nav-item-card ${
+                    className={`nav-item-card content-item ${
                       router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
                         ? 'active'
                         : ''
@@ -184,14 +186,14 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
             <div className="nav-divider-small"></div>
 
-            {/* Admin Settings Section - Dark grey background */}
+            {/* Admin Settings Section - Dark blue-grey background */}
             <div className="nav-section-box admin-box">
               <div className="nav-section">
                 {adminItems.map((item) => (
                   <Link
                     href={item.href}
                     key={item.href}
-                    className={`nav-item-card ${
+                    className={`nav-item-card admin-item ${
                       router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
                         ? 'active'
                         : ''
@@ -328,39 +330,49 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 0.5rem;
-          padding: 0.5rem 0;
+          padding: 0.75rem 0.625rem;
           width: 100%;
         }
 
         .nav-section-box {
-          border-radius: 8px;
-          padding: 0.5rem;
+          border-radius: 10px;
+          padding: 0;
           margin: 0 0.25rem;
           width: calc(100% - 0.5rem);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+          transition: all 0.2s ease;
         }
 
+        /* Light blue-grey background for dashboard group */
+        .nav-section-box.dashboard-box {
+          background: #3a4d63;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Mid blue-grey background for content group */
         .nav-section-box.content-box {
-          background: rgba(52, 73, 94, 0.15);
-          border: 1px solid rgba(52, 73, 94, 0.3);
+          background: #324155;
+          border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
+        /* Dark blue-grey background for admin group */
         .nav-section-box.admin-box {
-          background: rgba(0, 0, 0, 0.25);
-          border: 1px solid rgba(0, 0, 0, 0.4);
+          background: #273444;
+          border: 1px solid rgba(255, 255, 255, 0.04);
         }
 
         .nav-divider {
           height: 1px;
-          background: #34495e;
+          background: rgba(255, 255, 255, 0.08);
           margin: 0.75rem 0;
           width: 100%;
         }
 
         .nav-divider-small {
           height: 1px;
-          background: #34495e;
-          margin: 0.375rem 0;
-          width: 100%;
+          background: rgba(255, 255, 255, 0.06);
+          margin: 0.375rem 0.5rem;
+          width: calc(100% - 1rem);
         }
 
         .nav-item-card {
@@ -372,10 +384,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           padding: 0.625rem 0.25rem;
           color: #cbd5e0;
           text-decoration: none;
-          transition: all 0.2s;
-          border-radius: 10px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          transition: all 0.2s ease;
+          border-radius: 8px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           text-align: center;
           min-height: 65px;
           width: 100%;
@@ -383,11 +395,28 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           position: relative;
         }
 
-        .nav-item-card:hover {
-          background: rgba(255, 255, 255, 0.12);
+        /* Adaptive hover states for light background (dashboard) */
+        .nav-item-card.dashboard-item:hover {
+          background: rgba(0, 0, 0, 0.15);
           color: white;
-          transform: scale(1.02);
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Adaptive hover states for mid background (content) */
+        .nav-item-card.content-item:hover {
+          background: rgba(0, 0, 0, 0.12);
+          color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Adaptive hover states for dark background (admin) */
+        .nav-item-card.admin-item:hover {
+          background: rgba(255, 255, 255, 0.10);
+          color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
         }
 
         .nav-item-card.active {
@@ -396,6 +425,12 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           font-weight: 600;
           border-color: #3b82f6;
           box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+          transform: none;
+        }
+
+        .nav-item-card.active:hover {
+          background: linear-gradient(135deg, #4b92ff 0%, #3573fb 100%);
+          transform: translateY(-1px);
         }
 
         .nav-icon {
