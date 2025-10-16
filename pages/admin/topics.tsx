@@ -1,20 +1,29 @@
 /**
- * Admin Topics Page
- * Manage topics, categories, and content organization
+ * Admin Topics Page - Modern Card-Based Design
+ * Manage hierarchical topics with parent-child relationships
  */
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AdminLayout from '@/components/admin/AdminLayout'
 import Head from 'next/head'
+import Link from 'next/link'
+import styles from '@/styles/AdminTopics.module.css'
 
 interface Topic {
   id: string
   name: string
   slug: string
-  description: string
-  icon: string
-  color: string
+  description: string | null
+  icon: string | null
+  color: string | null
+  parentId: string | null
+  parent?: {
+    id: string
+    name: string
+    slug: string
+  }
+  children?: Topic[]
   caseCount: number
   statementCount: number
   trending: boolean
@@ -23,14 +32,12 @@ interface Topic {
   updatedAt: string
 }
 
-export default function TopicsPage() {
+export default function AdminTopicsPage() {
+  const router = useRouter()
   const [topics, setTopics] = useState<Topic[]>([])
   const [loading, setLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [filterVisibility, setFilterVisibility] = useState<'all' | 'public' | 'private' | 'archived'>('all')
-  const [showCreateModal, setShowCreateModal] = useState(false)
-  const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null)
-  const router = useRouter()
+  const [filter, setFilter] = useState<'all' | 'trending' | 'parent' | 'child'>('all')
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
     fetchTopics()
@@ -39,22 +46,55 @@ export default function TopicsPage() {
   const fetchTopics = async () => {
     try {
       setLoading(true)
-      // Simulated data - replace with actual API call
+      // Simulated hierarchical data - replace with actual API call
       setTimeout(() => {
-        setTopics([
+        const mockTopics: Topic[] = [
           {
             id: '1',
-            name: 'Climate Change',
-            slug: 'climate-change',
-            description: 'Environmental and climate-related statements and policies',
+            name: 'Climate & Environment',
+            slug: 'climate-environment',
+            description: 'Environmental policies, climate change, and sustainability',
             icon: '🌍',
             color: '#10b981',
+            parentId: null,
             caseCount: 45,
             statementCount: 234,
             trending: true,
             visibility: 'public',
             createdAt: '2024-01-15',
-            updatedAt: '2024-10-14'
+            updatedAt: '2024-10-14',
+            children: [
+              {
+                id: '1a',
+                name: 'Carbon Emissions',
+                slug: 'carbon-emissions',
+                description: 'Policies and statements on carbon reduction',
+                icon: '💨',
+                color: '#10b981',
+                parentId: '1',
+                caseCount: 12,
+                statementCount: 67,
+                trending: false,
+                visibility: 'public',
+                createdAt: '2024-01-16',
+                updatedAt: '2024-10-13'
+              },
+              {
+                id: '1b',
+                name: 'Renewable Energy',
+                slug: 'renewable-energy',
+                description: 'Solar, wind, and alternative energy sources',
+                icon: '⚡',
+                color: '#10b981',
+                parentId: '1',
+                caseCount: 18,
+                statementCount: 89,
+                trending: true,
+                visibility: 'public',
+                createdAt: '2024-01-17',
+                updatedAt: '2024-10-14'
+              }
+            ]
           },
           {
             id: '2',
@@ -63,40 +103,108 @@ export default function TopicsPage() {
             description: 'Healthcare policies, medical statements, and public health',
             icon: '🏥',
             color: '#ef4444',
+            parentId: null,
             caseCount: 38,
             statementCount: 189,
             trending: false,
             visibility: 'public',
             createdAt: '2024-01-20',
-            updatedAt: '2024-10-13'
+            updatedAt: '2024-10-13',
+            children: [
+              {
+                id: '2a',
+                name: 'Pandemic Response',
+                slug: 'pandemic-response',
+                description: 'COVID-19 and pandemic preparedness',
+                icon: '😷',
+                color: '#ef4444',
+                parentId: '2',
+                caseCount: 15,
+                statementCount: 78,
+                trending: false,
+                visibility: 'public',
+                createdAt: '2024-01-21',
+                updatedAt: '2024-10-12'
+              }
+            ]
           },
           {
             id: '3',
-            name: 'Technology',
-            slug: 'technology',
-            description: 'Tech industry, AI, cybersecurity, and digital transformation',
-            icon: '💻',
+            name: 'Technology & AI',
+            slug: 'technology-ai',
+            description: 'Tech industry, artificial intelligence, and digital transformation',
+            icon: '🤖',
             color: '#3b82f6',
+            parentId: null,
             caseCount: 52,
             statementCount: 301,
             trending: true,
             visibility: 'public',
             createdAt: '2024-02-01',
-            updatedAt: '2024-10-15'
+            updatedAt: '2024-10-15',
+            children: [
+              {
+                id: '3a',
+                name: 'AI Ethics',
+                slug: 'ai-ethics',
+                description: 'Ethical considerations in artificial intelligence',
+                icon: '🧠',
+                color: '#3b82f6',
+                parentId: '3',
+                caseCount: 8,
+                statementCount: 45,
+                trending: true,
+                visibility: 'public',
+                createdAt: '2024-02-02',
+                updatedAt: '2024-10-15'
+              },
+              {
+                id: '3b',
+                name: 'Data Privacy',
+                slug: 'data-privacy',
+                description: 'Personal data protection and privacy laws',
+                icon: '🔒',
+                color: '#3b82f6',
+                parentId: '3',
+                caseCount: 14,
+                statementCount: 92,
+                trending: false,
+                visibility: 'public',
+                createdAt: '2024-02-03',
+                updatedAt: '2024-10-14'
+              },
+              {
+                id: '3c',
+                name: 'Cybersecurity',
+                slug: 'cybersecurity',
+                description: 'Digital security and cyber threats',
+                icon: '🛡️',
+                color: '#3b82f6',
+                parentId: '3',
+                caseCount: 11,
+                statementCount: 58,
+                trending: false,
+                visibility: 'public',
+                createdAt: '2024-02-04',
+                updatedAt: '2024-10-13'
+              }
+            ]
           },
           {
             id: '4',
-            name: 'Economy',
-            slug: 'economy',
-            description: 'Economic policies, financial markets, and business',
+            name: 'Economy & Finance',
+            slug: 'economy-finance',
+            description: 'Economic policies, financial markets, and monetary policy',
             icon: '💰',
             color: '#eab308',
+            parentId: null,
             caseCount: 41,
             statementCount: 198,
             trending: false,
             visibility: 'public',
             createdAt: '2024-02-10',
-            updatedAt: '2024-10-12'
+            updatedAt: '2024-10-12',
+            children: []
           },
           {
             id: '5',
@@ -105,28 +213,33 @@ export default function TopicsPage() {
             description: 'Education policies, academic statements, and research',
             icon: '🎓',
             color: '#a855f7',
+            parentId: null,
             caseCount: 28,
             statementCount: 145,
             trending: false,
             visibility: 'public',
             createdAt: '2024-02-15',
-            updatedAt: '2024-10-10'
+            updatedAt: '2024-10-10',
+            children: []
           },
           {
             id: '6',
-            name: 'Defense',
-            slug: 'defense',
+            name: 'Defense & Security',
+            slug: 'defense-security',
             description: 'Military, defense, and national security topics',
-            icon: '🛡️',
+            icon: '🎖️',
             color: '#64748b',
+            parentId: null,
             caseCount: 19,
             statementCount: 87,
             trending: false,
             visibility: 'private',
             createdAt: '2024-03-01',
-            updatedAt: '2024-10-08'
+            updatedAt: '2024-10-08',
+            children: []
           }
-        ])
+        ]
+        setTopics(mockTopics)
         setLoading(false)
       }, 500)
     } catch (error) {
@@ -136,228 +249,273 @@ export default function TopicsPage() {
   }
 
   const filteredTopics = topics.filter(topic => {
-    const matchesSearch = topic.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          topic.description.toLowerCase().includes(searchTerm.toLowerCase())
-    const matchesVisibility = filterVisibility === 'all' || topic.visibility === filterVisibility
-    return matchesSearch && matchesVisibility
+    const matchesSearch =
+      topic.name.toLowerCase().includes(search.toLowerCase()) ||
+      (topic.description?.toLowerCase().includes(search.toLowerCase()) ?? false)
+
+    let matchesFilter = true
+    if (filter === 'trending') {
+      matchesFilter = topic.trending || (topic.children?.some(c => c.trending) ?? false)
+    } else if (filter === 'parent') {
+      matchesFilter = !topic.parentId && (topic.children?.length ?? 0) > 0
+    } else if (filter === 'child') {
+      matchesFilter = !!topic.parentId
+    }
+
+    return matchesSearch && matchesFilter
   })
 
-  const deleteTopic = (topicId: string) => {
-    if (confirm('Are you sure you want to delete this topic?')) {
+  const deleteTopic = async (topicId: string) => {
+    if (!confirm('Are you sure you want to delete this topic? This action cannot be undone.')) {
+      return
+    }
+
+    try {
+      // API call would go here
       setTopics(topics.filter(t => t.id !== topicId))
+    } catch (error) {
+      console.error('Failed to delete topic:', error)
+      alert('Failed to delete topic')
     }
   }
 
-  if (loading) {
-    return (
-      <AdminLayout title="Topics">
-        <div className="flex items-center justify-center py-20">
-          <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
-        </div>
-      </AdminLayout>
-    )
-  }
+  // Calculate statistics
+  const totalTopics = topics.length + topics.reduce((sum, t) => sum + (t.children?.length || 0), 0)
+  const trendingCount = topics.filter(t => t.trending).length +
+    topics.reduce((sum, t) => sum + (t.children?.filter(c => c.trending).length || 0), 0)
+  const parentCount = topics.filter(t => !t.parentId && (t.children?.length ?? 0) > 0).length
+  const totalCases = topics.reduce((sum, t) => sum + t.caseCount + (t.children?.reduce((s, c) => s + c.caseCount, 0) || 0), 0)
+  const totalStatements = topics.reduce((sum, t) => sum + t.statementCount + (t.children?.reduce((s, c) => s + c.statementCount, 0) || 0), 0)
 
   return (
     <>
       <Head>
-        <title>Topics - TWR Admin</title>
+        <title>Topics Management - TWR Admin</title>
       </Head>
 
-      <AdminLayout title="Topics">
-        <div className="max-w-7xl mx-auto">
+      <AdminLayout title="Topics Management">
+        <main className={styles.page}>
           {/* Header */}
-          <div className="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <div className="flex justify-between items-center mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Topics Management</h1>
-                <p className="text-gray-500 mt-1">Organize content with topics and categories</p>
-              </div>
+          <header className={styles.header}>
+            <div className={styles.headerContent}>
+              <h1 className={styles.title}>Topics Management</h1>
+              <p className={styles.subtitle}>Organize, link, and manage hierarchical topics and categories</p>
+            </div>
+            <div className={styles.headerActions}>
               <button
-                onClick={() => setShowCreateModal(true)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                onClick={() => router.push('/admin/topics/new')}
+                className={styles.newBtn}
               >
-                + Create Topic
+                <span>+</span> Create Topic
+              </button>
+              <button
+                onClick={() => router.push('/')}
+                className={styles.viewSiteBtn}
+              >
+                View Site
+              </button>
+            </div>
+          </header>
+
+          {/* Filters */}
+          <section className={styles.filters}>
+            <div className={styles.tabs}>
+              <button
+                className={filter === 'all' ? styles.active : ''}
+                onClick={() => setFilter('all')}
+              >
+                All Topics
+              </button>
+              <button
+                className={filter === 'trending' ? styles.active : ''}
+                onClick={() => setFilter('trending')}
+              >
+                Trending
+              </button>
+              <button
+                className={filter === 'parent' ? styles.active : ''}
+                onClick={() => setFilter('parent')}
+              >
+                Parent Topics
+              </button>
+              <button
+                className={filter === 'child' ? styles.active : ''}
+                onClick={() => setFilter('child')}
+              >
+                Child Topics
               </button>
             </div>
 
-            {/* Search and Filters */}
-            <div className="flex gap-4">
-              <input
-                type="text"
-                placeholder="Search topics..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <select
-                value={filterVisibility}
-                onChange={(e) => setFilterVisibility(e.target.value as any)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              >
-                <option value="all">All Topics</option>
-                <option value="public">Public</option>
-                <option value="private">Private</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-          </div>
+            <input
+              type="text"
+              placeholder="Search topics..."
+              className={styles.searchInput}
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </section>
 
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Total Topics</p>
-                  <p className="text-2xl font-bold text-gray-900">{topics.length}</p>
-                </div>
-                <span className="text-2xl">🧩</span>
+          {/* Statistics Bar */}
+          <div className={styles.statsBar}>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>📊</div>
+              <div className={styles.statContent}>
+                <p className={styles.statLabel}>Total Topics</p>
+                <p className={styles.statValue}>{totalTopics}</p>
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Trending</p>
-                  <p className="text-2xl font-bold text-orange-600">
-                    {topics.filter(t => t.trending).length}
-                  </p>
-                </div>
-                <span className="text-2xl">🔥</span>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>🔥</div>
+              <div className={styles.statContent}>
+                <p className={styles.statLabel}>Trending</p>
+                <p className={styles.statValue}>{trendingCount}</p>
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Total Cases</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {topics.reduce((sum, t) => sum + t.caseCount, 0)}
-                  </p>
-                </div>
-                <span className="text-2xl">📁</span>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>📁</div>
+              <div className={styles.statContent}>
+                <p className={styles.statLabel}>Parent Topics</p>
+                <p className={styles.statValue}>{parentCount}</p>
               </div>
             </div>
-            <div className="bg-white rounded-lg shadow-sm p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500">Total Statements</p>
-                  <p className="text-2xl font-bold text-gray-900">
-                    {topics.reduce((sum, t) => sum + t.statementCount, 0)}
-                  </p>
-                </div>
-                <span className="text-2xl">💬</span>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>📄</div>
+              <div className={styles.statContent}>
+                <p className={styles.statLabel}>Total Cases</p>
+                <p className={styles.statValue}>{totalCases}</p>
+              </div>
+            </div>
+            <div className={styles.statCard}>
+              <div className={styles.statIcon}>💬</div>
+              <div className={styles.statContent}>
+                <p className={styles.statLabel}>Statements</p>
+                <p className={styles.statValue}>{totalStatements}</p>
               </div>
             </div>
           </div>
 
-          {/* Topics Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredTopics.map((topic) => (
-              <div key={topic.id} className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+          {/* Loading State */}
+          {loading ? (
+            <div className={styles.loading}>
+              <div className={styles.spinner}></div>
+            </div>
+          ) : (
+            /* Topics Grid */
+            <section className={styles.cardsGrid}>
+              {filteredTopics.map(topic => (
                 <div
-                  className="h-2 rounded-t-lg"
-                  style={{ backgroundColor: topic.color }}
-                ></div>
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                      <span className="text-3xl">{topic.icon}</span>
-                      <div>
-                        <h3 className="font-semibold text-lg text-gray-900">
-                          {topic.name}
-                          {topic.trending && (
-                            <span className="ml-2 text-xs px-2 py-1 bg-orange-100 text-orange-700 rounded-full">
-                              Trending
-                            </span>
-                          )}
-                        </h3>
-                        <p className="text-sm text-gray-500">/{topic.slug}</p>
+                  key={topic.id}
+                  className={`${styles.topicCard} ${
+                    !topic.parentId && (topic.children?.length ?? 0) > 0
+                      ? styles.parentCard
+                      : ''
+                  }`}
+                >
+                  {/* Card Header */}
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardTitle}>
+                      <h2 className={styles.topicName}>
+                        <span className={styles.topicIcon}>{topic.icon || '📌'}</span>
+                        {topic.name}
+                      </h2>
+                      <div className={styles.badges}>
+                        {topic.trending && (
+                          <span className={styles.trending}>
+                            🔥 Trending
+                          </span>
+                        )}
+                        <span className={`${styles.visibilityBadge} ${styles[topic.visibility]}`}>
+                          {topic.visibility}
+                        </span>
                       </div>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                      topic.visibility === 'public'
-                        ? 'bg-green-100 text-green-700'
-                        : topic.visibility === 'private'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}>
-                      {topic.visibility}
-                    </span>
+                    <p className={styles.topicSlug}>/{topic.slug}</p>
                   </div>
 
-                  <p className="text-sm text-gray-600 mb-4">{topic.description}</p>
+                  {/* Parent Reference */}
+                  {topic.parent && (
+                    <p className={styles.parentRef}>
+                      Parent: <Link href={`/admin/topics/${topic.parent.slug}`}>{topic.parent.name}</Link>
+                    </p>
+                  )}
 
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    <div className="p-2 bg-gray-50 rounded-lg text-center">
-                      <p className="text-xs text-gray-500">Cases</p>
-                      <p className="font-semibold text-gray-900">{topic.caseCount}</p>
+                  {/* Card Body */}
+                  <div className={styles.cardBody}>
+                    <p className={styles.topicDesc}>
+                      {topic.description || 'No description provided.'}
+                    </p>
+
+                    {/* Statistics */}
+                    <div className={styles.topicStats}>
+                      <div className={styles.statItem}>
+                        <span>📁</span>
+                        <span>{topic.caseCount} Cases</span>
+                      </div>
+                      <div className={styles.statItem}>
+                        <span>💬</span>
+                        <span>{topic.statementCount} Statements</span>
+                      </div>
                     </div>
-                    <div className="p-2 bg-gray-50 rounded-lg text-center">
-                      <p className="text-xs text-gray-500">Statements</p>
-                      <p className="font-semibold text-gray-900">{topic.statementCount}</p>
-                    </div>
+
+                    {/* Child Topics */}
+                    {topic.children && topic.children.length > 0 && (
+                      <details className={styles.childContainer}>
+                        <summary>Subtopics ({topic.children.length})</summary>
+                        <ul className={styles.childList}>
+                          {topic.children.map(child => (
+                            <li key={child.id} className={styles.childItem}>
+                              <Link href={`/admin/topics/${child.slug}`}>
+                                {child.icon || '📎'} {child.name}
+                                {child.trending && ' 🔥'}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    )}
                   </div>
 
-                  <div className="text-xs text-gray-500 mb-4">
-                    <p>Created: {new Date(topic.createdAt).toLocaleDateString()}</p>
-                    <p>Updated: {new Date(topic.updatedAt).toLocaleDateString()}</p>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => router.push(`/admin/topics/${topic.slug}`)}
-                      className="flex-1 px-3 py-2 bg-blue-50 text-blue-700 rounded-lg text-sm font-medium hover:bg-blue-100 transition-colors"
-                    >
+                  {/* Card Actions */}
+                  <div className={styles.cardActions}>
+                    <Link href={`/admin/topics/${topic.slug}`} className={styles.editBtn}>
                       Edit
-                    </button>
-                    <button
-                      onClick={() => router.push(`/topics/${topic.slug}`)}
-                      className="flex-1 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors"
-                    >
+                    </Link>
+                    <Link href={`/topics/${topic.slug}`} className={styles.viewBtn}>
                       View
-                    </button>
+                    </Link>
                     <button
                       onClick={() => deleteTopic(topic.id)}
-                      className="px-3 py-2 bg-red-50 text-red-700 rounded-lg text-sm font-medium hover:bg-red-100 transition-colors"
+                      className={styles.deleteBtn}
+                      aria-label="Delete topic"
                     >
-                      Delete
+                      🗑️
                     </button>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
 
-          {/* Empty State */}
-          {filteredTopics.length === 0 && (
-            <div className="bg-white rounded-lg shadow-sm p-12 text-center">
-              <span className="text-6xl mb-4 block">🔍</span>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">No topics found</h3>
-              <p className="text-gray-500 mb-4">Try adjusting your search or filter criteria</p>
-              <button
-                onClick={() => {
-                  setSearchTerm('')
-                  setFilterVisibility('all')
-                }}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Clear Filters
-              </button>
-            </div>
+              {/* Empty State */}
+              {filteredTopics.length === 0 && (
+                <div className={styles.emptyState}>
+                  <div className={styles.emptyIcon}>🔍</div>
+                  <h3 className={styles.emptyTitle}>No topics found</h3>
+                  <p className={styles.emptyDesc}>
+                    Try adjusting your search or filter criteria
+                  </p>
+                  <button
+                    onClick={() => {
+                      setSearch('')
+                      setFilter('all')
+                    }}
+                    className={styles.clearFiltersBtn}
+                  >
+                    Clear Filters
+                  </button>
+                </div>
+              )}
+            </section>
           )}
-
-          {/* Create Topic Tip */}
-          <div className="mt-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-lg p-6 border border-purple-200">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="font-semibold text-lg text-gray-900">Pro Tip: Organize Content Better</h3>
-                <p className="text-gray-600 mt-1">
-                  Topics help users discover related content. Keep them focused and well-defined for the best user experience.
-                </p>
-              </div>
-              <span className="text-4xl">💡</span>
-            </div>
-          </div>
-        </div>
+        </main>
       </AdminLayout>
     </>
   )

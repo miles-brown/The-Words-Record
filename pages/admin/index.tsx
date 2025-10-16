@@ -1,5 +1,5 @@
 /**
- * Admin Dashboard
+ * Admin Dashboard - Redesigned with unified design system
  * Main admin interface with stats, recent activity, and quick actions
  */
 
@@ -64,869 +64,374 @@ interface DashboardStats {
   failedHarvests: number
 }
 
-interface MetricCardProps {
-  icon: string
-  label: string
-  value: number
-  subtle?: boolean
-  href?: string
-  color?: string
-}
-
-function MetricCard({ icon, label, value, subtle = false, href, color }: MetricCardProps) {
-  const router = useRouter()
-
-  const handleClick = () => {
-    if (href) {
-      router.push(href)
-    }
-  }
-
-  return (
-    <div
-      className={`stat-card ${subtle ? 'subtle' : ''} ${href ? 'clickable' : ''}`}
-      onClick={handleClick}
-      style={color ? { background: color } : undefined}
-    >
-      <div className="stat-icon">{icon}</div>
-      <div className="stat-content">
-        <h3>{label}</h3>
-        <p className="stat-number">{new Intl.NumberFormat('en-US').format(value)}</p>
-      </div>
-    </div>
-  )
-}
-
 export default function AdminDashboard() {
+  const router = useRouter()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const router = useRouter()
 
   useEffect(() => {
     fetchDashboardData()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const fetchDashboardData = async () => {
     try {
-      setLoading(true)
-      const response = await fetch('/api/admin/dashboard', {
-        credentials: 'include'
-      })
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          router.push('/admin/login')
-          return
-        }
-        throw new Error('Failed to fetch dashboard data')
+      const response = await fetch('/api/admin/dashboard')
+      if (response.ok) {
+        const data = await response.json()
+        setStats(data)
       }
-
-      const data = await response.json()
-      setStats(data)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred')
+    } catch (error) {
+      console.error('Failed to fetch dashboard data:', error)
     } finally {
       setLoading(false)
     }
   }
 
-  const formatNumber = (num: number) => {
-    return new Intl.NumberFormat('en-US').format(num)
-  }
-
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
-    })
-  }
-
-  const formatTime = (date: string) => {
-    const diff = Date.now() - new Date(date).getTime()
-    const minutes = Math.floor(diff / 60000)
-    const hours = Math.floor(minutes / 60)
-    const days = Math.floor(hours / 24)
-
-    if (days > 0) return `${days}d ago`
-    if (hours > 0) return `${hours}h ago`
-    if (minutes > 0) return `${minutes}m ago`
-    return 'just now'
-  }
-
   if (loading) {
     return (
       <AdminLayout title="Dashboard">
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading dashboard...</p>
+        <div className="admin-flex-center" style={{ minHeight: '60vh' }}>
+          <div className="admin-skeleton" style={{ width: '100px', height: '100px', borderRadius: '50%' }}></div>
         </div>
       </AdminLayout>
     )
   }
 
-  if (error) {
-    return (
-      <AdminLayout title="Dashboard">
-        <div className="error-container">
-          <h2>Error</h2>
-          <p>{error}</p>
-          <button onClick={fetchDashboardData}>Retry</button>
-        </div>
-      </AdminLayout>
-    )
-  }
+  const metrics = [
+    {
+      icon: '📁',
+      label: 'Total Cases',
+      value: stats?.totalCases || 0,
+      color: 'var(--metric-amber)',
+      href: '/admin/cases'
+    },
+    {
+      icon: '👥',
+      label: 'People',
+      value: stats?.totalPeople || 0,
+      color: 'var(--metric-blue)',
+      href: '/admin/people'
+    },
+    {
+      icon: '🏢',
+      label: 'Organizations',
+      value: stats?.totalOrganizations || 0,
+      color: 'var(--metric-green)',
+      href: '/admin/organizations'
+    },
+    {
+      icon: '💬',
+      label: 'Statements',
+      value: stats?.totalStatements || 0,
+      color: 'var(--metric-indigo)',
+      href: '/admin/statements'
+    },
+    {
+      icon: '📰',
+      label: 'Sources',
+      value: stats?.totalSources || 0,
+      color: 'var(--metric-purple)',
+      href: '/admin/sources'
+    },
+    {
+      icon: '👤',
+      label: 'Users',
+      value: stats?.totalUsers || 0,
+      color: 'var(--metric-pink)',
+      href: '/admin/users'
+    },
+    {
+      icon: '✅',
+      label: 'Verified',
+      value: stats?.verifiedSources || 0,
+      color: 'var(--metric-green)',
+      subtle: true
+    },
+    {
+      icon: '🔐',
+      label: 'MFA Enabled',
+      value: stats?.mfaEnabledUsers || 0,
+      color: 'var(--metric-grey)',
+      subtle: true
+    }
+  ]
 
-  if (!stats) {
-    return (
-      <AdminLayout title="Dashboard">
-        <div className="error-container">
-          <p>No data available</p>
-        </div>
-      </AdminLayout>
-    )
-  }
+  const quickActions = [
+    { icon: '📝', label: 'New Case', href: '/admin/cases/new' },
+    { icon: '👤', label: 'Add Person', href: '/admin/people/new' },
+    { icon: '💬', label: 'Add Statement', href: '/admin/statements/new' },
+    { icon: '📰', label: 'Add Source', href: '/admin/sources/new' },
+    { icon: '🏢', label: 'Add Org', href: '/admin/organizations/new' },
+    { icon: '📊', label: 'Analytics', href: '/admin/analytics' },
+    { icon: '⚙️', label: 'Settings', href: '/admin/settings' },
+    { icon: '📥', label: 'Import', href: '/admin/import' },
+    { icon: '📤', label: 'Export', href: '/admin/export' },
+    { icon: '🔍', label: 'Search', href: '/admin/search' }
+  ]
 
   return (
     <>
       <Head>
-        <title>Admin Dashboard - The Words Record</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <title>Dashboard - TWR Admin</title>
       </Head>
 
       <AdminLayout title="Dashboard">
-        <div className="dashboard">
-          <div className="stats-grid">
-            <MetricCard icon="📰" label="Total Cases" value={stats.totalCases} href="/admin/cases" color="linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)" />
-            <MetricCard icon="👤" label="People" value={stats.totalPeople} href="/admin/people" color="linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)" />
-            <MetricCard icon="🏢" label="Organizations" value={stats.totalOrganizations} href="/admin/organizations" color="linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)" />
-            <MetricCard icon="💬" label="Statements" value={stats.totalStatements} href="/admin/statements" color="linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%)" />
-            <MetricCard icon="🧑‍🤝‍🧑" label="Users" value={stats.totalUsers} href="/admin/users" color="linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%)" />
-            <MetricCard icon="🔥" label="Active (30d)" value={stats.activeUsers30d} color="linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)" />
-            <MetricCard icon="🔐" label="MFA Enabled" value={stats.mfaEnabledUsers} color="linear-gradient(135deg, #d1d5db 0%, #9ca3af 100%)" />
-            <MetricCard icon="🗝️" label="Active API Keys" value={stats.activeApiKeys} color="linear-gradient(135deg, #c4b5fd 0%, #a78bfa 100%)" />
-            <div className="stat-card wide">
-              <div className="stat-icon">📚</div>
-              <div className="stat-content">
-                <h3>Sources</h3>
-                <p className="stat-number">{formatNumber(stats.totalSources)}</p>
-                <p className="stat-subtitle">
-                  {stats.verifiedSources} verified ({stats.totalSources ? Math.round((stats.verifiedSources / stats.totalSources) * 100) : 0}%)
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="workflow-grid">
-            <MetricCard icon="📝" label="Drafts Pending" value={stats.draftsPending} subtle />
-            <MetricCard icon="🔍" label="Drafts In Review" value={stats.draftsSubmitted} subtle />
-            <MetricCard icon="✅" label="Approvals Pending" value={stats.pendingApprovals} subtle />
-            <MetricCard icon="⚠️" label="Failed Harvests" value={stats.failedHarvests} subtle />
-            <MetricCard icon="🔑" label="API Auth (24h)" value={stats.apiKeyAuth24h} subtle />
-            <MetricCard icon="🚨" label="Errors (24h)" value={stats.errorEvents24h} subtle />
-          </div>
-
-          {/* Quick Actions */}
-          <div className="quick-actions">
-            <h2>Quick Actions</h2>
-            <div className="action-buttons">
-              <button onClick={() => router.push('/admin/cases/new')} className="action-btn primary">
-                <span>➕</span> New Case
-              </button>
-              <button onClick={() => router.push('/admin/people/new')} className="action-btn">
-                <span>👤</span> Add Person
-              </button>
-              <button onClick={() => router.push('/admin/sources/verify')} className="action-btn">
-                <span>✅</span> Verify Sources
-              </button>
-              <button onClick={() => router.push('/admin/harvest')} className="action-btn">
-                <span>🤖</span> Run Harvester
-              </button>
-              <button onClick={() => router.push('/admin/export')} className="action-btn">
-                <span>📥</span> Export Data
-              </button>
-            </div>
-          </div>
-
-          <div className="panels">
-            <section className="panel">
-              <h2>Recent Statements</h2>
-              <div className="recent-list">
-                {stats.recentStatements && stats.recentStatements.map(statement => (
-                  <div key={statement.id} className="recent-item">
-                    <div className="item-main">
-                      <span className="item-title">
-                        {statement.person ? (statement.person.fullName || 'Unnamed Person') :
-                         statement.organization ? statement.organization.name : 'Unknown'}
-                      </span>
-                      <p className="item-content">{statement.content}</p>
-                      <p className="item-meta">
-                        {formatDate(statement.statementDate)} •
-                        <span className={`status status-${statement.statementType.toLowerCase()}`}>
-                          {statement.statementType}
-                        </span>
-                      </p>
-                    </div>
-                    <div className="item-actions">
-                      <button
-                        onClick={() => router.push(`/admin/statements?id=${statement.id}`)}
-                        className="mini-btn"
-                      >
-                        View
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {(!stats.recentStatements || stats.recentStatements.length === 0) &&
-                  <p className="no-data">No recent statements</p>}
-              </div>
-            </section>
-
-            <section className="panel">
-              <h2>Recent Cases</h2>
-              <div className="recent-list">
-                {stats.recentCases.map(caseItem => (
-                  <div key={caseItem.id} className="recent-item">
-                    <div className="item-main">
-                      <span className="item-title">{caseItem.title}</span>
-                      <p className="item-meta">
-                        {formatDate(caseItem.caseDate)} •
-                        <span className={`status status-${caseItem.status.toLowerCase()}`}>
-                          {caseItem.status}
-                        </span>
-                        {caseItem.isRealIncident && <span className="badge-incident">Multi-Statement Case</span>}
-                      </p>
-                    </div>
-                    <div className="item-actions">
-                      <button
-                        onClick={() => router.push(`/admin/cases/${caseItem.slug}`)}
-                        className="mini-btn"
-                      >
-                        Open
-                      </button>
-                    </div>
-                  </div>
-                ))}
-                {stats.recentCases.length === 0 && <p className="no-data">No recent cases</p>}
-              </div>
-            </section>
-          </div>
-
-          <section className="panel audit-panel">
-            <h2>Audit Timeline</h2>
-            <div className="activity-feed">
-              {stats.auditTimeline.map(item => (
-                <div key={item.id} className="activity-item">
-                  <div className="activity-icon">🕒</div>
-                  <div className="activity-content">
-                    <p className="activity-text">
-                      <strong>{item.actor || 'system'}</strong> {item.action.toLowerCase()} {item.entityType || 'record'} {item.entityId || ''}
-                    </p>
-                    <p className="activity-time">{formatTime(item.timestamp)}</p>
-                    {item.description && (
-                      <p className="activity-description">{item.description}</p>
-                    )}
-                  </div>
+        {/* Main Metrics Grid */}
+        <div className="admin-section">
+          <h2 className="admin-section-header">Overview</h2>
+          <div className="admin-grid admin-grid-auto">
+            {metrics.map((metric, index) => (
+              <div
+                key={index}
+                className="admin-metric-card"
+                style={{
+                  backgroundColor: metric.color,
+                  cursor: metric.href ? 'pointer' : 'default',
+                  opacity: metric.subtle ? 0.8 : 1
+                }}
+                onClick={() => metric.href && router.push(metric.href)}
+              >
+                <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
+                  {metric.icon}
                 </div>
-              ))}
-              {stats.auditTimeline.length === 0 && <p className="no-data">No recent activity</p>}
-            </div>
-          </section>
+                <div className="admin-metric-value">{metric.value.toLocaleString()}</div>
+                <div className="admin-metric-label">{metric.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <style jsx>{`
-          /* Admin Dashboard Container with CSS Variables */
-          .dashboard {
-            --spacing-unit: 2rem;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-            --shadow-md: 0 2px 8px rgba(0,0,0,0.08);
-            --shadow-lg: 0 4px 16px rgba(0,0,0,0.1);
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 0;
-          }
-
-          /* Reset global button styles for admin */
-          .dashboard button {
-            all: unset;
-            box-sizing: border-box;
-            cursor: pointer;
-            user-select: none;
-            font-family: inherit;
-          }
-
-          .dashboard * {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          }
-
-          .loading-container, .error-container {
-            text-align: center;
-            padding: 3rem;
-          }
-
-          .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid #e0e6ed;
-            border-top: 3px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-          }
-
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-
-          /* Primary Stats Grid - 4 columns, consistent sizing */
-          .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1.5rem;
-            margin-bottom: var(--spacing-unit);
-          }
-
-          /* Workflow Stats Grid - 6 columns, smaller cards */
-          .workflow-grid {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            gap: 1.5rem;
-            margin-bottom: var(--spacing-unit);
-          }
-
-          /* Stat Card - Fixed height for alignment */
-          .stat-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: var(--radius-md);
-            padding: 1.5rem;
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            min-height: 120px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            position: relative;
-          }
-
-          .stat-card.clickable {
-            cursor: pointer;
-          }
-
-          .stat-card.clickable::after {
-            content: '→';
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: opacity 0.2s, transform 0.2s;
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: rgba(0, 0, 0, 0.4);
-          }
-
-          .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-lg);
-            filter: brightness(0.98);
-          }
-
-          .stat-card.clickable:hover::after {
-            opacity: 1;
-            transform: translateY(-50%) translateX(3px);
-          }
-
-          .stat-card.subtle {
-            background: #fafbfc;
-            border: 1px solid #e5e7eb;
-            box-shadow: var(--shadow-sm);
-            min-height: 100px;
-            padding: 1.25rem;
-          }
-
-          .stat-card.subtle:hover {
-            background: white;
-            transform: translateY(-1px);
-          }
-
-          .stat-card.wide {
-            grid-column: span 2;
-          }
-
-          /* Stat Icon - Consistent sizing */
-          .stat-icon {
-            font-size: 2rem;
-            width: 56px;
-            height: 56px;
-            min-width: 56px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.03);
-            border-radius: 10px;
-            flex-shrink: 0;
-          }
-
-          .stat-card.subtle .stat-icon {
-            width: 44px;
-            height: 44px;
-            min-width: 44px;
-            font-size: 1.5rem;
-            background: rgba(0, 0, 0, 0.025);
-          }
-
-          /* Typography Hierarchy */
-          .stat-content {
-            flex: 1;
-            min-width: 0;
-          }
-
-          .stat-content h3 {
-            margin: 0 0 0.375rem 0;
-            font-size: 0.6875rem;
-            color: #64748b;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            line-height: 1.2;
-          }
-
-          .stat-number {
-            margin: 0;
-            font-size: 2rem;
-            font-weight: 700;
-            color: #0f172a;
-            line-height: 1;
-            font-variant-numeric: tabular-nums;
-          }
-
-          .stat-card.subtle .stat-number {
-            font-size: 1.5rem;
-            font-weight: 600;
-          }
-
-          .stat-subtitle {
-            margin: 0.5rem 0 0;
-            font-size: 0.8125rem;
-            color: #64748b;
-            font-weight: 400;
-            line-height: 1.4;
-          }
-
-          /* Quick Actions Section */
-          .quick-actions {
-            background: white;
-            border-radius: var(--radius-md);
-            padding: 2rem;
-            box-shadow: var(--shadow-sm);
-            margin-bottom: var(--spacing-unit);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-          }
-
-          .quick-actions h2 {
-            margin: 0 0 1.5rem 0;
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #0f172a;
-            letter-spacing: -0.01em;
-          }
-
-          .action-buttons {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 1.5rem;
-          }
-
-          .action-btn {
-            padding: 1.25rem 1.5rem;
-            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 0.9375rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            color: #475569;
-            text-align: center;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            min-height: 100px;
-          }
-
-          .action-btn span {
-            font-size: 2rem;
-            line-height: 1;
-            display: block;
-          }
-
-          .action-btn:hover {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-color: #3b82f6;
-            color: #3b82f6;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.15);
-          }
-
-          .action-btn.primary {
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            color: white;
-            border-color: #3b82f6;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
-          }
-
-          .action-btn.primary:hover {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-            border-color: #2563eb;
-            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.35);
-            transform: translateY(-3px);
-          }
-
-          /* Panels Grid */
-          .panels {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.5rem;
-            margin-bottom: var(--spacing-unit);
-          }
-
-          .panel {
-            background: white;
-            border-radius: var(--radius-md);
-            padding: 2rem;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-            min-height: 400px;
-          }
-
-          .audit-panel {
-            grid-column: 1 / -1;
-          }
-
-          .panel h2 {
-            margin: 0 0 1.5rem 0;
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #0f172a;
-            letter-spacing: -0.01em;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f1f5f9;
-          }
-
-          /* Recent Lists & Activity Feed */
-          .recent-list, .activity-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            flex: 1;
-            overflow-y: auto;
-          }
-
-          .recent-item, .activity-item {
-            padding: 1rem 1.25rem;
-            background: #fafbfc;
-            border-radius: var(--radius-sm);
-            border: 1px solid #e5e7eb;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-            transition: all 0.2s;
-          }
-
-          .recent-item:hover, .activity-item:hover {
-            background: white;
-            border-color: #d1d5db;
-            box-shadow: var(--shadow-sm);
-          }
-
-          .item-main {
-            flex: 1;
-            min-width: 0;
-          }
-
-          .item-title {
-            font-weight: 600;
-            color: #0f172a;
-            font-size: 0.9375rem;
-            line-height: 1.4;
-            margin: 0 0 0.375rem 0;
-            display: block;
-          }
-
-          .item-content {
-            font-size: 0.875rem;
-            color: #475569;
-            line-height: 1.5;
-            margin: 0.5rem 0;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-          }
-
-          .item-meta {
-            font-size: 0.8125rem;
-            color: #64748b;
-            margin: 0;
-            line-height: 1.5;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-          }
-
-          .item-actions {
-            flex-shrink: 0;
-          }
-
-          .mini-btn {
-            padding: 0.5rem 1rem;
-            background: white;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.8125rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            color: #475569;
-          }
-
-          .mini-btn:hover {
-            background: #f8fafc;
-            border-color: #3b82f6;
-            color: #3b82f6;
-            transform: translateY(-1px);
-          }
-
-          /* Activity Items */
-          .activity-item {
-            align-items: flex-start;
-            background: white;
-            border: 1px solid #f3f4f6;
-          }
-
-          .activity-icon {
-            font-size: 1.25rem;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8fafc;
-            border-radius: 8px;
-            flex-shrink: 0;
-          }
-
-          .activity-content {
-            flex: 1;
-            min-width: 0;
-          }
-
-          .activity-text {
-            margin: 0 0 0.5rem;
-            font-size: 0.9375rem;
-            color: #0f172a;
-            line-height: 1.5;
-          }
-
-          .activity-text strong {
-            font-weight: 700;
-            color: #3b82f6;
-          }
-
-          .activity-time {
-            margin: 0;
-            font-size: 0.8125rem;
-            color: #64748b;
-            font-weight: 500;
-          }
-
-          .activity-description {
-            margin: 0.5rem 0 0;
-            font-size: 0.875rem;
-            color: #64748b;
-            line-height: 1.5;
-          }
-
-          /* Status Badges */
-          .status {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.625rem;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            line-height: 1;
-          }
-
-          .status-documented {
-            background: #dbeafe;
-            color: #1e40af;
-          }
-
-          .status-approved {
-            background: #d1fae5;
-            color: #065f46;
-          }
-
-          .status-submitted {
-            background: #fef3c7;
-            color: #92400e;
-          }
-
-          .status-in_review {
-            background: #f3f4f6;
-            color: #374151;
-          }
-
-          .status-failed {
-            background: #fee2e2;
-            color: #991b1b;
-          }
-
-          .status-original {
-            background: #e0e7ff;
-            color: #3730a3;
-          }
-
-          .status-response {
-            background: #fef3c7;
-            color: #78350f;
-          }
-
-          .badge-incident {
-            display: inline-flex;
-            align-items: center;
-            padding: 0.25rem 0.625rem;
-            border-radius: 6px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            line-height: 1;
-            background: #ddd6fe;
-            color: #5b21b6;
-            margin-left: 0.5rem;
-          }
-
-          .no-data {
-            text-align: center;
-            color: #94a3b8;
-            padding: 3rem 1rem;
-            margin: 0;
-            font-size: 0.9375rem;
-            font-weight: 500;
-          }
-
-          /* Responsive Design */
-          @media (max-width: 1200px) {
-            .stats-grid {
-              grid-template-columns: repeat(3, 1fr);
-            }
-
-            .workflow-grid {
-              grid-template-columns: repeat(3, 1fr);
-            }
-
-            .action-buttons {
-              grid-template-columns: repeat(3, 1fr);
-            }
-          }
-
-          @media (max-width: 968px) {
-            .stats-grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-
-            .workflow-grid {
-              grid-template-columns: repeat(2, 1fr);
-            }
-
-            .action-buttons {
-              grid-template-columns: repeat(2, 1fr);
-            }
-
-            .panels {
-              grid-template-columns: 1fr;
-            }
-          }
-
-          @media (max-width: 640px) {
-            .dashboard {
-              --spacing-unit: 1.5rem;
-            }
-
-            .stats-grid {
-              grid-template-columns: 1fr;
-              gap: 1rem;
-            }
-
-            .workflow-grid {
-              grid-template-columns: 1fr;
-              gap: 1rem;
-            }
-
-            .stat-card.wide {
-              grid-column: span 1;
-            }
-
-            .panels {
-              grid-template-columns: 1fr;
-              gap: 1rem;
-            }
-
-            .panel {
-              padding: 1.5rem;
-              min-height: 300px;
-            }
-
-            .quick-actions {
-              padding: 1.5rem;
-            }
-
-            .action-buttons {
-              grid-template-columns: 1fr;
-              gap: 1rem;
-            }
-
-            .action-btn {
-              width: 100%;
-              justify-content: center;
-              min-height: 80px;
-            }
-
-            .stat-card {
-              min-height: 100px;
-              padding: 1.25rem;
-            }
-
-            .stat-icon {
-              width: 44px;
-              height: 44px;
-              min-width: 44px;
-              font-size: 1.5rem;
-            }
-
-            .stat-number {
-              font-size: 1.75rem;
-            }
-          }
-        `}</style>
+        {/* Content Management Section */}
+        <div className="admin-grid admin-grid-cols-2" style={{ gap: '1.5rem' }}>
+          {/* Recent Cases */}
+          <div className="admin-section">
+            <div className="admin-flex-between admin-mb-4">
+              <h2 className="admin-section-header" style={{ margin: 0 }}>Recent Cases</h2>
+              <button
+                onClick={() => router.push('/admin/cases')}
+                className="admin-btn admin-btn-secondary admin-text-sm"
+              >
+                View All
+              </button>
+            </div>
+            <div className="admin-table-wrapper">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats?.recentCases.slice(0, 5).map(item => (
+                    <tr key={item.id} onClick={() => router.push(`/admin/cases/${item.slug}`)} style={{ cursor: 'pointer' }}>
+                      <td className="admin-font-medium">{item.title}</td>
+                      <td className="admin-text-sm">{new Date(item.caseDate).toLocaleDateString()}</td>
+                      <td>
+                        <span className={`admin-badge ${
+                          item.status === 'PUBLISHED' ? 'admin-badge-success' :
+                          item.status === 'DRAFT' ? 'admin-badge-warning' :
+                          'admin-badge-info'
+                        }`}>
+                          {item.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats?.recentCases || stats.recentCases.length === 0) && (
+                    <tr>
+                      <td colSpan={3} style={{ textAlign: 'center', color: 'var(--admin-text-muted)' }}>
+                        No recent cases
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Recent Statements */}
+          <div className="admin-section">
+            <div className="admin-flex-between admin-mb-4">
+              <h2 className="admin-section-header" style={{ margin: 0 }}>Recent Statements</h2>
+              <button
+                onClick={() => router.push('/admin/statements')}
+                className="admin-btn admin-btn-secondary admin-text-sm"
+              >
+                View All
+              </button>
+            </div>
+            <div className="admin-table-wrapper">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Content</th>
+                    <th>By</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats?.recentStatements.slice(0, 5).map(item => (
+                    <tr key={item.id} style={{ cursor: 'pointer' }}>
+                      <td className="admin-font-medium" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {item.content}
+                      </td>
+                      <td className="admin-text-sm">
+                        {item.person?.fullName || item.organization?.name || 'Unknown'}
+                      </td>
+                      <td className="admin-text-sm">
+                        {new Date(item.statementDate).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats?.recentStatements || stats.recentStatements.length === 0) && (
+                    <tr>
+                      <td colSpan={3} style={{ textAlign: 'center', color: 'var(--admin-text-muted)' }}>
+                        No recent statements
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        {/* System Status Section */}
+        <div className="admin-grid admin-grid-cols-3" style={{ gap: '1.5rem' }}>
+          {/* Draft Queue */}
+          <div className="admin-card">
+            <h3 className="admin-section-header admin-text-lg">Draft Queue</h3>
+            <div className="admin-gap-4">
+              <div className="admin-flex-between admin-mb-2">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Pending</span>
+                <span className="admin-font-semibold">{stats?.draftsPending || 0}</span>
+              </div>
+              <div className="admin-flex-between admin-mb-2">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Submitted</span>
+                <span className="admin-font-semibold">{stats?.draftsSubmitted || 0}</span>
+              </div>
+              <div className="admin-flex-between">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Approvals</span>
+                <span className="admin-font-semibold">{stats?.pendingApprovals || 0}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* API Activity */}
+          <div className="admin-card">
+            <h3 className="admin-section-header admin-text-lg">API Activity</h3>
+            <div className="admin-gap-4">
+              <div className="admin-flex-between admin-mb-2">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Active Keys</span>
+                <span className="admin-font-semibold">{stats?.activeApiKeys || 0}</span>
+              </div>
+              <div className="admin-flex-between admin-mb-2">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Auth (24h)</span>
+                <span className="admin-font-semibold">{stats?.apiKeyAuth24h || 0}</span>
+              </div>
+              <div className="admin-flex-between">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Errors (24h)</span>
+                <span className="admin-font-semibold" style={{ color: stats?.errorEvents24h ? 'var(--admin-accent)' : 'inherit' }}>
+                  {stats?.errorEvents24h || 0}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* User Activity */}
+          <div className="admin-card">
+            <h3 className="admin-section-header admin-text-lg">User Activity</h3>
+            <div className="admin-gap-4">
+              <div className="admin-flex-between admin-mb-2">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Active (30d)</span>
+                <span className="admin-font-semibold">{stats?.activeUsers30d || 0}</span>
+              </div>
+              <div className="admin-flex-between admin-mb-2">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>MFA Users</span>
+                <span className="admin-font-semibold">{stats?.mfaEnabledUsers || 0}</span>
+              </div>
+              <div className="admin-flex-between">
+                <span className="admin-text-sm" style={{ color: 'var(--admin-text-secondary)' }}>Total Users</span>
+                <span className="admin-font-semibold">{stats?.totalUsers || 0}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Actions */}
+        <div className="admin-section">
+          <h2 className="admin-section-header">Quick Actions</h2>
+          <div className="admin-quick-actions">
+            {quickActions.map((action, index) => (
+              <div
+                key={index}
+                className="admin-quick-action-card"
+                onClick={() => router.push(action.href)}
+              >
+                <div className="admin-quick-action-icon">{action.icon}</div>
+                <div className="admin-quick-action-label">{action.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Audit Timeline */}
+        <div className="admin-section">
+          <div className="admin-flex-between admin-mb-4">
+            <h2 className="admin-section-header" style={{ margin: 0 }}>Recent Activity</h2>
+            <button
+              onClick={() => router.push('/admin/audit')}
+              className="admin-btn admin-btn-secondary admin-text-sm"
+            >
+              View Audit Log
+            </button>
+          </div>
+          <div className="admin-table-wrapper">
+            <table className="admin-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Entity</th>
+                  <th>User</th>
+                  <th>Time</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {stats?.auditTimeline.slice(0, 10).map(item => (
+                  <tr key={item.id}>
+                    <td className="admin-font-medium">{item.action.replace(/_/g, ' ')}</td>
+                    <td className="admin-text-sm">
+                      {item.entityType && item.entityId ? `${item.entityType}:${item.entityId}` : '-'}
+                    </td>
+                    <td className="admin-text-sm">{item.actor || 'System'}</td>
+                    <td className="admin-text-sm">
+                      {new Date(item.timestamp).toLocaleString()}
+                    </td>
+                    <td>
+                      <span className={`admin-badge ${
+                        item.status === 'SUCCESS' ? 'admin-badge-success' :
+                        item.status === 'FAILURE' ? 'admin-badge-error' :
+                        'admin-badge-info'
+                      }`}>
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+                {(!stats?.auditTimeline || stats.auditTimeline.length === 0) && (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: 'center', color: 'var(--admin-text-muted)' }}>
+                      No recent activity
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </AdminLayout>
     </>
   )
