@@ -2,7 +2,7 @@
 
 > A comprehensive knowledge graph documenting public statements, cases, and responses with neutral, factual analysis.
 >
-> **Latest Update:** Unified visual design system implemented across admin dashboard.
+> **Latest Update:** Unified visual design system implemented across admin dashboard. CSS imports fixed for production build.
 
 ## Features
 
