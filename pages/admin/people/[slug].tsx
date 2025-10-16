@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AdminLayout from '@/components/admin/AdminLayout'
 import Head from 'next/head'
+import { ChangeHistoryModal } from '@/components/admin/ChangeHistoryModal'
 
 interface PersonForm {
   firstName: string
@@ -44,6 +45,8 @@ export default function EditPerson() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showHistory, setShowHistory] = useState(false)
+  const [personName, setPersonName] = useState('')
   const [formData, setFormData] = useState<PersonForm>({
     firstName: '',
     middleName: '',
@@ -91,6 +94,8 @@ export default function EditPerson() {
       if (response.ok) {
         const data = await response.json()
         const person = data.person
+
+        setPersonName(person.name || `${person.firstName} ${person.lastName}`)
 
         setFormData({
           firstName: person.firstName || '',
@@ -262,6 +267,9 @@ export default function EditPerson() {
               <p className="page-subtitle">Update person profile</p>
             </div>
             <div className="header-actions">
+              <button onClick={() => setShowHistory(true)} className="btn-history">
+                📜 Change History
+              </button>
               <button onClick={handleDelete} className="btn-danger">
                 Delete
               </button>
@@ -270,6 +278,14 @@ export default function EditPerson() {
               </button>
             </div>
           </div>
+
+          {showHistory && (
+            <ChangeHistoryModal
+              personSlug={slug as string}
+              personName={personName}
+              onClose={() => setShowHistory(false)}
+            />
+          )}
 
           {error && <div className="error-message">{error}</div>}
 
@@ -764,6 +780,24 @@ export default function EditPerson() {
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+          }
+
+          .btn-history {
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+          }
+
+          .btn-history:hover {
+            background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
           }
 
           .btn-secondary:hover:not(:disabled) {

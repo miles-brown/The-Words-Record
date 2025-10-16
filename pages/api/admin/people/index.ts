@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { extractTokenFromRequest, verifyToken } from '@/lib/auth'
 import { logAuditEvent } from '@/lib/audit'
 import { AuditAction, AuditActorType, UserRole } from '@prisma/client'
+import { auditPerson, calculateCompletenessPercentage, HIGH_PRIORITY_FIELDS, MEDIUM_PRIORITY_FIELDS } from '@/lib/admin/personAudit'
 
 async function requireAdmin(req: NextApiRequest): Promise<{ userId: string } | null> {
   const token = extractTokenFromRequest(req)
@@ -63,27 +64,6 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
     const [people, total] = await Promise.all([
       prisma.person.findMany({
         where,
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          firstName: true,
-          lastName: true,
-          fullName: true,
-          profession: true,
-          professionDetail: true,
-          imageUrl: true,
-          nationality: true,
-          dateOfBirth: true,
-          createdAt: true,
-          updatedAt: true,
-          _count: {
-            select: {
-              statements: true,
-              cases: true
-            }
-          }
-        },
         orderBy: {
           createdAt: 'desc'
         },
@@ -93,8 +73,46 @@ async function handleGet(req: NextApiRequest, res: NextApiResponse) {
       prisma.person.count({ where })
     ])
 
+    // Calculate completeness for each person
+    const peopleWithCompleteness = people.map((person: any) => {
+      const issues = auditPerson(person)
+      const completeness = calculateCompletenessPercentage(person)
+
+      // Get unique missing field names (prioritize high/medium fields)
+      const missingFields = issues
+        .filter(issue => issue.issueType === 'missing' || issue.issueType === 'placeholder')
+        .map(issue => issue.field)
+        .sort((a, b) => {
+          const aPriority = HIGH_PRIORITY_FIELDS.includes(a) ? 3 : MEDIUM_PRIORITY_FIELDS.includes(a) ? 2 : 1
+          const bPriority = HIGH_PRIORITY_FIELDS.includes(b) ? 3 : MEDIUM_PRIORITY_FIELDS.includes(b) ? 2 : 1
+          return bPriority - aPriority
+        })
+
+      return {
+        id: person.id,
+        slug: person.slug,
+        name: person.name,
+        firstName: person.firstName,
+        lastName: person.lastName,
+        fullName: person.fullName,
+        profession: person.profession,
+        professionDetail: person.professionDetail,
+        imageUrl: person.imageUrl,
+        nationality: person.nationality,
+        dateOfBirth: person.dateOfBirth,
+        createdAt: person.createdAt,
+        updatedAt: person.updatedAt,
+        _count: {
+          statements: person._count?.statements || 0,
+          cases: person._count?.cases || 0
+        },
+        completeness,
+        missingFields
+      }
+    })
+
     return res.status(200).json({
-      people,
+      people: peopleWithCompleteness,
       pagination: {
         page: pageNum,
         limit: limitNum,

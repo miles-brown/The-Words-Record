@@ -842,7 +842,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     return {
       props: {
         person: JSON.parse(JSON.stringify(personWithResponseCounts)) // Serialize dates
-      }
+      },
+      revalidate: 60 // Revalidate every 60 seconds
     }
   } catch (error) {
     console.error('Error fetching person:', error)

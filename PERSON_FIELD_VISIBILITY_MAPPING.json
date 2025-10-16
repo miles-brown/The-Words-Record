@@ -1,0 +1,686 @@
+{
+  "schemaVersion": "3.0.1",
+  "generatedAt": "2025-10-16",
+  "description": "Comprehensive mapping of Person database fields to front-end rendering across all components",
+
+  "summary": {
+    "totalDatabaseFields": 182,
+    "fieldsDisplayedOnFrontend": 52,
+    "fieldsNotDisplayed": 130,
+    "displayPercentage": "28.6%",
+    "componentsCovered": [
+      "/pages/people/[slug].tsx (person detail page)",
+      "/components/PersonCardEnhanced.tsx (person card component)"
+    ]
+  },
+
+  "fieldsDisplayedOnFrontend": {
+    "basicInfo": [
+      "name",
+      "imageUrl",
+      "bestKnownFor",
+      "akaNames",
+      "bio",
+      "background",
+      "shortBio",
+      "aliases",
+      "namePrefix",
+      "nameSuffix"
+    ],
+    "demographics": [
+      "birthDate",
+      "birthPlace",
+      "deathDate",
+      "deathPlace",
+      "isDeceased"
+    ],
+    "location": [
+      "residence"
+    ],
+    "nationality": [
+      "nationalities (relational - PersonNationality[] with Country)",
+      "racialGroup"
+    ],
+    "professional": [
+      "profession",
+      "roleDescription",
+      "yearsActive",
+      "primaryProfession",
+      "industry"
+    ],
+    "currentPosition": [
+      "currentTitle",
+      "currentOrganization"
+    ],
+    "political": [
+      "politicalParty",
+      "politicalBeliefs",
+      "politicalAffiliation",
+      "politicalLeaning",
+      "isPolitician",
+      "isActivist"
+    ],
+    "religion": [
+      "religion"
+    ],
+    "socialMedia": [
+      "hasTwitter",
+      "twitterHandle",
+      "twitterFollowers",
+      "hasLinkedIn",
+      "hasInstagram",
+      "instagramFollowers",
+      "totalSocialReach"
+    ],
+    "influence": [
+      "influenceLevel",
+      "influenceScore"
+    ],
+    "publicProfile": [
+      "publicFigure"
+    ],
+    "verification": [
+      "isVerified"
+    ],
+    "controversy": [
+      "hasControversies",
+      "controversyScore",
+      "reputationStatus",
+      "hasBeenCancelled",
+      "cancelledDate"
+    ],
+    "statistics": [
+      "statementCount",
+      "responseCount",
+      "supportGiven",
+      "criticismsMade"
+    ],
+    "flags": [
+      "isPEP",
+      "isHighProfile"
+    ],
+    "relational": [
+      "affiliations (with organization details)",
+      "cases (full case details)",
+      "statements (full statement details)"
+    ]
+  },
+
+  "fieldsNotDisplayedOnFrontend": {
+    "basicInfo": [
+      "fullName",
+      "firstName",
+      "middleName",
+      "lastName",
+      "hebrewName",
+      "arabicName",
+      "nativeName",
+      "notableFor",
+      "awards",
+      "publications"
+    ],
+    "demographics": [
+      "dateOfBirth",
+      "age",
+      "gender",
+      "deceasedDate",
+      "deathCause",
+      "lastDeathCheck"
+    ],
+    "nationality": [
+      "nationality (legacy text field)",
+      "nationalityDetail (legacy text field)",
+      "nationality_primary_code (computed cache)",
+      "nationality_codes_cached (computed cache)",
+      "ethnicity (array)"
+    ],
+    "professional": [
+      "professionDetail (legacy)",
+      "professionArray",
+      "professionDetails",
+      "specialization",
+      "yearsExperience"
+    ],
+    "currentPosition": [
+      "currentOrgId",
+      "employmentStatus",
+      "isRetired",
+      "retirementDate"
+    ],
+    "education": [
+      "educationLevel",
+      "degrees",
+      "universities",
+      "academicTitles"
+    ],
+    "publicProfile": [
+      "celebrityStatus"
+    ],
+    "socialMedia": [
+      "twitterVerified",
+      "linkedInUrl",
+      "linkedInConnections",
+      "linkedInVerified",
+      "hasFacebook",
+      "facebookUrl",
+      "facebookFollowers",
+      "instagramHandle",
+      "mediaAppearances",
+      "citationCount"
+    ],
+    "political": [
+      "knownPositions",
+      "advocacy",
+      "isLobbyist"
+    ],
+    "relationships": [
+      "boardPositions"
+    ],
+    "religion": [
+      "religionDenomination"
+    ],
+    "controversy": [
+      "controversyNotes",
+      "reputationNotes",
+      "cancelledReason",
+      "hasBeenSuspended",
+      "hasBeenFired",
+      "hasResigned"
+    ],
+    "legal": [
+      "hasLegalIssues",
+      "legalIssueNotes",
+      "underInvestigation",
+      "investigationType",
+      "hasSanctions",
+      "sanctionDetails",
+      "hasCriminalRecord",
+      "criminalNotes"
+    ],
+    "statistics": [
+      "incidentCount",
+      "caseCount",
+      "sourceCount",
+      "criticismsReceived",
+      "supportReceived"
+    ],
+    "activityTracking": [
+      "firstActivityDate",
+      "lastActiveDate",
+      "lastActivityDate",
+      "mostActiveYear"
+    ],
+    "verification": [
+      "verificationLevel",
+      "verifiedAt",
+      "verifiedBy",
+      "personVerificationLevel",
+      "verificationDate",
+      "verificationNotes",
+      "wikipediaUrl",
+      "officialWebsite"
+    ],
+    "location": [
+      "residenceCountry",
+      "residenceState",
+      "residenceCity",
+      "workCountry",
+      "workCity"
+    ],
+    "contact": [
+      "publicEmail",
+      "agentEmail",
+      "pressContact"
+    ],
+    "flags": [
+      "isActive",
+      "isBlocked"
+    ],
+    "notes": [
+      "publicNotes",
+      "internalNotes",
+      "researchNotes",
+      "editorialNotes"
+    ],
+    "metadata": [
+      "createdAt",
+      "updatedAt",
+      "createdBy",
+      "lastEditedBy",
+      "dataSource",
+      "importSource",
+      "lastReviewDate",
+      "needsReview"
+    ],
+    "relational": [
+      "journalistProfile",
+      "repercussions",
+      "StatementAuthor",
+      "groupStatements"
+    ]
+  },
+
+  "fieldsByComponent": {
+    "personDetailPage": {
+      "component": "/pages/people/[slug].tsx",
+      "fieldsDisplayed": [
+        "name",
+        "imageUrl",
+        "bio",
+        "background",
+        "bestKnownFor",
+        "akaNames",
+        "birthDate",
+        "birthPlace",
+        "deathDate",
+        "deathPlace",
+        "residence",
+        "nationalities (relational)",
+        "racialGroup",
+        "religion",
+        "profession",
+        "roleDescription",
+        "yearsActive",
+        "politicalParty",
+        "politicalBeliefs",
+        "affiliations (relational)",
+        "cases (relational)",
+        "statements (relational)"
+      ],
+      "fieldReferences": {
+        "line68": "person.name",
+        "line69": "person.bio",
+        "line82": "person.imageUrl",
+        "line103": "person.bestKnownFor",
+        "line110": "person.akaNames",
+        "line117": "person.birthDate",
+        "line122": "person.birthPlace",
+        "line128": "person.deathDate",
+        "line133": "person.deathPlace",
+        "line139": "person.residence",
+        "line147": "person.nationalities",
+        "line159": "person.racialGroup",
+        "line166": "person.religion",
+        "line176": "person.profession",
+        "line186": "person.roleDescription",
+        "line193": "person.yearsActive",
+        "line200": "person.politicalParty",
+        "line207": "person.politicalBeliefs",
+        "line216": "person.affiliations",
+        "line244": "person.background",
+        "line251": "person.bio",
+        "line261": "person.cases",
+        "line298": "person.statements"
+      }
+    },
+    "personCardEnhanced": {
+      "component": "/components/PersonCardEnhanced.tsx",
+      "fieldsDisplayed": [
+        "name",
+        "slug",
+        "namePrefix",
+        "nameSuffix",
+        "aliases",
+        "currentTitle",
+        "currentOrganization",
+        "isVerified",
+        "influenceLevel",
+        "primaryProfession",
+        "nationalities (relational)",
+        "industry",
+        "shortBio",
+        "politicalAffiliation",
+        "politicalLeaning",
+        "hasTwitter",
+        "twitterHandle",
+        "twitterFollowers",
+        "hasLinkedIn",
+        "hasInstagram",
+        "instagramFollowers",
+        "totalSocialReach",
+        "statementCount",
+        "responseCount",
+        "supportGiven",
+        "criticismsMade",
+        "hasControversies",
+        "reputationStatus",
+        "controversyScore",
+        "hasBeenCancelled",
+        "cancelledDate",
+        "isPolitician",
+        "isActivist",
+        "publicFigure",
+        "isPEP",
+        "isHighProfile",
+        "isDeceased",
+        "influenceScore"
+      ],
+      "fieldReferences": {
+        "line65": "person.namePrefix",
+        "line66": "person.name",
+        "line67": "person.nameSuffix",
+        "line93": "person.aliases",
+        "line99": "person.currentTitle",
+        "line102": "person.currentOrganization",
+        "line111": "person.isVerified",
+        "line116": "person.influenceLevel",
+        "line126": "person.primaryProfession",
+        "line132": "person.nationalities",
+        "line148": "person.industry",
+        "line156": "person.shortBio",
+        "line163": "person.politicalAffiliation",
+        "line170": "person.politicalLeaning",
+        "line181": "person.hasTwitter",
+        "line184": "person.twitterHandle",
+        "line188": "person.twitterFollowers",
+        "line195": "person.hasLinkedIn",
+        "line200": "person.hasInstagram",
+        "line200": "person.instagramFollowers",
+        "line209": "person.totalSocialReach",
+        "line222": "person.statementCount",
+        "line228": "person.responseCount",
+        "line234": "person.supportGiven",
+        "line240": "person.criticismsMade",
+        "line248": "person.hasControversies",
+        "line251": "person.reputationStatus",
+        "line264": "person.controversyScore",
+        "line278": "person.hasBeenCancelled",
+        "line281": "person.cancelledDate",
+        "line293": "person.isPolitician",
+        "line298": "person.isActivist",
+        "line303": "person.publicFigure",
+        "line308": "person.isPEP",
+        "line313": "person.isHighProfile",
+        "line318": "person.isDeceased",
+        "line326": "person.influenceScore"
+      }
+    }
+  },
+
+  "missingFromDatabase": [],
+
+  "highValueUnusedFields": {
+    "description": "Database fields that contain valuable information but are not currently displayed on the front-end",
+    "fields": [
+      {
+        "field": "gender",
+        "category": "demographics",
+        "potentialUse": "Could be displayed in the info box",
+        "priority": "medium"
+      },
+      {
+        "field": "age",
+        "category": "demographics",
+        "potentialUse": "Calculated age could supplement birth date display",
+        "priority": "high"
+      },
+      {
+        "field": "educationLevel",
+        "category": "education",
+        "potentialUse": "Important for academic and professional context",
+        "priority": "medium"
+      },
+      {
+        "field": "degrees",
+        "category": "education",
+        "potentialUse": "Valuable for credibility and background",
+        "priority": "medium"
+      },
+      {
+        "field": "universities",
+        "category": "education",
+        "potentialUse": "Educational background is often relevant",
+        "priority": "medium"
+      },
+      {
+        "field": "notableFor",
+        "category": "basicInfo",
+        "potentialUse": "Array of notable achievements - more structured than bestKnownFor",
+        "priority": "high"
+      },
+      {
+        "field": "awards",
+        "category": "basicInfo",
+        "potentialUse": "Recognition and credibility indicators",
+        "priority": "medium"
+      },
+      {
+        "field": "publications",
+        "category": "basicInfo",
+        "potentialUse": "Relevant for academics and journalists",
+        "priority": "medium"
+      },
+      {
+        "field": "knownPositions",
+        "category": "political",
+        "potentialUse": "Specific political stances array",
+        "priority": "high"
+      },
+      {
+        "field": "advocacy",
+        "category": "political",
+        "potentialUse": "Advocacy causes and issues array",
+        "priority": "high"
+      },
+      {
+        "field": "wikipediaUrl",
+        "category": "verification",
+        "potentialUse": "External verification link",
+        "priority": "high"
+      },
+      {
+        "field": "officialWebsite",
+        "category": "verification",
+        "potentialUse": "Official source for verification",
+        "priority": "high"
+      },
+      {
+        "field": "firstActivityDate",
+        "category": "activityTracking",
+        "potentialUse": "Historical context for person's involvement",
+        "priority": "medium"
+      },
+      {
+        "field": "lastActivityDate",
+        "category": "activityTracking",
+        "potentialUse": "Recency indicator",
+        "priority": "high"
+      },
+      {
+        "field": "employmentStatus",
+        "category": "currentPosition",
+        "potentialUse": "Current work status",
+        "priority": "medium"
+      },
+      {
+        "field": "isRetired",
+        "category": "currentPosition",
+        "potentialUse": "Important career status indicator",
+        "priority": "medium"
+      },
+      {
+        "field": "hasLegalIssues",
+        "category": "legal",
+        "potentialUse": "Important transparency indicator",
+        "priority": "high"
+      },
+      {
+        "field": "underInvestigation",
+        "category": "legal",
+        "potentialUse": "Current legal status",
+        "priority": "high"
+      },
+      {
+        "field": "hasSanctions",
+        "category": "legal",
+        "potentialUse": "Political/legal consequences",
+        "priority": "high"
+      },
+      {
+        "field": "residenceCountry",
+        "category": "location",
+        "potentialUse": "More structured than residence text field",
+        "priority": "medium"
+      },
+      {
+        "field": "residenceCity",
+        "category": "location",
+        "potentialUse": "More structured location data",
+        "priority": "medium"
+      },
+      {
+        "field": "ethnicities",
+        "category": "nationality",
+        "potentialUse": "More structured than racialGroup",
+        "priority": "medium"
+      },
+      {
+        "field": "specializationn",
+        "category": "professional",
+        "potentialUse": "Specific area of expertise",
+        "priority": "medium"
+      },
+      {
+        "field": "yearsExperience",
+        "category": "professional",
+        "potentialUse": "Career length indicator",
+        "priority": "low"
+      },
+      {
+        "field": "celebrityStatus",
+        "category": "publicProfile",
+        "potentialUse": "Fame level indicator",
+        "priority": "low"
+      },
+      {
+        "field": "boardPositions",
+        "category": "relationships",
+        "potentialUse": "Influence and connections indicator",
+        "priority": "medium"
+      },
+      {
+        "field": "journalistProfile",
+        "category": "relational",
+        "potentialUse": "Journalist-specific data (beat, outlet, etc.)",
+        "priority": "high"
+      },
+      {
+        "field": "repercussions",
+        "category": "relational",
+        "potentialUse": "Consequences this person has faced",
+        "priority": "high"
+      }
+    ]
+  },
+
+  "legacyFieldsStillInUse": {
+    "description": "Legacy fields that are still displayed but have newer equivalents",
+    "fields": [
+      {
+        "legacyField": "akaNames",
+        "newField": "aliases",
+        "component": "/pages/people/[slug].tsx",
+        "recommendation": "Migrate display to use 'aliases' field"
+      },
+      {
+        "legacyField": "birthDate",
+        "newField": "dateOfBirth",
+        "component": "Both components",
+        "recommendation": "Standardize on 'dateOfBirth'"
+      },
+      {
+        "legacyField": "deathDate",
+        "newField": "deceasedDate",
+        "component": "/pages/people/[slug].tsx",
+        "recommendation": "Standardize on 'deceasedDate'"
+      },
+      {
+        "legacyField": "profession",
+        "newField": "primaryProfession/professionArray",
+        "component": "/pages/people/[slug].tsx",
+        "recommendation": "Use structured profession enums"
+      },
+      {
+        "legacyField": "nationality (text)",
+        "newField": "nationalities (relational)",
+        "component": "PersonCardEnhanced uses new, detail page uses new",
+        "recommendation": "Both now use new relational structure - good!"
+      }
+    ]
+  },
+
+  "recommendations": {
+    "highPriority": [
+      "Display 'notableFor' array instead of single 'bestKnownFor' text",
+      "Show 'knownPositions' and 'advocacy' arrays for political context",
+      "Display 'wikipediaUrl' and 'officialWebsite' as verification sources",
+      "Show 'lastActivityDate' to indicate recency of involvement",
+      "Display legal status fields (hasLegalIssues, underInvestigation, hasSanctions)",
+      "Add 'repercussions' section to person detail page",
+      "Display journalist profile data when applicable",
+      "Show calculated 'age' field"
+    ],
+    "mediumPriority": [
+      "Add education section (educationLevel, degrees, universities)",
+      "Display awards and publications",
+      "Show structured location data (residenceCountry, residenceCity)",
+      "Display employment status and retirement info",
+      "Add 'boardPositions' to relationship indicators",
+      "Show 'specialization' and 'yearsExperience'",
+      "Display 'gender' in demographics"
+    ],
+    "lowPriority": [
+      "Add metadata display for transparency (createdAt, updatedAt, lastReviewDate)",
+      "Show 'celebrityStatus' for public figures",
+      "Display all social media metrics (Facebook data currently unused)",
+      "Add 'mostActiveYear' to activity tracking"
+    ],
+    "dataQuality": [
+      "Migrate from legacy fields (akaNames → aliases, birthDate → dateOfBirth)",
+      "Ensure nationality data is properly populated in relational table",
+      "Audit which fields are commonly NULL vs. populated",
+      "Consider deprecating unused legacy text fields"
+    ]
+  },
+
+  "dataFlowAnalysis": {
+    "apiDataFetching": {
+      "file": "/pages/api/people/[slug].ts",
+      "includes": [
+        "nationalities (with country)",
+        "cases (with tags, counts, statements)",
+        "statements (with case, sources, responses)",
+        "affiliations (with organization)"
+      ],
+      "note": "API fetches relational data correctly but many direct fields are not included in SELECT statements"
+    },
+    "typeDefinition": {
+      "file": "/types/index.ts",
+      "interface": "PersonWithRelations",
+      "coverage": "Only includes nationalities, cases, statements, and _count - missing many other relations like journalistProfile, repercussions"
+    }
+  },
+
+  "visualizationOpportunities": {
+    "timelineView": {
+      "fields": ["firstActivityDate", "lastActivityDate", "birthDate", "deathDate", "mostActiveYear"],
+      "description": "Create a timeline visualization of person's life and activity"
+    },
+    "networkGraph": {
+      "fields": ["affiliations", "cases", "statements", "boardPositions"],
+      "description": "Visualize connections to organizations and cases"
+    },
+    "influenceMetrics": {
+      "fields": ["influenceScore", "influenceLevel", "totalSocialReach", "statementCount", "mediaAppearances"],
+      "description": "Dashboard showing comprehensive influence metrics"
+    },
+    "controversyTimeline": {
+      "fields": ["hasControversies", "controversyScore", "hasBeenCancelled", "cancelledDate", "repercussions"],
+      "description": "Timeline of controversies and consequences"
+    },
+    "politicalProfile": {
+      "fields": ["politicalAffiliation", "politicalLeaning", "knownPositions", "advocacy", "isPolitician"],
+      "description": "Comprehensive political stance visualization"
+    }
+  }
+}

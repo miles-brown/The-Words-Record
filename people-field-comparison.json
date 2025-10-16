@@ -1,0 +1,619 @@
+{
+  "generatedAt": "2025-10-16T00:00:00.000Z",
+  "schemaVersion": "3.0.1",
+  "
+": "Programmatic comparison of Person database fields vs. front-end display",
+
+  "summary": {
+    "totalDatabaseFields": 182,
+    "directFields": 182,
+    "relationalFields": 8,
+    "fieldsDisplayed": 52,
+    "fieldsNotDisplayed": 130,
+    "displayPercentage": 28.57,
+    "obsoleteFields": 0,
+    "legacyFieldsInUse": 4
+  },
+
+  "displayedFields": [
+    "name",
+    "imageUrl",
+    "bestKnownFor",
+    "akaNames",
+    "bio",
+    "background",
+    "shortBio",
+    "aliases",
+    "namePrefix",
+    "nameSuffix",
+    "birthDate",
+    "birthPlace",
+    "deathDate",
+    "deathPlace",
+    "isDeceased",
+    "residence",
+    "nationalities",
+    "racialGroup",
+    "profession",
+    "roleDescription",
+    "yearsActive",
+    "primaryProfession",
+    "industry",
+    "currentTitle",
+    "currentOrganization",
+    "politicalParty",
+    "politicalBeliefs",
+    "politicalAffiliation",
+    "politicalLeaning",
+    "isPolitician",
+    "isActivist",
+    "religion",
+    "hasTwitter",
+    "twitterHandle",
+    "twitterFollowers",
+    "hasLinkedIn",
+    "hasInstagram",
+    "instagramFollowers",
+    "totalSocialReach",
+    "influenceLevel",
+    "influenceScore",
+    "publicFigure",
+    "isVerified",
+    "hasControversies",
+    "controversyScore",
+    "reputationStatus",
+    "hasBeenCancelled",
+    "cancelledDate",
+    "statementCount",
+    "responseCount",
+    "supportGiven",
+    "criticismsMade",
+    "isPEP",
+    "isHighProfile",
+    "affiliations",
+    "cases",
+    "statements"
+  ],
+
+  "missingFromFrontend": [
+    "id",
+    "slug",
+    "fullName",
+    "firstName",
+    "middleName",
+    "lastName",
+    "hebrewName",
+    "arabicName",
+    "nativeName",
+    "notableFor",
+    "awards",
+    "publications",
+    "dateOfBirth",
+    "age",
+    "gender",
+    "deceasedDate",
+    "deathCause",
+    "lastDeathCheck",
+    "nationality",
+    "nationalityDetail",
+    "nationality_primary_code",
+    "nationality_codes_cached",
+    "ethnicity",
+    "professionDetail",
+    "professionArray",
+    "professionDetails",
+    "specialization",
+    "yearsExperience",
+    "currentOrgId",
+    "employmentStatus",
+    "isRetired",
+    "retirementDate",
+    "educationLevel",
+    "degrees",
+    "universities",
+    "academicTitles",
+    "celebrityStatus",
+    "mediaAppearances",
+    "citationCount",
+    "twitterVerified",
+    "linkedInUrl",
+    "linkedInConnections",
+    "linkedInVerified",
+    "hasFacebook",
+    "facebookUrl",
+    "facebookFollowers",
+    "instagramHandle",
+    "knownPositions",
+    "advocacy",
+    "isLobbyist",
+    "boardPositions",
+    "religionDenomination",
+    "controversyNotes",
+    "reputationNotes",
+    "cancelledReason",
+    "hasBeenSuspended",
+    "hasBeenFired",
+    "hasResigned",
+    "hasLegalIssues",
+    "legalIssueNotes",
+    "underInvestigation",
+    "investigationType",
+    "hasSanctions",
+    "sanctionDetails",
+    "hasCriminalRecord",
+    "criminalNotes",
+    "incidentCount",
+    "caseCount",
+    "sourceCount",
+    "criticismsReceived",
+    "supportReceived",
+    "firstActivityDate",
+    "lastActiveDate",
+    "lastActivityDate",
+    "mostActiveYear",
+    "verificationLevel",
+    "verifiedAt",
+    "verifiedBy",
+    "personVerificationLevel",
+    "verificationDate",
+    "verificationNotes",
+    "wikipediaUrl",
+    "officialWebsite",
+    "residenceCountry",
+    "residenceState",
+    "residenceCity",
+    "workCountry",
+    "workCity",
+    "publicEmail",
+    "agentEmail",
+    "pressContact",
+    "isActive",
+    "isBlocked",
+    "publicNotes",
+    "internalNotes",
+    "researchNotes",
+    "editorialNotes",
+    "createdAt",
+    "updatedAt",
+    "createdBy",
+    "lastEditedBy",
+    "dataSource",
+    "importSource",
+    "lastReviewDate",
+    "needsReview",
+    "journalistProfile",
+    "repercussions",
+    "StatementAuthor",
+    "groupStatements"
+  ],
+
+  "missingFromDatabase": [],
+
+  "legacyFieldsStillDisplayed": [
+    {
+      "field": "akaNames",
+      "replacedBy": "aliases",
+      "location": "/pages/people/[slug].tsx:110",
+      "status": "legacy_in_use"
+    },
+    {
+      "field": "birthDate",
+      "replacedBy": "dateOfBirth",
+      "location": "/pages/people/[slug].tsx:117",
+      "status": "legacy_in_use"
+    },
+    {
+      "field": "deathDate",
+      "replacedBy": "deceasedDate",
+      "location": "/pages/people/[slug].tsx:128",
+      "status": "legacy_in_use"
+    },
+    {
+      "field": "profession",
+      "replacedBy": "primaryProfession",
+      "location": "/pages/people/[slug].tsx:176",
+      "status": "legacy_in_use"
+    }
+  ],
+
+  "highPriorityMissing": [
+    {
+      "field": "notableFor",
+      "type": "String[]",
+      "category": "basicInfo",
+      "reason": "More structured than bestKnownFor text",
+      "impact": "high"
+    },
+    {
+      "field": "age",
+      "type": "Int",
+      "category": "demographics",
+      "reason": "Calculated age useful for context",
+      "impact": "high"
+    },
+    {
+      "field": "knownPositions",
+      "type": "String[]",
+      "category": "political",
+      "reason": "Specific political stances array",
+      "impact": "high"
+    },
+    {
+      "field": "advocacy",
+      "type": "String[]",
+      "category": "political",
+      "reason": "Advocacy causes and issues",
+      "impact": "high"
+    },
+    {
+      "field": "wikipediaUrl",
+      "type": "String",
+      "category": "verification",
+      "reason": "External verification source",
+      "impact": "high"
+    },
+    {
+      "field": "officialWebsite",
+      "type": "String",
+      "category": "verification",
+      "reason": "Official person website",
+      "impact": "high"
+    },
+    {
+      "field": "lastActivityDate",
+      "type": "DateTime",
+      "category": "activityTracking",
+      "reason": "Shows recency of involvement",
+      "impact": "high"
+    },
+    {
+      "field": "hasLegalIssues",
+      "type": "Boolean",
+      "category": "legal",
+      "reason": "Important transparency indicator",
+      "impact": "high"
+    },
+    {
+      "field": "underInvestigation",
+      "type": "Boolean",
+      "category": "legal",
+      "reason": "Current legal status",
+      "impact": "high"
+    },
+    {
+      "field": "hasSanctions",
+      "type": "Boolean",
+      "category": "legal",
+      "reason": "Political/legal consequences",
+      "impact": "high"
+    },
+    {
+      "field": "journalistProfile",
+      "type": "Journalist",
+      "category": "relational",
+      "reason": "Journalist-specific data (beat, outlet)",
+      "impact": "high"
+    },
+    {
+      "field": "repercussions",
+      "type": "Repercussion[]",
+      "category": "relational",
+      "reason": "Consequences person has faced",
+      "impact": "high"
+    }
+  ],
+
+  "fieldsByCategory": {
+    "displayed": {
+      "identifiers": 0,
+      "basicInfo": 10,
+      "biographical": 2,
+      "demographics": 5,
+      "nationality": 2,
+      "professional": 5,
+      "currentPosition": 2,
+      "education": 0,
+      "publicProfile": 1,
+      "influence": 2,
+      "socialMedia": 7,
+      "mediaPresence": 0,
+      "political": 6,
+      "relationships": 0,
+      "religion": 1,
+      "controversy": 5,
+      "legal": 0,
+      "statistics": 4,
+      "activityTracking": 0,
+      "verification": 1,
+      "location": 1,
+      "contact": 0,
+      "flags": 3,
+      "notes": 0,
+      "metadata": 0,
+      "relational": 3
+    },
+    "notDisplayed": {
+      "identifiers": 2,
+      "basicInfo": 9,
+      "biographical": 3,
+      "demographics": 7,
+      "nationality": 4,
+      "professional": 6,
+      "currentPosition": 4,
+      "education": 4,
+      "publicProfile": 1,
+      "influence": 0,
+      "socialMedia": 9,
+      "mediaPresence": 2,
+      "political": 3,
+      "relationships": 1,
+      "religion": 1,
+      "controversy": 6,
+      "legal": 8,
+      "statistics": 5,
+      "activityTracking": 4,
+      "verification": 9,
+      "location": 6,
+      "contact": 3,
+      "flags": 2,
+      "notes": 4,
+      "metadata": 8,
+      "relational": 4
+    }
+  },
+
+  "componentReferences": {
+    "personDetailPage": {
+      "file": "/pages/people/[slug].tsx",
+      "fieldsUsed": 22,
+      "relationalDataUsed": ["nationalities", "affiliations", "cases", "statements"],
+      "computedFields": [
+        {
+          "displayed": "age calculation",
+          "source": "getAgeString(birthDate, deathDate)",
+          "line": 123
+        },
+        {
+          "displayed": "nationality with flags",
+          "source": "formatCountryDisplay(nationalities)",
+          "line": 153
+        }
+      ]
+    },
+    "personCardEnhanced": {
+      "file": "/components/PersonCardEnhanced.tsx",
+      "fieldsUsed": 38,
+      "relationalDataUsed": ["nationalities"],
+      "computedFields": [
+        {
+          "displayed": "formatted title",
+          "source": "formatTitle() using namePrefix + name + nameSuffix",
+          "line": 63
+        },
+        {
+          "displayed": "formatted follower counts",
+          "source": "formatFollowers(count)",
+          "line": 71
+        }
+      ]
+    }
+  },
+
+  "apiDataFetching": {
+    "endpoint": "/pages/api/people/[slug].ts",
+    "prismaInclude": {
+      "nationalities": {
+        "include": ["country"],
+        "orderBy": ["isPrimary", "displayOrder"]
+      },
+      "cases": {
+        "include": ["tags", "_count"],
+        "orderBy": ["caseDate"]
+      },
+      "statements": {
+        "include": ["case", "sources", "respondsTo", "responses"],
+        "orderBy": ["statementDate"]
+      },
+      "affiliations": {
+        "include": ["organization"],
+        "orderBy": ["isActive"]
+      }
+    },
+    "fieldsImplicitlyIncluded": "All direct Person table fields (Prisma includes all scalar fields by default)",
+    "note": "API returns all 182 direct fields + specified relations, but front-end only renders 52"
+  },
+
+  "relationalDataStatus": {
+    "nationalities": {
+      "fetched": true,
+      "displayed": true,
+      "component": "Both",
+      "implementation": "Properly implemented with Country join and flag display"
+    },
+    "affiliations": {
+      "fetched": true,
+      "displayed": true,
+      "component": "Person detail page only",
+      "implementation": "Shows role, organization, dates"
+    },
+    "cases": {
+      "fetched": true,
+      "displayed": true,
+      "component": "Person detail page only",
+      "implementation": "Full case cards with tags, counts, links"
+    },
+    "statements": {
+      "fetched": true,
+      "displayed": true,
+      "component": "Person detail page only",
+      "implementation": "Block quotes with dates, medium, case links"
+    },
+    "journalistProfile": {
+      "fetched": false,
+      "displayed": false,
+      "component": null,
+      "implementation": "NOT FETCHED - needs to be added to API include"
+    },
+    "repercussions": {
+      "fetched": false,
+      "displayed": false,
+      "component": null,
+      "implementation": "NOT FETCHED - needs to be added to API include"
+    },
+    "StatementAuthor": {
+      "fetched": false,
+      "displayed": false,
+      "component": null,
+      "implementation": "NOT FETCHED - multi-author statements not shown"
+    },
+    "groupStatements": {
+      "fetched": false,
+      "displayed": false,
+      "component": null,
+      "implementation": "NOT FETCHED - group statements not shown"
+    }
+  },
+
+  "typeDefinitionCoverage": {
+    "file": "/types/index.ts",
+    "interface": "PersonWithRelations",
+    "definedRelations": ["nationalities", "cases", "statements", "_count"],
+    "missingRelations": ["affiliations", "journalistProfile", "repercussions", "StatementAuthor", "groupStatements"],
+    "note": "Type definition incomplete - affiliations used but not typed, others missing entirely"
+  },
+
+  "derivedFieldsInUse": [
+    {
+      "display": "Age with label (e.g., 'age 65')",
+      "sources": ["birthDate", "deathDate"],
+      "computation": "getAgeString(birthDate, deathDate)",
+      "location": "/pages/people/[slug].tsx:123-134",
+      "type": "computed"
+    },
+    {
+      "display": "Full formatted title",
+      "sources": ["namePrefix", "name", "nameSuffix"],
+      "computation": "formatTitle()",
+      "location": "/components/PersonCardEnhanced.tsx:63-69",
+      "type": "computed"
+    },
+    {
+      "display": "Nationality with flags and names",
+      "sources": ["nationalities.countryCode", "nationalities.country.name_en", "nationalities.country.flag_emoji"],
+      "computation": "formatCountryDisplay()",
+      "location": "/pages/people/[slug].tsx:147-157",
+      "type": "computed"
+    },
+    {
+      "display": "Abbreviated follower counts (e.g., '1.2M')",
+      "sources": ["twitterFollowers", "instagramFollowers", "totalSocialReach"],
+      "computation": "formatFollowers(count)",
+      "location": "/components/PersonCardEnhanced.tsx:71-76",
+      "type": "computed"
+    },
+    {
+      "display": "Response count per case",
+      "sources": ["cases.statements[] where statementType='RESPONSE'"],
+      "computation": "statements.filter(s => s.statementType === 'RESPONSE').length",
+      "location": "/pages/api/people/[slug].ts:825-840",
+      "type": "computed"
+    }
+  ],
+
+  "dataQualityInsights": {
+    "fieldsWithMultipleVersions": [
+      {
+        "legacy": "akaNames",
+        "current": "aliases",
+        "status": "Both exist, legacy still used in UI"
+      },
+      {
+        "legacy": "birthDate",
+        "current": "dateOfBirth",
+        "status": "Both exist, legacy still used in UI"
+      },
+      {
+        "legacy": "deathDate",
+        "current": "deceasedDate",
+        "status": "Both exist, legacy still used in UI"
+      },
+      {
+        "legacy": "nationality (text)",
+        "current": "nationalities (relational)",
+        "status": "Migration complete - UI uses relational data"
+      },
+      {
+        "legacy": "profession (enum)",
+        "current": "primaryProfession/professionArray",
+        "status": "Both exist, both used in UI"
+      }
+    ],
+    "cachingFields": [
+      {
+        "field": "nationality_primary_code",
+        "source": "PersonNationality where isPrimary=true",
+        "purpose": "Performance optimization for nationality queries"
+      },
+      {
+        "field": "nationality_codes_cached",
+        "source": "PersonNationality.countryCode[]",
+        "purpose": "Denormalized array of all nationality codes"
+      }
+    ],
+    "counterFields": [
+      "statementCount",
+      "incidentCount",
+      "caseCount",
+      "responseCount",
+      "sourceCount",
+      "criticismsMade",
+      "criticismsReceived",
+      "supportGiven",
+      "supportReceived",
+      "boardPositions",
+      "mediaAppearances",
+      "citationCount"
+    ]
+  },
+
+  "recommendations": {
+    "immediate": [
+      "Update PersonWithRelations type to include affiliations, journalistProfile, repercussions",
+      "Migrate UI from legacy fields (akaNames → aliases, birthDate → dateOfBirth, deathDate → deceasedDate)",
+      "Add journalistProfile and repercussions to API include statement",
+      "Display wikipediaUrl and officialWebsite as external verification links"
+    ],
+    "shortTerm": [
+      "Create education section using educationLevel, degrees, universities",
+      "Display notableFor array instead of single bestKnownFor text",
+      "Add political positions display using knownPositions and advocacy arrays",
+      "Show legal status indicators (hasLegalIssues, underInvestigation, hasSanctions)",
+      "Display lastActivityDate as recency indicator"
+    ],
+    "longTerm": [
+      "Build comprehensive person timeline using activity dates",
+      "Create network visualization using affiliations and boardPositions",
+      "Add journalist profile section for journalists",
+      "Display repercussions timeline",
+      "Deprecate unused legacy text fields after migration complete"
+    ]
+  },
+
+  "nextSteps": {
+    "step3": {
+      "task": "Build admin forms for all 182 fields",
+      "approach": "Use this mapping to create field groups and prioritize form sections",
+      "priority": "Cover high-value missing fields first"
+    },
+    "step4": {
+      "task": "Implement missing-field detection",
+      "approach": "Identify which high-priority fields are NULL/empty",
+      "priority": "Focus on fields that will be displayed on front-end"
+    },
+    "step5": {
+      "task": "Validate admin-to-frontend sync",
+      "approach": "Ensure edits to all 182 fields propagate correctly",
+      "priority": "Test especially the 130 fields not currently displayed"
+    }
+  }
+}

@@ -57,54 +57,9 @@ async function handleGet(
   slug: string
 ) {
   try {
+    // Fetch ALL person fields - Prisma includes all scalar fields by default
     const person = await prisma.person.findUnique({
-      where: { slug },
-      select: {
-        id: true,
-        slug: true,
-        name: true,
-        firstName: true,
-        middleName: true,
-        lastName: true,
-        namePrefix: true,
-        nameSuffix: true,
-        fullName: true,
-        bio: true,
-        shortBio: true,
-        profession: true,
-        professionDetail: true,
-        currentTitle: true,
-        currentOrganization: true,
-        nationality: true,
-        dateOfBirth: true,
-        birthDate: true,
-        deathDate: true,
-        birthPlace: true,
-        deathPlace: true,
-        imageUrl: true,
-        gender: true,
-        background: true,
-        bestKnownFor: true,
-        politicalParty: true,
-        politicalBeliefs: true,
-        religion: true,
-        religionDenomination: true,
-        residence: true,
-        roleDescription: true,
-        yearsActive: true,
-        twitterHandle: true,
-        linkedInUrl: true,
-        officialWebsite: true,
-        wikipediaUrl: true,
-        createdAt: true,
-        updatedAt: true,
-        _count: {
-          select: {
-            statements: true,
-            cases: true
-          }
-        }
-      }
+      where: { slug }
     })
 
     if (!person) {
@@ -125,50 +80,14 @@ async function handlePut(
   actorId: string
 ) {
   try {
-    const {
-      firstName,
-      middleName,
-      lastName,
-      namePrefix,
-      nameSuffix,
-      fullName,
-      name,
-      slug: newSlug,
-      bio,
-      shortBio,
-      profession,
-      professionDetail,
-      currentTitle,
-      currentOrganization,
-      nationality,
-      birthDate,
-      dateOfBirth,
-      deathDate,
-      birthPlace,
-      deathPlace,
-      imageUrl,
-      gender,
-      background,
-      bestKnownFor,
-      politicalParty,
-      politicalBeliefs,
-      religion,
-      religionDenomination,
-      residence,
-      roleDescription,
-      yearsActive,
-      twitterHandle,
-      linkedInUrl,
-      officialWebsite,
-      wikipediaUrl
-    } = req.body
+    const updateData = req.body
 
-    // Validation
-    if (!firstName || !lastName) {
+    // Validation - only check required fields
+    if (!updateData.firstName || !updateData.lastName) {
       return res.status(400).json({ error: 'First name and last name are required' })
     }
 
-    // Fetch existing person data for change detection
+    // Check if person exists
     const existingPerson = await prisma.person.findUnique({
       where: { slug }
     })
@@ -178,9 +97,9 @@ async function handlePut(
     }
 
     // If slug is being changed, check if new slug already exists
-    if (newSlug && newSlug !== slug) {
+    if (updateData.slug && updateData.slug !== slug) {
       const slugTaken = await prisma.person.findUnique({
-        where: { slug: newSlug }
+        where: { slug: updateData.slug }
       })
 
       if (slugTaken) {
@@ -188,72 +107,83 @@ async function handlePut(
       }
     }
 
-    // Prepare update data
-    const updateData = {
-      firstName,
-      middleName: middleName || null,
-      lastName,
-      namePrefix: namePrefix || null,
-      nameSuffix: nameSuffix || null,
-      fullName: fullName || `${namePrefix || ''} ${firstName} ${middleName || ''} ${lastName} ${nameSuffix || ''}`.replace(/\s+/g, ' ').trim(),
-      name: name || `${firstName} ${lastName}`.trim(),
-      slug: newSlug || slug,
-      bio: bio || null,
-      shortBio: shortBio || null,
-      profession: profession || 'OTHER',
-      professionDetail: professionDetail || null,
-      currentTitle: currentTitle || null,
-      currentOrganization: currentOrganization || null,
-      nationality: nationality || null,
-      birthDate: (birthDate || dateOfBirth) ? new Date(birthDate || dateOfBirth) : null,
-      dateOfBirth: (birthDate || dateOfBirth) ? new Date(birthDate || dateOfBirth) : null,
-      deathDate: deathDate ? new Date(deathDate) : null,
-      birthPlace: birthPlace || null,
-      deathPlace: deathPlace || null,
-      imageUrl: imageUrl || null,
-      gender: gender || null,
-      background: background || null,
-      bestKnownFor: bestKnownFor || null,
-      politicalParty: politicalParty || null,
-      politicalBeliefs: politicalBeliefs || null,
-      religion: religion || null,
-      religionDenomination: religionDenomination || null,
-      residence: residence || null,
-      roleDescription: roleDescription || null,
-      yearsActive: yearsActive || null,
-      twitterHandle: twitterHandle || null,
-      linkedInUrl: linkedInUrl || null,
-      officialWebsite: officialWebsite || null,
-      wikipediaUrl: wikipediaUrl || null
+    // Process data for Prisma
+    const processedData: any = {}
+
+    // Handle all fields dynamically
+    Object.keys(updateData).forEach(key => {
+      const value = updateData[key]
+
+      // Skip undefined values (they won't be updated)
+      if (value === undefined) {
+        return
+      }
+
+      // Convert null/empty strings to null for database
+      if (value === '' || value === null) {
+        processedData[key] = null
+        return
+      }
+
+      // Handle dates - convert string dates to Date objects
+      if (key.includes('Date') && typeof value === 'string' && value) {
+        try {
+          processedData[key] = new Date(value)
+        } catch (e) {
+          processedData[key] = null
+        }
+        return
+      }
+
+      // Handle arrays
+      if (Array.isArray(value)) {
+        processedData[key] = value.length > 0 ? value : null
+        return
+      }
+
+      // Handle booleans
+      if (typeof value === 'boolean') {
+        processedData[key] = value
+        return
+      }
+
+      // Handle numbers
+      if (typeof value === 'number') {
+        processedData[key] = value
+        return
+      }
+
+      // Handle strings
+      processedData[key] = value
+    })
+
+    // Ensure computed fields are set
+    if (processedData.firstName || processedData.lastName) {
+      processedData.name = `${processedData.firstName || existingPerson.firstName} ${processedData.lastName || existingPerson.lastName}`.trim()
+
+      const parts = [
+        processedData.namePrefix ?? existingPerson.namePrefix,
+        processedData.firstName ?? existingPerson.firstName,
+        processedData.middleName ?? existingPerson.middleName,
+        processedData.lastName ?? existingPerson.lastName,
+        processedData.nameSuffix ?? existingPerson.nameSuffix
+      ].filter(Boolean)
+
+      processedData.fullName = parts.join(' ')
     }
 
+    // Set lastEditedBy metadata
+    processedData.lastEditedBy = actorId
+
     // Detect changes before update
-    const changes = detectChanges(existingPerson, updateData)
+    const changes = detectChanges(existingPerson, processedData)
 
     // Use transaction for atomic update
     const person = await prisma.$transaction(async (tx) => {
-      // Update person
       const updated = await tx.person.update({
         where: { slug },
-        data: updateData,
-        select: {
-          id: true,
-          slug: true,
-          name: true,
-          firstName: true,
-          lastName: true,
-          fullName: true,
-          profession: true,
-          professionDetail: true,
-          currentTitle: true,
-          nationality: true,
-          birthDate: true,
-          dateOfBirth: true,
-          imageUrl: true,
-          updatedAt: true
-        }
+        data: processedData
       })
-
       return updated
     })
 
@@ -266,7 +196,8 @@ async function handlePut(
         userId: actorId,
         metadata: {
           source: 'admin_dashboard',
-          endpoint: '/api/admin/people/[slug]'
+          endpoint: '/api/admin/people/[slug]-enhanced',
+          fieldsUpdated: Object.keys(processedData)
         }
       })
     }
@@ -276,11 +207,11 @@ async function handlePut(
       console.error('Referential integrity check failed:', err)
     })
 
-    // Trigger ISR revalidation for the front-end page
+    // Trigger ISR revalidation for the person's public page
     try {
       await res.revalidate(`/people/${person.slug}`)
-    } catch (revalidateError) {
-      console.error('ISR revalidation failed:', revalidateError)
+    } catch (e) {
+      console.warn('Failed to revalidate person page:', e)
       // Don't fail the request if revalidation fails
     }
 

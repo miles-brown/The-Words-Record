@@ -1,0 +1,1282 @@
+{
+  "schemaVersion": "3.0.1",
+  "tableName": "Person",
+  "generatedAt": "2025-10-16",
+  "description": "Comprehensive schema audit of all database fields related to the Person entity, including direct fields and relational connections",
+
+  "directFields": {
+    "identifiers": {
+      "id": {
+        "type": "String (cuid)",
+        "nullable": false,
+        "description": "Primary key identifier",
+        "indexed": false,
+        "default": "cuid()"
+      },
+      "slug": {
+        "type": "String",
+        "nullable": false,
+        "description": "URL-friendly unique identifier",
+        "indexed": true,
+        "unique": true
+      }
+    },
+
+    "basicInfo": {
+      "name": {
+        "type": "String",
+        "nullable": false,
+        "description": "Display name (legacy field)",
+        "indexed": false
+      },
+      "fullName": {
+        "type": "String",
+        "nullable": true,
+        "description": "Complete full name",
+        "indexed": false
+      },
+      "firstName": {
+        "type": "String",
+        "nullable": true,
+        "description": "First/given name",
+        "indexed": false
+      },
+      "middleName": {
+        "type": "String",
+        "nullable": true,
+        "description": "Middle name(s)",
+        "indexed": false
+      },
+      "lastName": {
+        "type": "String",
+        "nullable": true,
+        "description": "Last/family name",
+        "indexed": false
+      },
+      "namePrefix": {
+        "type": "String",
+        "nullable": true,
+        "description": "Name prefix (Dr., Prof., Hon., etc.)",
+        "indexed": false
+      },
+      "nameSuffix": {
+        "type": "String",
+        "nullable": true,
+        "description": "Name suffix (Jr., Sr., III, etc.)",
+        "indexed": false
+      },
+      "aliases": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "Alternative names and aliases",
+        "indexed": false,
+        "default": "[]"
+      },
+      "akaNames": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "Also-known-as names (legacy field)",
+        "indexed": false
+      },
+      "hebrewName": {
+        "type": "String",
+        "nullable": true,
+        "description": "Name in Hebrew script",
+        "indexed": false
+      },
+      "arabicName": {
+        "type": "String",
+        "nullable": true,
+        "description": "Name in Arabic script",
+        "indexed": false
+      },
+      "nativeName": {
+        "type": "String",
+        "nullable": true,
+        "description": "Name in native script/language",
+        "indexed": false
+      }
+    },
+
+    "biographical": {
+      "bio": {
+        "type": "String",
+        "nullable": true,
+        "description": "Full biography text (legacy)",
+        "indexed": false
+      },
+      "shortBio": {
+        "type": "String (VARCHAR 500)",
+        "nullable": true,
+        "description": "Short biography for display",
+        "indexed": false
+      },
+      "background": {
+        "type": "String",
+        "nullable": true,
+        "description": "Background information",
+        "indexed": false
+      },
+      "bestKnownFor": {
+        "type": "String",
+        "nullable": true,
+        "description": "What the person is best known for",
+        "indexed": false
+      },
+      "notableFor": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "List of notable achievements/actions",
+        "indexed": false,
+        "default": "[]"
+      },
+      "awards": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "List of awards received",
+        "indexed": false,
+        "default": "[]"
+      },
+      "publications": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "List of publications",
+        "indexed": false,
+        "default": "[]"
+      }
+    },
+
+    "demographics": {
+      "birthDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of birth (legacy)",
+        "indexed": false
+      },
+      "dateOfBirth": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of birth",
+        "indexed": false
+      },
+      "age": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Current age (calculated)",
+        "indexed": false
+      },
+      "deathDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of death (legacy)",
+        "indexed": false
+      },
+      "deceasedDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of death",
+        "indexed": false
+      },
+      "deathPlace": {
+        "type": "String",
+        "nullable": true,
+        "description": "Place of death",
+        "indexed": false
+      },
+      "deathCause": {
+        "type": "String",
+        "nullable": true,
+        "description": "Cause of death",
+        "indexed": false
+      },
+      "lastDeathCheck": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Last time death status was verified",
+        "indexed": false
+      },
+      "isDeceased": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Whether person is deceased",
+        "indexed": false,
+        "default": false
+      },
+      "gender": {
+        "type": "Gender (enum)",
+        "nullable": true,
+        "description": "Gender identity",
+        "indexed": false,
+        "enumValues": ["MALE", "FEMALE", "NON_BINARY", "OTHER", "UNKNOWN"]
+      },
+      "birthPlace": {
+        "type": "String",
+        "nullable": true,
+        "description": "Place of birth",
+        "indexed": false
+      }
+    },
+
+    "nationality": {
+      "nationality": {
+        "type": "String",
+        "nullable": true,
+        "description": "Nationality text (legacy)",
+        "indexed": true
+      },
+      "nationalityDetail": {
+        "type": "String",
+        "nullable": true,
+        "description": "Detailed nationality information (legacy)",
+        "indexed": false
+      },
+      "nationality_primary_code": {
+        "type": "String (VARCHAR 2)",
+        "nullable": true,
+        "description": "Primary nationality ISO country code (computed cache)",
+        "indexed": true
+      },
+      "nationality_codes_cached": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "All nationality ISO codes (computed cache)",
+        "indexed": false,
+        "default": "[]"
+      },
+      "ethnicity": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "Ethnic backgrounds",
+        "indexed": false,
+        "default": "[]"
+      },
+      "racialGroup": {
+        "type": "String",
+        "nullable": true,
+        "description": "Racial group identification",
+        "indexed": false
+      }
+    },
+
+    "professional": {
+      "profession": {
+        "type": "ProfessionType (enum)",
+        "nullable": false,
+        "description": "Legacy profession categorization",
+        "indexed": true,
+        "default": "OTHER",
+        "enumValues": ["POLITICIAN", "JOURNALIST", "ACADEMIC", "ACTIVIST", "BUSINESS", "CELEBRITY", "RELIGIOUS", "MILITARY", "LEGAL", "MEDICAL", "ARTIST", "ATHLETE", "OTHER"]
+      },
+      "professionDetail": {
+        "type": "String",
+        "nullable": true,
+        "description": "Detailed profession text (legacy)",
+        "indexed": false
+      },
+      "professionArray": {
+        "type": "Profession[] (enum array)",
+        "nullable": false,
+        "description": "Multiple professions",
+        "indexed": false,
+        "enumValues": ["POLITICIAN", "DIPLOMAT", "GOVERNMENT_OFFICIAL", "POLITICAL_ADVISOR", "JOURNALIST", "EDITOR", "NEWS_ANCHOR", "COLUMNIST", "COMMENTATOR", "BLOGGER", "PODCASTER", "PROFESSOR", "RESEARCHER", "ACADEMIC_ADMINISTRATOR", "STUDENT", "LAWYER", "JUDGE", "PROSECUTOR", "LEGAL_SCHOLAR", "CEO", "EXECUTIVE", "ENTREPRENEUR", "INVESTOR", "CONSULTANT", "ACTOR", "DIRECTOR", "PRODUCER", "WRITER", "MUSICIAN", "ARTIST", "COMEDIAN", "ACTIVIST", "ORGANIZER", "NGO_LEADER", "ADVOCATE", "CLERGY", "RABBI", "IMAM", "PRIEST", "RELIGIOUS_LEADER", "MILITARY_OFFICER", "INTELLIGENCE_OFFICIAL", "POLICE_OFFICER", "DOCTOR", "NURSE", "RESEARCHER_MEDICAL", "ENGINEER", "DEVELOPER", "TECH_EXECUTIVE", "ATHLETE", "COACH", "SPORTS_EXECUTIVE", "INFLUENCER", "PUBLIC_FIGURE", "OTHER", "UNKNOWN"]
+      },
+      "primaryProfession": {
+        "type": "Profession (enum)",
+        "nullable": true,
+        "description": "Primary profession from array",
+        "indexed": false
+      },
+      "professionDetails": {
+        "type": "String",
+        "nullable": true,
+        "description": "Additional profession details",
+        "indexed": false
+      },
+      "industry": {
+        "type": "Industry (enum)",
+        "nullable": true,
+        "description": "Industry sector",
+        "indexed": false,
+        "enumValues": ["POLITICS_GOVERNMENT", "MEDIA_JOURNALISM", "EDUCATION_ACADEMIA", "LAW_LEGAL", "BUSINESS_FINANCE", "TECHNOLOGY", "HEALTHCARE", "ENTERTAINMENT", "SPORTS", "NONPROFIT_NGO", "RELIGION", "MILITARY_DEFENSE", "OTHER"]
+      },
+      "specialization": {
+        "type": "String",
+        "nullable": true,
+        "description": "Area of specialization",
+        "indexed": false
+      },
+      "yearsActive": {
+        "type": "String",
+        "nullable": true,
+        "description": "Years active in profession (text)",
+        "indexed": false
+      },
+      "yearsExperience": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Years of professional experience",
+        "indexed": false
+      },
+      "roleDescription": {
+        "type": "String",
+        "nullable": true,
+        "description": "Description of current role",
+        "indexed": false
+      }
+    },
+
+    "currentPosition": {
+      "currentTitle": {
+        "type": "String",
+        "nullable": true,
+        "description": "Current job title",
+        "indexed": false
+      },
+      "currentOrganization": {
+        "type": "String",
+        "nullable": true,
+        "description": "Current organization name",
+        "indexed": false
+      },
+      "currentOrgId": {
+        "type": "String",
+        "nullable": true,
+        "description": "Foreign key to Organization",
+        "indexed": false
+      },
+      "employmentStatus": {
+        "type": "EmploymentStatus (enum)",
+        "nullable": true,
+        "description": "Current employment status",
+        "indexed": false,
+        "enumValues": ["FULL_TIME", "PART_TIME", "CONTRACT", "FREELANCE", "PER_DIEM", "SEASONAL", "TEMPORARY"]
+      },
+      "isRetired": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Whether person is retired",
+        "indexed": false,
+        "default": false
+      },
+      "retirementDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of retirement",
+        "indexed": false
+      }
+    },
+
+    "education": {
+      "educationLevel": {
+        "type": "EducationLevel (enum)",
+        "nullable": true,
+        "description": "Highest education level",
+        "indexed": false,
+        "enumValues": ["HIGH_SCHOOL", "SOME_COLLEGE", "BACHELORS", "MASTERS", "DOCTORATE", "PROFESSIONAL", "OTHER"]
+      },
+      "degrees": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "List of degrees earned",
+        "indexed": false,
+        "default": "[]"
+      },
+      "universities": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "List of universities attended",
+        "indexed": false,
+        "default": "[]"
+      },
+      "academicTitles": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "Academic titles and honors",
+        "indexed": false,
+        "default": "[]"
+      }
+    },
+
+    "publicProfile": {
+      "publicFigure": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Whether person is a public figure",
+        "indexed": true,
+        "default": false
+      },
+      "celebrityStatus": {
+        "type": "CelebrityStatus (enum)",
+        "nullable": true,
+        "description": "Celebrity status level",
+        "indexed": false,
+        "enumValues": ["A_LIST", "B_LIST", "NOTABLE", "NICHE_FAMOUS", "INTERNET_FAMOUS", "LOCAL_CELEBRITY"]
+      },
+      "imageUrl": {
+        "type": "String",
+        "nullable": true,
+        "description": "Profile image URL",
+        "indexed": false
+      }
+    },
+
+    "influence": {
+      "influenceScore": {
+        "type": "Float",
+        "nullable": true,
+        "description": "Computed influence score",
+        "indexed": false
+      },
+      "influenceLevel": {
+        "type": "PersonInfluenceLevel (enum)",
+        "nullable": true,
+        "description": "Influence level category",
+        "indexed": true,
+        "enumValues": ["GLOBAL", "INTERNATIONAL", "NATIONAL", "REGIONAL", "LOCAL", "NICHE"]
+      }
+    },
+
+    "socialMedia": {
+      "hasTwitter": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has Twitter/X account",
+        "indexed": false,
+        "default": false
+      },
+      "twitterHandle": {
+        "type": "String",
+        "nullable": true,
+        "description": "Twitter/X username",
+        "indexed": false
+      },
+      "twitterFollowers": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Twitter/X follower count",
+        "indexed": false
+      },
+      "twitterVerified": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Twitter/X verified status",
+        "indexed": false,
+        "default": false
+      },
+      "hasLinkedIn": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has LinkedIn account",
+        "indexed": false,
+        "default": false
+      },
+      "linkedInUrl": {
+        "type": "String",
+        "nullable": true,
+        "description": "LinkedIn profile URL",
+        "indexed": false
+      },
+      "linkedInConnections": {
+        "type": "Int",
+        "nullable": true,
+        "description": "LinkedIn connection count",
+        "indexed": false
+      },
+      "linkedInVerified": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "LinkedIn verified status",
+        "indexed": false,
+        "default": false
+      },
+      "hasFacebook": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has Facebook account",
+        "indexed": false,
+        "default": false
+      },
+      "facebookUrl": {
+        "type": "String",
+        "nullable": true,
+        "description": "Facebook profile URL",
+        "indexed": false
+      },
+      "facebookFollowers": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Facebook follower count",
+        "indexed": false
+      },
+      "hasInstagram": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has Instagram account",
+        "indexed": false,
+        "default": false
+      },
+      "instagramHandle": {
+        "type": "String",
+        "nullable": true,
+        "description": "Instagram username",
+        "indexed": false
+      },
+      "instagramFollowers": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Instagram follower count",
+        "indexed": false
+      },
+      "totalSocialReach": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Total social media reach/followers",
+        "indexed": false
+      }
+    },
+
+    "mediaPresence": {
+      "mediaAppearances": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of media appearances",
+        "indexed": false,
+        "default": 0
+      },
+      "citationCount": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of citations/mentions",
+        "indexed": false,
+        "default": 0
+      }
+    },
+
+    "political": {
+      "politicalBeliefs": {
+        "type": "String",
+        "nullable": true,
+        "description": "Political beliefs text",
+        "indexed": false
+      },
+      "politicalParty": {
+        "type": "String",
+        "nullable": true,
+        "description": "Political party affiliation text",
+        "indexed": false
+      },
+      "politicalAffiliation": {
+        "type": "PoliticalAffiliation (enum)",
+        "nullable": true,
+        "description": "Political affiliation category",
+        "indexed": true,
+        "enumValues": ["DEMOCRAT", "REPUBLICAN", "INDEPENDENT_US", "GREEN_US", "LIBERTARIAN_US", "CONSERVATIVE_UK", "LABOUR_UK", "LIBERAL_DEMOCRAT_UK", "GREEN_UK", "LIKUD", "LABOR_IL", "BLUE_WHITE", "RELIGIOUS_ZIONIST", "CONSERVATIVE", "LIBERAL", "SOCIALIST", "COMMUNIST", "NATIONALIST", "NONPARTISAN", "UNKNOWN", "OTHER"]
+      },
+      "politicalLeaning": {
+        "type": "PoliticalLeaning (enum)",
+        "nullable": true,
+        "description": "Political leaning/ideology",
+        "indexed": false,
+        "enumValues": ["FAR_LEFT", "LEFT", "CENTER_LEFT", "CENTER", "CENTER_RIGHT", "RIGHT", "FAR_RIGHT", "LIBERTARIAN", "AUTHORITARIAN", "POPULIST", "PROGRESSIVE", "CONSERVATIVE", "SOCIALIST", "COMMUNIST", "FASCIST", "ANARCHIST", "MIXED", "APOLITICAL", "UNKNOWN"]
+      },
+      "knownPositions": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "Known political positions",
+        "indexed": false,
+        "default": "[]"
+      },
+      "advocacy": {
+        "type": "String[]",
+        "nullable": false,
+        "description": "Advocacy causes/issues",
+        "indexed": false,
+        "default": "[]"
+      },
+      "isPolitician": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is a politician",
+        "indexed": false,
+        "default": false
+      },
+      "isActivist": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is an activist",
+        "indexed": false,
+        "default": false
+      },
+      "isLobbyist": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is a lobbyist",
+        "indexed": false,
+        "default": false
+      }
+    },
+
+    "relationships": {
+      "boardPositions": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of board positions held",
+        "indexed": false,
+        "default": 0
+      }
+    },
+
+    "religion": {
+      "religion": {
+        "type": "String",
+        "nullable": true,
+        "description": "Religious affiliation",
+        "indexed": false
+      },
+      "religionDenomination": {
+        "type": "String",
+        "nullable": true,
+        "description": "Religious denomination",
+        "indexed": false
+      }
+    },
+
+    "controversy": {
+      "hasControversies": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has been involved in controversies",
+        "indexed": true,
+        "default": false
+      },
+      "controversyScore": {
+        "type": "Float",
+        "nullable": true,
+        "description": "Controversy score metric",
+        "indexed": true
+      },
+      "controversyNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Notes about controversies",
+        "indexed": false
+      },
+      "reputationStatus": {
+        "type": "ReputationStatus (enum)",
+        "nullable": true,
+        "description": "Current reputation status",
+        "indexed": false,
+        "enumValues": ["EXCELLENT", "GOOD", "MIXED", "DAMAGED", "SEVERELY_DAMAGED", "REHABILITATING"]
+      },
+      "reputationNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Notes about reputation",
+        "indexed": false
+      },
+      "hasBeenCancelled": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has been 'cancelled'",
+        "indexed": false,
+        "default": false
+      },
+      "cancelledDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of cancellation",
+        "indexed": false
+      },
+      "cancelledReason": {
+        "type": "String",
+        "nullable": true,
+        "description": "Reason for cancellation",
+        "indexed": false
+      },
+      "hasBeenSuspended": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has been suspended",
+        "indexed": false,
+        "default": false
+      },
+      "hasBeenFired": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has been fired",
+        "indexed": false,
+        "default": false
+      },
+      "hasResigned": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has resigned",
+        "indexed": false,
+        "default": false
+      }
+    },
+
+    "legal": {
+      "hasLegalIssues": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Currently has legal issues",
+        "indexed": false,
+        "default": false
+      },
+      "legalIssueNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Notes about legal issues",
+        "indexed": false
+      },
+      "underInvestigation": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Currently under investigation",
+        "indexed": false,
+        "default": false
+      },
+      "investigationType": {
+        "type": "String",
+        "nullable": true,
+        "description": "Type of investigation",
+        "indexed": false
+      },
+      "hasSanctions": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has sanctions against them",
+        "indexed": false,
+        "default": false
+      },
+      "sanctionDetails": {
+        "type": "String",
+        "nullable": true,
+        "description": "Details about sanctions",
+        "indexed": false
+      },
+      "hasCriminalRecord": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Has criminal record",
+        "indexed": false,
+        "default": false
+      },
+      "criminalNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Notes about criminal record",
+        "indexed": false
+      }
+    },
+
+    "statistics": {
+      "statementCount": {
+        "type": "Int",
+        "nullable": false,
+        "description": "Total statement count",
+        "indexed": true,
+        "default": 0
+      },
+      "incidentCount": {
+        "type": "Int",
+        "nullable": false,
+        "description": "Total incident count (legacy)",
+        "indexed": false,
+        "default": 0
+      },
+      "caseCount": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Total case count",
+        "indexed": false,
+        "default": 0
+      },
+      "responseCount": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of response statements",
+        "indexed": false,
+        "default": 0
+      },
+      "sourceCount": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of sources",
+        "indexed": false,
+        "default": 0
+      },
+      "criticismsMade": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of criticisms made",
+        "indexed": false,
+        "default": 0
+      },
+      "criticismsReceived": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of criticisms received",
+        "indexed": false,
+        "default": 0
+      },
+      "supportGiven": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of support statements given",
+        "indexed": false,
+        "default": 0
+      },
+      "supportReceived": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Number of support statements received",
+        "indexed": false,
+        "default": 0
+      }
+    },
+
+    "activityTracking": {
+      "firstActivityDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of first activity/statement",
+        "indexed": false
+      },
+      "lastActiveDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of last activity (legacy)",
+        "indexed": false
+      },
+      "lastActivityDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of last activity/statement",
+        "indexed": false
+      },
+      "mostActiveYear": {
+        "type": "Int",
+        "nullable": true,
+        "description": "Year with most activity",
+        "indexed": false
+      }
+    },
+
+    "verification": {
+      "verificationLevel": {
+        "type": "VerificationLevel (enum)",
+        "nullable": false,
+        "description": "Legacy verification level",
+        "indexed": true,
+        "default": "UNVERIFIED",
+        "enumValues": ["UNVERIFIED", "BASIC", "VERIFIED", "TRUSTED", "FULLY_VERIFIED", "PARTIALLY_VERIFIED", "DISPUTED", "LIKELY_FALSE", "DEBUNKED"]
+      },
+      "verifiedAt": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date verified (legacy)",
+        "indexed": false
+      },
+      "verifiedBy": {
+        "type": "String",
+        "nullable": true,
+        "description": "Who verified (legacy)",
+        "indexed": false
+      },
+      "isVerified": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is verified",
+        "indexed": true,
+        "default": false
+      },
+      "personVerificationLevel": {
+        "type": "PersonVerificationLevel (enum)",
+        "nullable": true,
+        "description": "Person-specific verification level",
+        "indexed": false,
+        "default": "UNVERIFIED",
+        "enumValues": ["FULLY_VERIFIED", "VERIFIED", "PARTIALLY_VERIFIED", "UNVERIFIED", "DISPUTED"]
+      },
+      "verificationDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Date of verification",
+        "indexed": false
+      },
+      "verificationNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Verification notes",
+        "indexed": false
+      },
+      "wikipediaUrl": {
+        "type": "String",
+        "nullable": true,
+        "description": "Wikipedia page URL",
+        "indexed": false
+      },
+      "officialWebsite": {
+        "type": "String",
+        "nullable": true,
+        "description": "Official website URL",
+        "indexed": false
+      }
+    },
+
+    "location": {
+      "residence": {
+        "type": "String",
+        "nullable": true,
+        "description": "Residence location text (legacy)",
+        "indexed": false
+      },
+      "residenceCountry": {
+        "type": "String",
+        "nullable": true,
+        "description": "Country of residence",
+        "indexed": false
+      },
+      "residenceState": {
+        "type": "String",
+        "nullable": true,
+        "description": "State/province of residence",
+        "indexed": false
+      },
+      "residenceCity": {
+        "type": "String",
+        "nullable": true,
+        "description": "City of residence",
+        "indexed": false
+      },
+      "workCountry": {
+        "type": "String",
+        "nullable": true,
+        "description": "Country of work",
+        "indexed": false
+      },
+      "workCity": {
+        "type": "String",
+        "nullable": true,
+        "description": "City of work",
+        "indexed": false
+      }
+    },
+
+    "contact": {
+      "publicEmail": {
+        "type": "String",
+        "nullable": true,
+        "description": "Public email address",
+        "indexed": false
+      },
+      "agentEmail": {
+        "type": "String",
+        "nullable": true,
+        "description": "Agent email address",
+        "indexed": false
+      },
+      "pressContact": {
+        "type": "String",
+        "nullable": true,
+        "description": "Press contact information",
+        "indexed": false
+      }
+    },
+
+    "flags": {
+      "isActive": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is currently active",
+        "indexed": true,
+        "default": true
+      },
+      "isBlocked": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is blocked from platform",
+        "indexed": false,
+        "default": false
+      },
+      "isPEP": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is a Politically Exposed Person",
+        "indexed": false,
+        "default": false
+      },
+      "isHighProfile": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Is a high-profile person",
+        "indexed": false,
+        "default": false
+      }
+    },
+
+    "notes": {
+      "publicNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Public-facing notes",
+        "indexed": false
+      },
+      "internalNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Internal staff notes",
+        "indexed": false
+      },
+      "researchNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Research notes",
+        "indexed": false
+      },
+      "editorialNotes": {
+        "type": "String",
+        "nullable": true,
+        "description": "Editorial notes",
+        "indexed": false
+      }
+    },
+
+    "metadata": {
+      "createdAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "description": "Record creation timestamp",
+        "indexed": false,
+        "default": "now()"
+      },
+      "updatedAt": {
+        "type": "DateTime",
+        "nullable": false,
+        "description": "Record update timestamp",
+        "indexed": false,
+        "updatedAt": true
+      },
+      "createdBy": {
+        "type": "String",
+        "nullable": true,
+        "description": "User who created record",
+        "indexed": false
+      },
+      "lastEditedBy": {
+        "type": "String",
+        "nullable": true,
+        "description": "User who last edited record",
+        "indexed": false
+      },
+      "dataSource": {
+        "type": "String",
+        "nullable": true,
+        "description": "Source of data",
+        "indexed": false
+      },
+      "importSource": {
+        "type": "String",
+        "nullable": true,
+        "description": "Import source if imported",
+        "indexed": false
+      },
+      "lastReviewDate": {
+        "type": "DateTime",
+        "nullable": true,
+        "description": "Last review date",
+        "indexed": false
+      },
+      "needsReview": {
+        "type": "Boolean",
+        "nullable": true,
+        "description": "Needs editorial review",
+        "indexed": false,
+        "default": false
+      }
+    }
+  },
+
+  "relationalFields": {
+    "affiliations": {
+      "type": "Affiliation[]",
+      "relation": "one-to-many",
+      "foreignKey": "personId",
+      "description": "Organizations this person is affiliated with",
+      "relatedTable": "Affiliation",
+      "includesFields": [
+        "id", "role", "roleLevel", "department", "startDate", "endDate",
+        "isActive", "isCurrent", "description", "responsibilities",
+        "organizationId", "roleCategory", "officialTitle", "isPrimary",
+        "employmentStatus", "departureReason", "tenureMonths", "affiliationType",
+        "hasMediaRole", "isSpokesperson", "influenceLevel", "isVerified"
+      ]
+    },
+
+    "journalistProfile": {
+      "type": "Journalist?",
+      "relation": "one-to-one",
+      "foreignKey": "personId",
+      "description": "Journalist-specific profile data (if applicable)",
+      "relatedTable": "Journalist",
+      "includesFields": [
+        "id", "currentOutletId", "beat", "isFreelance", "verificationType",
+        "twitterHandle", "linkedinProfile", "personalWebsite", "articlesCount",
+        "averageBias"
+      ]
+    },
+
+    "repercussions": {
+      "type": "Repercussion[]",
+      "relation": "one-to-many",
+      "foreignKey": "affectedPersonId",
+      "description": "Repercussions affecting this person",
+      "relatedTable": "Repercussion",
+      "includesFields": [
+        "id", "type", "description", "isTactical", "startDate", "endDate",
+        "severityScore", "impactDescription", "caseId", "outcome", "isOngoing",
+        "wasSuccessful", "isVerified"
+      ]
+    },
+
+    "statements": {
+      "type": "Statement[]",
+      "relation": "one-to-many",
+      "foreignKey": "personId",
+      "description": "Statements made by this person",
+      "relatedTable": "Statement",
+      "relationName": "PersonStatements",
+      "includesFields": [
+        "id", "content", "context", "statementType", "responseType",
+        "statementDate", "mediumUrl", "isVerified", "caseId", "organizationId",
+        "respondsToId", "summary", "medium", "platform", "hasRepercussions",
+        "responseCount", "likes", "shares", "views"
+      ]
+    },
+
+    "StatementAuthor": {
+      "type": "StatementAuthor[]",
+      "relation": "one-to-many",
+      "foreignKey": "personId",
+      "description": "Statements where this person is listed as author",
+      "relatedTable": "StatementAuthor",
+      "includesFields": [
+        "id", "statementId", "role", "orderIndex"
+      ]
+    },
+
+    "cases": {
+      "type": "Case[]",
+      "relation": "many-to-many",
+      "foreignKey": "personId",
+      "description": "Cases this person is involved in",
+      "relatedTable": "Case",
+      "relationName": "PersonCases",
+      "includesFields": [
+        "id", "slug", "title", "summary", "description", "caseDate",
+        "status", "severity", "locationCity", "locationCountry", "isVerified",
+        "viewCount", "shareCount", "isRealIncident", "qualificationScore",
+        "responseCount", "visibility", "isFeatured", "prominenceScore"
+      ]
+    },
+
+    "groupStatements": {
+      "type": "Statement[]",
+      "relation": "many-to-many",
+      "foreignKey": "personId",
+      "description": "Group statements this person is part of",
+      "relatedTable": "Statement",
+      "relationName": "PersonGroupStatements",
+      "includesFields": [
+        "id", "content", "statementType", "statementDate", "isGroupStatement"
+      ]
+    },
+
+    "nationalities": {
+      "type": "PersonNationality[]",
+      "relation": "one-to-many",
+      "foreignKey": "personId",
+      "description": "Nationality records for this person",
+      "relatedTable": "PersonNationality",
+      "includesFields": [
+        "id", "countryCode", "type", "acquisition", "isPrimary", "displayOrder",
+        "startDate", "endDate", "sourceId", "confidence", "note"
+      ],
+      "nestedRelations": {
+        "country": {
+          "type": "Country",
+          "relation": "many-to-one",
+          "foreignKey": "countryCode",
+          "includesFields": [
+            "code", "name_en", "iso3", "m49", "flag_emoji", "active"
+          ]
+        }
+      }
+    }
+  },
+
+  "computedFields": {
+    "nationality_primary_code": {
+      "description": "Cached primary nationality code from PersonNationality relation",
+      "source": "PersonNationality where isPrimary=true",
+      "updateTrigger": "PersonNationality changes"
+    },
+    "nationality_codes_cached": {
+      "description": "Cached array of all nationality codes from PersonNationality relation",
+      "source": "PersonNationality.countryCode array",
+      "updateTrigger": "PersonNationality changes"
+    }
+  },
+
+  "indexes": [
+    { "field": "slug", "type": "unique", "purpose": "URL lookup" },
+    { "field": "verificationLevel", "type": "standard", "purpose": "Filter by verification" },
+    { "field": "profession", "type": "standard", "purpose": "Filter by profession type" },
+    { "field": "nationality", "type": "standard", "purpose": "Filter by nationality text" },
+    { "field": "nationality_primary_code", "type": "standard", "purpose": "Filter by ISO code" },
+    { "field": "publicFigure", "type": "standard", "purpose": "Filter public figures" },
+    { "field": "isActive", "type": "standard", "purpose": "Filter active records" },
+    { "field": "isVerified", "type": "standard", "purpose": "Filter verified persons" },
+    { "field": "hasControversies", "type": "standard", "purpose": "Filter controversial persons" },
+    { "field": "statementCount", "type": "standard", "purpose": "Sort by activity" },
+    { "field": "controversyScore", "type": "standard", "purpose": "Sort by controversy" },
+    { "field": "influenceLevel", "type": "standard", "purpose": "Filter by influence" },
+    { "field": "politicalAffiliation", "type": "standard", "purpose": "Filter by politics" },
+    { "fields": ["primaryProfession", "primaryNationality"], "type": "composite", "purpose": "Combined filtering" }
+  ],
+
+  "enumTypes": {
+    "ProfessionType": ["POLITICIAN", "JOURNALIST", "ACADEMIC", "ACTIVIST", "BUSINESS", "CELEBRITY", "RELIGIOUS", "MILITARY", "LEGAL", "MEDICAL", "ARTIST", "ATHLETE", "OTHER"],
+    "Profession": ["POLITICIAN", "DIPLOMAT", "GOVERNMENT_OFFICIAL", "POLITICAL_ADVISOR", "JOURNALIST", "EDITOR", "NEWS_ANCHOR", "COLUMNIST", "COMMENTATOR", "BLOGGER", "PODCASTER", "PROFESSOR", "RESEARCHER", "ACADEMIC_ADMINISTRATOR", "STUDENT", "LAWYER", "JUDGE", "PROSECUTOR", "LEGAL_SCHOLAR", "CEO", "EXECUTIVE", "ENTREPRENEUR", "INVESTOR", "CONSULTANT", "ACTOR", "DIRECTOR", "PRODUCER", "WRITER", "MUSICIAN", "ARTIST", "COMEDIAN", "ACTIVIST", "ORGANIZER", "NGO_LEADER", "ADVOCATE", "CLERGY", "RABBI", "IMAM", "PRIEST", "RELIGIOUS_LEADER", "MILITARY_OFFICER", "INTELLIGENCE_OFFICIAL", "POLICE_OFFICER", "DOCTOR", "NURSE", "RESEARCHER_MEDICAL", "ENGINEER", "DEVELOPER", "TECH_EXECUTIVE", "ATHLETE", "COACH", "SPORTS_EXECUTIVE", "INFLUENCER", "PUBLIC_FIGURE", "OTHER", "UNKNOWN"],
+    "Gender": ["MALE", "FEMALE", "NON_BINARY", "OTHER", "UNKNOWN"],
+    "Industry": ["POLITICS_GOVERNMENT", "MEDIA_JOURNALISM", "EDUCATION_ACADEMIA", "LAW_LEGAL", "BUSINESS_FINANCE", "TECHNOLOGY", "HEALTHCARE", "ENTERTAINMENT", "SPORTS", "NONPROFIT_NGO", "RELIGION", "MILITARY_DEFENSE", "OTHER"],
+    "EducationLevel": ["HIGH_SCHOOL", "SOME_COLLEGE", "BACHELORS", "MASTERS", "DOCTORATE", "PROFESSIONAL", "OTHER"],
+    "CelebrityStatus": ["A_LIST", "B_LIST", "NOTABLE", "NICHE_FAMOUS", "INTERNET_FAMOUS", "LOCAL_CELEBRITY"],
+    "PersonInfluenceLevel": ["GLOBAL", "INTERNATIONAL", "NATIONAL", "REGIONAL", "LOCAL", "NICHE"],
+    "PoliticalAffiliation": ["DEMOCRAT", "REPUBLICAN", "INDEPENDENT_US", "GREEN_US", "LIBERTARIAN_US", "CONSERVATIVE_UK", "LABOUR_UK", "LIBERAL_DEMOCRAT_UK", "GREEN_UK", "LIKUD", "LABOR_IL", "BLUE_WHITE", "RELIGIOUS_ZIONIST", "CONSERVATIVE", "LIBERAL", "SOCIALIST", "COMMUNIST", "NATIONALIST", "NONPARTISAN", "UNKNOWN", "OTHER"],
+    "PoliticalLeaning": ["FAR_LEFT", "LEFT", "CENTER_LEFT", "CENTER", "CENTER_RIGHT", "RIGHT", "FAR_RIGHT", "LIBERTARIAN", "AUTHORITARIAN", "POPULIST", "PROGRESSIVE", "CONSERVATIVE", "SOCIALIST", "COMMUNIST", "FASCIST", "ANARCHIST", "MIXED", "APOLITICAL", "UNKNOWN"],
+    "ReputationStatus": ["EXCELLENT", "GOOD", "MIXED", "DAMAGED", "SEVERELY_DAMAGED", "REHABILITATING"],
+    "PersonVerificationLevel": ["FULLY_VERIFIED", "VERIFIED", "PARTIALLY_VERIFIED", "UNVERIFIED", "DISPUTED"],
+    "VerificationLevel": ["UNVERIFIED", "BASIC", "VERIFIED", "TRUSTED", "FULLY_VERIFIED", "PARTIALLY_VERIFIED", "DISPUTED", "LIKELY_FALSE", "DEBUNKED"],
+    "EmploymentStatus": ["FULL_TIME", "PART_TIME", "CONTRACT", "FREELANCE", "PER_DIEM", "SEASONAL", "TEMPORARY"]
+  },
+
+  "fieldCount": {
+    "directFields": 182,
+    "relationalFields": 8,
+    "totalFields": 190
+  },
+
+  "notes": [
+    "Many fields exist in both legacy and new versions (e.g., birthDate/dateOfBirth, nationality/nationalityArray)",
+    "The nationality system uses both cached fields and a relational PersonNationality table for flexibility",
+    "Profession fields support both single enum value and array of values",
+    "Verification has multiple levels of granularity (verificationLevel, personVerificationLevel, isVerified)",
+    "Social media fields are comprehensive but may be incomplete for many persons",
+    "Statistics fields (statementCount, caseCount, etc.) are maintained as denormalized counters",
+    "Many fields are nullable to accommodate incomplete data",
+    "The schema supports extensive political, legal, and controversy tracking"
+  ]
+}

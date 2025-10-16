@@ -14,6 +14,8 @@ interface Person {
   _count?: {
     statements: number
   }
+  completeness?: number
+  missingFields?: string[]
 }
 
 export default function AdminPeople() {
@@ -75,9 +77,14 @@ export default function AdminPeople() {
               <h1>People Management</h1>
               <p className="subtitle">{total} {total === 1 ? 'person' : 'people'} total</p>
             </div>
-            <button onClick={() => router.push('/admin/people/new')} className="btn-primary">
-              <span>➕</span> Add Person
-            </button>
+            <div className="header-actions">
+              <button onClick={() => router.push('/admin/people/audit')} className="btn-secondary">
+                📊 Data Audit
+              </button>
+              <button onClick={() => router.push('/admin/people/new')} className="btn-primary">
+                ➕ Add Person
+              </button>
+            </div>
           </div>
 
           <div className="search-bar">
@@ -130,29 +137,73 @@ export default function AdminPeople() {
                       <th>Name</th>
                       <th>Profession</th>
                       <th>Statements</th>
+                      <th>Completeness</th>
                       <th>Slug</th>
                       <th>Created</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {people.map((person) => (
-                      <tr key={person.id}>
-                        <td className="font-semibold">{person.fullName || `${person.firstName} ${person.lastName}`}</td>
-                        <td>{person.profession || '—'}</td>
-                        <td>{person._count?.statements || 0}</td>
-                        <td><code>{person.slug}</code></td>
-                        <td>{new Date(person.createdAt).toLocaleDateString()}</td>
-                        <td>
-                          <button
-                            onClick={() => router.push(`/admin/people/${person.slug}`)}
-                            className="btn-sm"
-                          >
-                            Edit
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
+                    {people.map((person) => {
+                      const completeness = person.completeness ?? 100
+                      const hasIssues = completeness < 100
+                      const missingCount = person.missingFields?.length || 0
+
+                      return (
+                        <tr key={person.id}>
+                          <td className="font-semibold">
+                            {person.fullName || `${person.firstName} ${person.lastName}`}
+                          </td>
+                          <td>{person.profession || '—'}</td>
+                          <td>{person._count?.statements || 0}</td>
+                          <td>
+                            <div className="completeness-cell">
+                              <div className="completeness-bar">
+                                <div
+                                  className={`completeness-fill ${
+                                    completeness >= 80 ? 'high' :
+                                    completeness >= 50 ? 'medium' :
+                                    'low'
+                                  }`}
+                                  style={{ width: `${completeness}%` }}
+                                />
+                              </div>
+                              <span className="completeness-text">{Math.round(completeness)}%</span>
+                              {hasIssues && (
+                                <div className="warning-icon-wrapper">
+                                  <span className="warning-icon" title={`${missingCount} field${missingCount !== 1 ? 's' : ''} incomplete`}>
+                                    ⚠️
+                                  </span>
+                                  <div className="tooltip">
+                                    <div className="tooltip-header">
+                                      {missingCount} Incomplete Field{missingCount !== 1 ? 's' : ''}
+                                    </div>
+                                    <div className="tooltip-body">
+                                      {person.missingFields?.slice(0, 10).map((field, idx) => (
+                                        <div key={idx} className="tooltip-field">• {field}</div>
+                                      ))}
+                                      {missingCount > 10 && (
+                                        <div className="tooltip-more">... and {missingCount - 10} more</div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                          <td><code>{person.slug}</code></td>
+                          <td>{new Date(person.createdAt).toLocaleDateString()}</td>
+                          <td>
+                            <button
+                              onClick={() => router.push(`/admin/people/${person.slug}`)}
+                              className="btn-sm"
+                            >
+                              Edit
+                            </button>
+                          </td>
+                        </tr>
+                      )
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -205,6 +256,31 @@ export default function AdminPeople() {
             margin: 0;
             font-size: 0.9375rem;
             color: #64748b;
+          }
+
+          .header-actions {
+            display: flex;
+            gap: 0.75rem;
+          }
+
+          .btn-secondary {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: #475569;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .btn-secondary:hover {
+            background: #f8fafc;
+            border-color: #94a3b8;
           }
 
           .search-bar {
@@ -434,6 +510,137 @@ export default function AdminPeople() {
             border-radius: 8px;
             margin-bottom: 1.5rem;
             font-weight: 500;
+          }
+
+          .completeness-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+          }
+
+          .completeness-bar {
+            width: 80px;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+          }
+
+          .completeness-fill {
+            height: 100%;
+            transition: width 0.3s;
+            border-radius: 4px;
+          }
+
+          .completeness-fill.high {
+            background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+          }
+
+          .completeness-fill.medium {
+            background: linear-gradient(90deg, #f59e0b 0%, #d97706 100%);
+          }
+
+          .completeness-fill.low {
+            background: linear-gradient(90deg, #ef4444 0%, #dc2626 100%);
+          }
+
+          .completeness-text {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: #64748b;
+            min-width: 40px;
+          }
+
+          .warning-icon-wrapper {
+            position: relative;
+            display: inline-block;
+          }
+
+          .warning-icon {
+            cursor: help;
+            font-size: 1rem;
+            display: inline-block;
+            transition: transform 0.2s;
+          }
+
+          .warning-icon:hover {
+            transform: scale(1.2);
+          }
+
+          .tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-8px);
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            padding: 0;
+            min-width: 200px;
+            max-width: 300px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 1000;
+            pointer-events: none;
+          }
+
+          .warning-icon-wrapper:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
+          }
+
+          .tooltip-header {
+            background: #f8fafc;
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            color: #0f172a;
+            border-radius: 8px 8px 0 0;
+          }
+
+          .tooltip-body {
+            padding: 0.75rem;
+            max-height: 200px;
+            overflow-y: auto;
+          }
+
+          .tooltip-field {
+            font-size: 0.8125rem;
+            color: #64748b;
+            padding: 0.25rem 0;
+            line-height: 1.4;
+          }
+
+          .tooltip-more {
+            font-size: 0.8125rem;
+            color: #94a3b8;
+            font-style: italic;
+            padding: 0.25rem 0;
+            margin-top: 0.25rem;
+          }
+
+          @media (max-width: 768px) {
+            .header-actions {
+              flex-direction: column;
+              width: 100%;
+            }
+
+            .header-actions button {
+              width: 100%;
+            }
+
+            .completeness-bar {
+              width: 60px;
+            }
+
+            .tooltip {
+              left: auto;
+              right: 0;
+              transform: translateY(-8px);
+            }
           }
         `}</style>
       </AdminLayout>
