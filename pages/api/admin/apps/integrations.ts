@@ -40,6 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         provider,
         name,
         status: 'connected',
+        lastPing: 0,
         config,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
