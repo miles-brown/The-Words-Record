@@ -215,7 +215,7 @@ export default function CasesPage() {
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          margin-bottom: 2rem;
+          margin-bottom: 1.5rem;
           gap: 1rem;
         }
 

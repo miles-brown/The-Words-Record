@@ -1,3 +1,8 @@
+/**
+ * Admin User Management Page - Rebuilt to match Admin Design System
+ * Create, edit, and manage admin users with role-based permissions
+ */
+
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import { format } from 'date-fns'
@@ -161,88 +166,342 @@ export default function UsersPage() {
 
   return (
     <AdminLayout title="User Management">
-      <div className="users-page">
-        <div className="page-header">
+      <div>
+        {/* Page Header */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          marginBottom: '1.5rem',
+          gap: '1rem',
+          flexWrap: 'wrap'
+        }}>
           <div>
-            <h2>Users</h2>
-            <p>Manage admin users and their permissions</p>
+            <h2 style={{
+              fontSize: '1.5rem',
+              fontWeight: 600,
+              color: 'var(--admin-text-primary)',
+              marginBottom: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem'
+            }}>
+              👥 User Management
+            </h2>
+            <p style={{
+              fontSize: '0.875rem',
+              color: 'var(--admin-text-secondary)',
+              margin: 0
+            }}>
+              Manage admin users and their permissions
+            </p>
           </div>
           <button
             type="button"
-            className="btn-primary"
             onClick={() => setShowCreateModal(true)}
+            style={{
+              padding: '0.75rem 1.5rem',
+              backgroundColor: 'var(--admin-accent)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '0.75rem',
+              fontSize: '0.875rem',
+              fontWeight: 600,
+              cursor: 'pointer',
+              transition: 'all 0.2s',
+              boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+            }}
           >
             + Create User
           </button>
         </div>
 
+        {/* Error Message */}
         {error && (
-          <div className="error-message">{error}</div>
+          <div style={{
+            backgroundColor: '#FEE2E2',
+            border: '1px solid #FECACA',
+            color: '#DC2626',
+            padding: '1rem',
+            borderRadius: '0.75rem',
+            marginBottom: '1.5rem',
+            fontWeight: 500,
+            fontSize: '0.875rem'
+          }}>
+            {error}
+          </div>
         )}
 
+        {/* Loading State */}
         {loading ? (
-          <div className="loading">Loading users...</div>
+          <div style={{
+            textAlign: 'center',
+            padding: '4rem',
+            color: 'var(--admin-text-secondary)'
+          }}>
+            <div style={{
+              width: '3rem',
+              height: '3rem',
+              border: '4px solid var(--admin-border)',
+              borderTopColor: 'var(--admin-accent)',
+              borderRadius: '50%',
+              animation: 'spin 1s linear infinite',
+              margin: '0 auto 1rem'
+            }}></div>
+            Loading users...
+          </div>
         ) : (
-          <div className="users-table-container">
-            <table className="users-table">
+          /* Users Table */
+          <div style={{
+            backgroundColor: 'var(--admin-card-bg)',
+            border: '1px solid var(--admin-border)',
+            borderRadius: '1rem',
+            boxShadow: 'var(--admin-shadow-light)',
+            overflowX: 'auto'
+          }}>
+            <table style={{
+              width: '100%',
+              borderCollapse: 'collapse'
+            }}>
               <thead>
-                <tr>
-                  <th>User</th>
-                  <th>Email</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Last Login</th>
-                  <th>Sessions</th>
-                  <th>Created</th>
-                  <th>Actions</th>
+                <tr style={{ borderBottom: '2px solid var(--admin-border)' }}>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>User</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Email</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Role</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Status</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Last Login</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'center',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Sessions</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'left',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Created</th>
+                  <th style={{
+                    padding: '1rem',
+                    textAlign: 'right',
+                    fontWeight: 600,
+                    fontSize: '0.75rem',
+                    color: 'var(--admin-text-secondary)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    backgroundColor: 'var(--admin-bg)'
+                  }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr key={user.id} className={!user.isActive ? 'inactive' : ''}>
-                    <td>
-                      <div className="user-cell">
-                        <strong>{user.username}</strong>
+                  <tr key={user.id} style={{
+                    borderBottom: '1px solid var(--admin-border)',
+                    opacity: user.isActive ? 1 : 0.6,
+                    transition: 'background-color 0.2s'
+                  }}>
+                    <td style={{ padding: '1rem' }}>
+                      <div>
+                        <div style={{
+                          fontWeight: 600,
+                          color: 'var(--admin-text-primary)',
+                          marginBottom: '0.25rem'
+                        }}>
+                          {user.username}
+                        </div>
                         {(user.firstName || user.lastName) && (
-                          <small>{user.firstName} {user.lastName}</small>
+                          <div style={{
+                            fontSize: '0.813rem',
+                            color: 'var(--admin-text-secondary)'
+                          }}>
+                            {user.firstName} {user.lastName}
+                          </div>
                         )}
                       </div>
                     </td>
-                    <td>{user.email}</td>
-                    <td>
-                      <span className={`role-badge role-${user.role.toLowerCase()}`}>
+                    <td style={{
+                      padding: '1rem',
+                      fontSize: '0.875rem',
+                      color: 'var(--admin-text-primary)'
+                    }}>
+                      {user.email}
+                    </td>
+                    <td style={{ padding: '1rem' }}>
+                      <span style={{
+                        display: 'inline-block',
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        textTransform: 'uppercase',
+                        backgroundColor: user.role === 'ADMIN' ? '#DBEAFE' : user.role === 'EDITOR' ? '#F3E5F5' : '#E8F5E9',
+                        color: user.role === 'ADMIN' ? '#1E40AF' : user.role === 'EDITOR' ? '#6B21A8' : '#15803D'
+                      }}>
                         {user.role}
                       </span>
                     </td>
-                    <td>
-                      <div className="status-cell">
-                        <span className={`status-dot ${user.isActive ? 'active' : 'inactive'}`}></span>
-                        {user.isActive ? 'Active' : 'Inactive'}
-                        {user.mfaEnabled && <span className="mfa-badge">MFA</span>}
-                        {!user.emailVerified && <span className="unverified-badge">Unverified</span>}
+                    <td style={{ padding: '1rem' }}>
+                      <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                        flexWrap: 'wrap'
+                      }}>
+                        <span style={{
+                          width: '8px',
+                          height: '8px',
+                          borderRadius: '50%',
+                          backgroundColor: user.isActive ? '#10B981' : '#9CA3AF'
+                        }}></span>
+                        <span style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--admin-text-primary)'
+                        }}>
+                          {user.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                        {user.mfaEnabled && (
+                          <span style={{
+                            padding: '0.125rem 0.5rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.688rem',
+                            fontWeight: 600,
+                            backgroundColor: '#D1FAE5',
+                            color: '#065F46'
+                          }}>
+                            MFA
+                          </span>
+                        )}
+                        {!user.emailVerified && (
+                          <span style={{
+                            padding: '0.125rem 0.5rem',
+                            borderRadius: '0.375rem',
+                            fontSize: '0.688rem',
+                            fontWeight: 600,
+                            backgroundColor: '#FEF3C7',
+                            color: '#92400E'
+                          }}>
+                            Unverified
+                          </span>
+                        )}
                       </div>
                     </td>
-                    <td>
+                    <td style={{
+                      padding: '1rem',
+                      fontSize: '0.875rem',
+                      color: 'var(--admin-text-secondary)'
+                    }}>
                       {user.lastLogin
                         ? format(new Date(user.lastLogin), 'MMM d, yyyy HH:mm')
                         : 'Never'
                       }
                     </td>
-                    <td className="center">{user._count.sessions}</td>
-                    <td>{format(new Date(user.createdAt), 'MMM d, yyyy')}</td>
-                    <td>
-                      <div className="actions">
+                    <td style={{
+                      padding: '1rem',
+                      textAlign: 'center',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      color: 'var(--admin-text-primary)'
+                    }}>
+                      {user._count.sessions}
+                    </td>
+                    <td style={{
+                      padding: '1rem',
+                      fontSize: '0.875rem',
+                      color: 'var(--admin-text-secondary)'
+                    }}>
+                      {format(new Date(user.createdAt), 'MMM d, yyyy')}
+                    </td>
+                    <td style={{ padding: '1rem' }}>
+                      <div style={{
+                        display: 'flex',
+                        gap: '0.5rem',
+                        justifyContent: 'flex-end'
+                      }}>
                         <button
                           type="button"
-                          className="btn-sm btn-secondary"
                           onClick={() => toggleUserStatus(user.id, user.isActive)}
+                          style={{
+                            padding: '0.375rem 0.75rem',
+                            fontSize: '0.813rem',
+                            fontWeight: 500,
+                            border: '1px solid var(--admin-border)',
+                            borderRadius: '0.5rem',
+                            backgroundColor: 'white',
+                            color: 'var(--admin-text-primary)',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                          }}
                         >
                           {user.isActive ? 'Deactivate' : 'Activate'}
                         </button>
                         <button
                           type="button"
-                          className="btn-sm btn-danger"
                           onClick={() => deleteUser(user.id, user.username)}
+                          style={{
+                            padding: '0.375rem 0.75rem',
+                            fontSize: '0.813rem',
+                            fontWeight: 500,
+                            border: '1px solid #FCA5A5',
+                            borderRadius: '0.5rem',
+                            backgroundColor: '#FEE2E2',
+                            color: '#DC2626',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s'
+                          }}
                         >
                           Delete
                         </button>
@@ -257,66 +516,215 @@ export default function UsersPage() {
 
         {/* Create User Modal */}
         {showCreateModal && (
-          <div className="modal-overlay" onClick={() => setShowCreateModal(false)}>
-            <div className="modal" onClick={(e) => e.stopPropagation()}>
-              <div className="modal-header">
-                <h3>Create New User</h3>
-                <button type="button" onClick={() => setShowCreateModal(false)}>✕</button>
+          <div
+            onClick={() => setShowCreateModal(false)}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              padding: '1rem'
+            }}
+          >
+            <div
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                backgroundColor: 'white',
+                borderRadius: '1rem',
+                padding: '2rem',
+                maxWidth: '600px',
+                width: '100%',
+                maxHeight: '90vh',
+                overflowY: 'auto',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+              }}
+            >
+              {/* Modal Header */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: '1.5rem'
+              }}>
+                <h3 style={{
+                  margin: 0,
+                  fontSize: '1.25rem',
+                  fontWeight: 600,
+                  color: 'var(--admin-text-primary)'
+                }}>
+                  Create New User
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowCreateModal(false)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    fontSize: '1.5rem',
+                    cursor: 'pointer',
+                    color: 'var(--admin-text-secondary)',
+                    width: '30px',
+                    height: '30px',
+                    borderRadius: '0.5rem',
+                    transition: 'all 0.2s'
+                  }}
+                >
+                  ✕
+                </button>
               </div>
 
+              {/* Form */}
               <form onSubmit={handleCreateUser}>
                 {formError && (
-                  <div className="form-error">{formError}</div>
+                  <div style={{
+                    backgroundColor: '#FEE2E2',
+                    border: '1px solid #FECACA',
+                    color: '#DC2626',
+                    padding: '0.75rem 1rem',
+                    borderRadius: '0.5rem',
+                    marginBottom: '1rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500
+                  }}>
+                    {formError}
+                  </div>
                 )}
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Username *</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '0.5rem',
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem'
+                    }}>
+                      Username *
+                    </label>
                     <input
                       type="text"
                       value={formData.username}
                       onChange={(e) => setFormData({...formData, username: e.target.value})}
                       required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        boxSizing: 'border-box'
+                      }}
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>Email *</label>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '0.5rem',
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem'
+                    }}>
+                      Email *
+                    </label>
                     <input
                       type="email"
                       value={formData.email}
                       onChange={(e) => setFormData({...formData, email: e.target.value})}
                       required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        boxSizing: 'border-box'
+                      }}
                     />
                   </div>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>First Name</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '0.5rem',
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem'
+                    }}>
+                      First Name
+                    </label>
                     <input
                       type="text"
                       value={formData.firstName}
                       onChange={(e) => setFormData({...formData, firstName: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        boxSizing: 'border-box'
+                      }}
                     />
                   </div>
 
-                  <div className="form-group">
-                    <label>Last Name</label>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '0.5rem',
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem'
+                    }}>
+                      Last Name
+                    </label>
                     <input
                       type="text"
                       value={formData.lastName}
                       onChange={(e) => setFormData({...formData, lastName: e.target.value})}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        boxSizing: 'border-box'
+                      }}
                     />
                   </div>
                 </div>
 
-                <div className="form-group">
-                  <label>Role *</label>
+                <div style={{ marginBottom: '1rem' }}>
+                  <label style={{
+                    display: 'block',
+                    marginBottom: '0.5rem',
+                    fontWeight: 500,
+                    color: 'var(--admin-text-primary)',
+                    fontSize: '0.875rem'
+                  }}>
+                    Role *
+                  </label>
                   <select
                     value={formData.role}
                     onChange={(e) => setFormData({...formData, role: e.target.value})}
                     required
+                    style={{
+                      width: '100%',
+                      padding: '0.75rem',
+                      border: '1px solid var(--admin-border)',
+                      borderRadius: '0.5rem',
+                      fontSize: '0.875rem',
+                      boxSizing: 'border-box',
+                      backgroundColor: 'white'
+                    }}
                   >
                     <option value="ADMIN">Admin</option>
                     <option value="EDITOR">Editor</option>
@@ -324,35 +732,107 @@ export default function UsersPage() {
                   </select>
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Password *</label>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '0.5rem',
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem'
+                    }}>
+                      Password *
+                    </label>
                     <input
                       type="password"
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
                       required
                       minLength={8}
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        boxSizing: 'border-box'
+                      }}
                     />
-                    <small>Minimum 8 characters</small>
+                    <small style={{
+                      display: 'block',
+                      marginTop: '0.25rem',
+                      color: 'var(--admin-text-secondary)',
+                      fontSize: '0.75rem'
+                    }}>
+                      Minimum 8 characters
+                    </small>
                   </div>
 
-                  <div className="form-group">
-                    <label>Confirm Password *</label>
+                  <div>
+                    <label style={{
+                      display: 'block',
+                      marginBottom: '0.5rem',
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem'
+                    }}>
+                      Confirm Password *
+                    </label>
                     <input
                       type="password"
                       value={formData.confirmPassword}
                       onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
                       required
+                      style={{
+                        width: '100%',
+                        padding: '0.75rem',
+                        border: '1px solid var(--admin-border)',
+                        borderRadius: '0.5rem',
+                        fontSize: '0.875rem',
+                        boxSizing: 'border-box'
+                      }}
                     />
                   </div>
                 </div>
 
-                <div className="modal-actions">
-                  <button type="button" className="btn-secondary" onClick={() => setShowCreateModal(false)}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '0.75rem',
+                  marginTop: '1.5rem'
+                }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowCreateModal(false)}
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      border: '1px solid var(--admin-border)',
+                      borderRadius: '0.75rem',
+                      backgroundColor: 'white',
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s'
+                    }}
+                  >
                     Cancel
                   </button>
-                  <button type="submit" className="btn-primary">
+                  <button
+                    type="submit"
+                    style={{
+                      padding: '0.75rem 1.5rem',
+                      border: 'none',
+                      borderRadius: '0.75rem',
+                      backgroundColor: 'var(--admin-accent)',
+                      color: 'white',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      boxShadow: '0 2px 8px rgba(59, 130, 246, 0.3)'
+                    }}
+                  >
                     Create User
                   </button>
                 </div>
@@ -360,355 +840,48 @@ export default function UsersPage() {
             </div>
           </div>
         )}
+
+        <style jsx>{`
+          @keyframes spin {
+            to { transform: rotate(360deg); }
+          }
+
+          table tbody tr:hover {
+            background-color: var(--admin-bg);
+          }
+
+          button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+          }
+
+          button:active {
+            transform: translateY(0);
+          }
+
+          input:focus,
+          select:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+          }
+
+          @media (max-width: 768px) {
+            table {
+              font-size: 0.813rem;
+            }
+
+            th, td {
+              padding: 0.75rem 0.5rem !important;
+            }
+
+            button {
+              font-size: 0.75rem !important;
+              padding: 0.25rem 0.5rem !important;
+            }
+          }
+        `}</style>
       </div>
-
-      <style jsx>{`
-        .users-page {
-          max-width: 1400px;
-        }
-
-        .page-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: flex-start;
-          margin-bottom: 2rem;
-          gap: 1rem;
-        }
-
-        .page-header h2 {
-          margin: 0 0 0.5rem 0;
-          color: #2c3e50;
-          font-size: 1.75rem;
-        }
-
-        .page-header p {
-          margin: 0;
-          color: #6c757d;
-        }
-
-        .btn-primary {
-          background: #3498db;
-          color: white;
-          border: none;
-          padding: 0.75rem 1.5rem;
-          border-radius: 6px;
-          cursor: pointer;
-          font-size: 0.95rem;
-          font-weight: 500;
-          transition: background 0.2s;
-        }
-
-        .btn-primary:hover {
-          background: #2980b9;
-        }
-
-        .btn-secondary {
-          background: #6c757d;
-          color: white;
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 0.875rem;
-          transition: background 0.2s;
-        }
-
-        .btn-secondary:hover {
-          background: #5a6268;
-        }
-
-        .btn-danger {
-          background: #e74c3c;
-          color: white;
-          border: none;
-          padding: 0.5rem 1rem;
-          border-radius: 4px;
-          cursor: pointer;
-          font-size: 0.875rem;
-          transition: background 0.2s;
-        }
-
-        .btn-danger:hover {
-          background: #c0392b;
-        }
-
-        .btn-sm {
-          padding: 0.375rem 0.75rem;
-          font-size: 0.813rem;
-        }
-
-        .error-message {
-          background: #fee;
-          border: 1px solid #fcc;
-          color: #c33;
-          padding: 1rem;
-          border-radius: 6px;
-          margin-bottom: 1.5rem;
-        }
-
-        .loading {
-          text-align: center;
-          padding: 3rem;
-          color: #6c757d;
-        }
-
-        .users-table-container {
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-          overflow-x: auto;
-        }
-
-        .users-table {
-          width: 100%;
-          border-collapse: collapse;
-        }
-
-        .users-table th {
-          background: #f8f9fa;
-          padding: 1rem;
-          text-align: left;
-          font-weight: 600;
-          color: #2c3e50;
-          border-bottom: 2px solid #e0e6ed;
-          font-size: 0.875rem;
-          text-transform: uppercase;
-          letter-spacing: 0.5px;
-        }
-
-        .users-table td {
-          padding: 1rem;
-          border-bottom: 1px solid #e0e6ed;
-        }
-
-        .users-table tr.inactive {
-          opacity: 0.6;
-        }
-
-        .users-table tr:hover {
-          background: #f8f9fa;
-        }
-
-        .user-cell {
-          display: flex;
-          flex-direction: column;
-          gap: 0.25rem;
-        }
-
-        .user-cell strong {
-          color: #2c3e50;
-        }
-
-        .user-cell small {
-          color: #6c757d;
-          font-size: 0.813rem;
-        }
-
-        .role-badge {
-          display: inline-block;
-          padding: 0.25rem 0.75rem;
-          border-radius: 12px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-        }
-
-        .role-admin {
-          background: #e3f2fd;
-          color: #1976d2;
-        }
-
-        .role-editor {
-          background: #f3e5f5;
-          color: #7b1fa2;
-        }
-
-        .role-viewer {
-          background: #e8f5e9;
-          color: #388e3c;
-        }
-
-        .status-cell {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          flex-wrap: wrap;
-        }
-
-        .status-dot {
-          width: 8px;
-          height: 8px;
-          border-radius: 50%;
-        }
-
-        .status-dot.active {
-          background: #27ae60;
-        }
-
-        .status-dot.inactive {
-          background: #95a5a6;
-        }
-
-        .mfa-badge {
-          background: #2ecc71;
-          color: white;
-          padding: 0.125rem 0.5rem;
-          border-radius: 10px;
-          font-size: 0.688rem;
-          font-weight: 600;
-        }
-
-        .unverified-badge {
-          background: #f39c12;
-          color: white;
-          padding: 0.125rem 0.5rem;
-          border-radius: 10px;
-          font-size: 0.688rem;
-          font-weight: 600;
-        }
-
-        .center {
-          text-align: center;
-        }
-
-        .actions {
-          display: flex;
-          gap: 0.5rem;
-        }
-
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0,0,0,0.5);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 1000;
-          padding: 1rem;
-        }
-
-        .modal {
-          background: white;
-          border-radius: 8px;
-          padding: 2rem;
-          max-width: 600px;
-          width: 100%;
-          max-height: 90vh;
-          overflow-y: auto;
-        }
-
-        .modal-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1.5rem;
-        }
-
-        .modal-header h3 {
-          margin: 0;
-          color: #2c3e50;
-        }
-
-        .modal-header button {
-          background: none;
-          border: none;
-          font-size: 1.5rem;
-          cursor: pointer;
-          color: #6c757d;
-          padding: 0;
-          width: 30px;
-          height: 30px;
-          border-radius: 4px;
-        }
-
-        .modal-header button:hover {
-          background: #f8f9fa;
-        }
-
-        .form-error {
-          background: #fee;
-          border: 1px solid #fcc;
-          color: #c33;
-          padding: 0.75rem;
-          border-radius: 4px;
-          margin-bottom: 1rem;
-          font-size: 0.875rem;
-        }
-
-        .form-row {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 1rem;
-        }
-
-        .form-group {
-          margin-bottom: 1rem;
-        }
-
-        .form-group label {
-          display: block;
-          margin-bottom: 0.5rem;
-          font-weight: 500;
-          color: #2c3e50;
-          font-size: 0.875rem;
-        }
-
-        .form-group input,
-        .form-group select {
-          width: 100%;
-          padding: 0.75rem;
-          border: 1px solid #e0e6ed;
-          border-radius: 4px;
-          font-size: 0.938rem;
-          box-sizing: border-box;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-          outline: none;
-          border-color: #3498db;
-        }
-
-        .form-group small {
-          display: block;
-          margin-top: 0.25rem;
-          color: #6c757d;
-          font-size: 0.813rem;
-        }
-
-        .modal-actions {
-          display: flex;
-          justify-content: flex-end;
-          gap: 0.75rem;
-          margin-top: 1.5rem;
-        }
-
-        @media (max-width: 768px) {
-          .page-header {
-            flex-direction: column;
-          }
-
-          .form-row {
-            grid-template-columns: 1fr;
-          }
-
-          .users-table {
-            font-size: 0.875rem;
-          }
-
-          .users-table th,
-          .users-table td {
-            padding: 0.75rem 0.5rem;
-          }
-
-          .actions {
-            flex-direction: column;
-          }
-        }
-      `}</style>
     </AdminLayout>
   )
 }

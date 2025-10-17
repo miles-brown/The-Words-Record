@@ -58,23 +58,51 @@ async function handleGet(
   try {
     const source = await prisma.source.findUnique({
       where: { id },
-      select: {
-        id: true,
-        title: true,
-        url: true,
-        publication: true,
-        author: true,
-        publishDate: true,
-        verificationStatus: true,
-        verificationDate: true,
-        verifiedBy: true,
-        sourceType: true,
-        sourceLevel: true,
-        credibilityLevel: true,
-        credibilityScore: true,
-        verificationNotes: true,
-        createdAt: true,
-        updatedAt: true,
+      include: {
+        mediaOutlet: {
+          select: {
+            id: true,
+            organization: {
+              select: {
+                id: true,
+                name: true,
+                slug: true
+              }
+            }
+          }
+        },
+        journalist: {
+          select: {
+            id: true,
+            person: {
+              select: {
+                id: true,
+                name: true,
+                slug: true
+              }
+            }
+          }
+        },
+        case: {
+          select: {
+            id: true,
+            title: true,
+            slug: true
+          }
+        },
+        statement: {
+          select: {
+            id: true,
+            content: true
+          }
+        },
+        repercussion: {
+          select: {
+            id: true,
+            type: true,
+            description: true
+          }
+        },
         _count: {
           select: {
             primaryForStatements: true
@@ -108,16 +136,7 @@ async function handlePatch(
   username?: string
 ) {
   try {
-    const {
-      title,
-      url,
-      publication,
-      author,
-      publishDate,
-      sourceType,
-      credibilityLevel,
-      isVerified
-    } = req.body
+    const body = req.body
 
     // Check if source exists
     const existingSource = await prisma.source.findUnique({
@@ -131,20 +150,100 @@ async function handlePatch(
     // Build update data
     const updateData: any = {}
 
-    if (title !== undefined) updateData.title = title
-    if (url !== undefined) updateData.url = url
-    if (publication !== undefined) updateData.publication = publication
-    if (author !== undefined) updateData.author = author
-    if (publishDate !== undefined) updateData.publishDate = publishDate ? new Date(publishDate) : null
-    if (sourceType !== undefined) updateData.sourceType = sourceType
-    if (credibilityLevel !== undefined) updateData.credibilityLevel = credibilityLevel
+    // Basic info
+    if (body.title !== undefined) updateData.title = body.title
+    if (body.url !== undefined) updateData.url = body.url || null
+    if (body.publication !== undefined) updateData.publication = body.publication || null
+    if (body.publicationSlug !== undefined) updateData.publicationSlug = body.publicationSlug || null
+    if (body.publicationSection !== undefined) updateData.publicationSection = body.publicationSection || null
+    if (body.author !== undefined) updateData.author = body.author || null
+    if (body.additionalAuthors !== undefined) updateData.additionalAuthors = body.additionalAuthors || []
 
-    // Handle verification status
-    if (isVerified === true && existingSource.verificationStatus !== VerificationStatus.VERIFIED) {
+    // Dates
+    if (body.publishDate !== undefined) updateData.publishDate = body.publishDate ? new Date(body.publishDate) : null
+    if (body.accessDate !== undefined) updateData.accessDate = body.accessDate ? new Date(body.accessDate) : null
+
+    // Classification
+    if (body.sourceType !== undefined) updateData.sourceType = body.sourceType
+    if (body.sourceLevel !== undefined) updateData.sourceLevel = body.sourceLevel
+    if (body.contentType !== undefined) updateData.contentType = body.contentType
+
+    // Credibility
+    if (body.credibility !== undefined) updateData.credibility = body.credibility
+    if (body.credibilityLevel !== undefined) updateData.credibilityLevel = body.credibilityLevel
+    if (body.credibilityScore !== undefined) updateData.credibilityScore = body.credibilityScore ? parseFloat(body.credibilityScore) : null
+
+    // Verification
+    if (body.verificationStatus !== undefined) updateData.verificationStatus = body.verificationStatus
+    if (body.verificationNotes !== undefined) updateData.verificationNotes = body.verificationNotes || null
+
+    // Fact checking
+    if (body.factCheckStatus !== undefined) updateData.factCheckStatus = body.factCheckStatus
+    if (body.factCheckUrl !== undefined) updateData.factCheckUrl = body.factCheckUrl || null
+    if (body.factCheckBy !== undefined) updateData.factCheckBy = body.factCheckBy || null
+
+    // Archival
+    if (body.isArchived !== undefined) updateData.isArchived = body.isArchived
+    if (body.archiveUrl !== undefined) updateData.archiveUrl = body.archiveUrl || null
+    if (body.archiveDate !== undefined) updateData.archiveDate = body.archiveDate ? new Date(body.archiveDate) : null
+    if (body.archiveMethod !== undefined) updateData.archiveMethod = body.archiveMethod
+    if (body.archiveHash !== undefined) updateData.archiveHash = body.archiveHash || null
+    if (body.requiresArchival !== undefined) updateData.requiresArchival = body.requiresArchival
+    if (body.archivalPriority !== undefined) updateData.archivalPriority = body.archivalPriority ? parseInt(body.archivalPriority) : null
+    if (body.contentSnapshot !== undefined) updateData.contentSnapshot = body.contentSnapshot || null
+    if (body.screenshotUrl !== undefined) updateData.screenshotUrl = body.screenshotUrl || null
+    if (body.pdfUrl !== undefined) updateData.pdfUrl = body.pdfUrl || null
+
+    // Quality indicators
+    if (body.qualityScore !== undefined) updateData.qualityScore = body.qualityScore ? parseInt(body.qualityScore) : null
+    if (body.hasByline !== undefined) updateData.hasByline = body.hasByline
+    if (body.hasMultipleSources !== undefined) updateData.hasMultipleSources = body.hasMultipleSources
+    if (body.hasPaywall !== undefined) updateData.hasPaywall = body.hasPaywall
+    if (body.isOpinion !== undefined) updateData.isOpinion = body.isOpinion
+    if (body.isEditorial !== undefined) updateData.isEditorial = body.isEditorial
+    if (body.isExclusive !== undefined) updateData.isExclusive = body.isExclusive
+    if (body.hasDate !== undefined) updateData.hasDate = body.hasDate
+    if (body.hasSources !== undefined) updateData.hasSources = body.hasSources
+
+    // Content analysis
+    if (body.wordCount !== undefined) updateData.wordCount = body.wordCount ? parseInt(body.wordCount) : null
+    if (body.biasRating !== undefined) updateData.biasRating = body.biasRating
+    if (body.biasNote !== undefined) updateData.biasNote = body.biasNote || null
+    if (body.contentWarning !== undefined) updateData.contentWarning = body.contentWarning || null
+    if (body.isGraphic !== undefined) updateData.isGraphic = body.isGraphic
+    if (body.isSensitive !== undefined) updateData.isSensitive = body.isSensitive
+
+    // Status tracking
+    if (body.isDeleted !== undefined) updateData.isDeleted = body.isDeleted
+    if (body.deletionDate !== undefined) updateData.deletionDate = body.deletionDate ? new Date(body.deletionDate) : null
+    if (body.deletionReason !== undefined) updateData.deletionReason = body.deletionReason || null
+    if (body.isBroken !== undefined) updateData.isBroken = body.isBroken
+    if (body.lastCheckDate !== undefined) updateData.lastCheckDate = body.lastCheckDate ? new Date(body.lastCheckDate) : null
+    if (body.checkFailCount !== undefined) updateData.checkFailCount = body.checkFailCount ? parseInt(body.checkFailCount) : 0
+
+    // Metrics
+    if (body.citationCount !== undefined) updateData.citationCount = body.citationCount ? parseInt(body.citationCount) : 0
+    if (body.viewCount !== undefined) updateData.viewCount = body.viewCount ? parseInt(body.viewCount) : 0
+
+    // Relationships
+    if (body.mediaOutletId !== undefined) updateData.mediaOutletId = body.mediaOutletId || null
+    if (body.journalistId !== undefined) updateData.journalistId = body.journalistId || null
+    if (body.caseId !== undefined) updateData.caseId = body.caseId || null
+    if (body.statementId !== undefined) updateData.statementId = body.statementId || null
+    if (body.repercussionId !== undefined) updateData.repercussionId = body.repercussionId || null
+    if (body.topicId !== undefined) updateData.topicId = body.topicId || null
+
+    // Administrative
+    if (body.publicNotes !== undefined) updateData.publicNotes = body.publicNotes || null
+    if (body.internalNotes !== undefined) updateData.internalNotes = body.internalNotes || null
+    updateData.lastEditedBy = username || actorId
+
+    // Handle legacy isVerified field
+    if (body.isVerified === true && existingSource.verificationStatus !== VerificationStatus.VERIFIED) {
       updateData.verificationStatus = VerificationStatus.VERIFIED
       updateData.verificationDate = new Date()
       updateData.verifiedBy = username || actorId
-    } else if (isVerified === false) {
+    } else if (body.isVerified === false) {
       updateData.verificationStatus = VerificationStatus.UNVERIFIED
       updateData.verificationDate = null
       updateData.verifiedBy = null
@@ -153,21 +252,7 @@ async function handlePatch(
     // Update source
     const source = await prisma.source.update({
       where: { id },
-      data: updateData,
-      select: {
-        id: true,
-        title: true,
-        url: true,
-        publication: true,
-        author: true,
-        publishDate: true,
-        verificationStatus: true,
-        verificationDate: true,
-        verifiedBy: true,
-        sourceType: true,
-        credibilityLevel: true,
-        updatedAt: true
-      }
+      data: updateData
     })
 
     // Log audit event

@@ -161,12 +161,7 @@ export default function AdminDashboard() {
     { icon: '👤', label: 'Add Person', href: '/admin/people/new' },
     { icon: '💬', label: 'Add Statement', href: '/admin/statements/new' },
     { icon: '📰', label: 'Add Source', href: '/admin/sources/new' },
-    { icon: '🏢', label: 'Add Org', href: '/admin/organizations/new' },
-    { icon: '📊', label: 'Analytics', href: '/admin/analytics' },
-    { icon: '⚙️', label: 'Settings', href: '/admin/settings' },
-    { icon: '📥', label: 'Import', href: '/admin/import' },
-    { icon: '📤', label: 'Export', href: '/admin/export' },
-    { icon: '🔍', label: 'Search', href: '/admin/search' }
+    { icon: '🏢', label: 'Add Organization', href: '/admin/organizations/new' }
   ]
 
   return (

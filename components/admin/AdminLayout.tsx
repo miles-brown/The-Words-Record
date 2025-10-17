@@ -17,6 +17,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
   const [user, setUser] = useState<AdminUser | null>(null)
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const router = useRouter()
 
   useEffect(() => {
@@ -47,6 +48,13 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
       router.push('/admin/login')
     } catch (error) {
       console.error('Logout failed:', error)
+    }
+  }
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      router.push(`/admin/search?q=${encodeURIComponent(searchQuery.trim())}`)
     }
   }
 
@@ -89,7 +97,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
     return null // Redirecting to login
   }
 
-  const dashboardItems = [
+  const mainItems = [
     { href: '/admin', label: 'Dashboard', icon: '📊' },
     { href: '/admin/advanced', label: 'Advanced View', icon: '🔬' }
   ]
@@ -103,12 +111,17 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
     { href: '/admin/sources', label: 'Sources', icon: '📰' }
   ]
 
-  const adminItems = [
+  const dataToolsItems = [
+    { href: '/admin/import', label: 'Import', icon: '📥' },
+    { href: '/admin/export', label: 'Export', icon: '📤' }
+  ]
+
+  const systemItems = [
     { href: '/admin/analytics', label: 'Analytics', icon: '📈' },
     { href: '/admin/apps', label: 'Apps', icon: '📱' },
-    { href: '/admin/export', label: 'Export', icon: '📥' },
-    { href: '/admin/users', label: 'Users', icon: '👥' },
     { href: '/admin/security', label: 'Security', icon: '🔐' },
+    { href: '/admin/maintenance', label: 'Maintenance', icon: '🔧' },
+    { href: '/admin/users', label: 'Users', icon: '👥' },
     { href: '/admin/settings', label: 'Settings', icon: '⚙️' }
   ]
 
@@ -144,10 +157,11 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           </div>
 
           <nav className="sidebar-nav">
-            {/* Dashboard Section - Light blue-grey background */}
+            {/* MAIN - Dashboard Section */}
+            <div className="nav-section-label">MAIN</div>
             <div className="nav-section-box dashboard-box">
               <div className="nav-section">
-                {dashboardItems.map((item) => (
+                {mainItems.map((item) => (
                   <Link
                     href={item.href}
                     key={item.href}
@@ -164,7 +178,8 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
             <div className="nav-divider-small"></div>
 
-            {/* Content Management Section - Mid blue-grey background */}
+            {/* CORE CONTENT - Content Management Section */}
+            <div className="nav-section-label">CORE CONTENT</div>
             <div className="nav-section-box content-box">
               <div className="nav-section">
                 {contentItems.map((item) => (
@@ -186,10 +201,34 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
             <div className="nav-divider-small"></div>
 
-            {/* Admin Settings Section - Dark blue-grey background */}
+            {/* DATA TOOLS Section */}
+            <div className="nav-section-label">DATA TOOLS</div>
+            <div className="nav-section-box datatools-box">
+              <div className="nav-section">
+                {dataToolsItems.map((item) => (
+                  <Link
+                    href={item.href}
+                    key={item.href}
+                    className={`nav-item-card datatools-item ${
+                      router.pathname === item.href || router.asPath.startsWith(`${item.href}/`)
+                        ? 'active'
+                        : ''
+                    }`}
+                  >
+                    <span className="nav-icon">{item.icon}</span>
+                    <span className="nav-label">{item.label}</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+
+            <div className="nav-divider-small"></div>
+
+            {/* SYSTEM OPERATIONS Section */}
+            <div className="nav-section-label">SYSTEM OPERATIONS</div>
             <div className="nav-section-box admin-box">
               <div className="nav-section">
-                {adminItems.map((item) => (
+                {systemItems.map((item) => (
                   <Link
                     href={item.href}
                     key={item.href}
@@ -232,6 +271,18 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
             <div>
               <h1 className="admin-page-title">{title}</h1>
             </div>
+            <form onSubmit={handleSearch} className="header-search">
+              <input
+                type="text"
+                placeholder="Search admin..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+              <button type="submit" className="search-button">
+                🔍
+              </button>
+            </form>
             <div className="top-bar-actions">
               <Link href="/" className="admin-btn admin-btn-primary">
                 🌐 View Site
@@ -334,6 +385,15 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           width: 100%;
         }
 
+        .nav-section-label {
+          font-size: 0.65rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          color: rgba(255, 255, 255, 0.5);
+          padding: 0.5rem 0.75rem 0.375rem;
+          text-transform: uppercase;
+        }
+
         .nav-section-box {
           border-radius: 10px;
           padding: 0;
@@ -353,6 +413,12 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         .nav-section-box.content-box {
           background: #324155;
           border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        /* Data tools background */
+        .nav-section-box.datatools-box {
+          background: #2e3d4f;
+          border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         /* Dark blue-grey background for admin group */
@@ -409,6 +475,14 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           color: white;
           transform: translateY(-1px);
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.18);
+        }
+
+        /* Adaptive hover states for data tools background */
+        .nav-item-card.datatools-item:hover {
+          background: rgba(0, 0, 0, 0.15);
+          color: white;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.16);
         }
 
         /* Adaptive hover states for dark background (admin) */
@@ -498,6 +572,8 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           display: flex;
           flex-direction: column;
           min-width: 0;
+          max-height: 100vh;
+          overflow: hidden;
         }
 
         .top-bar {
@@ -508,6 +584,54 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           align-items: center;
           gap: 1rem;
           box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+          position: sticky;
+          top: 0;
+          z-index: 30;
+          flex-shrink: 0;
+        }
+
+        .header-search {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          flex: 1;
+          max-width: 400px;
+          margin-left: auto;
+        }
+
+        .search-input {
+          flex: 1;
+          padding: 0.5rem 0.75rem;
+          border: 1px solid #e0e6ed;
+          border-radius: 6px;
+          font-size: 0.875rem;
+          background: #f8f9fa;
+          transition: all 0.2s;
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: #3498db;
+          background: white;
+          box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .search-button {
+          padding: 0.5rem 0.75rem;
+          background: #3498db;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: all 0.2s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .search-button:hover {
+          background: #2980b9;
+          transform: translateY(-1px);
         }
 
         .sidebar-toggle {
@@ -555,8 +679,9 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         .page-content {
           flex: 1;
-          padding: 2rem;
+          padding: 1rem 2rem 2rem;
           overflow-y: auto;
+          overflow-x: hidden;
         }
 
         @media (min-width: 768px) {
@@ -617,7 +742,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           }
 
           .page-content {
-            padding: 1rem;
+            padding: 0.75rem 1rem 1rem;
           }
 
           .top-bar {
@@ -626,6 +751,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
           .top-bar h1 {
             font-size: 1.25rem;
+          }
+
+          .header-search {
+            display: none;
           }
         }
       `}</style>

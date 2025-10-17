@@ -1,3 +1,8 @@
+/**
+ * Admin Export Page - Rebuilt to match Admin Design System
+ * Export data in various formats with filtering options
+ */
+
 import { useState } from 'react'
 import AdminLayout from '@/components/admin/AdminLayout'
 import Head from 'next/head'
@@ -50,398 +55,472 @@ export default function ExportPage() {
   }
 
   const dataTypes = [
-    { value: 'cases', label: 'Cases', description: 'Export all cases with their metadata' },
-    { value: 'statements', label: 'Statements', description: 'Export all statements' },
-    { value: 'people', label: 'People', description: 'Export all person profiles' },
-    { value: 'organizations', label: 'Organizations', description: 'Export all organizations' },
-    { value: 'sources', label: 'Sources', description: 'Export all source references' },
-    { value: 'all', label: 'Complete Database', description: 'Export everything (large file)' }
+    { value: 'cases', label: 'Cases', icon: '📁', description: 'Export all cases with their metadata' },
+    { value: 'statements', label: 'Statements', icon: '💬', description: 'Export all statements' },
+    { value: 'people', label: 'People', icon: '👤', description: 'Export all person profiles' },
+    { value: 'organizations', label: 'Organizations', icon: '🏢', description: 'Export all organizations' },
+    { value: 'sources', label: 'Sources', icon: '📰', description: 'Export all source references' },
+    { value: 'all', label: 'Complete Database', icon: '💾', description: 'Export everything (large file)' }
   ]
 
   const exportFormats = [
-    { value: 'json', label: 'JSON', description: 'JavaScript Object Notation - structured data' },
-    { value: 'csv', label: 'CSV', description: 'Comma Separated Values - for spreadsheets' },
-    { value: 'xlsx', label: 'Excel (XLSX)', description: 'Microsoft Excel workbook' }
+    { value: 'json', label: 'JSON', icon: '{ }', description: 'JavaScript Object Notation - structured data' },
+    { value: 'csv', label: 'CSV', icon: '📊', description: 'Comma Separated Values - for spreadsheets' },
+    { value: 'xlsx', label: 'Excel', icon: '📗', description: 'Microsoft Excel workbook' }
   ]
 
   return (
     <>
       <Head>
-        <title>Export Data - Admin - The Words Record</title>
+        <title>Export Data - TWR Admin</title>
       </Head>
 
       <AdminLayout title="Export Data">
-        <div className="admin-page">
-          <div className="page-header">
-            <div>
-              <h1>Export Data</h1>
-              <p className="page-subtitle">Download your data in various formats</p>
-            </div>
+        <div className="export-page">
+          {/* Page Header */}
+          <div style={{
+            marginBottom: '2rem'
+          }}>
+            <h2 style={{
+              fontSize: '1.5rem',
+              fontWeight: 600,
+              color: 'var(--admin-text-primary)',
+              marginBottom: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.75rem'
+            }}>
+              📥 Export Data
+            </h2>
+            <p style={{
+              fontSize: '0.875rem',
+              color: 'var(--admin-text-secondary)',
+              margin: 0
+            }}>
+              Download your data in various formats for backup, analysis, or migration
+            </p>
           </div>
 
-          {error && <div className="error-message">{error}</div>}
+          {/* Error Message */}
+          {error && (
+            <div style={{
+              backgroundColor: '#FEE2E2',
+              border: '1px solid #FECACA',
+              color: '#DC2626',
+              padding: '1rem 1.25rem',
+              borderRadius: '0.75rem',
+              marginBottom: '1.5rem',
+              fontWeight: 500,
+              fontSize: '0.875rem'
+            }}>
+              {error}
+            </div>
+          )}
 
-          <div className="export-container">
-            <div className="export-section">
-              <h3>1. Select Data Type</h3>
-              <div className="options-grid">
+          {/* Export Configuration Card */}
+          <div style={{
+            backgroundColor: 'var(--admin-card-bg)',
+            border: '1px solid var(--admin-border)',
+            borderRadius: '1rem',
+            padding: '2rem',
+            boxShadow: 'var(--admin-shadow-light)'
+          }}>
+            {/* Step 1: Select Data Type */}
+            <div style={{ marginBottom: '2.5rem' }}>
+              <h3 style={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                color: 'var(--admin-text-primary)',
+                marginBottom: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '1.75rem',
+                  height: '1.75rem',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--admin-accent)',
+                  color: 'white',
+                  fontSize: '0.875rem',
+                  fontWeight: 600
+                }}>1</span>
+                Select Data Type
+              </h3>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                gap: '1rem'
+              }}>
                 {dataTypes.map((type) => (
-                  <label key={type.value} className={`option-card ${selectedType === type.value ? 'selected' : ''}`}>
+                  <label
+                    key={type.value}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'start',
+                      gap: '0.75rem',
+                      padding: '1rem',
+                      border: `2px solid ${selectedType === type.value ? 'var(--admin-accent)' : 'var(--admin-border)'}`,
+                      borderRadius: '0.75rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      backgroundColor: selectedType === type.value ? 'rgba(59, 130, 246, 0.05)' : 'transparent'
+                    }}
+                  >
                     <input
                       type="radio"
                       name="dataType"
                       value={type.value}
                       checked={selectedType === type.value}
                       onChange={(e) => setSelectedType(e.target.value)}
+                      style={{ marginTop: '0.25rem' }}
                     />
-                    <div className="option-content">
-                      <div className="option-title">{type.label}</div>
-                      <div className="option-description">{type.description}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontWeight: 600,
+                        color: 'var(--admin-text-primary)',
+                        marginBottom: '0.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}>
+                        <span style={{ fontSize: '1.25rem' }}>{type.icon}</span>
+                        {type.label}
+                      </div>
+                      <div style={{
+                        fontSize: '0.813rem',
+                        color: 'var(--admin-text-secondary)',
+                        lineHeight: '1.4'
+                      }}>
+                        {type.description}
+                      </div>
                     </div>
                   </label>
                 ))}
               </div>
             </div>
 
-            <div className="export-section">
-              <h3>2. Select Export Format</h3>
-              <div className="options-grid">
+            {/* Step 2: Select Format */}
+            <div style={{ marginBottom: '2.5rem' }}>
+              <h3 style={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                color: 'var(--admin-text-primary)',
+                marginBottom: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '1.75rem',
+                  height: '1.75rem',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--admin-accent)',
+                  color: 'white',
+                  fontSize: '0.875rem',
+                  fontWeight: 600
+                }}>2</span>
+                Select Export Format
+              </h3>
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                gap: '1rem'
+              }}>
                 {exportFormats.map((format) => (
-                  <label key={format.value} className={`option-card ${selectedFormat === format.value ? 'selected' : ''}`}>
+                  <label
+                    key={format.value}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'start',
+                      gap: '0.75rem',
+                      padding: '1rem',
+                      border: `2px solid ${selectedFormat === format.value ? 'var(--admin-accent)' : 'var(--admin-border)'}`,
+                      borderRadius: '0.75rem',
+                      cursor: 'pointer',
+                      transition: 'all 0.2s',
+                      backgroundColor: selectedFormat === format.value ? 'rgba(59, 130, 246, 0.05)' : 'transparent'
+                    }}
+                  >
                     <input
                       type="radio"
                       name="exportFormat"
                       value={format.value}
                       checked={selectedFormat === format.value}
                       onChange={(e) => setSelectedFormat(e.target.value)}
+                      style={{ marginTop: '0.25rem' }}
                     />
-                    <div className="option-content">
-                      <div className="option-title">{format.label}</div>
-                      <div className="option-description">{format.description}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{
+                        fontWeight: 600,
+                        color: 'var(--admin-text-primary)',
+                        marginBottom: '0.25rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem'
+                      }}>
+                        <span style={{ fontSize: '1.125rem' }}>{format.icon}</span>
+                        {format.label}
+                      </div>
+                      <div style={{
+                        fontSize: '0.813rem',
+                        color: 'var(--admin-text-secondary)',
+                        lineHeight: '1.4'
+                      }}>
+                        {format.description}
+                      </div>
                     </div>
                   </label>
                 ))}
               </div>
             </div>
 
-            <div className="export-section">
-              <h3>3. Export Options</h3>
+            {/* Step 3: Export Options */}
+            <div style={{ marginBottom: '2rem' }}>
+              <h3 style={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                color: 'var(--admin-text-primary)',
+                marginBottom: '1.25rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <span style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '1.75rem',
+                  height: '1.75rem',
+                  borderRadius: '50%',
+                  backgroundColor: 'var(--admin-accent)',
+                  color: 'white',
+                  fontSize: '0.875rem',
+                  fontWeight: 600
+                }}>3</span>
+                Export Options
+              </h3>
 
-              <div className="checkbox-group">
-                <label>
+              {/* Include Relations Checkbox */}
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--admin-bg)',
+                borderRadius: '0.75rem',
+                marginBottom: '1rem'
+              }}>
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  cursor: 'pointer'
+                }}>
                   <input
                     type="checkbox"
                     checked={includeRelations}
                     onChange={(e) => setIncludeRelations(e.target.checked)}
+                    style={{ width: 'auto', cursor: 'pointer' }}
                   />
-                  <span>Include related data</span>
+                  <div>
+                    <span style={{
+                      fontWeight: 500,
+                      color: 'var(--admin-text-primary)'
+                    }}>
+                      Include related data
+                    </span>
+                    <p style={{
+                      fontSize: '0.813rem',
+                      color: 'var(--admin-text-secondary)',
+                      margin: '0.25rem 0 0 0'
+                    }}>
+                      Include relationships (e.g., statements with their people and organizations)
+                    </p>
+                  </div>
                 </label>
-                <small>Include relationships (e.g., statements with their people and organizations)</small>
               </div>
 
-              <div className="date-range-group">
-                <label>Filter by Date Range (Optional)</label>
-                <div className="date-inputs">
+              {/* Date Range Filter */}
+              <div style={{
+                padding: '1rem',
+                backgroundColor: 'var(--admin-bg)',
+                borderRadius: '0.75rem'
+              }}>
+                <label style={{
+                  display: 'block',
+                  marginBottom: '0.75rem',
+                  fontWeight: 500,
+                  color: 'var(--admin-text-primary)',
+                  fontSize: '0.875rem'
+                }}>
+                  Filter by Date Range (Optional)
+                </label>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '1rem',
+                  flexWrap: 'wrap'
+                }}>
                   <input
                     type="date"
                     value={dateRange.start}
                     onChange={(e) => setDateRange(prev => ({ ...prev, start: e.target.value }))}
-                    placeholder="Start date"
+                    style={{
+                      flex: 1,
+                      minWidth: '150px',
+                      padding: '0.75rem',
+                      border: '1px solid var(--admin-border)',
+                      borderRadius: '0.5rem',
+                      fontSize: '0.875rem',
+                      backgroundColor: 'white'
+                    }}
                   />
-                  <span>to</span>
+                  <span style={{ color: 'var(--admin-text-secondary)', fontWeight: 500 }}>to</span>
                   <input
                     type="date"
                     value={dateRange.end}
                     onChange={(e) => setDateRange(prev => ({ ...prev, end: e.target.value }))}
-                    placeholder="End date"
+                    style={{
+                      flex: 1,
+                      minWidth: '150px',
+                      padding: '0.75rem',
+                      border: '1px solid var(--admin-border)',
+                      borderRadius: '0.5rem',
+                      fontSize: '0.875rem',
+                      backgroundColor: 'white'
+                    }}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="export-actions">
+            {/* Export Button */}
+            <div style={{
+              paddingTop: '2rem',
+              borderTop: '1px solid var(--admin-border)',
+              textAlign: 'center'
+            }}>
               <button
                 onClick={handleExport}
                 disabled={exporting}
-                className="btn-export"
+                style={{
+                  padding: '1rem 2.5rem',
+                  background: exporting ? '#9CA3AF' : 'linear-gradient(135deg, #10B981 0%, #059669 100%)',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '0.75rem',
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                  cursor: exporting ? 'not-allowed' : 'pointer',
+                  transition: 'all 0.2s',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.75rem',
+                  boxShadow: exporting ? 'none' : '0 4px 12px rgba(16, 185, 129, 0.3)'
+                }}
               >
                 {exporting ? (
                   <>
-                    <span className="spinner"></span>
+                    <span style={{
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      border: '2px solid #ffffff40',
+                      borderTopColor: '#ffffff',
+                      borderRadius: '50%',
+                      animation: 'spin 0.6s linear infinite'
+                    }}></span>
                     Exporting...
                   </>
                 ) : (
                   <>
-                    <span>⬇</span>
+                    <span style={{ fontSize: '1.25rem' }}>⬇️</span>
                     Export {selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} as {selectedFormat.toUpperCase()}
                   </>
                 )}
               </button>
             </div>
+          </div>
 
-            <div className="export-info">
-              <h4>ℹ️ Export Information</h4>
-              <ul>
-                <li><strong>JSON:</strong> Best for developers and data migration. Preserves all data types and structures.</li>
-                <li><strong>CSV:</strong> Best for spreadsheets and data analysis. Each data type exports as a separate file.</li>
-                <li><strong>Excel:</strong> Best for non-technical users. Each data type appears as a separate sheet.</li>
-              </ul>
-              <p><strong>Note:</strong> Large exports may take several minutes to complete.</p>
-            </div>
+          {/* Information Card */}
+          <div style={{
+            marginTop: '1.5rem',
+            padding: '1.5rem',
+            backgroundColor: 'rgba(59, 130, 246, 0.05)',
+            border: '1px solid rgba(59, 130, 246, 0.2)',
+            borderLeft: '4px solid var(--admin-accent)',
+            borderRadius: '0.75rem'
+          }}>
+            <h4 style={{
+              margin: '0 0 1rem 0',
+              fontSize: '1rem',
+              fontWeight: 600,
+              color: 'var(--admin-text-primary)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <span style={{ fontSize: '1.25rem' }}>ℹ️</span>
+              Export Information
+            </h4>
+            <ul style={{
+              margin: '0 0 1rem 1.5rem',
+              padding: 0,
+              color: 'var(--admin-text-primary)'
+            }}>
+              <li style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                <strong>JSON:</strong> Best for developers and data migration. Preserves all data types and structures.
+              </li>
+              <li style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                <strong>CSV:</strong> Best for spreadsheets and data analysis. Each data type exports as a separate file.
+              </li>
+              <li style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
+                <strong>Excel:</strong> Best for non-technical users. Each data type appears as a separate sheet.
+              </li>
+            </ul>
+            <p style={{
+              margin: 0,
+              color: 'var(--admin-text-secondary)',
+              fontSize: '0.813rem',
+              fontStyle: 'italic'
+            }}>
+              <strong>Note:</strong> Large exports may take several minutes to complete. The file will download automatically when ready.
+            </p>
           </div>
         </div>
 
         <style jsx>{`
-          .admin-page {
-            max-width: 900px;
-          }
-
-          .page-header {
-            margin-bottom: 2rem;
-          }
-
-          .page-header h1 {
-            margin: 0 0 0.5rem 0;
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: #0f172a;
-          }
-
-          .page-subtitle {
-            margin: 0;
-            font-size: 0.9375rem;
-            color: #64748b;
-          }
-
-          .error-message {
-            background: #fee2e2;
-            border: 1px solid #fecaca;
-            color: #991b1b;
-            padding: 1rem 1.25rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
-          }
-
-          .export-container {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border: 1px solid #f3f4f6;
-          }
-
-          .export-section {
-            margin-bottom: 2.5rem;
-          }
-
-          .export-section:last-of-type {
-            margin-bottom: 0;
-          }
-
-          .export-section h3 {
-            margin: 0 0 1.5rem 0;
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: #0f172a;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #e5e7eb;
-          }
-
-          .options-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 1rem;
-          }
-
-          .option-card {
-            display: flex;
-            align-items: flex-start;
-            gap: 1rem;
-            padding: 1.25rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-          }
-
-          .option-card:hover {
-            border-color: #3b82f6;
-            background: #f8fafc;
-          }
-
-          .option-card.selected {
-            border-color: #3b82f6;
-            background: #eff6ff;
-          }
-
-          .option-card input[type="radio"] {
-            margin-top: 0.25rem;
-          }
-
-          .option-content {
-            flex: 1;
-          }
-
-          .option-title {
-            font-weight: 600;
-            color: #0f172a;
-            margin-bottom: 0.25rem;
-          }
-
-          .option-description {
-            font-size: 0.875rem;
-            color: #64748b;
-          }
-
-          .checkbox-group {
-            margin-bottom: 1.5rem;
-          }
-
-          .checkbox-group label {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-            font-weight: 500;
-          }
-
-          .checkbox-group input[type="checkbox"] {
-            width: auto;
-          }
-
-          .checkbox-group small {
-            display: block;
-            margin-top: 0.5rem;
-            margin-left: 1.75rem;
-            color: #64748b;
-            font-size: 0.875rem;
-          }
-
-          .date-range-group label {
-            display: block;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
-            color: #0f172a;
-          }
-
-          .date-inputs {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-          }
-
-          .date-inputs input {
-            flex: 1;
-            padding: 0.75rem;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 0.9375rem;
-          }
-
-          .date-inputs input:focus {
-            outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-          }
-
-          .export-actions {
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid #e5e7eb;
-            text-align: center;
-          }
-
-          .btn-export {
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-          }
-
-          .btn-export:hover:not(:disabled) {
-            background: linear-gradient(135deg, #059669 0%, #047857 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
-          }
-
-          .btn-export:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-          }
-
-          .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ffffff40;
-            border-top-color: #ffffff;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-          }
-
           @keyframes spin {
             to { transform: rotate(360deg); }
           }
 
-          .export-info {
-            margin-top: 2rem;
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: 8px;
-            border-left: 4px solid #3b82f6;
+          .export-page input[type="radio"]:focus {
+            outline: 2px solid var(--admin-accent);
+            outline-offset: 2px;
           }
 
-          .export-info h4 {
-            margin: 0 0 1rem 0;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #0f172a;
+          .export-page input[type="checkbox"]:focus {
+            outline: 2px solid var(--admin-accent);
+            outline-offset: 2px;
           }
 
-          .export-info ul {
-            margin: 0 0 1rem 1.5rem;
-            padding: 0;
-          }
-
-          .export-info li {
-            margin-bottom: 0.5rem;
-            color: #475569;
-            font-size: 0.9375rem;
-          }
-
-          .export-info p {
-            margin: 0;
-            color: #64748b;
-            font-size: 0.875rem;
-            font-style: italic;
+          .export-page input[type="date"]:focus {
+            outline: none;
+            border-color: var(--admin-accent);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
           }
 
           @media (max-width: 768px) {
-            .export-container {
-              padding: 1.5rem;
+            .export-page > div:first-child {
+              margin-bottom: 1.5rem;
             }
 
-            .options-grid {
-              grid-template-columns: 1fr;
-            }
-
-            .date-inputs {
-              flex-direction: column;
-              align-items: stretch;
-            }
-
-            .btn-export {
-              width: 100%;
-              justify-content: center;
+            .export-page > div:first-child h2 {
+              font-size: 1.25rem;
             }
           }
         `}</style>
