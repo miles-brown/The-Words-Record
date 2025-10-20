@@ -53,4 +53,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withRole(['SUPERADMIN'])(handler)
+export default withRole(['ADMIN'])(handler)
