@@ -2178,12 +2178,14 @@ enum AuditAction {
   EXPORT
   IMPORT
   LOGIN
+  LOGIN_FAILED
   LOGOUT
   VERIFY
   APPROVE
   REJECT
   ARCHIVE
   RESTORE
+  AUTHZ_DENIED
 }
 
 enum AuditActorType {
