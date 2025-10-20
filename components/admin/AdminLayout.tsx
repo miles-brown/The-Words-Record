@@ -2,6 +2,7 @@ import { useState, useEffect, ReactNode } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
+import ZoomControl from './ZoomControl'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -238,6 +239,9 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
                 ))}
               </div>
             </div>
+
+            {/* Text Size Control */}
+            <ZoomControl />
           </nav>
 
           <div className="sidebar-footer">
