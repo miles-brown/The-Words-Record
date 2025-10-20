@@ -1511,18 +1511,21 @@ export default function CasePage({ caseItem }: CasePageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    // Only get real incidents (multi-statement cases)
+    // Only pre-generate top 50 most recent real incidents at build time
+    // Remaining pages will be generated on-demand with fallback: 'blocking'
     const cases = await prisma.case.findMany({
       where: {
         isRealIncident: true
       },
-      select: { slug: true }
+      select: { slug: true },
+      orderBy: { caseDate: 'desc' },
+      take: 50
     })
 
     if (!cases || !Array.isArray(cases)) {
       return {
         paths: [],
-        fallback: true
+        fallback: 'blocking'
       }
     }
 
@@ -1532,13 +1535,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
     return {
       paths,
-      fallback: true
+      fallback: 'blocking' // Generate remaining pages on-demand
     }
   } catch (error) {
     console.error('Error in getStaticPaths:', error)
     return {
       paths: [],
-      fallback: true
+      fallback: 'blocking'
     }
   }
 }
