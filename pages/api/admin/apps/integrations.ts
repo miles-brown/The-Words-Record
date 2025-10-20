@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { withRole } from '@/middleware/rbac'
 
 // Mock data for development
 const integrations = [
@@ -24,8 +25,7 @@ const integrations = [
   }
 ]
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // TODO: Add authentication check for SuperAdmin
+async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   switch (req.method) {
     case 'GET':
@@ -52,3 +52,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(405).json({ error: 'Method not allowed' })
   }
 }
+
+export default withRole(['SUPERADMIN'])(handler)
