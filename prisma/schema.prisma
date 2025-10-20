@@ -42,6 +42,7 @@ model User {
   auditLogs               AuditLog[]        @relation("AuditUser")
   tokens                  UserToken[]
   groups                  UserGroup[]
+  importJobs              ImportJob[]
 
   @@index([role])
   @@index([isActive])
@@ -2454,4 +2455,78 @@ model CustomApp {
 
   @@index([enabled])
   @@index([published])
+}
+
+// ========================================
+// DATA IMPORT & QUARANTINE MODULE
+// ========================================
+
+model ImportJob {
+  id            String              @id @default(cuid())
+  userId        String
+  fileName      String
+  fileSize      Int
+  fileType      String
+  totalRows     Int
+  processedRows Int                 @default(0)
+  approvedRows  Int                 @default(0)
+  rejectedRows  Int                 @default(0)
+  status        ImportStatus        @default(PENDING)
+  notes         String?
+  errorLog      Json?
+  metadata      Json?
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  reviewedAt    DateTime?
+  importedAt    DateTime?
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quarantine ImportQuarantine[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model ImportQuarantine {
+  id                String            @id @default(cuid())
+  importJobId       String
+  entityType        ImportEntityType
+  rowNumber         Int
+  rawData           Json
+  parsedData        Json?
+  fieldMapping      Json?
+  validationErrors  Json?
+  status            ImportStatus      @default(PENDING)
+  confidence        Float?
+  suggestedMatches  Json?
+  finalEntityId     String?
+  reviewNotes       String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  reviewedAt        DateTime?
+  importedAt        DateTime?
+
+  importJob ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
+
+  @@index([importJobId])
+  @@index([entityType])
+  @@index([status])
+}
+
+enum ImportStatus {
+  PENDING
+  REVIEWING
+  APPROVED
+  REJECTED
+  IMPORTED
+}
+
+enum ImportEntityType {
+  PERSON
+  ORGANIZATION
+  STATEMENT
+  CASE
+  SOURCE
+  TOPIC
 }

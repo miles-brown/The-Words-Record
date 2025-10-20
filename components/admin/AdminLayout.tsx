@@ -176,8 +176,6 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
               </div>
             </div>
 
-            <div className="nav-divider-small"></div>
-
             {/* CORE CONTENT - Content Management Section */}
             <div className="nav-section-label">CORE CONTENT</div>
             <div className="nav-section-box content-box">
@@ -199,8 +197,6 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
               </div>
             </div>
 
-            <div className="nav-divider-small"></div>
-
             {/* DATA TOOLS Section */}
             <div className="nav-section-label">DATA TOOLS</div>
             <div className="nav-section-box datatools-box">
@@ -221,8 +217,6 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
                 ))}
               </div>
             </div>
-
-            <div className="nav-divider-small"></div>
 
             {/* SYSTEM OPERATIONS Section */}
             <div className="nav-section-label">SYSTEM OPERATIONS</div>
@@ -370,11 +364,12 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         .sidebar-nav {
           flex: 1;
-          padding: 0.75rem;
+          padding: 0.5rem 0.75rem 0.75rem;
           overflow-y: auto;
           overflow-x: hidden;
           display: flex;
           flex-direction: column;
+          gap: 0;
         }
 
         .nav-section {
@@ -390,14 +385,22 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           font-weight: 600;
           letter-spacing: 0.1em;
           color: rgba(255, 255, 255, 0.5);
-          padding: 0.5rem 0.75rem 0.375rem;
+          padding: 0.25rem 0.75rem 0.125rem !important;
           text-transform: uppercase;
+          margin-top: 0.25rem !important;
+          margin-bottom: 0.125rem !important;
+          line-height: 1.4;
+        }
+
+        .nav-section-label:first-child {
+          margin-top: 0 !important;
+          padding-top: 0 !important;
         }
 
         .nav-section-box {
           border-radius: 10px;
-          padding: 0;
-          margin: 0 0.25rem;
+          padding: 0 !important;
+          margin: 0 0.25rem 0 !important;
           width: calc(100% - 0.5rem);
           box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
           transition: all 0.2s ease;

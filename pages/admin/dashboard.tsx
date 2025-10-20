@@ -161,8 +161,12 @@ export default function AdminDashboard() {
     { icon: '👤', label: 'Add Person', href: '/admin/people/new' },
     { icon: '💬', label: 'Add Statement', href: '/admin/statements/new' },
     { icon: '📰', label: 'Add Source', href: '/admin/sources/new' },
-    { icon: '🏢', label: 'Add Organization', href: '/admin/organizations/new' },
-    { icon: '🏷️', label: 'Add Topic', href: '/admin/topics/new' }
+    { icon: '🏢', label: 'Add Org', href: '/admin/organizations/new' },
+    { icon: '📊', label: 'Analytics', href: '/admin/analytics' },
+    { icon: '⚙️', label: 'Settings', href: '/admin/settings' },
+    { icon: '📥', label: 'Import', href: '/admin/import' },
+    { icon: '📤', label: 'Export', href: '/admin/export' },
+    { icon: '🔍', label: 'Search', href: '/admin/search' }
   ]
 
   return (
@@ -172,83 +176,34 @@ export default function AdminDashboard() {
       </Head>
 
       <AdminLayout title="Dashboard">
-        {/* Top Section: Overview (Left) and Recent Statements (Right) */}
-        <div className="admin-grid admin-grid-cols-2" style={{ gap: '1.5rem', alignItems: 'start' }}>
-          {/* Overview - Left side with square metric cards */}
-          <div className="admin-section">
-            <h2 className="admin-section-header">Overview</h2>
-            <div className="dashboard-metrics-grid">
-              {metrics.map((metric, index) => (
-                <div
-                  key={index}
-                  className="dashboard-metric-square"
-                  style={{
-                    backgroundColor: metric.color,
-                    cursor: metric.href ? 'pointer' : 'default',
-                    opacity: metric.subtle ? 0.8 : 1
-                  }}
-                  onClick={() => metric.href && router.push(metric.href)}
-                >
-                  <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
-                    {metric.icon}
-                  </div>
-                  <div className="admin-metric-value">{metric.value.toLocaleString()}</div>
-                  <div className="admin-metric-label">{metric.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Recent Statements - Right side */}
-          <div className="admin-section">
-            <div className="admin-flex-between admin-mb-4">
-              <h2 className="admin-section-header" style={{ margin: 0 }}>Recent Statements</h2>
-              <button
-                onClick={() => router.push('/admin/statements')}
-                className="admin-btn admin-btn-secondary admin-text-sm"
+        {/* Main Metrics Grid */}
+        <div className="admin-section">
+          <h2 className="admin-section-header">Overview</h2>
+          <div className="admin-grid admin-grid-auto">
+            {metrics.map((metric, index) => (
+              <div
+                key={index}
+                className="admin-metric-card"
+                style={{
+                  backgroundColor: metric.color,
+                  cursor: metric.href ? 'pointer' : 'default',
+                  opacity: metric.subtle ? 0.8 : 1
+                }}
+                onClick={() => metric.href && router.push(metric.href)}
               >
-                View All
-              </button>
-            </div>
-            <div className="admin-table-wrapper">
-              <table className="admin-table">
-                <thead>
-                  <tr>
-                    <th>Content</th>
-                    <th>By</th>
-                    <th>Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {stats?.recentStatements.slice(0, 5).map(item => (
-                    <tr key={item.id} style={{ cursor: 'pointer' }}>
-                      <td className="admin-font-medium" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                        {item.content}
-                      </td>
-                      <td className="admin-text-sm">
-                        {item.person?.fullName || item.organization?.name || 'Unknown'}
-                      </td>
-                      <td className="admin-text-sm">
-                        {new Date(item.statementDate).toLocaleDateString()}
-                      </td>
-                    </tr>
-                  ))}
-                  {(!stats?.recentStatements || stats.recentStatements.length === 0) && (
-                    <tr>
-                      <td colSpan={3} style={{ textAlign: 'center', color: 'var(--admin-text-muted)' }}>
-                        No recent statements
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                <div className="admin-metric-icon" style={{ backgroundColor: 'rgba(255,255,255,0.5)' }}>
+                  {metric.icon}
+                </div>
+                <div className="admin-metric-value">{metric.value.toLocaleString()}</div>
+                <div className="admin-metric-label">{metric.label}</div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Bottom Section: Recent Cases (Left) and Quick Actions (Right) */}
+        {/* Content Management Section */}
         <div className="admin-grid admin-grid-cols-2" style={{ gap: '1.5rem' }}>
-          {/* Recent Cases - Left side */}
+          {/* Recent Cases */}
           <div className="admin-section">
             <div className="admin-flex-between admin-mb-4">
               <h2 className="admin-section-header" style={{ margin: 0 }}>Recent Cases</h2>
@@ -296,20 +251,49 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          {/* Quick Actions - Right side */}
+          {/* Recent Statements */}
           <div className="admin-section">
-            <h2 className="admin-section-header">Quick Actions</h2>
-            <div className="admin-quick-actions">
-              {quickActions.map((action, index) => (
-                <div
-                  key={index}
-                  className="admin-quick-action-card"
-                  onClick={() => router.push(action.href)}
-                >
-                  <div className="admin-quick-action-icon">{action.icon}</div>
-                  <div className="admin-quick-action-label">{action.label}</div>
-                </div>
-              ))}
+            <div className="admin-flex-between admin-mb-4">
+              <h2 className="admin-section-header" style={{ margin: 0 }}>Recent Statements</h2>
+              <button
+                onClick={() => router.push('/admin/statements')}
+                className="admin-btn admin-btn-secondary admin-text-sm"
+              >
+                View All
+              </button>
+            </div>
+            <div className="admin-table-wrapper">
+              <table className="admin-table">
+                <thead>
+                  <tr>
+                    <th>Content</th>
+                    <th>By</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {stats?.recentStatements.slice(0, 5).map(item => (
+                    <tr key={item.id} style={{ cursor: 'pointer' }}>
+                      <td className="admin-font-medium" style={{ maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                        {item.content}
+                      </td>
+                      <td className="admin-text-sm">
+                        {item.person?.fullName || item.organization?.name || 'Unknown'}
+                      </td>
+                      <td className="admin-text-sm">
+                        {new Date(item.statementDate).toLocaleDateString()}
+                      </td>
+                    </tr>
+                  ))}
+                  {(!stats?.recentStatements || stats.recentStatements.length === 0) && (
+                    <tr>
+                      <td colSpan={3} style={{ textAlign: 'center', color: 'var(--admin-text-muted)' }}>
+                        No recent statements
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -376,6 +360,23 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Quick Actions */}
+        <div className="admin-section">
+          <h2 className="admin-section-header">Quick Actions</h2>
+          <div className="admin-quick-actions">
+            {quickActions.map((action, index) => (
+              <div
+                key={index}
+                className="admin-quick-action-card"
+                onClick={() => router.push(action.href)}
+              >
+                <div className="admin-quick-action-icon">{action.icon}</div>
+                <div className="admin-quick-action-label">{action.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Audit Timeline */}
         <div className="admin-section">
           <div className="admin-flex-between admin-mb-4">
@@ -432,51 +433,6 @@ export default function AdminDashboard() {
           </div>
         </div>
       </AdminLayout>
-
-      <style jsx>{`
-        .dashboard-metrics-grid {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 1rem;
-        }
-
-        .dashboard-metric-square {
-          aspect-ratio: 1 / 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 1rem;
-          border-radius: 1rem;
-          transition: all 0.2s ease;
-          color: white;
-          position: relative;
-          overflow: hidden;
-        }
-
-        .dashboard-metric-square:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        @media (max-width: 1200px) {
-          .dashboard-metrics-grid {
-            grid-template-columns: repeat(3, 1fr);
-          }
-        }
-
-        @media (max-width: 768px) {
-          .dashboard-metrics-grid {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-
-        @media (max-width: 480px) {
-          .dashboard-metrics-grid {
-            grid-template-columns: 1fr;
-          }
-        }
-      `}</style>
     </>
   )
 }
