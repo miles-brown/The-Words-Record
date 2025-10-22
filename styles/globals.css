@@ -268,36 +268,6 @@ button:active, .button:active, input[type="submit"]:active {
   height: 16px;
 }
 
-/* Utility Bar - Top right corner, disappears on scroll */
-.utility-bar {
-  position: sticky;
-  top: 0;
-  z-index: 101;
-  background: var(--background-primary);
-  border-bottom: 1px solid var(--border-primary);
-  padding: 0.4rem 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  opacity: 1;
-  max-height: 50px;
-}
-
-.utility-bar.hidden {
-  opacity: 0;
-  max-height: 0;
-  padding: 0;
-  border-bottom: none;
-  overflow: hidden;
-}
-
-.utility-bar-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.6rem;
-}
-
 header {
   background: var(--background-primary);
   border-bottom: 1px solid var(--border-primary);
@@ -327,12 +297,35 @@ nav {
   justify-self: start;
 }
 
-/* Primary navigation container - right-aligned */
-.nav-primary-container {
+/* Two-row button stack in upper right corner */
+.nav-buttons-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  justify-self: end;
+  align-items: flex-end;
+}
+
+/* Top row - utility buttons with icons */
+.nav-utility-row {
+  display: flex;
+  gap: 0.6rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  max-height: 50px;
+}
+
+.nav-utility-row.hidden {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Bottom row - primary navigation buttons */
+.nav-primary-row {
   display: flex;
   gap: 0.85rem;
-  justify-content: flex-end;
-  align-items: center;
 }
 
 .nav-utility-btn {
@@ -409,11 +402,11 @@ nav {
     padding: 0.55rem 1rem;
   }
 
-  .nav-primary-container {
+  .nav-primary-row {
     gap: 0.7rem;
   }
 
-  .utility-bar-content {
+  .nav-utility-row {
     gap: 0.5rem;
   }
 }
@@ -566,11 +559,7 @@ header.scrolled .site-logo {
 
 /* Hide navigation buttons on tablets and mobile - use hamburger menu instead */
 @media (max-width: 1024px) {
-  .utility-bar {
-    display: none;
-  }
-
-  .nav-primary-container {
+  .nav-buttons-stack {
     display: none;
   }
 
