@@ -97,8 +97,6 @@ export default function Layout({ children, title, description }: LayoutProps) {
       <Analytics />
 
       <div className="container">
-        <a href="#main-content" className="skip-link">Skip to main content</a>
-
         <header className={isScrolled ? 'scrolled' : ''}>
           <nav aria-label="Main navigation">
             <div className="nav-brand">

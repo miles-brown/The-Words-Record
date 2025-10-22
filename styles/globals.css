@@ -292,6 +292,10 @@ nav {
   align-items: center;
 }
 
+.nav-brand {
+  margin-left: 33%;
+}
+
 .nav-brand h1 {
   color: var(--text-primary);
   font-size: 1.5rem;
