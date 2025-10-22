@@ -18,6 +18,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
 
   const [isScrolled, setIsScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,6 +36,27 @@ export default function Layout({ children, title, description }: LayoutProps) {
       document.body.style.overflow = 'unset'
     }
   }, [menuOpen])
+
+  useEffect(() => {
+    // Load theme preference
+    const savedTheme = localStorage.getItem('theme')
+    if (savedTheme === 'dark') {
+      setDarkMode(true)
+      document.documentElement.classList.add('dark-mode')
+    }
+  }, [])
+
+  const toggleTheme = () => {
+    const newMode = !darkMode
+    setDarkMode(newMode)
+    if (newMode) {
+      document.documentElement.classList.add('dark-mode')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark-mode')
+      localStorage.setItem('theme', 'light')
+    }
+  }
 
   return (
     <>
@@ -77,33 +99,6 @@ export default function Layout({ children, title, description }: LayoutProps) {
       <div className="container">
         <a href="#main-content" className="skip-link">Skip to main content</a>
 
-        {/* Utility Bar */}
-        <div className="utility-bar">
-          <div className="utility-content">
-            <div className="utility-links">
-              <Link href="/sources" className="utility-link">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="utility-icon">
-                  <path d="M7 3.5A1.5 1.5 0 018.5 2h3.879a1.5 1.5 0 011.06.44l3.122 3.12A1.5 1.5 0 0117 6.622V12.5a1.5 1.5 0 01-1.5 1.5h-1v-3.379a3 3 0 00-.879-2.121L10.5 5.379A3 3 0 008.379 4.5H7v-1z" />
-                  <path d="M4.5 6A1.5 1.5 0 003 7.5v9A1.5 1.5 0 004.5 18h7a1.5 1.5 0 001.5-1.5v-5.879a1.5 1.5 0 00-.44-1.06L9.44 6.439A1.5 1.5 0 008.378 6H4.5z" />
-                </svg>
-                Sources
-              </Link>
-              <Link href="/methodology" className="utility-link">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="utility-icon">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z" clipRule="evenodd" />
-                </svg>
-                Methodology
-              </Link>
-              <Link href="/about" className="utility-link">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="utility-icon">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-5.5-2.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM10 12a5.99 5.99 0 00-4.793 2.39A6.483 6.483 0 0010 16.5a6.483 6.483 0 004.793-2.11A5.99 5.99 0 0010 12z" clipRule="evenodd" />
-                </svg>
-                About
-              </Link>
-            </div>
-          </div>
-        </div>
-
         <header className={isScrolled ? 'scrolled' : ''}>
           <nav aria-label="Main navigation">
             <div className="nav-brand">
@@ -116,39 +111,23 @@ export default function Layout({ children, title, description }: LayoutProps) {
               </Link>
             </div>
 
-            {!isScrolled && (
-              <>
-                <div className="nav-center">
-                  <SearchBox placeholder="Search..." className="header-search" />
-                </div>
-                <div className="nav-links">
-                  <Link href="/statements" className="nav-btn">Statements</Link>
-                  <Link href="/cases" className="nav-btn">Cases</Link>
-                  <Link href="/people" className="nav-btn">People</Link>
-                  <Link href="/donate" className="nav-btn nav-btn-accent">Donate</Link>
-                </div>
-              </>
-            )}
-
-            {isScrolled && (
-              <button
-                type="button"
-                className="menu-button"
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-label="Toggle menu"
-                aria-expanded={menuOpen}
-              >
-                <span className="hamburger-icon">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </button>
-            )}
+            <button
+              type="button"
+              className="menu-button"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Toggle menu"
+              aria-expanded={menuOpen}
+            >
+              <span className="hamburger-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </button>
           </nav>
         </header>
 
-        {/* Mobile Menu Overlay */}
+        {/* Hamburger Menu */}
         {menuOpen && (
           <div className="menu-overlay" onClick={() => setMenuOpen(false)}>
             <div className="menu-content" onClick={(e) => e.stopPropagation()}>
@@ -161,11 +140,10 @@ export default function Layout({ children, title, description }: LayoutProps) {
                 ×
               </button>
 
-              <div className="menu-search">
-                <SearchBox placeholder="Search..." />
-              </div>
-
               <nav className="menu-links">
+                <Link href="/" onClick={() => setMenuOpen(false)}>
+                  Home
+                </Link>
                 <Link href="/statements" onClick={() => setMenuOpen(false)}>
                   Statements
                 </Link>
@@ -175,18 +153,62 @@ export default function Layout({ children, title, description }: LayoutProps) {
                 <Link href="/people" onClick={() => setMenuOpen(false)}>
                   People
                 </Link>
-                <Link href="/donate" onClick={() => setMenuOpen(false)} className="menu-link-accent">
-                  Donate
+                <Link href="/organizations" onClick={() => setMenuOpen(false)}>
+                  Organizations
+                </Link>
+                <Link href="/tags" onClick={() => setMenuOpen(false)}>
+                  Topics
                 </Link>
                 <Link href="/sources" onClick={() => setMenuOpen(false)}>
                   Sources
                 </Link>
+                <Link href="/methodology" onClick={() => setMenuOpen(false)}>
+                  Methodology
+                </Link>
                 <Link href="/about" onClick={() => setMenuOpen(false)}>
                   About
                 </Link>
-                <Link href="/contact" onClick={() => setMenuOpen(false)}>
-                  Contact
+                <Link href="/report" onClick={() => setMenuOpen(false)}>
+                  Report
                 </Link>
+                <Link href="/suggestions" onClick={() => setMenuOpen(false)}>
+                  Suggest
+                </Link>
+                <Link href="/donate" onClick={() => setMenuOpen(false)} className="menu-link-accent">
+                  Donate
+                </Link>
+
+                <div className="theme-switcher">
+                  <button
+                    onClick={toggleTheme}
+                    className="theme-toggle"
+                    aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+                  >
+                    {darkMode ? (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <circle cx="12" cy="12" r="5"></circle>
+                          <line x1="12" y1="1" x2="12" y2="3"></line>
+                          <line x1="12" y1="21" x2="12" y2="23"></line>
+                          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                          <line x1="1" y1="12" x2="3" y2="12"></line>
+                          <line x1="21" y1="12" x2="23" y2="12"></line>
+                          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                        Light Mode
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        Dark Mode
+                      </>
+                    )}
+                  </button>
+                </div>
               </nav>
             </div>
           </div>
