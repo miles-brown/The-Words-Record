@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 import Head from 'next/head'
 import ZoomControl from './ZoomControl'
+import { getAuthToken, clearAuthToken } from '@/lib/authFetch'
 
 interface AdminLayoutProps {
   children: ReactNode
@@ -19,25 +20,61 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
   const [loading, setLoading] = useState(true)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [mounted, setMounted] = useState(false)
   const router = useRouter()
 
+  // Only run on client side after hydration
   useEffect(() => {
-    checkAuth()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    setMounted(true)
   }, [])
+
+  useEffect(() => {
+    if (mounted) {
+      checkAuth()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mounted])
 
   const checkAuth = async () => {
     try {
-      const response = await fetch('/api/auth/me')
+      console.log('Starting auth check...')
+
+      // Get token from localStorage
+      const token = getAuthToken()
+
+      if (!token) {
+        console.log('No token found in localStorage, redirecting to login')
+        window.location.href = '/admin/login'
+        return
+      }
+
+      const response = await fetch('/api/auth/me', {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
+      console.log('Auth check response:', response.status, response.ok)
+
       if (response.ok) {
         const data = await response.json()
+        console.log('Auth check successful, user:', data.user)
         setUser(data.user)
       } else {
-        router.push('/admin/login')
+        console.log('Auth check failed with status:', response.status)
+        // Clear invalid token
+        clearAuthToken()
+        window.location.href = '/admin/login'
       }
     } catch (error) {
       console.error('Auth check failed:', error)
-      router.push('/admin/login')
+      // Clear potentially corrupted token
+      clearAuthToken()
+      window.location.href = '/admin/login'
     } finally {
       setLoading(false)
     }
@@ -45,10 +82,18 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      })
+      // Clear token from localStorage
+      clearAuthToken()
       router.push('/admin/login')
     } catch (error) {
       console.error('Logout failed:', error)
+      // Clear token anyway
+      clearAuthToken()
+      router.push('/admin/login')
     }
   }
 

@@ -2,5 +2,11 @@
   "buildCommand": "prisma generate && next build",
   "devCommand": "next dev",
   "installCommand": "npm install",
-  "framework": "nextjs"
+  "framework": "nextjs",
+  "build": {
+    "env": {
+      "ENABLE_BUILD_CACHE": "1"
+    }
+  },
+  "crons": []
 }

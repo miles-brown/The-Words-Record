@@ -215,7 +215,7 @@ export default function MethodologyPreview() {
           flex-shrink: 0;
           width: 48px;
           height: 48px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           border-radius: 50%;
           display: flex;
           align-items: center;
@@ -259,7 +259,7 @@ export default function MethodologyPreview() {
         .principle-icon {
           width: 56px;
           height: 56px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           border-radius: 12px;
           display: flex;
           align-items: center;
@@ -296,23 +296,26 @@ export default function MethodologyPreview() {
         }
 
         .btn-methodology {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           color: white;
           border: none;
           padding: 1rem 2rem;
-          border-radius: 8px;
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
           font-size: 1.05rem;
           font-weight: 600;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
         }
 
         .btn-methodology:hover {
+          background: #5a809b;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
         }
 
         .btn-icon {

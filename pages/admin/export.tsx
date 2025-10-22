@@ -29,6 +29,7 @@ export default function ExportPage() {
       })
 
       const response = await fetch(`/api/admin/export?${params}`, {
+        credentials: 'include',
         method: 'GET'
       })
 

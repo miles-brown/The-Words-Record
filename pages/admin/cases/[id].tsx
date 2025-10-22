@@ -47,7 +47,7 @@ export default function EditCase() {
 
   const fetchCase = async () => {
     try {
-      const response = await fetch(`/api/admin/cases/${id}`)
+      const response = await fetch(`/api/admin/cases/${id}`, { credentials: 'include' })
       if (response.ok) {
         const data = await response.json()
         const caseData = data.case
@@ -132,6 +132,7 @@ export default function EditCase() {
 
     try {
       const response = await fetch(`/api/admin/cases/${id}`, {
+        credentials: 'include',
         method: 'DELETE'
       })
 

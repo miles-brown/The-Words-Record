@@ -11,95 +11,28 @@
   "lang": "en-US",
   "dir": "ltr",
   "categories": ["news", "politics", "social", "reference"],
-  "icons": [
-    {
-      "src": "/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-384x384.png",
-      "sizes": "384x384",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
-  ],
+  "icons": [],
   "shortcuts": [
     {
       "name": "View Statements",
       "short_name": "Statements",
       "description": "Browse all documented statements",
-      "url": "/statements",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/statements"
     },
     {
       "name": "Search People",
       "short_name": "People",
       "description": "Search public figures",
-      "url": "/people",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/people"
     },
     {
       "name": "Organizations",
       "short_name": "Orgs",
       "description": "View organizations",
-      "url": "/organizations",
-      "icons": [{ "src": "/icon-192x192.png", "sizes": "192x192" }]
+      "url": "/organizations"
     }
   ],
-  "screenshots": [
-    {
-      "src": "/screenshot-wide.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "The Words Record homepage"
-    },
-    {
-      "src": "/screenshot-narrow.png",
-      "sizes": "750x1334",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Browse statements on mobile"
-    }
-  ],
+  "screenshots": [],
   "prefer_related_applications": false,
   "iarc_rating_id": "",
   "related_applications": []

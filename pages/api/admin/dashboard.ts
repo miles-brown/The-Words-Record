@@ -71,165 +71,144 @@ async function dashboardHandler(req: NextApiRequest, res: NextApiResponse) {
     const last30Days = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     const last24Hours = new Date(now.getTime() - 24 * 60 * 60 * 1000)
 
-    const [
-      totalCases,
-      totalPeople,
-      totalOrganizations,
-      totalStatements,
-      totalSources,
-      verifiedSources,
-      totalUsers,
-      mfaEnabledUsers,
-      activeUsers30d,
-      activeApiKeys,
-      apiKeyAuth24h,
-      errorEvents24h,
-      recentCases,
-      recentStatements,
-      auditTimeline,
-      pendingApprovals,
-      draftsPending,
-      draftsSubmitted,
-      draftQueue,
-      failedHarvests
-    ] = await Promise.all([
-      prisma.case.count(),
-      prisma.person.count(),
-      prisma.organization.count(),
-      prisma.statement.count(),
-      prisma.source.count(),
-      prisma.source.count({
-        where: {
-          contentSnapshot: {
-            not: null
-          }
+    // Run queries sequentially to avoid prepared statement conflicts
+    // This is slower but more reliable with Prisma + Supabase
+    const totalCases = await prisma.case.count()
+    const totalPeople = await prisma.person.count()
+    const totalOrganizations = await prisma.organization.count()
+    const totalStatements = await prisma.statement.count()
+    const totalSources = await prisma.source.count()
+    const verifiedSources = await prisma.source.count({
+      where: {
+        contentSnapshot: {
+          not: null
         }
-      }),
-      prisma.user.count(),
-      prisma.user.count({ where: { mfaEnabled: true } }),
-      prisma.user.count({
-        where: {
-          lastLogin: {
-            gte: last30Days
-          }
+      }
+    })
+    const totalUsers = await prisma.user.count()
+    const mfaEnabledUsers = await prisma.user.count({ where: { mfaEnabled: true } })
+    const activeUsers30d = await prisma.user.count({
+      where: {
+        lastLogin: {
+          gte: last30Days
         }
-      }),
-      prisma.apiKey.count({ where: { isActive: true } }),
-      prisma.auditLog.count({
-        where: {
-          action: AuditAction.LOGIN,
-          actorType: AuditActorType.API_KEY,
-          status: 'SUCCESS',
-          occuredAt: {
-            gte: last24Hours
-          }
+      }
+    })
+    const activeApiKeys = await prisma.apiKey.count({ where: { isActive: true } })
+    const apiKeyAuth24h = await prisma.auditLog.count({
+      where: {
+        action: AuditAction.LOGIN,
+        actorType: AuditActorType.API_KEY,
+        status: 'SUCCESS',
+        occuredAt: {
+          gte: last24Hours
         }
-      }),
-      prisma.auditLog.count({
-        where: {
-          status: 'FAILURE',
-          occuredAt: {
-            gte: last24Hours
-          }
+      }
+    })
+    const errorEvents24h = await prisma.auditLog.count({
+      where: {
+        status: 'FAILURE',
+        occuredAt: {
+          gte: last24Hours
         }
-      }),
-      prisma.case.findMany({
-        take: 5,
-        where: {
-          isRealIncident: true  // Only show actual multi-statement cases
-        },
-        orderBy: { caseDate: 'desc' },
-        select: {
-          id: true,
-          title: true,
-          slug: true,
-          caseDate: true,
-          status: true,
-          isRealIncident: true
-        }
-      }),
-      prisma.statement.findMany({
-        take: 10,
-        orderBy: { statementDate: 'desc' },
-        select: {
-          id: true,
-          content: true,
-          statementDate: true,
-          statementType: true,
-          person: {
-            select: {
-              id: true,
-              slug: true,
-              fullName: true
-            }
-          },
-          organization: {
-            select: {
-              id: true,
-              slug: true,
-              name: true
-            }
-          }
-        }
-      }),
-      prisma.auditLog.findMany({
-        take: 15,
-        orderBy: { occuredAt: 'desc' },
-        select: {
-          id: true,
-          action: true,
-          entityType: true,
-          entityId: true,
-          actorId: true,
-          actorType: true,
-          occuredAt: true,
-          status: true,
-          description: true
-        }
-      }),
-      prisma.contentApproval.count({
-        where: {
-          status: ApprovalStatus.PENDING
-        }
-      }),
-      prisma.contentDraft.count({ where: { status: 'SUBMITTED' } }),
-      prisma.contentDraft.count({
-        where: {
-          status: {
-            in: ['IN_REVIEW']
-          }
-        }
-      }),
-      prisma.contentDraft.findMany({
-        where: {
-          status: {
-            in: ['SUBMITTED', 'IN_REVIEW']
+      }
+    })
+    const recentCases = await prisma.case.findMany({
+      take: 5,
+      where: {
+        isRealIncident: true  // Only show actual multi-statement cases
+      },
+      orderBy: { caseDate: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        caseDate: true,
+        status: true,
+        isRealIncident: true
+      }
+    })
+    const recentStatements = await prisma.statement.findMany({
+      take: 10,
+      orderBy: { statementDate: 'desc' },
+      select: {
+        id: true,
+        content: true,
+        statementDate: true,
+        statementType: true,
+        person: {
+          select: {
+            id: true,
+            slug: true,
+            fullName: true
           }
         },
-        orderBy: { updatedAt: 'desc' },
-        take: 10,
-        select: {
-          id: true,
-          contentType: true,
-          status: true,
-          updatedAt: true,
-          submittedAt: true,
-          user: {
-            select: {
-              id: true,
-              username: true
-            }
+        organization: {
+          select: {
+            id: true,
+            slug: true,
+            name: true
           }
         }
-      }),
-      prisma.harvestJob.count({
-        where: {
-          status: {
-            in: [JobStatus.FAILED, JobStatus.RETRY]
+      }
+    })
+    const auditTimeline = await prisma.auditLog.findMany({
+      take: 15,
+      orderBy: { occuredAt: 'desc' },
+      select: {
+        id: true,
+        action: true,
+        entityType: true,
+        entityId: true,
+        actorId: true,
+        actorType: true,
+        occuredAt: true,
+        status: true,
+        description: true
+      }
+    })
+    const pendingApprovals = await prisma.contentApproval.count({
+      where: {
+        status: ApprovalStatus.PENDING
+      }
+    })
+    const draftsPending = await prisma.contentDraft.count({ where: { status: 'SUBMITTED' } })
+    const draftsSubmitted = await prisma.contentDraft.count({
+      where: {
+        status: {
+          in: ['IN_REVIEW']
+        }
+      }
+    })
+    const draftQueue = await prisma.contentDraft.findMany({
+      where: {
+        status: {
+          in: ['SUBMITTED', 'IN_REVIEW']
+        }
+      },
+      orderBy: { updatedAt: 'desc' },
+      take: 10,
+      select: {
+        id: true,
+        contentType: true,
+        status: true,
+        updatedAt: true,
+        submittedAt: true,
+        user: {
+          select: {
+            id: true,
+            username: true
           }
         }
-      })
-    ])
+      }
+    })
+    const failedHarvests = await prisma.harvestJob.count({
+      where: {
+        status: {
+          in: [JobStatus.FAILED, JobStatus.RETRY]
+        }
+      }
+    })
 
     const response: DashboardResponse = {
       totalCases,

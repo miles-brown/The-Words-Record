@@ -39,6 +39,13 @@ export default function CookieConsent() {
   useEffect(() => {
     setMounted(true)
 
+    // NEVER show on localhost or development
+    if (process.env.NODE_ENV === 'development' ||
+        window.location.hostname === 'localhost' ||
+        window.location.hostname === '127.0.0.1') {
+      return
+    }
+
     // Check if user has already consented
     const savedConsent = localStorage.getItem('cookie-consent')
 

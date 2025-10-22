@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
+import { setAuthToken } from '@/lib/authFetch'
 
 export default function AdminLogin() {
   const [credentials, setCredentials] = useState({ username: '', password: '' })
@@ -8,20 +9,8 @@ export default function AdminLogin() {
   const [error, setError] = useState('')
   const router = useRouter()
 
-  useEffect(() => {
-    // Check if already logged in
-    const checkExistingAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me')
-        if (response.ok) {
-          router.push('/admin')
-        }
-      } catch (error) {
-        // Not logged in, stay on login page
-      }
-    }
-    checkExistingAuth()
-  }, [router])
+  // Removed auth check from login page to prevent redirect loops
+  // The user should only be able to access /admin after successful login
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,23 +18,65 @@ export default function AdminLogin() {
     setError('')
 
     try {
+      console.log('Submitting login request...')
       const response = await fetch('/api/auth/login', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
       })
 
-      const data = await response.json()
+      console.log('Login response status:', response.status, response.ok)
 
-      if (response.ok) {
-        router.push('/admin')
+      let data
+      try {
+        data = await response.json()
+        console.log('Login response data:', data)
+      } catch (parseError) {
+        console.error('Failed to parse response JSON:', parseError)
+        setError('Invalid response from server')
+        return
+      }
+
+      if (response.ok && data.token) {
+        console.log('Login successful, storing token and redirecting to /admin')
+
+        // Store token in localStorage for Authorization header
+        setAuthToken(data.token)
+
+        // Cookie is already set by the server via Set-Cookie header
+        console.log('Token stored, redirecting...')
+
+        // Use window.location instead of router.push to force a full page reload
+        window.location.href = '/admin'
       } else {
-        setError(data.error || 'Login failed')
+        // Build detailed error message
+        let errorMessage = data.error || 'Login failed'
+
+        // Add remaining attempts info if provided
+        if (typeof data.attemptsRemaining === 'number') {
+          if (data.attemptsRemaining > 0) {
+            errorMessage += ` (${data.attemptsRemaining} attempt${data.attemptsRemaining === 1 ? '' : 's'} remaining)`
+          } else {
+            errorMessage = 'Account locked due to too many failed login attempts. Please try again in 30 minutes.'
+          }
+        }
+
+        // Add lock expiration time if provided
+        if (data.lockedUntil) {
+          const lockTime = new Date(data.lockedUntil)
+          const now = new Date()
+          const minutesRemaining = Math.ceil((lockTime.getTime() - now.getTime()) / (1000 * 60))
+          errorMessage += ` Account will be unlocked in ${minutesRemaining} minute${minutesRemaining === 1 ? '' : 's'}.`
+        }
+
+        setError(errorMessage)
       }
     } catch (error) {
-      setError('Login failed. Please try again.')
+      console.error('Login error:', error)
+      setError('Network error: Unable to connect to the server. Please check your connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -115,10 +146,8 @@ export default function AdminLogin() {
           </form>
 
           <div className="login-footer">
-            <p className="demo-info">
-              <strong>Demo Credentials:</strong><br />
-              Username: admin<br />
-              Password: admin123
+            <p className="help-info">
+              Need access? Contact the web team for a password reset.
             </p>
           </div>
         </div>
@@ -237,16 +266,12 @@ export default function AdminLogin() {
           border-top: 1px solid #e0e6ed;
         }
 
-        .demo-info {
+        .help-info {
           margin: 0;
           font-size: 0.875rem;
           color: #6c757d;
           text-align: center;
           line-height: 1.5;
-        }
-
-        .demo-info strong {
-          color: #2c3e50;
         }
 
         @media (max-width: 480px) {

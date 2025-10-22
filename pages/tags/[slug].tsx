@@ -250,12 +250,16 @@ export default function TagPage({ tag }: TagPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Only pre-generate top 50 most used tags at build time
+  // Only pre-generate top 5 most used tags at build time
   // Remaining pages will be generated on-demand with fallback: 'blocking'
+  // This significantly reduces build time
   const tags = await prisma.tag.findMany({
-    select: { slug: true },
-    orderBy: { createdAt: 'desc' },
-    take: 50
+    select: { slug: true, _count: { select: { statements: true } } },
+    orderBy: [
+      { statements: { _count: 'desc' } }, // Most used tags first
+      { createdAt: 'desc' }
+    ],
+    take: 5
   })
 
   const paths = tags.map((tag) => ({

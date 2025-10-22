@@ -75,18 +75,17 @@ export default function CTASection() {
             )}
           </div>
 
-          {/* Suggest a Case */}
+          {/* Suggestions */}
           <div className="cta-card">
             <div className="card-icon" aria-hidden="true">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                 <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zM12.75 9a.75.75 0 00-1.5 0v2.25H9a.75.75 0 000 1.5h2.25V15a.75.75 0 001.5 0v-2.25H15a.75.75 0 000-1.5h-2.25V9z" clipRule="evenodd" />
               </svg>
             </div>
-            <h3>Suggest a Case</h3>
-            <p>Know of a public statement that should be documented? Let us know</p>
+            <h3>Suggestions</h3>
+            <p>Know of a statement by a public figure that could be included? Click here to nominate for inclusion.</p>
             <button type="button" className="btn-secondary" onClick={() => {
-              // This could open a modal or navigate to a form
-              window.location.href = 'mailto:contact@thewordsrecord.com?subject=Case%20Suggestion'
+              window.location.href = '/suggestions'
             }}>
               Submit Suggestion
             </button>
@@ -102,7 +101,7 @@ export default function CTASection() {
             <h3>Report an Error</h3>
             <p>Found an inaccuracy or broken link? Help us maintain quality standards</p>
             <button type="button" className="btn-secondary" onClick={() => {
-              window.location.href = 'mailto:contact@thewordsrecord.com?subject=Error%20Report'
+              window.location.href = '/report'
             }}>
               Report Issue
             </button>
@@ -169,7 +168,7 @@ export default function CTASection() {
 
         .cta-primary {
           grid-column: 1 / -1;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           color: white;
           border: none;
         }
@@ -193,7 +192,7 @@ export default function CTASection() {
         }
 
         .cta-card:not(.cta-primary) .card-icon {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
         }
 
         .card-icon svg {
@@ -254,19 +253,21 @@ export default function CTASection() {
         .btn-subscribe {
           padding: 0.875rem 1.75rem;
           background: white;
-          color: #667eea;
-          border: none;
-          border-radius: 8px;
+          color: #4a708b;
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
           font-size: 1rem;
           font-weight: 600;
           cursor: pointer;
           white-space: nowrap;
-          transition: all 0.2s;
+          transition: all 0.3s;
         }
 
         .btn-subscribe:hover:not(:disabled) {
+          background: #f8f9fa;
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .btn-subscribe:disabled {
@@ -276,20 +277,23 @@ export default function CTASection() {
 
         .btn-secondary {
           padding: 0.875rem 1.5rem;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           color: white;
           border: none;
-          border-radius: 8px;
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
           font-size: 1rem;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s;
           margin-top: auto;
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
         }
 
         .btn-secondary:hover {
+          background: #5a809b;
           transform: translateY(-2px);
-          box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
         }
 
         .success-message {

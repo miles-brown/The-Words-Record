@@ -4,7 +4,8 @@
   "description": "The Words Record - Documentation of public statements and responses",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
+    "vercel-build": "prisma generate && next build",
     "start": "next start",
     "export": "next build && next export",
     "clean": "rm -rf .next .turbo node_modules/.cache",
@@ -20,11 +21,11 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.65.0",
+    "@anthropic-ai/sdk": "^0.67.0",
     "@imbios/next-pwa": "^1.1.1",
-    "@next/third-parties": "^15.5.4",
-    "@prisma/client": "^6.16.2",
-    "@supabase/supabase-js": "^2.75.0",
+    "@next/third-parties": "^15.5.6",
+    "@prisma/client": "^6.17.1",
+    "@supabase/supabase-js": "^2.76.1",
     "@types/cookie": "^0.6.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
@@ -32,12 +33,12 @@
     "cookie": "^1.0.2",
     "csv-parse": "^6.1.0",
     "date-fns": "^2.29.3",
-    "firecrawl": "^4.3.8",
+    "firecrawl": "^4.4.1",
     "formidable": "^3.5.4",
     "gray-matter": "^4.0.3",
     "jsonwebtoken": "^9.0.2",
     "nanoid": "^5.0.7",
-    "next": "^14.0.0",
+    "next": "^14.2.33",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-dropzone": "^14.3.8",
@@ -48,21 +49,22 @@
     "zustand": "^5.0.8"
   },
   "optionalDependencies": {
-    "@aws-sdk/client-s3": "^3.700.0",
-    "cloudinary": "^2.5.1"
+    "@aws-sdk/client-s3": "^3.914.0",
+    "cloudinary": "^2.8.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/formidable": "^3.4.6",
     "@types/jsonwebtoken": "^9.0.10",
-    "@types/node": "^20.19.18",
-    "@types/react": "^18.3.24",
+    "@types/node": "^22.10.5",
+    "@types/react": "^18.3.26",
     "@types/react-dom": "^18.3.7",
     "@types/recharts": "^1.8.29",
-    "eslint": "^8.57.1",
-    "eslint-config-next": "^14.0.0",
-    "prisma": "^6.16.2",
+    "eslint": "^9.18.0",
+    "eslint-config-next": "^14.2.33",
+    "prisma": "^6.17.1",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.3"
   }
 }

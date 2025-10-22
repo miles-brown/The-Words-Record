@@ -90,7 +90,7 @@ export default function EditPerson() {
 
   const fetchPerson = async () => {
     try {
-      const response = await fetch(`/api/admin/people/${slug}`)
+      const response = await fetch(`/api/admin/people/${slug}`, { credentials: 'include' })
       if (response.ok) {
         const data = await response.json()
         const person = data.person
@@ -213,6 +213,7 @@ export default function EditPerson() {
 
     try {
       const response = await fetch(`/api/admin/people/${slug}`, {
+        credentials: 'include',
         method: 'DELETE'
       })
 

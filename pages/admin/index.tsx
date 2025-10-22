@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import AdminLayout from '@/components/admin/AdminLayout'
 import Head from 'next/head'
+import { getAuthToken, clearAuthToken } from '@/lib/authFetch'
 
 interface DashboardStats {
   totalCases: number
@@ -75,10 +76,32 @@ export default function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await fetch('/api/admin/dashboard')
+      // Get token from localStorage
+      const token = getAuthToken()
+
+      if (!token) {
+        console.log('No token found, redirecting to login')
+        router.push('/admin/login')
+        return
+      }
+
+      const response = await fetch('/api/admin/dashboard', {
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      })
+
       if (response.ok) {
         const data = await response.json()
         setStats(data)
+      } else if (response.status === 401) {
+        console.error('Unauthorized - redirecting to login')
+        clearAuthToken()
+        router.push('/admin/login')
+      } else {
+        console.error('Failed to fetch dashboard data, status:', response.status)
       }
     } catch (error) {
       console.error('Failed to fetch dashboard data:', error)

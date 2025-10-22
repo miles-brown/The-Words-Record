@@ -35,7 +35,7 @@ export function ChangeHistoryModal({ personSlug, personName, onClose }: ChangeHi
   const fetchHistory = async () => {
     try {
       setLoading(true)
-      const response = await fetch(`/api/admin/people/${personSlug}/history?limit=50`)
+      const response = await fetch(`/api/admin/people/${personSlug}/history?limit=50`, { credentials: 'include' })
 
       if (response.ok) {
         const data = await response.json()

@@ -746,15 +746,19 @@ export default function PersonPage({ person }: PersonPageProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  // Only pre-generate top 50 most active people at build time
+  // Only pre-generate top 5 most important people at build time
   // Remaining pages will be generated on-demand with fallback: 'blocking'
+  // This significantly reduces build time while maintaining good UX
   const people = await prisma.person.findMany({
     where: {
       isActive: true
     },
-    select: { slug: true },
-    orderBy: { createdAt: 'desc' },
-    take: 50
+    select: { slug: true, _count: { select: { statements: true } } },
+    orderBy: [
+      { statements: { _count: 'desc' } }, // Most statements first
+      { createdAt: 'desc' }
+    ],
+    take: 5
   })
 
   const paths = people.map((person) => ({

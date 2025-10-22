@@ -76,6 +76,47 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
       {/* Site Metrics */}
       <SiteMetrics />
 
+      {/* Hero Mission Statement */}
+      <section className="hero-mission" aria-label="About The Words Record">
+        <div className="mission-wrapper">
+          <div className="mission-container">
+            <div className="quote-mark opening">"</div>
+
+            <div className="mission-content">
+              <p className="mission-first">
+                <strong>The Words Record</strong> exists to preserve the statements, denials, and defences that have shaped the world's most enduring conflict: the question of justice, identity, and power surrounding Palestine and Israel.
+              </p>
+
+              <p className="mission-text">
+                This is not a regional story. It is a global one, about how truth is spoken, silenced, or rewritten, and about what happens when words become weapons or shields.
+              </p>
+
+              <p className="mission-text">
+                Every record in this archive is factual, sourced, and traceable. Together they reveal how language defines allegiance, how narratives shape conscience, and how the world measures its own humanity through this single debate.
+              </p>
+
+              <p className="mission-final">
+                The purpose is simple: to ensure that what was said remains visible, because how we remember these words will determine what kind of world we create next.
+              </p>
+            </div>
+
+            <div className="quote-mark closing">"</div>
+
+            <p className="mission-attribution">
+              — Words from the founder of The Words Record
+            </p>
+
+            <div className="mission-cta">
+              <Link href="/cases">
+                <button type="button" className="btn-enter-record">
+                  Enter the Record
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Recent Cases Section */}
       <section className="cases-preview" aria-label="Recent cases">
         <div className="section-header">
@@ -123,6 +164,121 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
       <CTASection />
 
       <style jsx>{`
+        /* Hero Mission Statement */
+        .hero-mission {
+          background: #f8f9fa;
+          padding: 5rem 2rem;
+          border-bottom: 1px solid var(--border-primary);
+        }
+
+        .mission-wrapper {
+          max-width: 1400px;
+          margin: 0 auto;
+          display: flex;
+          justify-content: flex-start;
+        }
+
+        .mission-container {
+          max-width: 70%;
+          position: relative;
+        }
+
+        .quote-mark {
+          font-family: 'Merriweather', Georgia, serif;
+          font-size: 6rem;
+          line-height: 0.5;
+          color: #4a708b;
+          opacity: 0.25;
+          position: absolute;
+        }
+
+        .quote-mark.opening {
+          top: -30px;
+          left: -45px;
+        }
+
+        .quote-mark.closing {
+          bottom: 90px;
+          right: -30px;
+        }
+
+        .mission-content {
+          padding: 20px 0;
+        }
+
+        .mission-first {
+          font-family: 'Lato', sans-serif;
+          font-size: 1.25rem;
+          font-weight: 400;
+          line-height: 1.7;
+          color: #1f1f1f;
+          margin-bottom: 1.25rem;
+        }
+
+        .mission-first strong {
+          font-weight: 700;
+        }
+
+        .mission-text {
+          font-family: 'Lato', sans-serif;
+          font-size: 1.1875rem;
+          font-weight: 400;
+          line-height: 1.65;
+          color: #1f1f1f;
+          margin-bottom: 1.25rem;
+        }
+
+        .mission-final {
+          font-family: 'Lato', sans-serif;
+          font-size: 1.1875rem;
+          font-weight: 500;
+          font-style: normal;
+          line-height: 1.65;
+          color: #1f1f1f;
+          margin-bottom: 0;
+        }
+
+        .mission-attribution {
+          font-family: 'Lato', sans-serif;
+          font-size: 1rem;
+          font-weight: 400;
+          font-style: italic;
+          color: #4a708b;
+          text-align: right;
+          margin-top: 1.5rem;
+          margin-bottom: 2rem;
+        }
+
+        .mission-cta {
+          margin-top: 2.5rem;
+        }
+
+        .btn-enter-record {
+          background: #4a708b;
+          color: white;
+          border: none;
+          padding: 1.1rem 3rem;
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
+          font-size: 1.05rem;
+          font-weight: 600;
+          letter-spacing: 0.02em;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
+        }
+
+        .btn-enter-record:hover {
+          background: #5a809b;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
+        }
+
+        .btn-enter-record:active {
+          transform: translateY(0);
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
+        }
+
         .cases-preview {
           max-width: 1200px;
           margin: 0 auto;
@@ -158,23 +314,26 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
         }
 
         .btn-primary {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           color: white;
           border: none;
           padding: 1rem 2rem;
-          border-radius: 8px;
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
           font-size: 1.05rem;
           font-weight: 600;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
         }
 
         .btn-primary:hover {
+          background: #5a809b;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
         }
 
         .btn-icon {
@@ -183,6 +342,48 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
         }
 
         @media (max-width: 768px) {
+          .hero-mission {
+            padding: 4rem 2rem;
+          }
+
+          .quote-icon {
+            width: 60px;
+            height: 60px;
+          }
+
+          .quote-icon.opening {
+            margin-right: -15px;
+            margin-bottom: -15px;
+          }
+
+          .quote-icon.closing {
+            margin-left: -15px;
+            margin-top: -15px;
+          }
+
+          .mission-first {
+            font-size: 1.125rem;
+            line-height: 1.9;
+          }
+
+          .mission-text {
+            font-size: 1.0625rem;
+            line-height: 1.9;
+          }
+
+          .mission-final {
+            font-size: 1.0625rem;
+          }
+
+          .mission-attribution {
+            font-size: 0.95rem;
+          }
+
+          .btn-enter-record {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+          }
+
           .cases-preview {
             padding: 3rem 0;
           }
@@ -198,6 +399,52 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
           .cases-grid {
             grid-template-columns: 1fr;
             gap: 1.5rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-mission {
+            padding: 3rem 1.5rem;
+          }
+
+          .quote-icon {
+            width: 50px;
+            height: 50px;
+          }
+
+          .quote-icon.opening {
+            margin-right: -10px;
+            margin-bottom: -10px;
+          }
+
+          .quote-icon.closing {
+            margin-left: -10px;
+            margin-top: -10px;
+          }
+
+          .mission-first {
+            font-size: 1.0625rem;
+            line-height: 1.85;
+          }
+
+          .mission-text {
+            font-size: 1rem;
+            line-height: 1.85;
+          }
+
+          .mission-final {
+            font-size: 1rem;
+          }
+
+          .mission-attribution {
+            font-size: 0.9rem;
+          }
+
+          .btn-enter-record {
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
           }
         }
       `}</style>

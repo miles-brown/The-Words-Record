@@ -1349,12 +1349,13 @@ export default function CasePage({ caseItem }: CasePageProps) {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   try {
-    // Only pre-generate top 50 most recent cases at build time
+    // Only pre-generate top 5 most recent cases at build time
     // Remaining pages will be generated on-demand with fallback: 'blocking'
+    // This significantly reduces build time
     const cases = await prisma.case.findMany({
       select: { slug: true },
       orderBy: { caseDate: 'desc' },
-      take: 50
+      take: 5
     })
 
     // Safety check: ensure cases is defined and is an array

@@ -23,7 +23,7 @@ export default function AdminOrganizations() {
 
   const fetchOrganizations = async () => {
     try {
-      const response = await fetch('/api/admin/organizations')
+      const response = await fetch('/api/admin/organizations', { credentials: 'include' })
       if (response.ok) {
         const data = await response.json()
         setOrganizations(data.organizations || [])

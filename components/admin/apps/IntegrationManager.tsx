@@ -113,7 +113,7 @@ export default function IntegrationManager() {
   const fetchIntegrations = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/apps/integrations')
+      const response = await fetch('/api/apps/integrations', { credentials: 'include' })
       if (response.ok) {
         const result = await response.json()
         setIntegrations(result.data || [])
@@ -148,6 +148,7 @@ export default function IntegrationManager() {
 
     try {
       const response = await fetch(`/api/apps/integrations/${deleteConfirm.id}`, {
+        credentials: 'include',
         method: 'DELETE'
       })
       if (response.ok) {
@@ -163,6 +164,7 @@ export default function IntegrationManager() {
     try {
       setPinging(id)
       const response = await fetch(`/api/apps/integrations/${id}/ping`, {
+        credentials: 'include',
         method: 'POST'
       })
       if (response.ok) {

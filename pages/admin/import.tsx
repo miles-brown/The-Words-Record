@@ -62,7 +62,7 @@ export default function ImportPage() {
   const loadJobs = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/admin/import/jobs')
+      const res = await fetch('/api/admin/import/jobs', { credentials: 'include' })
       if (res.ok) {
         const data = await res.json()
         setJobs(data.jobs)
@@ -77,7 +77,7 @@ export default function ImportPage() {
   const loadQuarantineItems = async (jobId: string) => {
     setLoading(true)
     try {
-      const res = await fetch(`/api/admin/import/quarantine?jobId=${jobId}&limit=100`)
+      const res = await fetch(`/api/admin/import/quarantine?jobId=${jobId}&limit=100`, { credentials: 'include' })
       if (res.ok) {
         const data = await res.json()
         setQuarantineItems(data.items)
@@ -100,6 +100,7 @@ export default function ImportPage() {
       formData.append('file', file)
 
       const res = await fetch('/api/admin/import/upload', {
+        credentials: 'include',
         method: 'POST',
         body: formData,
       })
@@ -214,6 +215,7 @@ export default function ImportPage() {
   const handleDeleteJob = async (jobId: string) => {
     try {
       const res = await fetch(`/api/admin/import/jobs?jobId=${jobId}`, {
+        credentials: 'include',
         method: 'DELETE',
       })
 

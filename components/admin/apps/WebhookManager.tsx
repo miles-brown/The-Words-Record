@@ -49,7 +49,7 @@ export default function WebhookManager() {
   const fetchWebhooks = async () => {
     try {
       setLoading(true)
-      const response = await fetch('/api/admin/apps/webhooks')
+      const response = await fetch('/api/admin/apps/webhooks', { credentials: 'include' })
       if (response.ok) {
         const data = await response.json()
         setWebhooks(data)
@@ -176,6 +176,7 @@ export default function WebhookManager() {
 
     try {
       const response = await fetch(`/api/admin/apps/webhooks/${id}`, {
+        credentials: 'include',
         method: 'DELETE'
       })
 

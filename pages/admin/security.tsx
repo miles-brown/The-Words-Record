@@ -49,6 +49,7 @@ export default function SecurityPage() {
   const [loading, setLoading] = useState(true)
   const [timeRange, setTimeRange] = useState('24h')
   const [securityScore, setSecurityScore] = useState(85)
+  const [showAuditModal, setShowAuditModal] = useState(false)
 
   useEffect(() => {
     fetchSecurityData()
@@ -131,6 +132,10 @@ export default function SecurityPage() {
     }
   }
 
+  const handleRunAudit = () => {
+    setShowAuditModal(true)
+  }
+
   const getScoreColor = () => {
     if (securityScore >= 90) return '#10B981' // green
     if (securityScore >= 70) return '#F59E0B' // yellow
@@ -202,93 +207,77 @@ export default function SecurityPage() {
 
       <AdminLayout title="Security Center">
         <div style={{ minHeight: '100vh', backgroundColor: 'var(--admin-bg)' }}>
-          {/* Sticky Header with Action Buttons */}
+          {/* Subheader with Time Range and Refresh - No longer sticky */}
           <div style={{
             backgroundColor: 'var(--admin-card-bg)',
             borderBottom: '1px solid var(--admin-border)',
-            position: 'sticky',
-            top: 0,
-            zIndex: 50
+            marginBottom: '2rem'
           }}>
-            <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                paddingTop: '1rem',
-                paddingBottom: '1rem',
-                flexWrap: 'wrap',
-                gap: '1rem'
+            <div style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              padding: '1rem 0',
+              flexWrap: 'wrap',
+              gap: '1rem'
+            }}>
+              <p style={{
+                fontSize: '0.875rem',
+                color: 'var(--admin-text-secondary)',
+                margin: 0
               }}>
-                <div>
-                  <h1 style={{
-                    fontSize: '1.5rem',
-                    fontWeight: 700,
-                    color: 'var(--admin-text-primary)',
-                    marginBottom: '0.25rem'
-                  }}>
-                    Security Center
-                  </h1>
-                  <p style={{
+                Monitor security events and manage access controls
+              </p>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                <select
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(e.target.value)}
+                  style={{
+                    padding: '0.5rem 0.75rem',
                     fontSize: '0.875rem',
-                    color: 'var(--admin-text-secondary)',
-                    margin: 0
-                  }}>
-                    Monitor security events and manage access controls
-                  </p>
-                </div>
+                    fontWeight: 500,
+                    color: 'var(--admin-text-primary)',
+                    backgroundColor: 'var(--admin-bg)',
+                    border: '1px solid var(--admin-border)',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="24h">Last 24 hours</option>
+                  <option value="7d">Last 7 days</option>
+                  <option value="30d">Last 30 days</option>
+                </select>
 
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <select
-                    value={timeRange}
-                    onChange={(e) => setTimeRange(e.target.value)}
-                    style={{
-                      padding: '0.5rem 0.75rem',
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      color: 'var(--admin-text-primary)',
-                      backgroundColor: 'var(--admin-bg)',
-                      border: '1px solid var(--admin-border)',
-                      borderRadius: '0.5rem',
-                      cursor: 'pointer',
-                      outline: 'none'
-                    }}
-                  >
-                    <option value="24h">Last 24 hours</option>
-                    <option value="7d">Last 7 days</option>
-                    <option value="30d">Last 30 days</option>
-                  </select>
-
-                  <button
-                    onClick={fetchSecurityData}
-                    style={{
-                      padding: '0.5rem 1rem',
-                      fontSize: '0.875rem',
-                      fontWeight: 500,
-                      color: 'white',
-                      backgroundColor: 'var(--admin-accent)',
-                      border: 'none',
-                      borderRadius: '0.5rem',
-                      cursor: 'pointer',
-                      transition: 'opacity 0.2s',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '0.5rem'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                  >
-                    <span style={{ fontSize: '1rem' }}>🔄</span>
-                    Refresh
-                  </button>
-                </div>
+                <button
+                  onClick={fetchSecurityData}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    color: 'white',
+                    backgroundColor: 'var(--admin-accent)',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    transition: 'opacity 0.2s',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                >
+                  <span style={{ fontSize: '1rem' }}>🔄</span>
+                  Refresh
+                </button>
               </div>
             </div>
           </div>
 
           {/* Main Content */}
-          <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '2rem 1rem' }}>
-
+          <div>
             {/* Security Score Overview */}
             <div style={{ marginBottom: '2rem' }}>
               <div style={{
@@ -374,6 +363,7 @@ export default function SecurityPage() {
 
                 {/* Run Audit Button */}
                 <button
+                  onClick={handleRunAudit}
                   style={{
                     padding: '0.625rem 1.25rem',
                     fontSize: '0.875rem',
@@ -397,10 +387,10 @@ export default function SecurityPage() {
               </div>
             </div>
 
-            {/* Quick Security Metrics */}
+            {/* Quick Security Metrics - Reduced size by ~20% */}
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
               gap: '1rem',
               marginBottom: '2rem'
             }}>
@@ -412,16 +402,17 @@ export default function SecurityPage() {
               ].map((metric, index) => (
                 <div
                   key={index}
+                  title="📊 Sample data - Connect to /api/admin/security/metrics for live data"
                   style={{
                     position: 'relative',
-                    padding: '1.5rem',
+                    padding: '1.2rem',
                     backgroundColor: 'var(--admin-card-bg)',
                     borderRadius: '0.75rem',
                     border: '1px solid var(--admin-border)',
                     boxShadow: 'var(--admin-shadow-medium)',
                     overflow: 'hidden',
                     transition: 'transform 0.2s, box-shadow 0.2s',
-                    cursor: 'default'
+                    cursor: 'help'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
@@ -432,12 +423,30 @@ export default function SecurityPage() {
                     e.currentTarget.style.boxShadow = 'var(--admin-shadow-medium)'
                   }}
                 >
+                  {/* Sample Data Badge */}
+                  <div style={{
+                    position: 'absolute',
+                    top: '0.5rem',
+                    right: '0.5rem',
+                    fontSize: '0.65rem',
+                    fontWeight: 600,
+                    color: '#F59E0B',
+                    backgroundColor: '#F59E0B20',
+                    padding: '0.2rem 0.4rem',
+                    borderRadius: '0.25rem',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.025em',
+                    zIndex: 2
+                  }}>
+                    Demo
+                  </div>
+
                   {/* Background Icon */}
                   <div style={{
                     position: 'absolute',
                     top: '-0.5rem',
                     right: '-0.5rem',
-                    fontSize: '4rem',
+                    fontSize: '3.2rem',
                     opacity: 0.05,
                     lineHeight: 1
                   }}>
@@ -446,15 +455,15 @@ export default function SecurityPage() {
 
                   {/* Icon Badge */}
                   <div style={{
-                    width: '3rem',
-                    height: '3rem',
+                    width: '2.4rem',
+                    height: '2.4rem',
                     borderRadius: '0.5rem',
                     backgroundColor: `${metric.color}20`,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    fontSize: '1.5rem',
-                    marginBottom: '1rem'
+                    fontSize: '1.2rem',
+                    marginBottom: '0.8rem'
                   }}>
                     {metric.icon}
                   </div>
@@ -462,27 +471,27 @@ export default function SecurityPage() {
                   {/* Content */}
                   <div style={{ position: 'relative', zIndex: 1 }}>
                     <p style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.65rem',
                       fontWeight: 600,
                       color: 'var(--admin-text-secondary)',
                       textTransform: 'uppercase',
                       letterSpacing: '0.05em',
-                      marginBottom: '0.5rem'
+                      marginBottom: '0.4rem'
                     }}>
                       {metric.label}
                     </p>
                     <p style={{
-                      fontSize: '2rem',
+                      fontSize: '1.6rem',
                       fontWeight: 700,
                       color: 'var(--admin-text-primary)',
                       margin: 0,
                       lineHeight: 1,
-                      marginBottom: '0.5rem'
+                      marginBottom: '0.4rem'
                     }}>
                       {metric.value}
                     </p>
                     <p style={{
-                      fontSize: '0.75rem',
+                      fontSize: '0.65rem',
                       color: 'var(--admin-text-secondary)',
                       margin: 0
                     }}>
@@ -848,6 +857,145 @@ export default function SecurityPage() {
             </div>
           </div>
         </div>
+
+        {/* Security Audit Modal */}
+        {showAuditModal && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 1000,
+              padding: '1rem'
+            }}
+            onClick={() => setShowAuditModal(false)}
+          >
+            <div
+              style={{
+                backgroundColor: 'var(--admin-card-bg)',
+                borderRadius: '0.75rem',
+                padding: '2rem',
+                maxWidth: '500px',
+                width: '100%',
+                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3 style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                color: 'var(--admin-text-primary)',
+                marginBottom: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <span>🔍</span>
+                Security Audit
+              </h3>
+
+              <p style={{
+                color: 'var(--admin-text-secondary)',
+                marginBottom: '1.5rem',
+                lineHeight: 1.6
+              }}>
+                The security audit function is not yet configured. This feature will scan your system for:
+              </p>
+
+              <ul style={{
+                color: 'var(--admin-text-secondary)',
+                marginBottom: '1.5rem',
+                paddingLeft: '1.5rem',
+                lineHeight: 1.8
+              }}>
+                <li>Weak password policies</li>
+                <li>Inactive user accounts</li>
+                <li>Suspicious login patterns</li>
+                <li>API key vulnerabilities</li>
+                <li>Configuration issues</li>
+              </ul>
+
+              <div style={{
+                padding: '1rem',
+                backgroundColor: '#F59E0B20',
+                borderLeft: '4px solid #F59E0B',
+                borderRadius: '0.5rem',
+                marginBottom: '1.5rem'
+              }}>
+                <p style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--admin-text-primary)',
+                  margin: 0,
+                  fontWeight: 500
+                }}>
+                  💡 <strong>Developer Note:</strong> Connect this to <code style={{
+                    backgroundColor: 'var(--admin-bg)',
+                    padding: '0.2rem 0.4rem',
+                    borderRadius: '0.25rem',
+                    fontFamily: 'monospace',
+                    fontSize: '0.8rem'
+                  }}>/api/admin/security/audit</code> endpoint
+                </p>
+              </div>
+
+              <div style={{
+                display: 'flex',
+                gap: '0.75rem',
+                justifyContent: 'flex-end'
+              }}>
+                <button
+                  onClick={() => setShowAuditModal(false)}
+                  style={{
+                    padding: '0.625rem 1.25rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    color: 'var(--admin-text-primary)',
+                    backgroundColor: 'var(--admin-bg)',
+                    border: '1px solid var(--admin-border)',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--admin-card-bg)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'var(--admin-bg)'
+                  }}
+                >
+                  Close
+                </button>
+                <button
+                  onClick={() => {
+                    setShowAuditModal(false)
+                    alert('Audit endpoint not configured. See /api/admin/security/audit')
+                  }}
+                  style={{
+                    padding: '0.625rem 1.25rem',
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                    color: 'white',
+                    backgroundColor: 'var(--admin-accent)',
+                    border: 'none',
+                    borderRadius: '0.5rem',
+                    cursor: 'pointer',
+                    transition: 'opacity 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                >
+                  Run Anyway
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </AdminLayout>
     </>
   )

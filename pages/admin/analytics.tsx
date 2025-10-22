@@ -121,15 +121,15 @@ export default function AnalyticsPage() {
   const fetchAllData = async () => {
     try {
       const [build, lighthouse, latency, errors, traffic, integrations, resources, uptime, funnel] = await Promise.all([
-        fetch('/api/analytics/build').then(r => r.json()),
-        fetch('/api/analytics/lighthouse').then(r => r.json()),
-        fetch(`/api/analytics/api-latency?range=${timeRange}`).then(r => r.json()),
-        fetch(`/api/analytics/errors?range=${timeRange}`).then(r => r.json()),
-        fetch(`/api/analytics/traffic?range=${timeRange}`).then(r => r.json()),
-        fetch('/api/analytics/integrations').then(r => r.json()),
-        fetch(`/api/analytics/resources?range=${timeRange}`).then(r => r.json()),
-        fetch(`/api/analytics/uptime?range=${timeRange}`).then(r => r.json()),
-        fetch('/api/analytics/funnel').then(r => r.json())
+        fetch('/api/analytics/build', { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/analytics/lighthouse', { credentials: 'include' }).then(r => r.json()),
+        fetch(`/api/analytics/api-latency?range=${timeRange}`, { credentials: 'include' }).then(r => r.json()),
+        fetch(`/api/analytics/errors?range=${timeRange}`, { credentials: 'include' }).then(r => r.json()),
+        fetch(`/api/analytics/traffic?range=${timeRange}`, { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/analytics/integrations', { credentials: 'include' }).then(r => r.json()),
+        fetch(`/api/analytics/resources?range=${timeRange}`, { credentials: 'include' }).then(r => r.json()),
+        fetch(`/api/analytics/uptime?range=${timeRange}`, { credentials: 'include' }).then(r => r.json()),
+        fetch('/api/analytics/funnel', { credentials: 'include' }).then(r => r.json())
       ])
 
       setBuildData(build)

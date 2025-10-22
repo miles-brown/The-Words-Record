@@ -42,7 +42,7 @@ export default function AdminPeople() {
         limit: '100',
         ...(search && { search })
       })
-      const response = await fetch(`/api/admin/people?${params}`)
+      const response = await fetch(`/api/admin/people?${params}`, { credentials: 'include' })
       if (response.ok) {
         const data = await response.json()
         setPeople(data.people || [])

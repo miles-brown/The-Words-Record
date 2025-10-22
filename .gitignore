@@ -64,3 +64,6 @@ prisma/
 !prisma/migrations/
 supabase/
 !supabase/migrations/
+
+# Private conversation logs
+GOOGLE-GEMINI-DATABASE-AGENT-CONVERSATION.md

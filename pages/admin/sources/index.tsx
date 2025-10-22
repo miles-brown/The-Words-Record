@@ -61,7 +61,7 @@ export default function AdminSources() {
         ...(filter !== 'all' && { verified: filter === 'verified' ? 'true' : 'false' })
       })
 
-      const response = await fetch(`/api/admin/sources?${params}`)
+      const response = await fetch(`/api/admin/sources?${params}`, { credentials: 'include' })
       if (response.ok) {
         const data = await response.json()
         setSources(data.sources || [])

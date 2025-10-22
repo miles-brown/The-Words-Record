@@ -128,7 +128,7 @@ export default function WhatWeDoSection() {
         .column-icon {
           width: 60px;
           height: 60px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           border-radius: 12px;
           display: flex;
           align-items: center;
@@ -171,7 +171,7 @@ export default function WhatWeDoSection() {
         }
 
         .list-icon {
-          color: #667eea;
+          color: #4a708b;
           font-weight: 700;
           font-size: 1.5rem;
           line-height: 1.4;
@@ -202,38 +202,43 @@ export default function WhatWeDoSection() {
         }
 
         .btn-browse-cases {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: #4a708b;
           color: white;
           border: none;
           padding: 1rem 2rem;
-          border-radius: 8px;
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
           font-size: 1.05rem;
           font-weight: 600;
           cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
         }
 
         .btn-browse-cases:hover {
+          background: #5a809b;
           transform: translateY(-2px);
-          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
         }
 
         .btn-learn-more {
           background: white;
-          color: #667eea;
-          border: 2px solid #667eea;
+          color: #4a708b;
+          border: 2px solid #4a708b;
           padding: 1rem 2rem;
-          border-radius: 8px;
+          border-radius: 6px;
+          font-family: 'Lato', sans-serif;
           font-size: 1.05rem;
           font-weight: 600;
           cursor: pointer;
-          transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.15);
         }
 
         .btn-learn-more:hover {
+          background: #f8f9fa;
           transform: translateY(-2px);
-          background: #f5f7fa;
-          box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.25);
         }
 
         @media (max-width: 968px) {
