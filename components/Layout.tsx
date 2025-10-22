@@ -109,6 +109,23 @@ export default function Layout({ children, title, description }: LayoutProps) {
               </Link>
             </div>
 
+            <div className="nav-buttons-container">
+              {/* Utility Navigation - Smaller buttons on top */}
+              <div className="nav-utility">
+                <Link href="/about" className="nav-utility-btn">About</Link>
+                <Link href="/methodology" className="nav-utility-btn">Methodology</Link>
+                <Link href="/sources" className="nav-utility-btn">Sources</Link>
+              </div>
+
+              {/* Primary Navigation - Larger buttons below */}
+              <div className="nav-primary">
+                <Link href="/statements" className="nav-btn">Statements</Link>
+                <Link href="/cases" className="nav-btn">Cases</Link>
+                <Link href="/people" className="nav-btn">People</Link>
+                <Link href="/donate" className="nav-btn nav-btn-accent">Donate</Link>
+              </div>
+            </div>
+
             <button
               type="button"
               className="menu-button"

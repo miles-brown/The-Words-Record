@@ -284,16 +284,54 @@ header.scrolled {
 }
 
 nav {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 1.5rem;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 2rem;
   align-items: center;
 }
 
 .nav-brand {
-  margin-left: 15%;
+  justify-self: start;
+}
+
+.nav-buttons-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-self: center;
+}
+
+.nav-utility {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.nav-utility-btn {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border: 1px solid var(--border-primary);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  background: var(--background-secondary);
+}
+
+.nav-utility-btn:hover {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: var(--background-primary);
+}
+
+.nav-primary {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
 }
 
 .nav-brand h1 {
@@ -363,6 +401,18 @@ header.scrolled .site-logo {
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+/* Hide navigation buttons on tablets and mobile - use hamburger menu instead */
+@media (max-width: 1024px) {
+  .nav-buttons-container {
+    display: none;
+  }
+
+  nav {
+    grid-template-columns: auto auto;
+    justify-content: space-between;
+  }
 }
 
 /* Hamburger Menu Button - Compact Design */
