@@ -108,7 +108,11 @@ export default function Layout({ children, title, description }: LayoutProps) {
           <nav aria-label="Main navigation">
             <div className="nav-brand">
               <Link href="/">
-                <h1>The Words Record</h1>
+                <img
+                  src="/images/logo-2.png"
+                  alt="The Words Record"
+                  className="site-logo"
+                />
               </Link>
             </div>
 
@@ -223,6 +227,18 @@ export default function Layout({ children, title, description }: LayoutProps) {
                 <Link href="/terms" className="footer-link">
                   Terms of Use
                 </Link>
+                <button
+                  onClick={() => {
+                    // Reopen Google Funding Choices consent dialog
+                    if (typeof window !== 'undefined' && (window as any).__tcfapi) {
+                      (window as any).__tcfapi('displayConsentUi', 2, () => {});
+                    }
+                  }}
+                  className="footer-link cookie-settings-btn"
+                  aria-label="Cookie Settings"
+                >
+                  Cookie Settings
+                </button>
               </div>
             </div>
           </div>
