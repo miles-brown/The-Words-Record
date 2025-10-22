@@ -104,7 +104,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
             <div className="nav-brand">
               <Link href="/">
                 <img
-                  src="/images/logo-2.png"
+                  src="/images/LOGO-HEADER.png"
                   alt="The Words Record"
                   className="site-logo"
                 />
