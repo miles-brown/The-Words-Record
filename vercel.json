@@ -5,8 +5,30 @@
   "framework": "nextjs",
   "build": {
     "env": {
-      "ENABLE_BUILD_CACHE": "1"
+      "ENABLE_BUILD_CACHE": "1",
+      "PRISMA_SKIP_POSTINSTALL_GENERATE": "true",
+      "NEXT_TELEMETRY_DISABLED": "1"
     }
   },
-  "crons": []
+  "outputDirectory": ".next",
+  "crons": [],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        }
+      ]
+    }
+  ]
 }
