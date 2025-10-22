@@ -97,6 +97,37 @@ export default function Layout({ children, title, description }: LayoutProps) {
       <Analytics />
 
       <div className="container">
+        {/* Utility Navigation Bar - Top right corner, disappears on scroll */}
+        <div className={`utility-bar ${isScrolled ? 'hidden' : ''}`}>
+          <div className="utility-bar-content">
+            <Link href="/about" className="nav-utility-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+              </svg>
+              About
+            </Link>
+            <Link href="/methodology" className="nav-utility-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+              </svg>
+              Methodology
+            </Link>
+            <Link href="/sources" className="nav-utility-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+              </svg>
+              Sources
+            </Link>
+          </div>
+        </div>
+
         <header className={isScrolled ? 'scrolled' : ''}>
           <nav aria-label="Main navigation">
             <div className="nav-brand">
@@ -109,21 +140,12 @@ export default function Layout({ children, title, description }: LayoutProps) {
               </Link>
             </div>
 
-            <div className="nav-buttons-container">
-              {/* Utility Navigation - Smaller buttons on top */}
-              <div className="nav-utility">
-                <Link href="/about" className="nav-utility-btn">About</Link>
-                <Link href="/methodology" className="nav-utility-btn">Methodology</Link>
-                <Link href="/sources" className="nav-utility-btn">Sources</Link>
-              </div>
-
-              {/* Primary Navigation - Larger buttons below */}
-              <div className="nav-primary">
-                <Link href="/statements" className="nav-btn">Statements</Link>
-                <Link href="/cases" className="nav-btn">Cases</Link>
-                <Link href="/people" className="nav-btn">People</Link>
-                <Link href="/donate" className="nav-btn nav-btn-accent">Donate</Link>
-              </div>
+            {/* Primary Navigation - Right-aligned, shrinks on scroll */}
+            <div className="nav-primary-container">
+              <Link href="/statements" className="nav-btn">Statements</Link>
+              <Link href="/cases" className="nav-btn">Cases</Link>
+              <Link href="/people" className="nav-btn">People</Link>
+              <Link href="/donate" className="nav-btn nav-btn-accent">Donate</Link>
             </div>
 
             <button
