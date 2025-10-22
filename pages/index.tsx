@@ -254,29 +254,57 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
         }
 
         .btn-enter-record {
-          background: #4a708b;
-          color: white;
-          border: none;
-          padding: 1.1rem 3rem;
-          border-radius: 6px;
+          background: transparent;
+          color: var(--text-primary);
+          border: 1px solid rgba(0, 0, 0, 0.12);
+          padding: 0.75rem 2rem;
+          border-radius: 2px;
           font-family: 'Lato', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 600;
-          letter-spacing: 0.02em;
+          font-size: 0.95rem;
+          font-weight: 500;
+          letter-spacing: 0.025em;
           cursor: pointer;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dark-mode .btn-enter-record {
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-enter-record::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.03), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .dark-mode .btn-enter-record::before {
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        }
+
+        .btn-enter-record:hover::before {
+          left: 100%;
         }
 
         .btn-enter-record:hover {
-          background: #5a809b;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
+          border-color: rgba(0, 0, 0, 0.25);
+          background: rgba(0, 0, 0, 0.02);
+          transform: translateY(-1px);
+        }
+
+        .dark-mode .btn-enter-record:hover {
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.03);
         }
 
         .btn-enter-record:active {
           transform: translateY(0);
-          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
         }
 
         .cases-preview {
@@ -314,26 +342,56 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
         }
 
         .btn-primary {
-          background: #4a708b;
-          color: white;
-          border: none;
-          padding: 1rem 2rem;
-          border-radius: 6px;
+          background: transparent;
+          color: var(--text-primary);
+          border: 1px solid rgba(0, 0, 0, 0.12);
+          padding: 0.65rem 1.4rem;
+          border-radius: 2px;
           font-family: 'Lato', sans-serif;
-          font-size: 1.05rem;
-          font-weight: 600;
+          font-size: 0.95rem;
+          font-weight: 500;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          transition: all 0.3s ease;
-          box-shadow: 0 2px 8px rgba(74, 112, 139, 0.25);
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          letter-spacing: 0.025em;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dark-mode .btn-primary {
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-primary::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.03), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .dark-mode .btn-primary::before {
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        }
+
+        .btn-primary:hover::before {
+          left: 100%;
         }
 
         .btn-primary:hover {
-          background: #5a809b;
-          transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(74, 112, 139, 0.35);
+          border-color: rgba(0, 0, 0, 0.25);
+          background: rgba(0, 0, 0, 0.02);
+          transform: translateY(-1px);
+        }
+
+        .dark-mode .btn-primary:hover {
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.03);
         }
 
         .btn-icon {

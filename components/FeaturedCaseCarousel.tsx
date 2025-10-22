@@ -156,10 +156,11 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
       <style jsx>{`
         .featured-carousel {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 5rem 2rem;
-          margin: -2rem -2rem 3rem -2rem;
+          background: var(--background-primary);
+          border-bottom: 1px solid var(--border-primary);
+          color: var(--text-primary);
+          padding: 3rem 2rem;
+          margin: 0;
           position: relative;
           overflow: hidden;
         }
@@ -171,7 +172,7 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           left: 0;
           right: 0;
           bottom: 0;
-          background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, transparent 100%);
           pointer-events: none;
         }
 
@@ -184,15 +185,15 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
         .carousel-content {
           position: relative;
-          min-height: 400px;
+          min-height: 320px;
           display: flex;
           align-items: center;
-          justify-content: center;
+          justify-content: flex-start;
         }
 
         .carousel-main {
-          text-align: center;
-          max-width: 800px;
+          text-align: left;
+          max-width: 900px;
           animation: fadeIn 0.5s ease-out;
         }
 
@@ -209,90 +210,134 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
         .case-badge {
           display: inline-block;
-          background: rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(10px);
-          padding: 0.5rem 1rem;
-          border-radius: 20px;
-          font-size: 0.85rem;
+          background: transparent;
+          border: 1px solid var(--border-primary);
+          padding: 0.35rem 0.85rem;
+          border-radius: 2px;
+          font-size: 0.7rem;
           font-weight: 600;
           text-transform: uppercase;
-          letter-spacing: 1px;
-          margin-bottom: 1.5rem;
+          letter-spacing: 0.08em;
+          margin-bottom: 1.25rem;
+          color: var(--text-secondary);
         }
 
         .case-title {
-          font-size: 2.5rem;
+          font-size: 2.25rem;
           margin-bottom: 0.75rem;
-          line-height: 1.2;
+          line-height: 1.3;
+          font-weight: 600;
+          color: var(--text-primary);
+          letter-spacing: -0.01em;
         }
 
         .case-date {
-          font-size: 1rem;
-          opacity: 0.9;
-          margin-bottom: 1.5rem;
+          font-size: 0.9rem;
+          color: var(--text-secondary);
+          margin-bottom: 1.25rem;
+          font-weight: 500;
+          letter-spacing: 0.01em;
         }
 
         .case-summary {
-          font-size: 1.2rem;
-          line-height: 1.6;
-          margin-bottom: 2rem;
-          opacity: 0.95;
+          font-size: 1.05rem;
+          line-height: 1.7;
+          margin-bottom: 1.75rem;
+          color: var(--text-secondary);
+          max-width: 700px;
         }
 
         .case-meta {
           display: flex;
-          justify-content: center;
-          gap: 2rem;
-          margin-bottom: 1.5rem;
+          justify-content: flex-start;
+          gap: 1.5rem;
+          margin-bottom: 1.25rem;
         }
 
         .meta-item {
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          font-size: 0.95rem;
-          opacity: 0.9;
+          gap: 0.45rem;
+          font-size: 0.875rem;
+          color: var(--text-secondary);
+          font-weight: 500;
         }
 
         .meta-icon {
-          width: 20px;
-          height: 20px;
+          width: 16px;
+          height: 16px;
+          opacity: 0.7;
         }
 
         .case-tags {
           display: flex;
-          justify-content: center;
+          justify-content: flex-start;
           flex-wrap: wrap;
           gap: 0.5rem;
-          margin-bottom: 2rem;
+          margin-bottom: 1.75rem;
         }
 
         .tag {
-          background: rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(10px);
-          padding: 0.4rem 0.8rem;
-          border-radius: 12px;
-          font-size: 0.85rem;
+          background: transparent;
+          border: 1px solid var(--border-primary);
+          padding: 0.3rem 0.7rem;
+          border-radius: 2px;
+          font-size: 0.75rem;
+          color: var(--text-secondary);
+          font-weight: 500;
+          letter-spacing: 0.02em;
         }
 
         .btn-explore {
-          background: white;
-          color: #667eea;
-          border: none;
-          padding: 1rem 2rem;
-          border-radius: 30px;
-          font-size: 1.1rem;
-          font-weight: 600;
+          background: transparent;
+          color: var(--text-primary);
+          border: 1px solid rgba(0, 0, 0, 0.12);
+          padding: 0.65rem 1.4rem;
+          border-radius: 2px;
+          font-size: 0.95rem;
+          font-weight: 500;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          transition: transform 0.2s, box-shadow 0.2s;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          letter-spacing: 0.025em;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .dark-mode .btn-explore {
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-explore::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: -100%;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.03), transparent);
+          transition: left 0.5s ease;
+        }
+
+        .dark-mode .btn-explore::before {
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+        }
+
+        .btn-explore:hover::before {
+          left: 100%;
         }
 
         .btn-explore:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+          border-color: rgba(0, 0, 0, 0.25);
+          background: rgba(0, 0, 0, 0.02);
+          transform: translateY(-1px);
+        }
+
+        .dark-mode .btn-explore:hover {
+          border-color: rgba(255, 255, 255, 0.3);
+          background: rgba(255, 255, 255, 0.03);
         }
 
         .btn-icon {
@@ -304,52 +349,64 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          background: rgba(255, 255, 255, 0.2);
-          backdrop-filter: blur(10px);
-          border: none;
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
+          background: transparent;
+          border: 1px solid var(--border-primary);
+          width: 40px;
+          height: 40px;
+          border-radius: 2px;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: all 0.2s;
-          color: white;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: var(--text-primary);
         }
 
         .carousel-button:hover {
-          background: rgba(255, 255, 255, 0.3);
-          transform: translateY(-50%) scale(1.1);
+          background: rgba(0, 0, 0, 0.02);
+          border-color: rgba(0, 0, 0, 0.25);
+          transform: translateY(-50%) translateX(0);
+        }
+
+        .dark-mode .carousel-button:hover {
+          background: rgba(255, 255, 255, 0.03);
+          border-color: rgba(255, 255, 255, 0.3);
         }
 
         .carousel-button svg {
-          width: 24px;
-          height: 24px;
+          width: 20px;
+          height: 20px;
         }
 
         .carousel-prev {
-          left: 0;
+          left: -60px;
+        }
+
+        .carousel-prev:hover {
+          transform: translateY(-50%) translateX(-2px);
         }
 
         .carousel-next {
-          right: 0;
+          right: -60px;
+        }
+
+        .carousel-next:hover {
+          transform: translateY(-50%) translateX(2px);
         }
 
         .carousel-dots {
           position: absolute;
-          bottom: -2rem;
-          left: 50%;
-          transform: translateX(-50%);
+          bottom: -1.5rem;
+          left: 0;
           display: flex;
-          gap: 0.75rem;
+          gap: 0.5rem;
         }
 
         .carousel-dot {
-          width: 12px;
-          height: 12px;
+          width: 8px;
+          height: 8px;
           border-radius: 50%;
-          border: 2px solid rgba(255, 255, 255, 0.5);
+          border: 1px solid var(--border-primary);
           background: transparent;
           cursor: pointer;
           transition: all 0.3s;
@@ -357,22 +414,25 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
         }
 
         .carousel-dot.active {
-          background: white;
-          border-color: white;
+          background: var(--text-primary);
+          border-color: var(--text-primary);
         }
 
         .carousel-dot:hover {
-          border-color: white;
+          border-color: var(--text-primary);
         }
 
         @media (max-width: 768px) {
           .featured-carousel {
-            padding: 3rem 1.5rem;
-            margin: -1rem -1rem 2rem -1rem;
+            padding: 2.5rem 1.5rem;
           }
 
           .carousel-content {
-            min-height: 300px;
+            min-height: 280px;
+          }
+
+          .carousel-main {
+            text-align: left;
           }
 
           .case-title {
@@ -380,41 +440,58 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           }
 
           .case-summary {
-            font-size: 1rem;
+            font-size: 0.95rem;
           }
 
           .case-meta {
-            flex-direction: column;
-            gap: 0.75rem;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 1rem;
           }
 
           .carousel-button {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
           }
 
           .carousel-button svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
           }
 
           .carousel-prev {
-            left: -10px;
+            left: -45px;
           }
 
           .carousel-next {
-            right: -10px;
+            right: -45px;
           }
         }
 
         @media (max-width: 480px) {
+          .featured-carousel {
+            padding: 2rem 1rem;
+          }
+
           .case-title {
             font-size: 1.5rem;
           }
 
+          .case-summary {
+            font-size: 0.9rem;
+          }
+
           .btn-explore {
-            padding: 0.875rem 1.5rem;
-            font-size: 1rem;
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+          }
+
+          .carousel-prev {
+            left: 0;
+          }
+
+          .carousel-next {
+            right: 0;
           }
         }
       `}</style>
