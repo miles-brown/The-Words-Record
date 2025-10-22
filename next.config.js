@@ -24,9 +24,7 @@ const nextConfig = {
 
   // Experimental optimizations
   experimental: {
-    // Optimize CSS
-    optimizeCss: true,
-    // Optimize package imports
+    // Optimize package imports (tree-shaking for large packages)
     optimizePackageImports: ['recharts', 'react-markdown', 'remark'],
   },
 

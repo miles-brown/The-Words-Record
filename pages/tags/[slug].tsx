@@ -254,9 +254,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
   // Remaining pages will be generated on-demand with fallback: 'blocking'
   // This significantly reduces build time
   const tags = await prisma.tag.findMany({
-    select: { slug: true, _count: { select: { statements: true } } },
+    select: { slug: true },
     orderBy: [
-      { statements: { _count: 'desc' } }, // Most used tags first
+      { usageCount: 'desc' }, // Most used tags first
       { createdAt: 'desc' }
     ],
     take: 5
