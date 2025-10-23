@@ -1,14 +1,33 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
-import { verifyAuth } from '@/lib/auth-middleware'
+import { PrismaClient, UserRole } from '@prisma/client'
+import { extractTokenFromRequest, verifyToken } from '@/lib/auth'
 
 const prisma = new PrismaClient()
 
+async function requireAdmin(req: NextApiRequest): Promise<{ userId: string; username?: string } | null> {
+  const token = extractTokenFromRequest(req)
+  if (!token) return null
+
+  const payload = verifyToken(token)
+  if (!payload || !payload.sub) return null
+
+  const user = await prisma.user.findUnique({
+    where: { id: payload.sub },
+    select: { id: true, username: true, role: true, isActive: true }
+  })
+
+  if (!user || !user.isActive || user.role !== UserRole.ADMIN) {
+    return null
+  }
+
+  return { userId: user.id, username: user.username }
+}
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // Verify authentication
-  const authResult = await verifyAuth(req)
-  if (!authResult.authenticated || !authResult.user) {
-    return res.status(401).json({ error: 'Unauthorized' })
+  const auth = await requireAdmin(req)
+  if (!auth) {
+    return res.status(403).json({ error: 'Unauthorized' })
   }
 
   const { id } = req.query
@@ -21,7 +40,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     case 'GET':
       return getStatement(id, res)
     case 'PATCH':
-      return updateStatement(id, req.body, authResult.user.id, res)
+      return updateStatement(id, req.body, auth.userId, res)
     case 'DELETE':
       return deleteStatement(id, res)
     default:
