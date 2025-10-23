@@ -10,6 +10,7 @@ interface Statement {
   context: string | null
   statementDate: string
   statementType: string
+  responseType: string | null
   verificationStatus: string | null
   credibilityScore: number | null
   category: string | null
@@ -25,6 +26,15 @@ interface Statement {
   flagReason: string | null
   hasMedia: boolean
   mediaType: string | null
+  platform: string | null
+  medium: string | null
+  likes: number | null
+  shares: number | null
+  views: number | null
+  responseCount: number | null
+  isRetracted: boolean | null
+  isDeleted: boolean | null
+  isDisputed: boolean | null
   createdAt: string
   updatedAt: string
   person: {
@@ -272,9 +282,12 @@ export default function AdminStatements() {
                       <th>Speaker</th>
                       <th>Case</th>
                       <th>Type</th>
+                      <th>Response Type</th>
                       <th>Status</th>
-                      <th>Sentiment</th>
+                      <th>Platform</th>
+                      <th>Medium</th>
                       <th>Source</th>
+                      <th>Engagement</th>
                       <th>Relationships</th>
                       <th>Flags</th>
                       <th>Date</th>
@@ -327,8 +340,30 @@ export default function AdminStatements() {
                               {stmt.statementType === 'RESPONSE' ? '↩️ RESPONSE' : '💬 ORIGINAL'}
                             </code>
                           </td>
+                          <td>
+                            {stmt.responseType ? (
+                              <code className="type-badge response-type">
+                                {stmt.responseType}
+                              </code>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
+                          </td>
                           <td>{getVerificationBadge(stmt.verificationStatus, stmt.isVerified)}</td>
-                          <td>{getSentimentBadge(stmt.sentiment)}</td>
+                          <td>
+                            {stmt.platform ? (
+                              <span className="platform-badge">{stmt.platform}</span>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
+                          </td>
+                          <td>
+                            {stmt.medium ? (
+                              <code className="type-badge">{stmt.medium}</code>
+                            ) : (
+                              <span className="text-muted">—</span>
+                            )}
+                          </td>
                           <td>
                             {stmt.primarySource ? (
                               <span className="source-indicator" title={stmt.primarySource.title}>
@@ -337,6 +372,31 @@ export default function AdminStatements() {
                             ) : (
                               <span className="text-muted">—</span>
                             )}
+                          </td>
+                          <td>
+                            <div className="engagement-stats">
+                              {(stmt.likes || stmt.shares || stmt.views) ? (
+                                <>
+                                  {stmt.likes != null && stmt.likes > 0 && (
+                                    <span className="stat-badge" title="Likes">
+                                      ❤️ {stmt.likes.toLocaleString()}
+                                    </span>
+                                  )}
+                                  {stmt.shares != null && stmt.shares > 0 && (
+                                    <span className="stat-badge" title="Shares">
+                                      🔄 {stmt.shares.toLocaleString()}
+                                    </span>
+                                  )}
+                                  {stmt.views != null && stmt.views > 0 && (
+                                    <span className="stat-badge" title="Views">
+                                      👁️ {stmt.views.toLocaleString()}
+                                    </span>
+                                  )}
+                                </>
+                              ) : (
+                                <span className="text-muted">—</span>
+                              )}
+                            </div>
                           </td>
                           <td>
                             <div className="relationships">
@@ -367,6 +427,15 @@ export default function AdminStatements() {
                             <div className="flags">
                               {stmt.isFlagged && (
                                 <span className="flag flag-flagged" title={stmt.flagReason || 'Flagged'}>🚩</span>
+                              )}
+                              {stmt.isRetracted && (
+                                <span className="flag flag-retracted" title="Retracted">↩️</span>
+                              )}
+                              {stmt.isDeleted && (
+                                <span className="flag flag-deleted" title="Deleted">🗑️</span>
+                              )}
+                              {stmt.isDisputed && (
+                                <span className="flag flag-disputed" title="Disputed">⚠️</span>
                               )}
                               {!stmt.isPublic && (
                                 <span className="flag flag-private" title="Private">🔒</span>
@@ -427,7 +496,9 @@ export default function AdminStatements() {
 
         <style jsx>{`
           .admin-page {
-            max-width: 1800px;
+            max-width: 100%;
+            width: 100%;
+            padding: 0 1rem;
           }
 
           .page-header {
@@ -566,12 +637,14 @@ export default function AdminStatements() {
             padding: 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border: 1px solid #f3f4f6;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: visible;
             margin-bottom: 1.5rem;
           }
 
           .data-table {
             width: 100%;
+            min-width: 2000px;
             border-collapse: collapse;
           }
 
@@ -709,10 +782,43 @@ export default function AdminStatements() {
             white-space: nowrap;
           }
 
+          .platform-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            background: #dbeafe;
+            color: #1e40af;
+            border-radius: 4px;
+            font-weight: 600;
+            white-space: nowrap;
+          }
+
+          .engagement-stats {
+            display: flex;
+            gap: 0.375rem;
+            align-items: center;
+            flex-wrap: wrap;
+          }
+
+          .stat-badge {
+            font-size: 0.6875rem;
+            padding: 0.125rem 0.375rem;
+            background: #f1f5f9;
+            border-radius: 4px;
+            white-space: nowrap;
+            color: #475569;
+            font-weight: 600;
+          }
+
+          .response-type {
+            background: #fef3c7;
+            color: #92400e;
+          }
+
           .flags {
             display: flex;
             gap: 0.25rem;
             align-items: center;
+            flex-wrap: wrap;
           }
 
           .flag {

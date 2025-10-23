@@ -105,7 +105,9 @@ async function autoPromoteStatements() {
             wasManuallyPromoted: false,
             originatingStatementId: statement.id, // Set as principal statement
             qualificationScore: calculateQualificationScore(statement._count.responses),
-            responseCount: statement._count.responses
+            responseCount: statement._count.responses,
+            visibility: 'PUBLIC',
+            status: 'DOCUMENTED'
           }
         })
 

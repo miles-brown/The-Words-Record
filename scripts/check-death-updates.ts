@@ -236,9 +236,10 @@ async function checkDeathUpdates(options: { force?: boolean; ageGroup?: string }
         }
       ]
     },
-    orderBy: {
-      birthDate: 'asc' // Oldest first
-    }
+    orderBy: [
+      { birthDate: 'asc' }, // Oldest first
+      { dateOfBirth: 'asc' }
+    ]
   })
 
   console.log(`Found ${people.length} living people in database\n`)
@@ -338,7 +339,10 @@ async function checkDeathUpdates(options: { force?: boolean; ageGroup?: string }
               publication: source.publication,
               publishDate: new Date(source.date),
               credibilityLevel: result.confidence > 0.8 ? 'VERY_HIGH' : 'HIGH',
-              sourceType: 'NEWS_ARTICLE'
+              sourceType: 'NEWS_ARTICLE',
+              verificationStatus: result.confidence > 0.8 ? 'VERIFIED' : 'PARTIALLY_VERIFIED',
+              contentType: 'ARTICLE',
+              sourceLevel: 'PRIMARY'
             }
           })
         } catch (error) {

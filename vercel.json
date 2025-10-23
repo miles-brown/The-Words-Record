@@ -11,7 +11,16 @@
     }
   },
   "outputDirectory": ".next",
-  "crons": [],
+  "crons": [
+    {
+      "path": "/api/cron/automation?task=all",
+      "schedule": "0 2 * * *"
+    },
+    {
+      "path": "/api/cron/automation?task=auto-promote",
+      "schedule": "0 14 * * *"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

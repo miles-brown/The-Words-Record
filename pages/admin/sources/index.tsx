@@ -346,7 +346,9 @@ export default function AdminSources() {
 
         <style jsx>{`
           .admin-page {
-            max-width: 1600px;
+            max-width: 100%;
+            width: 100%;
+            padding: 0 1rem;
           }
 
           .page-header {
@@ -501,12 +503,14 @@ export default function AdminSources() {
             padding: 0;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             border: 1px solid #f3f4f6;
-            overflow: hidden;
+            overflow-x: auto;
+            overflow-y: visible;
             margin-bottom: 1.5rem;
           }
 
           .data-table {
             width: 100%;
+            min-width: 1400px;
             border-collapse: collapse;
           }
 

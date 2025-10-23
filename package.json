@@ -22,6 +22,12 @@
     "harvest:jaspiz": "npx tsx scripts/harvest-jaspiz-data.ts",
     "check-admin": "npx tsx scripts/check-admin.ts",
     "reset-admin-password": "npx tsx scripts/reset-admin-password.ts",
+    "automation:death-check": "npx tsx scripts/check-death-updates.ts",
+    "automation:death-check-force": "npx tsx scripts/check-death-updates.ts --force",
+    "automation:death-check-80": "npx tsx scripts/check-death-updates.ts --age-group=80",
+    "automation:auto-promote": "node scripts/auto-promote-statements.js",
+    "automation:analyze-responses": "node scripts/analyze-statement-responses.js",
+    "automation:all": "npm run automation:death-check && npm run automation:auto-promote",
     "postinstall": "prisma generate"
   },
   "dependencies": {
