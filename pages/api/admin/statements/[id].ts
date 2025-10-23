@@ -75,7 +75,7 @@ async function getStatement(id: string, res: NextApiResponse) {
             id: true,
             name: true,
             slug: true,
-            organizationType: true
+            type: true
           }
         },
         case: {
