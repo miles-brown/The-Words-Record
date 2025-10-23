@@ -67,12 +67,8 @@ export default function Document() {
             />
 
             {/* Google AdSense Code Snippet */}
-            {/* Loads after CMP to ensure consent is collected first */}
-            <script
-              async
-              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5418171625369886"
-              crossOrigin="anonymous"
-            />
+            {/* NOTE: AdSense script now loaded conditionally via AdSenseScript component in Layout */}
+            {/* This prevents ads from showing on admin pages */}
 
             {/* Google Tag Manager */}
             <script

@@ -5,6 +5,7 @@ import { format } from 'date-fns'
 import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
+import InArticleAd from '@/components/InArticleAd'
 import { prisma } from '@/lib/prisma'
 
 interface TagPageProps {
@@ -60,42 +61,56 @@ export default function TagPage({ tag }: TagPageProps) {
         </div>
 
         <div className="cases-list">
-          {tag.cases.map((caseItem: any) => (
-            <Link href={`/cases/${caseItem.slug}`} key={caseItem.id}>
-              <article className="case-card">
-                <div className="case-header">
-                  <h2>{caseItem.title}</h2>
-                  <span className="date">
-                    {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
-                  </span>
-                </div>
+          {tag.cases.map((caseItem: any, index: number) => {
+            const totalCases = tag.cases.length
+            const adPosition1 = Math.floor(totalCases * 0.4) // ~2/5 through
+            const adPosition2 = Math.floor(totalCases * 0.67) // ~2/3 through
 
-                <p className="case-excerpt">{caseItem.summary}</p>
+            return (
+              <div key={caseItem.id}>
+                <Link href={`/cases/${caseItem.slug}`}>
+                  <article className="case-card">
+                    <div className="case-header">
+                      <h2>{caseItem.title}</h2>
+                      <span className="date">
+                        {format(new Date(caseItem.caseDate), 'MMMM d, yyyy')}
+                      </span>
+                    </div>
 
-                {caseItem.people && caseItem.people.length > 0 && (
-                  <div className="involved-people">
-                    <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
-                  </div>
-                )}
+                    <p className="case-excerpt">{caseItem.summary}</p>
 
-                <div className="case-footer">
-                  <div className="case-stats">
-                    <span>
-                      {caseItem._count?.statements || 0} statement{caseItem._count?.statements !== 1 ? 's' : ''}
-                    </span>
-                    <span>•</span>
-                    <span>
-                      {caseItem._count?.responses || 0} response{caseItem._count?.responses !== 1 ? 's' : ''}
-                    </span>
-                    <span>•</span>
-                    <span>
-                      {caseItem._count?.sources || 0} source{caseItem._count?.sources !== 1 ? 's' : ''}
-                    </span>
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))}
+                    {caseItem.people && caseItem.people.length > 0 && (
+                      <div className="involved-people">
+                        <strong>Involved:</strong> {caseItem.people.map((p: any) => p.name).join(', ')}
+                      </div>
+                    )}
+
+                    <div className="case-footer">
+                      <div className="case-stats">
+                        <span>
+                          {caseItem._count?.statements || 0} statement{caseItem._count?.statements !== 1 ? 's' : ''}
+                        </span>
+                        <span>•</span>
+                        <span>
+                          {caseItem._count?.responses || 0} response{caseItem._count?.responses !== 1 ? 's' : ''}
+                        </span>
+                        <span>•</span>
+                        <span>
+                          {caseItem._count?.sources || 0} source{caseItem._count?.sources !== 1 ? 's' : ''}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                </Link>
+
+                {/* Ad Position 1: ~2/5 through the list */}
+                {index === adPosition1 && <InArticleAd />}
+
+                {/* Ad Position 2: ~2/3 through the list */}
+                {index === adPosition2 && <InArticleAd />}
+              </div>
+            )
+          })}
         </div>
       </div>
 

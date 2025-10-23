@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown'
 import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
+import InArticleAd from '@/components/InArticleAd'
 import { CaseWithRelations } from '@/types'
 import { prisma } from '@/lib/prisma'
 import { generateHarvardCitation, type CitationData } from '@/lib/harvard-citation'
@@ -267,10 +268,8 @@ export default function CasePage({ caseItem }: CasePageProps) {
           </div>
         </section>
 
-        {/* Mid-page Ad Banner */}
-        <div className="ad-banner ad-banner-mid">
-          <p>Advertisement</p>
-        </div>
+        {/* Ad Position 1: ~2/5 down the page */}
+        <InArticleAd />
 
         {caseItem.people && caseItem.people.length > 0 && (
           <section className="involved-people">
@@ -384,6 +383,9 @@ export default function CasePage({ caseItem }: CasePageProps) {
             </div>
           </section>
         )}
+
+        {/* Ad Position 2: ~2/3 down the page */}
+        <InArticleAd />
 
         {caseItem.sources && caseItem.sources.length > 0 && (
           <section className="sources-section">

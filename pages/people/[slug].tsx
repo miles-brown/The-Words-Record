@@ -6,6 +6,7 @@ import { format } from 'date-fns'
 import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
+import InArticleAd from '@/components/InArticleAd'
 import { PersonWithRelations } from '@/types'
 import { prisma } from '@/lib/prisma'
 import { getAgeString } from '@/lib/ageUtils'
@@ -71,7 +72,7 @@ export default function PersonPage({ person }: PersonPageProps) {
       <article className="person-profile">
         <Breadcrumbs
           items={[
-            { label: 'Who?', href: '/people' },
+            { label: 'People', href: '/people' },
             { label: person.name }
           ]}
         />
@@ -257,6 +258,9 @@ export default function PersonPage({ person }: PersonPageProps) {
           </div>
         </div>
 
+        {/* Ad Position 1: ~2/5 down the page */}
+        <InArticleAd />
+
         <section className="cases-section">
           <h2>Related Cases ({person.cases?.length || 0})</h2>
           
@@ -294,6 +298,9 @@ export default function PersonPage({ person }: PersonPageProps) {
             <p className="no-cases">No cases documented for this person.</p>
           )}
         </section>
+
+        {/* Ad Position 2: ~2/3 down the page */}
+        <InArticleAd />
 
         {person.statements && person.statements.length > 0 && (
           <section className="statements-section">

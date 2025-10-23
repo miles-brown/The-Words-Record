@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown'
 import Layout from '@/components/Layout'
 import Breadcrumbs from '@/components/Breadcrumbs'
 import { ContentSkeleton } from '@/components/LoadingSkeletons'
+import InArticleAd from '@/components/InArticleAd'
 import { prisma } from '@/lib/prisma'
 
 interface CasePageProps {
@@ -168,6 +169,9 @@ export default function CasePage({ caseItem }: CasePageProps) {
           </div>
         </section>
 
+        {/* Ad Position 1: ~2/5 down the page */}
+        <InArticleAd />
+
         {caseItem.people && caseItem.people.length > 0 && (
           <section className="involved-people">
             <h2>People Involved ({caseItem.people.length})</h2>
@@ -295,6 +299,9 @@ export default function CasePage({ caseItem }: CasePageProps) {
             </div>
           </section>
         )}
+
+        {/* Ad Position 2: ~2/3 down the page */}
+        <InArticleAd />
 
         {/* Repercussions Section - Only show if repercussions exist */}
         {caseItem.repercussions && caseItem.repercussions.length > 0 && (

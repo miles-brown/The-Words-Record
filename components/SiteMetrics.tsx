@@ -109,17 +109,16 @@ export default function SiteMetrics() {
           <p>Documenting public discourse with verified sources</p>
         </div>
 
-        <div className="metrics-grid" role="list">
+        <div className="metrics-grid">
           <AnimatedMetric
             label="Cases Documented"
             value={stats.cases}
             delay={0}
           />
-          <AnimatedMetric
-            label="Verified Sources"
-            value={stats.sources}
-            delay={100}
-          />
+          <div className="metric-item">
+            <div className="metric-value">#</div>
+            <div className="metric-label">Verified Sources</div>
+          </div>
           <AnimatedMetric
             label="People Covered"
             value={stats.people}
