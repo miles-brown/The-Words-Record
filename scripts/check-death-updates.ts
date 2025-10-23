@@ -341,7 +341,7 @@ async function checkDeathUpdates(options: { force?: boolean; ageGroup?: string }
               credibilityLevel: result.confidence > 0.8 ? 'VERY_HIGH' : 'HIGH',
               sourceType: 'NEWS_ARTICLE',
               verificationStatus: result.confidence > 0.8 ? 'VERIFIED' : 'PARTIALLY_VERIFIED',
-              contentType: 'ARTICLE',
+              contentType: 'TEXT',
               sourceLevel: 'PRIMARY'
             }
           })
