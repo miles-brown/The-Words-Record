@@ -141,12 +141,12 @@ export default function PeoplePage() {
 
   return (
     <Layout
-      title="Who?"
+      title="People"
       description="Browse profiles of individuals involved in documented public statements"
     >
       <div className="people-page">
         <div className="page-header">
-          <h1>Who?</h1>
+          <h1>People</h1>
           <p className="page-description">
             Browse profiles of individuals who have made or been subjects of documented public statements.
             Click on any profile to view their complete history and statements.
@@ -780,10 +780,13 @@ export default function PeoplePage() {
 
         .grid-layout .person-image {
           width: 100%;
-          height: 180px;
+          aspect-ratio: 1 / 1;
+          max-width: 180px;
           border-radius: 8px;
           overflow: hidden;
           margin-bottom: 0.75rem;
+          margin-left: auto;
+          margin-right: auto;
           display: flex;
           align-items: center;
           justify-content: center;

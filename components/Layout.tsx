@@ -30,13 +30,7 @@ export default function Layout({ children, title, description }: LayoutProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = 'unset'
-    }
-  }, [menuOpen])
+  // Removed body overflow restriction to allow navigation while menu is open
 
   useEffect(() => {
     // Load theme preference
@@ -163,8 +157,8 @@ export default function Layout({ children, title, description }: LayoutProps) {
 
         {/* Hamburger Menu */}
         {menuOpen && (
-          <div className="menu-overlay" onClick={() => setMenuOpen(false)}>
-            <div className="menu-content" onClick={(e) => e.stopPropagation()}>
+          <div className="menu-overlay">
+            <div className="menu-content">
               <button
                 type="button"
                 className="menu-close"
@@ -175,40 +169,40 @@ export default function Layout({ children, title, description }: LayoutProps) {
               </button>
 
               <nav className="menu-links">
-                <Link href="/" onClick={() => setMenuOpen(false)}>
+                <Link href="/">
                   Home
                 </Link>
-                <Link href="/statements" onClick={() => setMenuOpen(false)}>
+                <Link href="/statements">
                   Statements
                 </Link>
-                <Link href="/cases" onClick={() => setMenuOpen(false)}>
+                <Link href="/cases">
                   Cases
                 </Link>
-                <Link href="/people" onClick={() => setMenuOpen(false)}>
+                <Link href="/people">
                   People
                 </Link>
-                <Link href="/organizations" onClick={() => setMenuOpen(false)}>
+                <Link href="/organizations">
                   Organizations
                 </Link>
-                <Link href="/tags" onClick={() => setMenuOpen(false)}>
+                <Link href="/tags">
                   Topics
                 </Link>
-                <Link href="/sources" onClick={() => setMenuOpen(false)}>
+                <Link href="/sources">
                   Sources
                 </Link>
-                <Link href="/methodology" onClick={() => setMenuOpen(false)}>
+                <Link href="/methodology">
                   Methodology
                 </Link>
-                <Link href="/about" onClick={() => setMenuOpen(false)}>
+                <Link href="/about">
                   About
                 </Link>
-                <Link href="/report" onClick={() => setMenuOpen(false)}>
+                <Link href="/report">
                   Report
                 </Link>
-                <Link href="/suggestions" onClick={() => setMenuOpen(false)}>
+                <Link href="/suggestions">
                   Suggest
                 </Link>
-                <Link href="/donate" onClick={() => setMenuOpen(false)} className="menu-link-accent">
+                <Link href="/donate" className="menu-link-accent">
                   Donate
                 </Link>
 
