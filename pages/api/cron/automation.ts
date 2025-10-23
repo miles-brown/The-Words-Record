@@ -171,7 +171,7 @@ async function runAutoPromotion() {
   const qualifyingStatements = statements.filter(statement => {
     const responseCount = statement._count.responses
     const hasCase = statement.case !== null
-    const isAlreadyRealCase = hasCase && statement.case.isRealIncident === true
+    const isAlreadyRealCase = hasCase && statement.case?.isRealIncident === true
 
     return responseCount > 2 && !isAlreadyRealCase && hasCase
   })
