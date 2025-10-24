@@ -35,8 +35,21 @@ interface AccessControlUser {
   status: 'active' | 'inactive' | 'suspended'
 }
 
+interface SecurityMetrics {
+  activeSessions: number
+  failedLogins24h: number
+  mfaEnabledPercent: number
+  apiKeys: number
+}
+
 export default function SecurityPage() {
   const [events, setEvents] = useState<SecurityEvent[]>([])
+  const [metrics, setMetrics] = useState<SecurityMetrics>({
+    activeSessions: 0,
+    failedLogins24h: 0,
+    mfaEnabledPercent: 0,
+    apiKeys: 0
+  })
   const [settings, setSettings] = useState<SecuritySettings>({
     mfaRequired: true,
     sessionTimeout: 30,
@@ -58,78 +71,62 @@ export default function SecurityPage() {
   const fetchSecurityData = async () => {
     try {
       setLoading(true)
-      // Simulated data - replace with actual API calls
-      setTimeout(() => {
-        setEvents([
-          {
-            id: '1',
-            type: 'login',
-            user: 'admin@example.com',
-            description: 'Successful login',
-            timestamp: '10 minutes ago',
-            ipAddress: '192.168.1.1',
-            risk: 'low'
-          },
-          {
-            id: '2',
-            type: 'failed_login',
-            user: 'unknown@test.com',
-            description: 'Failed login attempt - invalid credentials',
-            timestamp: '25 minutes ago',
-            ipAddress: '203.0.113.42',
-            risk: 'medium'
-          },
-          {
-            id: '3',
-            type: 'permission_change',
-            user: 'editor@example.com',
-            description: 'User role updated from Editor to Admin',
-            timestamp: '1 hour ago',
-            ipAddress: '192.168.1.2',
-            risk: 'medium'
-          },
-          {
-            id: '4',
-            type: 'data_export',
-            user: 'admin@example.com',
-            description: 'Exported 500 records',
-            timestamp: '3 hours ago',
-            ipAddress: '192.168.1.1',
-            risk: 'low'
-          },
-          {
-            id: '5',
-            type: 'suspicious',
-            user: 'test@example.com',
-            description: 'Multiple failed login attempts detected',
-            timestamp: '5 hours ago',
-            ipAddress: '198.51.100.78',
-            risk: 'high'
-          },
-          {
-            id: '6',
-            type: 'login',
-            user: 'user@example.com',
-            description: 'Successful login',
-            timestamp: '6 hours ago',
-            ipAddress: '10.0.0.15',
-            risk: 'low'
-          }
-        ])
 
-        setAccessControlUsers([
-          { id: '1', username: 'admin@example.com', role: 'Super Admin', lastLogin: '10 mins ago', status: 'active' },
-          { id: '2', username: 'editor@example.com', role: 'Admin', lastLogin: '1 hour ago', status: 'active' },
-          { id: '3', username: 'user@example.com', role: 'Editor', lastLogin: '6 hours ago', status: 'active' },
-          { id: '4', username: 'test@example.com', role: 'Viewer', lastLogin: '2 days ago', status: 'suspended' }
-        ])
+      // Fetch real data from API endpoints
+      const [eventsRes, metricsRes, usersRes] = await Promise.all([
+        fetch(`/api/admin/security/events?timeRange=${timeRange}&limit=20`, {
+          credentials: 'include'
+        }),
+        fetch('/api/admin/security/metrics', {
+          credentials: 'include'
+        }),
+        fetch('/api/admin/users?limit=10&orderBy=lastLogin', {
+          credentials: 'include'
+        }).catch(() => null) // Optional: users list
+      ])
 
-        setLoading(false)
-      }, 500)
+      if (!eventsRes.ok || !metricsRes.ok) {
+        throw new Error('Failed to fetch security data')
+      }
+
+      const eventsData = await eventsRes.json()
+      const metricsData = await metricsRes.json()
+
+      setEvents(eventsData.events || [])
+      setMetrics(metricsData)
+
+      // Optionally fetch users for access control table
+      if (usersRes && usersRes.ok) {
+        const usersData = await usersRes.json()
+        if (usersData.users) {
+          setAccessControlUsers(usersData.users.map((u: any) => ({
+            id: u.id,
+            username: u.username || u.email,
+            role: u.role,
+            lastLogin: u.lastLogin ? formatUserLastLogin(new Date(u.lastLogin)) : 'Never',
+            status: u.isActive ? 'active' : 'inactive'
+          })))
+        }
+      }
+
+      setLoading(false)
     } catch (error) {
       console.error('Failed to fetch security data:', error)
       setLoading(false)
     }
+  }
+
+  const formatUserLastLogin = (date: Date): string => {
+    const now = Date.now()
+    const diff = now - date.getTime()
+
+    const minutes = Math.floor(diff / 60000)
+    const hours = Math.floor(minutes / 60)
+    const days = Math.floor(hours / 24)
+
+    if (minutes < 60) return `${minutes} mins ago`
+    if (hours < 24) return `${hours} hour${hours === 1 ? '' : 's'} ago`
+    return `${days} day${days === 1 ? '' : 's'} ago`
   }
 
   const handleRunAudit = async () => {
@@ -414,7 +411,7 @@ export default function SecurityPage() {
               </div>
             </div>
 
-            {/* Quick Security Metrics - Reduced size by ~20% */}
+            {/* Quick Security Metrics - Real Data */}
             <div style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
@@ -422,14 +419,14 @@ export default function SecurityPage() {
               marginBottom: '2rem'
             }}>
               {[
-                { label: 'Active Sessions', value: '23', icon: '🧑‍💻', color: '#3B82F6', description: 'Currently logged in' },
-                { label: 'Failed Logins (24h)', value: '7', icon: '⚠', color: '#F59E0B', description: 'Requires attention' },
-                { label: 'MFA Enabled', value: '89%', icon: '🔐', color: '#10B981', description: 'Two-factor auth' },
-                { label: 'API Keys', value: '12', icon: '🔑', color: '#8B5CF6', description: 'Active tokens' }
+                { label: 'Active Sessions', value: metrics.activeSessions.toString(), icon: '🧑‍💻', color: '#3B82F6', description: 'Currently logged in' },
+                { label: 'Failed Logins (24h)', value: metrics.failedLogins24h.toString(), icon: '⚠', color: '#F59E0B', description: 'Requires attention' },
+                { label: 'MFA Enabled', value: `${metrics.mfaEnabledPercent}%`, icon: '🔐', color: '#10B981', description: 'Two-factor auth' },
+                { label: 'API Keys', value: metrics.apiKeys.toString(), icon: '🔑', color: '#8B5CF6', description: 'Active tokens' }
               ].map((metric, index) => (
                 <div
                   key={index}
-                  title="📊 Sample data - Connect to /api/admin/security/metrics for live data"
+                  title={`Real-time ${metric.label} metric`}
                   style={{
                     position: 'relative',
                     padding: '1.2rem',
@@ -438,8 +435,7 @@ export default function SecurityPage() {
                     border: '1px solid var(--admin-border)',
                     boxShadow: 'var(--admin-shadow-medium)',
                     overflow: 'hidden',
-                    transition: 'transform 0.2s, box-shadow 0.2s',
-                    cursor: 'help'
+                    transition: 'transform 0.2s, box-shadow 0.2s'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)'
@@ -450,23 +446,6 @@ export default function SecurityPage() {
                     e.currentTarget.style.boxShadow = 'var(--admin-shadow-medium)'
                   }}
                 >
-                  {/* Sample Data Badge */}
-                  <div style={{
-                    position: 'absolute',
-                    top: '0.5rem',
-                    right: '0.5rem',
-                    fontSize: '0.65rem',
-                    fontWeight: 600,
-                    color: '#F59E0B',
-                    backgroundColor: '#F59E0B20',
-                    padding: '0.2rem 0.4rem',
-                    borderRadius: '0.25rem',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.025em',
-                    zIndex: 2
-                  }}>
-                    Demo
-                  </div>
 
                   {/* Background Icon */}
                   <div style={{
