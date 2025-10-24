@@ -132,8 +132,35 @@ export default function SecurityPage() {
     }
   }
 
-  const handleRunAudit = () => {
-    setShowAuditModal(true)
+  const handleRunAudit = async () => {
+    try {
+      setLoading(true)
+      const response = await fetch('/api/admin/security/audit', {
+        method: 'POST',
+        credentials: 'include'
+      })
+
+      if (!response.ok) {
+        throw new Error('Audit failed')
+      }
+
+      const auditReport = await response.json()
+
+      // Update security score based on audit results
+      setSecurityScore(auditReport.overallScore)
+
+      // Store audit report for display in modal
+      sessionStorage.setItem('lastAuditReport', JSON.stringify(auditReport))
+
+      // Show results in modal
+      setShowAuditModal(true)
+
+    } catch (error) {
+      console.error('Failed to run security audit:', error)
+      alert('Failed to run security audit. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   const getScoreColor = () => {
@@ -859,143 +886,251 @@ export default function SecurityPage() {
         </div>
 
         {/* Security Audit Modal */}
-        {showAuditModal && (
-          <div
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              zIndex: 1000,
-              padding: '1rem'
-            }}
-            onClick={() => setShowAuditModal(false)}
-          >
+        {showAuditModal && (() => {
+          const auditData = typeof window !== 'undefined' ? sessionStorage.getItem('lastAuditReport') : null
+          const auditReport = auditData ? JSON.parse(auditData) : null
+
+          return (
             <div
               style={{
-                backgroundColor: 'var(--admin-card-bg)',
-                borderRadius: '0.75rem',
-                padding: '2rem',
-                maxWidth: '500px',
-                width: '100%',
-                boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
-              }}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <h3 style={{
-                fontSize: '1.25rem',
-                fontWeight: 700,
-                color: 'var(--admin-text-primary)',
-                marginBottom: '1rem',
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '0.5rem'
-              }}>
-                <span>🔍</span>
-                Security Audit
-              </h3>
-
-              <p style={{
-                color: 'var(--admin-text-secondary)',
-                marginBottom: '1.5rem',
-                lineHeight: 1.6
-              }}>
-                The security audit function is not yet configured. This feature will scan your system for:
-              </p>
-
-              <ul style={{
-                color: 'var(--admin-text-secondary)',
-                marginBottom: '1.5rem',
-                paddingLeft: '1.5rem',
-                lineHeight: 1.8
-              }}>
-                <li>Weak password policies</li>
-                <li>Inactive user accounts</li>
-                <li>Suspicious login patterns</li>
-                <li>API key vulnerabilities</li>
-                <li>Configuration issues</li>
-              </ul>
-
-              <div style={{
+                justifyContent: 'center',
+                zIndex: 1000,
                 padding: '1rem',
-                backgroundColor: '#F59E0B20',
-                borderLeft: '4px solid #F59E0B',
-                borderRadius: '0.5rem',
-                marginBottom: '1.5rem'
-              }}>
-                <p style={{
-                  fontSize: '0.875rem',
+                overflow: 'auto'
+              }}
+              onClick={() => setShowAuditModal(false)}
+            >
+              <div
+                style={{
+                  backgroundColor: 'var(--admin-card-bg)',
+                  borderRadius: '0.75rem',
+                  padding: '2rem',
+                  maxWidth: '800px',
+                  width: '100%',
+                  maxHeight: '90vh',
+                  overflowY: 'auto',
+                  boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+                }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h3 style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
                   color: 'var(--admin-text-primary)',
-                  margin: 0,
-                  fontWeight: 500
+                  marginBottom: '1rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
                 }}>
-                  💡 <strong>Developer Note:</strong> Connect this to <code style={{
-                    backgroundColor: 'var(--admin-bg)',
-                    padding: '0.2rem 0.4rem',
-                    borderRadius: '0.25rem',
-                    fontFamily: 'monospace',
-                    fontSize: '0.8rem'
-                  }}>/api/admin/security/audit</code> endpoint
-                </p>
-              </div>
+                  <span>🔍</span>
+                  Security Audit Results
+                </h3>
 
-              <div style={{
-                display: 'flex',
-                gap: '0.75rem',
-                justifyContent: 'flex-end'
-              }}>
-                <button
-                  onClick={() => setShowAuditModal(false)}
-                  style={{
-                    padding: '0.625rem 1.25rem',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    color: 'var(--admin-text-primary)',
-                    backgroundColor: 'var(--admin-bg)',
-                    border: '1px solid var(--admin-border)',
-                    borderRadius: '0.5rem',
-                    cursor: 'pointer',
-                    transition: 'all 0.2s'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--admin-card-bg)'
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--admin-bg)'
-                  }}
-                >
-                  Close
-                </button>
-                <button
-                  onClick={() => {
-                    setShowAuditModal(false)
-                    alert('Audit endpoint not configured. See /api/admin/security/audit')
-                  }}
-                  style={{
-                    padding: '0.625rem 1.25rem',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
-                    color: 'white',
-                    backgroundColor: 'var(--admin-accent)',
-                    border: 'none',
-                    borderRadius: '0.5rem',
-                    cursor: 'pointer',
-                    transition: 'opacity 0.2s'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                >
-                  Run Anyway
-                </button>
+                {auditReport ? (
+                  <>
+                    {/* Summary */}
+                    <div style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))',
+                      gap: '1rem',
+                      marginBottom: '2rem'
+                    }}>
+                      <div style={{
+                        padding: '1rem',
+                        backgroundColor: 'var(--admin-bg)',
+                        borderRadius: '0.5rem',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: getScoreColor() }}>
+                          {auditReport.overallScore}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-secondary)' }}>
+                          Security Score
+                        </div>
+                      </div>
+                      <div style={{
+                        padding: '1rem',
+                        backgroundColor: '#EF444410',
+                        borderRadius: '0.5rem',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#EF4444' }}>
+                          {auditReport.summary.critical + auditReport.summary.high}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-secondary)' }}>
+                          Critical/High
+                        </div>
+                      </div>
+                      <div style={{
+                        padding: '1rem',
+                        backgroundColor: '#10B98110',
+                        borderRadius: '0.5rem',
+                        textAlign: 'center'
+                      }}>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: '#10B981' }}>
+                          {auditReport.checks.passed}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-secondary)' }}>
+                          Checks Passed
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Findings */}
+                    {auditReport.findings.length > 0 ? (
+                      <div style={{ marginBottom: '1.5rem' }}>
+                        <h4 style={{
+                          fontSize: '1rem',
+                          fontWeight: 600,
+                          color: 'var(--admin-text-primary)',
+                          marginBottom: '1rem'
+                        }}>
+                          Security Findings ({auditReport.findings.length})
+                        </h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                          {auditReport.findings.map((finding: any) => (
+                            <div
+                              key={finding.id}
+                              style={{
+                                padding: '1rem',
+                                backgroundColor: 'var(--admin-bg)',
+                                borderRadius: '0.5rem',
+                                borderLeft: `4px solid ${
+                                  finding.severity === 'critical' ? '#EF4444' :
+                                  finding.severity === 'high' ? '#F59E0B' :
+                                  finding.severity === 'medium' ? '#3B82F6' : '#6B7280'
+                                }`
+                              }}
+                            >
+                              <div style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'flex-start',
+                                marginBottom: '0.5rem'
+                              }}>
+                                <h5 style={{
+                                  fontSize: '0.875rem',
+                                  fontWeight: 600,
+                                  color: 'var(--admin-text-primary)',
+                                  margin: 0
+                                }}>
+                                  {finding.title}
+                                </h5>
+                                <span style={{
+                                  padding: '0.25rem 0.5rem',
+                                  fontSize: '0.7rem',
+                                  fontWeight: 600,
+                                  textTransform: 'uppercase',
+                                  borderRadius: '0.25rem',
+                                  color: finding.severity === 'critical' ? '#EF4444' :
+                                         finding.severity === 'high' ? '#F59E0B' :
+                                         finding.severity === 'medium' ? '#3B82F6' : '#6B7280',
+                                  backgroundColor: finding.severity === 'critical' ? '#EF444420' :
+                                                   finding.severity === 'high' ? '#F59E0B20' :
+                                                   finding.severity === 'medium' ? '#3B82F620' : '#6B728020'
+                                }}>
+                                  {finding.severity}
+                                </span>
+                              </div>
+                              <p style={{
+                                fontSize: '0.8rem',
+                                color: 'var(--admin-text-secondary)',
+                                margin: '0 0 0.5rem 0'
+                              }}>
+                                {finding.description}
+                              </p>
+                              <p style={{
+                                fontSize: '0.75rem',
+                                color: 'var(--admin-text-primary)',
+                                margin: 0,
+                                fontStyle: 'italic'
+                              }}>
+                                💡 {finding.recommendation}
+                              </p>
+                              {finding.affectedItems && finding.affectedItems.length > 0 && (
+                                <div style={{
+                                  marginTop: '0.5rem',
+                                  padding: '0.5rem',
+                                  backgroundColor: 'var(--admin-card-bg)',
+                                  borderRadius: '0.25rem',
+                                  fontSize: '0.7rem',
+                                  fontFamily: 'monospace',
+                                  color: 'var(--admin-text-secondary)'
+                                }}>
+                                  Affected: {finding.affectedItems.slice(0, 3).join(', ')}
+                                  {finding.affectedItems.length > 3 && ` (+${finding.affectedItems.length - 3} more)`}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{
+                        padding: '2rem',
+                        textAlign: 'center',
+                        backgroundColor: '#10B98110',
+                        borderRadius: '0.5rem',
+                        marginBottom: '1.5rem'
+                      }}>
+                        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
+                        <p style={{ color: '#10B981', fontWeight: 600, margin: 0 }}>
+                          No security issues found!
+                        </p>
+                      </div>
+                    )}
+
+                    <div style={{
+                      fontSize: '0.75rem',
+                      color: 'var(--admin-text-secondary)',
+                      textAlign: 'center',
+                      marginBottom: '1rem'
+                    }}>
+                      Audit completed at {new Date(auditReport.timestamp).toLocaleString()}
+                    </div>
+                  </>
+                ) : (
+                  <p style={{ color: 'var(--admin-text-secondary)', textAlign: 'center' }}>
+                    No audit data available. Run an audit to see results.
+                  </p>
+                )}
+
+                <div style={{
+                  display: 'flex',
+                  gap: '0.75rem',
+                  justifyContent: 'flex-end'
+                }}>
+                  <button
+                    onClick={() => setShowAuditModal(false)}
+                    style={{
+                      padding: '0.625rem 1.25rem',
+                      fontSize: '0.875rem',
+                      fontWeight: 500,
+                      color: 'white',
+                      backgroundColor: 'var(--admin-accent)',
+                      border: 'none',
+                      borderRadius: '0.5rem',
+                      cursor: 'pointer',
+                      transition: 'opacity 0.2s'
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
+                    onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
+                  >
+                    Close
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )
+        })()}
       </AdminLayout>
     </>
   )
