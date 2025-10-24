@@ -231,71 +231,91 @@ export default function SecurityPage() {
 
       <AdminLayout title="Security Center">
         <div style={{ minHeight: '100vh', backgroundColor: 'var(--admin-bg)' }}>
-          {/* Subheader with Time Range and Refresh - No longer sticky */}
+          {/* Sticky Header with Action Buttons */}
           <div style={{
             backgroundColor: 'var(--admin-card-bg)',
             borderBottom: '1px solid var(--admin-border)',
+            position: 'sticky',
+            top: 0,
+            zIndex: 50,
             marginBottom: '2rem'
           }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              padding: '1rem 0',
-              flexWrap: 'wrap',
-              gap: '1rem'
-            }}>
-              <p style={{
-                fontSize: '0.875rem',
-                color: 'var(--admin-text-secondary)',
-                margin: 0
+            <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+              <div style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                paddingTop: '1rem',
+                paddingBottom: '1rem',
+                flexWrap: 'wrap',
+                gap: '1rem'
               }}>
-                Monitor security events and manage access controls
-              </p>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <select
-                  value={timeRange}
-                  onChange={(e) => setTimeRange(e.target.value)}
-                  style={{
-                    padding: '0.5rem 0.75rem',
-                    fontSize: '0.875rem',
-                    fontWeight: 500,
+                <div>
+                  <h1 style={{
+                    fontSize: '1.5rem',
+                    fontWeight: 700,
                     color: 'var(--admin-text-primary)',
-                    backgroundColor: 'var(--admin-bg)',
-                    border: '1px solid var(--admin-border)',
-                    borderRadius: '0.5rem',
-                    cursor: 'pointer',
-                    outline: 'none'
-                  }}
-                >
-                  <option value="24h">Last 24 hours</option>
-                  <option value="7d">Last 7 days</option>
-                  <option value="30d">Last 30 days</option>
-                </select>
-
-                <button
-                  onClick={fetchSecurityData}
-                  style={{
-                    padding: '0.5rem 1rem',
+                    marginBottom: '0.25rem'
+                  }}>
+                    Security Center
+                  </h1>
+                  <p style={{
                     fontSize: '0.875rem',
-                    fontWeight: 500,
-                    color: 'white',
-                    backgroundColor: 'var(--admin-accent)',
-                    border: 'none',
-                    borderRadius: '0.5rem',
-                    cursor: 'pointer',
-                    transition: 'opacity 0.2s',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.5rem'
-                  }}
-                  onMouseEnter={(e) => e.currentTarget.style.opacity = '0.9'}
-                  onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
-                >
-                  <span style={{ fontSize: '1rem' }}>🔄</span>
-                  Refresh
-                </button>
+                    color: 'var(--admin-text-secondary)',
+                    margin: 0
+                  }}>
+                    Monitor security events and manage access controls
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <select
+                    value={timeRange}
+                    onChange={(e) => setTimeRange(e.target.value)}
+                    style={{
+                      padding: '0.625rem 1.25rem',
+                      borderRadius: '0.75rem',
+                      border: '1px solid var(--admin-border)',
+                      backgroundColor: 'var(--admin-card-bg)',
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <option value="24h">Last 24 hours</option>
+                    <option value="7d">Last 7 days</option>
+                    <option value="30d">Last 30 days</option>
+                  </select>
+
+                  <button
+                    type="button"
+                    onClick={fetchSecurityData}
+                    style={{
+                      padding: '0.625rem 1.25rem',
+                      borderRadius: '0.75rem',
+                      border: '1px solid var(--admin-border)',
+                      backgroundColor: 'var(--admin-card-bg)',
+                      color: 'var(--admin-text-primary)',
+                      fontSize: '0.875rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      transition: 'all 0.2s'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--admin-bg)'
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--admin-card-bg)'
+                    }}
+                  >
+                    <span style={{ fontSize: '1rem' }}>🔄</span>
+                    Refresh
+                  </button>
+                </div>
               </div>
             </div>
           </div>
