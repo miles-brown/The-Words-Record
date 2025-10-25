@@ -8,6 +8,7 @@ import WhatWeDoSection from '../components/WhatWeDoSection'
 import MethodologyPreview from '../components/MethodologyPreview'
 import CTASection from '../components/CTASection'
 import CaseCardEnhanced from '../components/CaseCardEnhanced'
+import StructuredData, { generateOrganizationSchema, generateWebsiteSchema } from '../components/StructuredData'
 
 interface CaseStudy {
   slug: string
@@ -66,7 +67,12 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
       <Head>
         <title>The Words Record - Documentation of Public Statements</title>
         <meta name="description" content="Comprehensive documentation of public statements, allegations, and responses. Neutral, factual, and thoroughly sourced." />
+        <meta name="keywords" content="public statements, fact checking, documentation, news archive, accountability, transparency" />
       </Head>
+
+      {/* Structured Data for SEO */}
+      <StructuredData type="organization" data={generateOrganizationSchema()} />
+      <StructuredData type="website" data={generateWebsiteSchema()} />
 
       {/* Featured Case Carousel */}
       {featuredCases.length > 0 && (
