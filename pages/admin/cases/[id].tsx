@@ -23,7 +23,9 @@ export default function EditCase() {
   const { id } = router.query
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [enriching, setEnriching] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [enrichmentSuccess, setEnrichmentSuccess] = useState<string | null>(null)
   const [formData, setFormData] = useState<CaseForm>({
     title: '',
     slug: '',
@@ -147,6 +149,59 @@ export default function EditCase() {
     }
   }
 
+  const handleEnrich = async (force = false) => {
+    const confirmMessage = force
+      ? 'This case already has documentation. Re-enrich with AI? This may take 30-60 seconds.'
+      : 'Generate comprehensive Wikipedia-style documentation using AI? This may take 30-60 seconds.'
+
+    if (!confirm(confirmMessage)) {
+      return
+    }
+
+    setEnriching(true)
+    setError(null)
+    setEnrichmentSuccess(null)
+
+    try {
+      const response = await fetch('/api/admin/cases/enrich', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ caseId: id, force })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        // Update form with enriched content
+        setFormData(prev => ({
+          ...prev,
+          summary: data.case.summary || prev.summary,
+          description: data.case.description || prev.description
+        }))
+
+        setEnrichmentSuccess(
+          `✓ AI enrichment completed! Generated ${data.enrichmentMetadata.summaryLength} char summary ` +
+          `and ${data.enrichmentMetadata.descriptionLength} char description using ` +
+          `${data.enrichmentMetadata.sourcesUsed} sources, ${data.enrichmentMetadata.responsesAnalyzed} responses, ` +
+          `and ${data.enrichmentMetadata.repercussionsAnalyzed} repercussions.`
+        )
+
+        // Scroll to description field
+        setTimeout(() => {
+          const descriptionElement = document.querySelector('textarea[name="description"]')
+          descriptionElement?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }, 100)
+      } else {
+        setError(data.error || 'Failed to enrich case')
+      }
+    } catch (err) {
+      setError('An error occurred during enrichment')
+    } finally {
+      setEnriching(false)
+    }
+  }
+
   const statusOptions = [
     { value: 'DOCUMENTED', label: 'Documented' },
     { value: 'VERIFIED', label: 'Verified' },
@@ -194,6 +249,17 @@ export default function EditCase() {
               <p className="page-subtitle">Update case information</p>
             </div>
             <div className="header-actions">
+              {formData.isRealIncident && (
+                <button
+                  onClick={() => handleEnrich(formData.description.length > 1000)}
+                  disabled={enriching}
+                  className="btn-primary"
+                  title="Generate comprehensive Wikipedia-style documentation using AI"
+                  style={{ marginRight: '8px' }}
+                >
+                  {enriching ? '🤖 Enriching...' : '✨ AI Enrich'}
+                </button>
+              )}
               <button onClick={handleDelete} className="btn-danger">
                 Delete
               </button>
@@ -204,6 +270,18 @@ export default function EditCase() {
           </div>
 
           {error && <div className="error-message">{error}</div>}
+          {enrichmentSuccess && (
+            <div className="success-message" style={{
+              background: 'var(--success-bg, #d4edda)',
+              color: 'var(--success-text, #155724)',
+              padding: '1rem',
+              borderRadius: '4px',
+              marginBottom: '1rem',
+              border: '1px solid var(--success-border, #c3e6cb)'
+            }}>
+              {enrichmentSuccess}
+            </div>
+          )}
 
           <div className="form-container">
             <form onSubmit={handleSubmit}>

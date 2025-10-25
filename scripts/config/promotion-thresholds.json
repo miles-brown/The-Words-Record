@@ -1,0 +1,39 @@
+{
+  "version": "1.0.0",
+  "description": "Thresholds and weights for statement-to-case auto-promotion",
+  "comment": "Adjust these values to fine-tune which statements get promoted to full cases",
+
+  "weights": {
+    "responseCount": 15,
+    "mediaOutlets": 10,
+    "articleCount": 5,
+    "likes": 0.01,
+    "shares": 0.02,
+    "views": 0.0001,
+    "hasRepercussions": 30
+  },
+
+  "thresholds": {
+    "minimumResponses": 3,
+    "minimumQualificationScore": 40,
+    "autoPromoteScore": 60,
+    "highPriorityScore": 80
+  },
+
+  "scoring": {
+    "description": "Score calculation: (responses × 15) + (mediaOutlets × 10) + (articles × 5) + (likes × 0.01) + (shares × 0.02) + (views × 0.0001) + (hasRepercussions × 30)",
+    "maxScore": 100,
+    "scoreBands": {
+      "low": "0-39: Not eligible for promotion",
+      "medium": "40-59: Eligible but requires manual review",
+      "high": "60-79: Auto-promote candidate",
+      "veryHigh": "80-100: High priority case"
+    }
+  },
+
+  "enrichment": {
+    "autoEnrichOnPromotion": true,
+    "requireManualReview": false,
+    "enrichmentTimeout": 180000
+  }
+}
