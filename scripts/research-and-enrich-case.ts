@@ -12,8 +12,8 @@
  */
 
 import { PrismaClient } from '@prisma/client'
-import { enrichCase, testConnection, type CaseEnrichmentInput } from '../lib/claude-api'
-import { enrichedCaseSearch, testTavilyConnection } from '../lib/tavily-search'
+import { enrichCase, testConnection, type CaseEnrichmentInput } from '../lib/claude-api.js'
+import { enrichedCaseSearch, testTavilyConnection } from '../lib/tavily-search.js'
 
 const prisma = new PrismaClient()
 
