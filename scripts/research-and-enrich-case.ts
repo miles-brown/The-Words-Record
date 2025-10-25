@@ -8,16 +8,19 @@
  *   npx ts-node scripts/research-and-enrich-case.ts <caseSlug>
  *   npx ts-node scripts/research-and-enrich-case.ts --all  (enrich all promoted cases)
  *   npx ts-node scripts/research-and-enrich-case.ts --dry-run <caseSlug>
+ *   npx ts-node scripts/research-and-enrich-case.ts --web-search <caseSlug>  (include web search)
  */
 
 import { PrismaClient } from '@prisma/client'
 import { enrichCase, testConnection, type CaseEnrichmentInput } from '../lib/claude-api'
+import { enrichedCaseSearch, testTavilyConnection } from '../lib/tavily-search'
 
 const prisma = new PrismaClient()
 
 interface EnrichmentOptions {
   dryRun?: boolean
   force?: boolean // Re-enrich even if already enriched
+  webSearch?: boolean // Include web search results
 }
 
 async function main() {
@@ -31,6 +34,7 @@ async function main() {
   const dryRun = args.includes('--dry-run') || args.includes('-d')
   const force = args.includes('--force') || args.includes('-f')
   const enrichAll = args.includes('--all') || args.includes('-a')
+  const webSearch = args.includes('--web-search') || args.includes('-w')
   const caseSlug = args.find(arg => !arg.startsWith('--') && !arg.startsWith('-'))
 
   console.log('🔬 Case Research & Enrichment Tool\n')
@@ -45,13 +49,30 @@ async function main() {
     process.exit(1)
   }
 
-  console.log('✅ Claude API connection successful\n')
+  console.log('✅ Claude API connection successful')
+
+  // Test Tavily API if web search is enabled
+  if (webSearch) {
+    console.log('Testing Tavily API connection...')
+    const tavilyOk = await testTavilyConnection()
+
+    if (!tavilyOk) {
+      console.error('❌ Failed to connect to Tavily API')
+      console.error('Please check your TAVILY_API_KEY environment variable')
+      console.error('Get a free API key at https://tavily.com/ (1,000 searches/month)')
+      process.exit(1)
+    }
+
+    console.log('✅ Tavily API connection successful')
+  }
+
+  console.log('')
 
   try {
     if (enrichAll) {
-      await enrichAllCases({ dryRun, force })
+      await enrichAllCases({ dryRun, force, webSearch })
     } else if (caseSlug) {
-      await enrichSingleCase(caseSlug, { dryRun, force })
+      await enrichSingleCase(caseSlug, { dryRun, force, webSearch })
     } else {
       console.error('❌ Please provide a case slug or use --all flag')
       printUsage()
@@ -246,6 +267,36 @@ async function enrichSingleCase(
     }
   }
 
+  // Perform web search if enabled
+  if (options.webSearch && origStatement.person) {
+    console.log('🌐 Performing web search for additional context...')
+    console.log('   (This may take 10-20 seconds)')
+
+    try {
+      const webSearchResults = await enrichedCaseSearch({
+        personName: origStatement.person.name,
+        statementContent: origStatement.content,
+        statementDate: origStatement.statementDate,
+        caseTitle: caseRecord.title,
+        context: origStatement.context || undefined
+      })
+
+      enrichmentInput.webSearchResults = webSearchResults
+
+      console.log('✅ Web search completed!')
+      console.log(`   Main sources found: ${webSearchResults.mainSources.length}`)
+      console.log(`   Media coverage: ${webSearchResults.mediaCoverage.length}`)
+      console.log(`   Recent updates: ${webSearchResults.recentUpdates.length}`)
+      if (webSearchResults.background.answer) {
+        console.log(`   Background info: ${webSearchResults.background.answer.substring(0, 80)}...`)
+      }
+      console.log('')
+    } catch (error) {
+      console.warn('⚠️  Web search failed:', error instanceof Error ? error.message : 'Unknown error')
+      console.warn('   Continuing with enrichment without web search results\n')
+    }
+  }
+
   if (options.dryRun) {
     console.log('[DRY RUN] Would send the following data to Claude API:')
     console.log(JSON.stringify(enrichmentInput, null, 2))
@@ -255,7 +306,7 @@ async function enrichSingleCase(
 
   // Call Claude API to enrich
   console.log('🤖 Sending data to Claude API for enrichment...')
-  console.log('   (This may take 30-60 seconds)')
+  console.log('   (This may take 10-30 seconds with Claude Haiku)')
   console.log('')
 
   const startTime = Date.now()
@@ -401,23 +452,29 @@ Options:
   -h, --help        Show this help message
   -d, --dry-run     Simulate enrichment without making changes
   -f, --force       Re-enrich even if case already has documentation
+  -w, --web-search  Include web search results (requires TAVILY_API_KEY)
   -a, --all         Enrich all promoted cases
 
 Examples:
   # Enrich a single case
   npx ts-node scripts/research-and-enrich-case.ts elon-musk-twitter-advertisers-2024
 
+  # Enrich with web search for additional context
+  npx ts-node scripts/research-and-enrich-case.ts --web-search elon-musk-twitter-advertisers-2024
+
   # Dry run to see what would be sent to Claude
   npx ts-node scripts/research-and-enrich-case.ts --dry-run some-case-slug
 
-  # Enrich all promoted cases that don't have documentation yet
-  npx ts-node scripts/research-and-enrich-case.ts --all
+  # Enrich all promoted cases with web search
+  npx ts-node scripts/research-and-enrich-case.ts --all --web-search
 
   # Force re-enrichment of all cases
   npx ts-node scripts/research-and-enrich-case.ts --all --force
 
 Environment Variables Required:
   ANTHROPIC_API_KEY   Your Claude API key from anthropic.com
+  TAVILY_API_KEY      (Optional) Your Tavily API key for web search from tavily.com
+                      Free tier: 1,000 searches/month
 `)
 }
 

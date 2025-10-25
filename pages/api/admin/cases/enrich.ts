@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { extractTokenFromRequest, verifyToken } from '@/lib/auth'
 import { UserRole } from '@prisma/client'
 import { enrichCase, testConnection, type CaseEnrichmentInput } from '@/lib/claude-api'
+import { enrichedCaseSearch } from '@/lib/tavily-search'
 
 async function requireAdmin(req: NextApiRequest): Promise<{ userId: string } | null> {
   const token = extractTokenFromRequest(req)
@@ -27,6 +28,7 @@ interface EnrichmentRequest {
   caseId?: string
   slug?: string
   force?: boolean
+  webSearch?: boolean
 }
 
 /**
@@ -50,7 +52,7 @@ export default async function handler(
   }
 
   try {
-    const { caseId, slug, force = false }: EnrichmentRequest = req.body
+    const { caseId, slug, force = false, webSearch = false }: EnrichmentRequest = req.body
 
     if (!caseId && !slug) {
       return res.status(400).json({
@@ -231,6 +233,24 @@ export default async function handler(
         caseDate: caseRecord.caseDate,
         locationCity: caseRecord.locationCity,
         locationCountry: caseRecord.locationCountry
+      }
+    }
+
+    // Perform web search if enabled
+    if (webSearch && origStatement.person) {
+      try {
+        const webSearchResults = await enrichedCaseSearch({
+          personName: origStatement.person.name,
+          statementContent: origStatement.content,
+          statementDate: origStatement.statementDate,
+          caseTitle: caseRecord.title,
+          context: origStatement.context || undefined
+        })
+
+        enrichmentInput.webSearchResults = webSearchResults
+      } catch (error) {
+        console.warn('Web search failed, continuing without it:', error)
+        // Continue without web search results
       }
     }
 

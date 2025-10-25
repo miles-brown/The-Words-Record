@@ -75,6 +75,32 @@ export interface CaseEnrichmentInput {
     locationCity?: string | null
     locationCountry?: string | null
   }
+  webSearchResults?: {
+    mainSources: Array<{
+      title: string
+      url: string
+      content: string
+      publishedDate?: string
+    }>
+    background?: {
+      answer?: string
+      sources: Array<{
+        title: string
+        url: string
+        content: string
+      }>
+    }
+    mediaCoverage: Array<{
+      title: string
+      url: string
+      content: string
+    }>
+    recentUpdates: Array<{
+      title: string
+      url: string
+      content: string
+    }>
+  }
 }
 
 export interface CaseEnrichmentOutput {
@@ -137,7 +163,7 @@ export async function enrichCase(
  * Build comprehensive prompt for case enrichment
  */
 function buildEnrichmentPrompt(input: CaseEnrichmentInput): string {
-  const { statement, person, organization, responses, repercussions, sources, caseBasicInfo } = input
+  const { statement, person, organization, responses, repercussions, sources, caseBasicInfo, webSearchResults } = input
 
   // Format speaker name
   const speaker = person?.name || organization?.name || 'Unknown'
@@ -149,6 +175,12 @@ function buildEnrichmentPrompt(input: CaseEnrichmentInput): string {
 
   // Format dates
   const formatDate = (date: Date) => date.toISOString().split('T')[0]
+
+  const hasWebSearch = webSearchResults && (
+    webSearchResults.mainSources.length > 0 ||
+    webSearchResults.mediaCoverage.length > 0 ||
+    webSearchResults.recentUpdates.length > 0
+  )
 
   return `# Task: Create Comprehensive Case Documentation
 
@@ -197,6 +229,54 @@ ${i + 1}. ${s.title || 'Untitled'}
    ${s.publishDate ? `**Date:** ${formatDate(s.publishDate)}` : ''}
    ${s.url ? `**URL:** ${s.url}` : ''}
 `).join('\n') : 'No sources provided.'}
+
+${hasWebSearch ? `
+## Additional Web Search Results
+
+${webSearchResults!.background?.answer ? `### Background Information from Web Search
+${webSearchResults!.background.answer}
+
+**Sources:**
+${webSearchResults!.background.sources.slice(0, 3).map((s, i) => `
+${i + 1}. **${s.title}**
+   URL: ${s.url}
+   Content: ${s.content.substring(0, 200)}...
+`).join('\n')}
+` : ''}
+
+### Recent News Articles (${webSearchResults!.mainSources.length})
+${webSearchResults!.mainSources.map((s, i) => `
+${i + 1}. **${s.title}**
+   URL: ${s.url}
+   ${s.publishedDate ? `Published: ${s.publishedDate}` : ''}
+   Content: ${s.content.substring(0, 300)}...
+`).join('\n')}
+
+${webSearchResults!.mediaCoverage.length > 0 ? `
+### Media Coverage Analysis (${webSearchResults!.mediaCoverage.length})
+${webSearchResults!.mediaCoverage.map((s, i) => `
+${i + 1}. **${s.title}**
+   URL: ${s.url}
+   Content: ${s.content.substring(0, 250)}...
+`).join('\n')}
+` : ''}
+
+${webSearchResults!.recentUpdates.length > 0 ? `
+### Recent Updates (${webSearchResults!.recentUpdates.length})
+${webSearchResults!.recentUpdates.map((s, i) => `
+${i + 1}. **${s.title}**
+   URL: ${s.url}
+   Content: ${s.content.substring(0, 200)}...
+`).join('\n')}
+` : ''}
+
+**IMPORTANT:** Use the web search results above to enhance your documentation with:
+- Additional context and background not in the original sources
+- More comprehensive media coverage analysis
+- Recent developments and updates
+- Multiple perspectives from different sources
+- Verification and fact-checking of claims
+` : ''}
 
 ---
 

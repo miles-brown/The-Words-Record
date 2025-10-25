@@ -154,10 +154,18 @@ npx ts-node scripts/research-and-enrich-case.ts --help
 
 **User Flow:**
 1. Admin opens case in editor
-2. Clicks "✨ AI Enrich" button
-3. Confirms action (30-60 second wait)
-4. AI-generated content populates form
-5. Admin reviews, edits, and saves
+2. (Optional) Enable "🌐 Web Search" checkbox for additional context
+3. Click "✨ AI Enrich" button
+4. Confirm action (10-60 second wait depending on web search)
+5. AI-generated content populates form
+6. Admin reviews, edits, and saves
+
+**Web Search Benefits:**
+- Finds additional news articles and sources not in database
+- Provides background information about people and events
+- Discovers recent updates and developments
+- Enhances media coverage analysis
+- Verifies and cross-references claims
 
 ---
 
@@ -170,13 +178,19 @@ Add to your `.env` file:
 # Required for AI enrichment
 ANTHROPIC_API_KEY=sk-ant-xxxxx...
 
-# Get your API key from: https://console.anthropic.com/
+# Optional: Web search for additional context (free tier: 1,000 searches/month)
+TAVILY_API_KEY=tvly-xxxxx...
+
+# Get your API keys from:
+# - Anthropic Claude: https://console.anthropic.com/
+# - Tavily Search: https://tavily.com/ (free signup)
 ```
 
 ### Installation
 
 All dependencies are already installed:
 - `@anthropic-ai/sdk` (v0.67.0) - Claude API client
+- `tavily` - Web search API client
 - `@prisma/client` - Database access
 
 ### Vercel Environment Setup
@@ -202,6 +216,9 @@ node scripts/auto-promote-statements.js
 ```bash
 # Run after promotion script
 npx ts-node scripts/research-and-enrich-case.ts --all
+
+# Or with web search for additional context
+npx ts-node scripts/research-and-enrich-case.ts --all --web-search
 ```
 
 **Step 3: Admin Review**
@@ -334,21 +351,33 @@ npx tsc --noEmit
 ## Cost Estimates
 
 ### Claude API Pricing (as of 2024)
-- **Model:** claude-3-5-sonnet-20241022
-- **Input:** ~$3 per million tokens
-- **Output:** ~$15 per million tokens
+- **Model:** claude-3-haiku-20240307 (faster, cheaper)
+- **Input:** ~$0.25 per million tokens
+- **Output:** ~$1.25 per million tokens
+
+### Tavily Search API Pricing
+- **Free Tier:** 1,000 searches/month (more than enough!)
+- **Paid:** $0.005 per search after free tier
 
 ### Per-Enrichment Cost
-- Input: ~4,000 tokens × $0.003 = $0.012
-- Output: ~3,000 tokens × $0.015 = $0.045
-- **Total: ~$0.06 per case**
+
+**Without Web Search:**
+- Input: ~4,000 tokens × $0.00025 = $0.001
+- Output: ~3,000 tokens × $0.00125 = $0.004
+- **Total: ~$0.005 per case** (half a cent!)
+
+**With Web Search:**
+- Claude API: ~$0.005
+- Tavily searches (4 queries): Free tier
+- **Total: ~$0.005 per case** (web search is free!)
 
 ### Monthly Estimates
-- 10 cases/month: ~$0.60
-- 50 cases/month: ~$3.00
-- 100 cases/month: ~$6.00
+- 10 cases/month: ~$0.05 (5 cents!)
+- 50 cases/month: ~$0.25
+- 100 cases/month: ~$0.50
+- 1,000 cases/month: ~$5.00
 
-Very affordable for high-quality, comprehensive documentation.
+**Extremely affordable** with Claude Haiku! Web search adds no cost with free tier.
 
 ---
 

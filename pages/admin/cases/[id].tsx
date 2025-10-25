@@ -24,6 +24,7 @@ export default function EditCase() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [enriching, setEnriching] = useState(false)
+  const [webSearchEnabled, setWebSearchEnabled] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [enrichmentSuccess, setEnrichmentSuccess] = useState<string | null>(null)
   const [formData, setFormData] = useState<CaseForm>({
@@ -150,9 +151,10 @@ export default function EditCase() {
   }
 
   const handleEnrich = async (force = false) => {
+    const timeEstimate = webSearchEnabled ? '30-60 seconds' : '10-30 seconds'
     const confirmMessage = force
-      ? 'This case already has documentation. Re-enrich with AI? This may take 30-60 seconds.'
-      : 'Generate comprehensive Wikipedia-style documentation using AI? This may take 30-60 seconds.'
+      ? `This case already has documentation. Re-enrich with AI${webSearchEnabled ? ' (with web search)' : ''}? This may take ${timeEstimate}.`
+      : `Generate comprehensive Wikipedia-style documentation using AI${webSearchEnabled ? ' with web search' : ''}? This may take ${timeEstimate}.`
 
     if (!confirm(confirmMessage)) {
       return
@@ -167,7 +169,7 @@ export default function EditCase() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ caseId: id, force })
+        body: JSON.stringify({ caseId: id, force, webSearch: webSearchEnabled })
       })
 
       const data = await response.json()
@@ -250,15 +252,36 @@ export default function EditCase() {
             </div>
             <div className="header-actions">
               {formData.isRealIncident && (
-                <button
-                  onClick={() => handleEnrich(formData.description.length > 1000)}
-                  disabled={enriching}
-                  className="btn-primary"
-                  title="Generate comprehensive Wikipedia-style documentation using AI"
-                  style={{ marginRight: '8px' }}
-                >
-                  {enriching ? '🤖 Enriching...' : '✨ AI Enrich'}
-                </button>
+                <>
+                  <label style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.9rem',
+                    marginRight: '12px',
+                    cursor: 'pointer'
+                  }}>
+                    <input
+                      type="checkbox"
+                      checked={webSearchEnabled}
+                      onChange={(e) => setWebSearchEnabled(e.target.checked)}
+                      disabled={enriching}
+                      style={{ cursor: 'pointer' }}
+                    />
+                    <span title="Search the web for additional context and sources (requires TAVILY_API_KEY)">
+                      🌐 Web Search
+                    </span>
+                  </label>
+                  <button
+                    onClick={() => handleEnrich(formData.description.length > 1000)}
+                    disabled={enriching}
+                    className="btn-primary"
+                    title="Generate comprehensive Wikipedia-style documentation using AI"
+                    style={{ marginRight: '8px' }}
+                  >
+                    {enriching ? '🤖 Enriching...' : '✨ AI Enrich'}
+                  </button>
+                </>
               )}
               <button onClick={handleDelete} className="btn-danger">
                 Delete

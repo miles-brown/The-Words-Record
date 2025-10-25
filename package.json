@@ -56,6 +56,7 @@
     "recharts": "^2.12.7",
     "remark": "^15.0.1",
     "remark-html": "^16.0.1",
+    "tavily": "^1.0.2",
     "zustand": "^5.0.8"
   },
   "optionalDependencies": {
