@@ -235,7 +235,7 @@ async function enrichSingleCase(
     } : null,
     organization: origStatement.organization ? {
       name: origStatement.organization.name,
-      organizationType: origStatement.organization.organizationType
+      organizationType: (origStatement.organization as any).organizationType || null
     } : null,
     responses: allResponses.map(r => ({
       content: r.content,
@@ -254,8 +254,8 @@ async function enrichSingleCase(
     sources: uniqueSources.map(s => ({
       url: s.url,
       title: s.title,
-      publicationName: s.publicationName,
-      publishDate: s.publishDate,
+      publicationName: (s as any).publication || (s as any).publicationName || null,
+      publishDate: (s as any).publishDate || (s as any).publishedDate || null,
       author: s.author
     })),
     caseBasicInfo: {
@@ -350,16 +350,19 @@ async function enrichSingleCase(
 async function enrichAllCases(options: EnrichmentOptions = {}): Promise<void> {
   console.log('🔍 Finding all promoted cases...\n')
 
+  const whereClause: any = {
+    isRealIncident: true
+  }
+
+  if (!options.force) {
+    whereClause.OR = [
+      { description: null },
+      { description: { not: { contains: 'Background' } } } // Heuristic: enriched content has sections
+    ]
+  }
+
   const cases = await prisma.case.findMany({
-    where: {
-      isRealIncident: true,
-      ...(options.force ? {} : {
-        OR: [
-          { description: null },
-          { description: { not: { contains: 'Background' } } } // Heuristic: enriched content has sections
-        ]
-      })
-    },
+    where: whereClause,
     select: {
       slug: true,
       title: true,
