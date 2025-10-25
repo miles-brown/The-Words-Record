@@ -5,7 +5,7 @@
  * Finds additional sources, news articles, and context about statements
  */
 
-import { tavily } from 'tavily'
+import tavily from 'tavily'
 
 export interface SearchResult {
   title: string
