@@ -105,7 +105,7 @@ export async function enrichCase(
 
   try {
     const response = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-haiku-20240307',
       max_tokens: 8000,
       temperature: 0.3, // Lower temperature for more factual, consistent output
       system: `You are a professional journalist and historian specializing in creating comprehensive, neutral documentation of public statements and controversies. Your writing style is similar to Wikipedia: factual, well-sourced, neutral point of view, comprehensive coverage of all angles, and well-structured with clear sections. You excel at synthesizing information from multiple sources to create coherent narratives.`,
@@ -302,7 +302,7 @@ export async function testConnection(): Promise<boolean> {
     const client = getClient()
 
     const response = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-haiku-20240307',
       max_tokens: 100,
       messages: [
         {
