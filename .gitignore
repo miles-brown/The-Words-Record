@@ -67,3 +67,17 @@ supabase/
 
 # Private conversation logs
 GOOGLE-GEMINI-DATABASE-AGENT-CONVERSATION.md.env.backup*
+
+# Database backups may contain sensitive data
+backup_full.sql
+backups/
+prisma/backup_*.db
+prisma/schema.prisma.backup
+
+# Code backups
+*.backup
+pages/**/*.backup
+
+# Private documentation
+GOOGLE-GEMINI-DATABASE-AGENT-CONVERSATION.md
+COMPREHENSIVE-TECHNICAL-DOCUMENTATION.md
