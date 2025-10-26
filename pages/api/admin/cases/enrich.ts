@@ -204,7 +204,7 @@ export default async function handler(
       } : null,
       organization: origStatement.organization ? {
         name: origStatement.organization.name,
-        organizationType: origStatement.organization.organizationType
+        organizationType: origStatement.organization.type
       } : null,
       responses: allResponses.map(r => ({
         content: r.content,
