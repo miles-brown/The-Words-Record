@@ -1005,3 +1005,113 @@ footer {
 .scroll-smooth {
   scroll-behavior: smooth;
 }
+
+/* ==================== Academic Citation Styles ==================== */
+
+/* Footnote links - Wikipedia-style superscript citations */
+.footnote-link {
+  text-decoration: none;
+  color: var(--accent-primary);
+  font-weight: 600;
+  transition: color 0.2s ease;
+  margin-left: 1px;
+}
+
+.footnote-link:hover {
+  color: var(--accent-secondary);
+  text-decoration: underline;
+}
+
+.footnote-link sup {
+  font-size: 0.7em;
+  vertical-align: super;
+  line-height: 0;
+}
+
+/* References section */
+.sources-section {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-primary);
+}
+
+.sources-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+/* Harvard-formatted reference list */
+.sources-list {
+  list-style: none;
+  counter-reset: source-counter;
+  padding-left: 0;
+}
+
+.sources-list li {
+  counter-increment: source-counter;
+  position: relative;
+  padding-left: 2.5rem;
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+  font-size: 0.95rem;
+  scroll-margin-top: 100px; /* For smooth jump-to with fixed header */
+}
+
+.sources-list li::before {
+  content: "[" counter(source-counter) "]";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-size: 0.9rem;
+}
+
+/* Harvard reference formatting */
+.source-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+  display: inline;
+}
+
+.source-link:hover {
+  color: var(--accent-primary);
+}
+
+.source-link .author {
+  font-weight: 600;
+}
+
+.source-link .year {
+  font-weight: 600;
+}
+
+.source-link em {
+  font-style: italic;
+}
+
+.source-link .publication {
+  font-style: normal;
+}
+
+.source-link .url {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  word-break: break-all;
+}
+
+/* Target highlight for jumped-to references */
+.sources-list li:target {
+  background: rgba(74, 112, 139, 0.1);
+  padding: 0.5rem;
+  padding-left: 2.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+.dark-mode .sources-list li:target {
+  background: rgba(106, 138, 165, 0.15);
+}

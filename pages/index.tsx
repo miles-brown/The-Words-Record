@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
-import { getAllCases } from '../lib/cases'
+import { PrismaClient } from '@prisma/client'
 import Layout from '../components/Layout'
 import FeaturedCaseCarousel from '../components/FeaturedCaseCarousel'
 import SiteMetrics from '../components/SiteMetrics'
@@ -74,7 +74,7 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
       <StructuredData type="organization" data={generateOrganizationSchema()} />
       <StructuredData type="website" data={generateWebsiteSchema()} />
 
-      {/* Featured Case Carousel */}
+      {/* Featured Case Carousel - Auto-rotates every 5 seconds */}
       {featuredCases.length > 0 && (
         <FeaturedCaseCarousel featuredCases={featuredCases} />
       )}
@@ -410,21 +410,6 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
             padding: 4rem 2rem;
           }
 
-          .quote-icon {
-            width: 60px;
-            height: 60px;
-          }
-
-          .quote-icon.opening {
-            margin-right: -15px;
-            margin-bottom: -15px;
-          }
-
-          .quote-icon.closing {
-            margin-left: -15px;
-            margin-top: -15px;
-          }
-
           .mission-first {
             font-size: 1.125rem;
             line-height: 1.9;
@@ -471,21 +456,6 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
             padding: 3rem 1.5rem;
           }
 
-          .quote-icon {
-            width: 50px;
-            height: 50px;
-          }
-
-          .quote-icon.opening {
-            margin-right: -10px;
-            margin-bottom: -10px;
-          }
-
-          .quote-icon.closing {
-            margin-left: -10px;
-            margin-top: -10px;
-          }
-
           .mission-first {
             font-size: 1.0625rem;
             line-height: 1.85;
@@ -517,29 +487,92 @@ export default function Home({ allCases, featuredCases }: HomeProps) {
 }
 
 export async function getStaticProps() {
-  const allCases = getAllCases()
+  const prisma = new PrismaClient()
 
-  // Filter featured cases (you can add a featured field to your markdown frontmatter)
-  // For now, just use the first 3-5 most recent cases as featured
-  const featuredCases: FeaturedCase[] = allCases
-    .slice(0, 5)
-    .map(c => ({
+  try {
+    // Get promoted cases with sources and statements count
+    const promotedCases = await prisma.case.findMany({
+      where: {
+        isRealIncident: true,
+        wasManuallyPromoted: true
+      },
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        summary: true,
+        caseDate: true,
+        _count: {
+          select: {
+            sources: true,
+            statements: true
+          }
+        },
+        tags: {
+          select: {
+            id: true,
+            name: true,
+            slug: true
+          }
+        }
+      },
+      orderBy: {
+        promotedAt: 'desc'
+      },
+      take: 10
+    })
+
+    // Select 4-5 featured cases for the carousel (top promoted cases)
+    const featuredCases: FeaturedCase[] = promotedCases.slice(0, 5).map(c => ({
       slug: c.slug,
       title: c.title,
-      summary: c.excerpt || c.summary || '',
-      excerpt: c.excerpt,
-      caseDate: c.date,
-      _count: {
-        sources: 0, // These would come from the database
-        statements: 0
-      },
-      tags: normalizeTags(c.tags)
+      summary: c.summary || '',
+      excerpt: c.summary || '',
+      caseDate: c.caseDate?.toISOString() || new Date().toISOString(),
+      _count: c._count,
+      tags: c.tags.map(t => ({
+        name: t.name,
+        slug: t.slug
+      }))
     }))
 
-  return {
-    props: {
-      allCases,
-      featuredCases
+    // All cases for the recent cases section
+    const allCases: CaseStudy[] = promotedCases.map(c => ({
+      slug: c.slug,
+      title: c.title,
+      date: c.caseDate?.toISOString() || new Date().toISOString(),
+      caseDate: c.caseDate?.toISOString(),
+      excerpt: c.summary || '',
+      summary: c.summary || '',
+      _count: c._count,
+      tags: c.tags.map(t => ({
+        name: t.name,
+        slug: t.slug
+      })),
+      status: 'DOCUMENTED',
+      isVerified: true
+    }))
+
+    await prisma.$disconnect()
+
+    return {
+      props: {
+        allCases,
+        featuredCases
+      },
+      revalidate: 300 // Revalidate every 5 minutes
+    }
+  } catch (error) {
+    console.error('Error fetching cases:', error)
+    await prisma.$disconnect()
+
+    // Return empty arrays as fallback
+    return {
+      props: {
+        allCases: [],
+        featuredCases: []
+      },
+      revalidate: 60
     }
   }
 }

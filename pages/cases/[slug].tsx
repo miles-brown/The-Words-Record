@@ -165,7 +165,37 @@ export default function CasePage({ caseItem }: CasePageProps) {
         <section className="case-description">
           <h2>Full Description</h2>
           <div className="description-content markdown-content">
-            <ReactMarkdown>{caseItem.description}</ReactMarkdown>
+            <ReactMarkdown
+              components={{
+                // Convert [1], [2], [3] to clickable superscript footnotes
+                p: ({node, children, ...props}) => {
+                  const processFootnotes = (content: any): any => {
+                    if (typeof content === 'string') {
+                      const parts = content.split(/(\[\d+\])/g);
+                      return parts.map((part, i) => {
+                        const match = part.match(/\[(\d+)\]/);
+                        if (match) {
+                          return (
+                            <a key={i} href={`#ref-${match[1]}`} className="footnote-link">
+                              <sup>[{match[1]}]</sup>
+                            </a>
+                          );
+                        }
+                        return part;
+                      });
+                    }
+                    if (Array.isArray(content)) {
+                      return content.map(processFootnotes);
+                    }
+                    return content;
+                  };
+
+                  return <p {...props}>{processFootnotes(children)}</p>;
+                }
+              }}
+            >
+              {caseItem.description}
+            </ReactMarkdown>
           </div>
         </section>
 
@@ -450,29 +480,19 @@ export default function CasePage({ caseItem }: CasePageProps) {
 
         {caseItem.sources && caseItem.sources.length > 0 && (
           <section className="sources-section">
-            <h2>Sources & References</h2>
+            <h2>References</h2>
             <ol className="sources-list">
-              {caseItem.sources.map((source: any) => (
-                <li key={source.id}>
-                  {source.url ? (
-                    <a href={source.url} target="_blank" rel="noopener noreferrer">
-                      {source.title}
-                    </a>
-                  ) : (
-                    <span>{source.title}</span>
-                  )}
-                  {source.publication && <span className="publication"> - {source.publication}</span>}
-                  {source.author && <span className="author"> by {source.author}</span>}
-                  {source.publishDate && (
-                    <span className="publish-date">
-                      {' '}({format(new Date(source.publishDate), 'MMMM yyyy')})
-                    </span>
-                  )}
-                  {source.credibility && (
-                    <span className={`credibility credibility-${source.credibility}`}>
-                      [{source.credibility}]
-                    </span>
-                  )}
+              {caseItem.sources.map((source: any, index: number) => (
+                <li key={source.id} id={`ref-${index + 1}`}>
+                  <Link href={`/sources/${source.slug}`} className="source-link">
+                    {source.author && <span className="author">{source.author}</span>}
+                    {source.publicationDate && (
+                      <span className="year"> ({format(new Date(source.publicationDate), 'yyyy')}). </span>
+                    )}
+                    <em>{source.title}</em>.
+                    {source.publication && <span className="publication"> {source.publication}</span>}.
+                    {source.url && <span className="url"> Retrieved from {source.url}</span>}
+                  </Link>
                 </li>
               ))}
             </ol>

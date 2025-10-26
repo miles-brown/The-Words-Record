@@ -865,6 +865,7 @@ model Repercussion {
 
 model Source {
   id                   String               @id @default(cuid())
+  slug                 String?              @unique
   title                String
   url                  String?
   publication          String?

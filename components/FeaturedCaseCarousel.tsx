@@ -27,13 +27,13 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
-  // Auto-advance carousel every 6 seconds
+  // Auto-advance carousel every 5 seconds
   useEffect(() => {
     if (!isAutoPlaying || featuredCases.length <= 1) return
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % featuredCases.length)
-    }, 6000)
+    }, 5000)
 
     return () => clearInterval(timer)
   }, [isAutoPlaying, featuredCases.length])

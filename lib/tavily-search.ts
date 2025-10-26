@@ -5,7 +5,7 @@
  * Finds additional sources, news articles, and context about statements
  */
 
-import tavily from 'tavily'
+import { TavilyClient } from 'tavily'
 
 export interface SearchResult {
   title: string
@@ -13,6 +13,24 @@ export interface SearchResult {
   content: string
   score: number
   publishedDate?: string
+}
+
+/**
+ * Sanitize text for use in search queries
+ * Removes special characters, quotes, newlines, and extracts key words
+ */
+function sanitizeForSearch(text: string, maxWords: number = 10): string {
+  // Remove quotes, newlines, tabs, and other control characters
+  let cleaned = text
+    .replace(/["'`]/g, '') // Remove quotes
+    .replace(/[\n\r\t]/g, ' ') // Replace newlines/tabs with spaces
+    .replace(/[^\w\s-]/g, ' ') // Remove special chars except hyphens
+    .replace(/\s+/g, ' ') // Collapse multiple spaces
+    .trim()
+
+  // Split into words and take first N important words
+  const words = cleaned.split(' ').filter(w => w.length > 2) // Skip short words
+  return words.slice(0, maxWords).join(' ')
 }
 
 export interface SearchOptions {
@@ -37,7 +55,7 @@ function getClient() {
     )
   }
 
-  return tavily({ apiKey })
+  return new TavilyClient({ apiKey })
 }
 
 /**
@@ -64,13 +82,14 @@ export async function searchForCase(params: {
   } = options
 
   try {
-    const response = await client.search(query, {
-      maxResults,
-      searchDepth,
-      includeDomains,
-      excludeDomains,
-      includeAnswer,
-      includeImages
+    const response = await client.search({
+      query,
+      max_results: maxResults,
+      search_depth: searchDepth,
+      include_domains: includeDomains,
+      exclude_domains: excludeDomains,
+      include_answer: includeAnswer,
+      include_images: includeImages
     })
 
     return {
@@ -103,16 +122,20 @@ export async function searchForStatementSources(params: {
 }): Promise<SearchResult[]> {
   const { personName, statementKeywords, date, context } = params
 
-  // Build search query
-  let query = `"${personName}" ${statementKeywords}`
+  // Sanitize inputs to prevent API errors
+  const cleanKeywords = sanitizeForSearch(statementKeywords, 8)
+  const cleanContext = context ? sanitizeForSearch(context, 5) : ''
+
+  // Build simple, clean search query
+  let query = `${personName} ${cleanKeywords}`
 
   if (date) {
     const year = date.getFullYear()
     query += ` ${year}`
   }
 
-  if (context) {
-    query += ` ${context}`
+  if (cleanContext) {
+    query += ` ${cleanContext}`
   }
 
   // Prioritize news sources

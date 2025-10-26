@@ -324,6 +324,68 @@ async function enrichSingleCase(
   }
   console.log('')
 
+  // Save web search sources to database
+  if (enrichmentInput.webSearchResults) {
+    console.log('💾 Saving web search sources to database...')
+
+    const allSources = [
+      ...enrichmentInput.webSearchResults.mainSources,
+      ...enrichmentInput.webSearchResults.mediaCoverage,
+      ...enrichmentInput.webSearchResults.recentUpdates,
+      ...enrichmentInput.webSearchResults.background.sources
+    ]
+
+    let sourcesAdded = 0
+    for (const source of allSources) {
+      try {
+        // Check if source already exists
+        const existing = await prisma.source.findFirst({
+          where: { url: source.url }
+        })
+
+        if (!existing) {
+          // Extract publication name from URL domain
+          const urlObj = new URL(source.url)
+          const publication = urlObj.hostname.replace('www.', '')
+
+          // Generate slug from title
+          const slug = source.title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .substring(0, 100)
+
+          // Create new source
+          await prisma.source.create({
+            data: {
+              url: source.url,
+              title: source.title,
+              slug: slug,
+              publication: publication,
+              publishDate: source.publishedDate ? new Date(source.publishedDate) : null,
+              sourceType: 'NEWS_ARTICLE',
+              caseId: caseRecord.id
+            }
+          })
+          sourcesAdded++
+        } else if (existing.caseId !== caseRecord.id) {
+          // Update existing source to link to this case if not already linked
+          await prisma.source.update({
+            where: { id: existing.id },
+            data: {
+              caseId: caseRecord.id
+            }
+          })
+        }
+      } catch (error) {
+        console.warn(`   ⚠️  Failed to save source: ${source.url}`)
+      }
+    }
+
+    console.log(`   ✅ Added ${sourcesAdded} new sources to database`)
+  }
+
   // Update the case in database
   console.log('💾 Updating case in database...')
 

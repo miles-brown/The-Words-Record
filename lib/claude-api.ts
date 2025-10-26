@@ -6,6 +6,7 @@
  */
 
 import Anthropic from '@anthropic-ai/sdk'
+import { jsonrepair } from 'jsonrepair'
 
 // Initialize Claude client
 const getClient = () => {
@@ -132,7 +133,7 @@ export async function enrichCase(
   try {
     const response = await client.messages.create({
       model: 'claude-3-haiku-20240307',
-      max_tokens: 8000,
+      max_tokens: 4096, // Claude Haiku max output tokens
       temperature: 0.3, // Lower temperature for more factual, consistent output
       system: `You are a professional journalist and historian specializing in creating comprehensive, neutral documentation of public statements and controversies. Your writing style is similar to Wikipedia: factual, well-sourced, neutral point of view, comprehensive coverage of all angles, and well-structured with clear sections. You excel at synthesizing information from multiple sources to create coherent narratives.`,
       messages: [
@@ -244,12 +245,15 @@ ${i + 1}. **${s.title}**
 `).join('\n')}
 ` : ''}
 
-### Recent News Articles (${webSearchResults!.mainSources.length})
+### Web Search Sources (for footnote citations)
+Use these source numbers for your footnote citations [1], [2], [3], etc.:
+
 ${webSearchResults!.mainSources.map((s, i) => `
-${i + 1}. **${s.title}**
-   URL: ${s.url}
-   ${s.publishedDate ? `Published: ${s.publishedDate}` : ''}
-   Content: ${s.content.substring(0, 300)}...
+[${i + 1}] **${s.title}**
+    Publication: ${new URL(s.url).hostname.replace('www.', '')}
+    URL: ${s.url}
+    ${s.publishedDate ? `Published: ${s.publishedDate}` : ''}
+    Content: ${s.content.substring(0, 300)}...
 `).join('\n')}
 
 ${webSearchResults!.mediaCoverage.length > 0 ? `
@@ -284,36 +288,21 @@ ${i + 1}. **${s.title}**
 
 Create comprehensive documentation with the following sections. Use ONLY the information provided above - do not invent or assume facts not present in the source material. If information is missing, note it as "Information not available" rather than guessing.
 
-Return your response in the following JSON format:
+Return your response in the following JSON format (ensure all text is on single lines with \\n for line breaks):
 
 \`\`\`json
 {
   "summary": "2-3 paragraph concise overview (200-300 words)",
-  "description": "Comprehensive Wikipedia-style article (2000-4000 words) with the following structure:
-
-    ## Background
-    Explain what led to this statement. What was the context? What events or circumstances prompted this?
-
-    ## The Statement
-    Detail how it was made, where, when, and in what context. Include details about platform, venue, medium.
-
-    ## Immediate Reaction
-    Describe the initial public and media response. Who responded first and how?
-
-    ## Subsequent Developments
-    Chronicle all responses in chronological order, organized by type (criticism, support, institutional responses).
-
-    ## Repercussions and Consequences
-    Detail all documented repercussions with dates and impacts.
-
-    ## Media Coverage and Public Discourse
-    Analyze how different outlets framed the story and public discourse evolved.
-
-    ## Multiple Perspectives
-    Present different viewpoints: supporters, critics, neutral observers.
-
-    ## Outcome and Current Status
-    Summarize the final state and any ongoing developments.",
+  "description": {
+    "background": "Explain what led to this statement. What was the context? What events or circumstances prompted this? (Use \\n\\n for paragraph breaks)",
+    "statement": "Detail how it was made, where, when, and in what context. Include details about platform, venue, medium. (Use \\n\\n for paragraph breaks)",
+    "immediateReaction": "Describe the initial public and media response. Who responded first and how? (Use \\n\\n for paragraph breaks)",
+    "subsequentDevelopments": "Chronicle all responses in chronological order, organized by type (criticism, support, institutional responses). (Use \\n\\n for paragraph breaks)",
+    "repercussionsAndConsequences": "Detail all documented repercussions with dates and impacts. (Use \\n\\n for paragraph breaks)",
+    "mediaCoverageAndPublicDiscourse": "Analyze how different outlets framed the story and public discourse evolved. (Use \\n\\n for paragraph breaks)",
+    "multiplePerspectives": "Present different viewpoints: supporters, critics, neutral observers. (Use \\n\\n for paragraph breaks)",
+    "outcomeAndCurrentStatus": "Summarize the final state and any ongoing developments. (Use \\n\\n for paragraph breaks)"
+  },
   "triggeringEvent": "Brief description of what prompted the original statement",
   "outcome": "Summary of final outcomes and current status",
   "mediaFraming": "How media outlets primarily framed this story",
@@ -321,7 +310,7 @@ Return your response in the following JSON format:
     {
       "date": "YYYY-MM-DD",
       "event": "Description of what happened",
-      "type": "statement" | "response" | "repercussion"
+      "type": "statement | response | repercussion"
     }
   ],
   "originalLanguage": "Language code if not English (e.g., 'es', 'fr', 'he', 'ar')",
@@ -333,11 +322,14 @@ Return your response in the following JSON format:
 - Maintain strict neutrality - present all sides fairly
 - Use only factual information from the provided sources
 - If information is missing, state "Information not available" rather than speculating
-- Cite specific dates, names, and quotes from the source material
-- Create a clear chronological timeline
+- **CRITICAL FOR CITATIONS:** For EVERY fact, detail, or claim, add a Wikipedia-style footnote citation using square brackets with numbers [1], [2], [3] at the end of the sentence
+- Match footnote numbers to the source list provided in the web search results above - use [1] for the first source listed, [2] for the second, etc.
+- Multiple facts from the same source should reuse the same footnote number [1]...[1]
+- Create a clear chronological timeline with footnote citations for each event
 - Identify the original language if the statement was not in English
 - Write in professional, encyclopedic style similar to Wikipedia
 - Be comprehensive but concise - avoid unnecessary repetition
+- **CRITICAL JSON FORMATTING:** Do NOT use quotation marks around show names, publication titles, or any text within the JSON strings - write The View not "The View", write Maus not "Maus". Use \\n for line breaks. The JSON parser will fail if you use unescaped quotes.
 `
 }
 
@@ -348,18 +340,88 @@ function parseEnrichmentResponse(response: string): CaseEnrichmentOutput {
   try {
     // Extract JSON from markdown code blocks if present
     const jsonMatch = response.match(/```json\n([\s\S]*?)\n```/)
-    const jsonStr = jsonMatch ? jsonMatch[1] : response
+    let jsonStr = jsonMatch ? jsonMatch[1] : response
 
-    const parsed = JSON.parse(jsonStr)
+    // Pre-process to fix common Claude issues with unescaped quotes in strings
+    // The regex approach is too complex. Instead, use a state machine to properly escape quotes
+    let inString = false
+    let result = ''
+    let i = 0
+
+    while (i < jsonStr.length) {
+      const char = jsonStr[i]
+      const prevChar = i > 0 ? jsonStr[i - 1] : ''
+      const nextChar = i < jsonStr.length - 1 ? jsonStr[i + 1] : ''
+
+      if (char === '"' && prevChar !== '\\') {
+        if (!inString) {
+          // Starting a string
+          inString = true
+          result += char
+        } else {
+          // Ending a string - check if next char is : or , or } which indicates end of value
+          if (nextChar === ':' || nextChar === ',' || nextChar === '}' || nextChar === ']' || nextChar === '\n') {
+            inString = false
+            result += char
+          } else {
+            // This is a quote within the string - escape it
+            result += '\\"'
+          }
+        }
+      } else {
+        result += char
+      }
+      i++
+    }
+
+    jsonStr = result
+
+    // Try parsing first - if it works, great!
+    let parsed: any
+    try {
+      parsed = JSON.parse(jsonStr)
+    } catch (firstError) {
+      // If parsing still fails, try a more aggressive fix
+      console.warn('Initial JSON parse failed, attempting to repair...')
+
+      try {
+        // Try jsonrepair as last resort
+        const repairedJson = jsonrepair(jsonStr)
+        parsed = JSON.parse(repairedJson)
+        console.log('✓ JSON repaired successfully')
+      } catch (repairError) {
+        console.error('JSON repair also failed')
+        // Save the problematic JSON to a file for debugging
+        console.error('Problematic JSON (first 1000 chars):')
+        console.error(jsonStr.substring(0, 1000))
+        throw firstError // Throw original error for better debugging
+      }
+    }
 
     // Validate required fields
     if (!parsed.summary || !parsed.description) {
       throw new Error('Response missing required fields (summary or description)')
     }
 
+    // If description is an object with sections, convert to markdown
+    let descriptionText: string
+    if (typeof parsed.description === 'object' && !Array.isArray(parsed.description)) {
+      const sections = parsed.description
+      descriptionText = `## Background\n\n${sections.background || 'Information not available'}\n\n` +
+        `## The Statement\n\n${sections.statement || 'Information not available'}\n\n` +
+        `## Immediate Reaction\n\n${sections.immediateReaction || 'Information not available'}\n\n` +
+        `## Subsequent Developments\n\n${sections.subsequentDevelopments || 'Information not available'}\n\n` +
+        `## Repercussions and Consequences\n\n${sections.repercussionsAndConsequences || 'Information not available'}\n\n` +
+        `## Media Coverage and Public Discourse\n\n${sections.mediaCoverageAndPublicDiscourse || 'Information not available'}\n\n` +
+        `## Multiple Perspectives\n\n${sections.multiplePerspectives || 'Information not available'}\n\n` +
+        `## Outcome and Current Status\n\n${sections.outcomeAndCurrentStatus || 'Information not available'}`
+    } else {
+      descriptionText = parsed.description
+    }
+
     return {
       summary: parsed.summary,
-      description: parsed.description,
+      description: descriptionText,
       triggeringEvent: parsed.triggeringEvent,
       outcome: parsed.outcome,
       mediaFraming: parsed.mediaFraming,
