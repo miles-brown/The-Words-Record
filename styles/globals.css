@@ -271,26 +271,26 @@ button:active, .button:active, input[type="submit"]:active {
 header {
   background: var(--background-primary);
   border-bottom: 1px solid var(--border-primary);
-  padding: 0.25rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 header.scrolled {
-  padding: 0.25rem 0;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 nav {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0.5rem 1.5rem;
   display: grid;
   grid-template-columns: auto 1fr auto;
   gap: 2rem;
   align-items: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-brand {
@@ -312,16 +312,17 @@ nav {
   gap: 0.6rem;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 1;
-  max-height: 50px;
+  height: 28px;
+  margin-bottom: 0.3rem;
   transform: translateY(0);
+  overflow: hidden;
 }
 
 .nav-utility-row.hidden {
   opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  margin: 0;
-  transform: translateY(-8px);
+  height: 0;
+  margin-bottom: 0;
+  transform: translateY(-10px);
   pointer-events: none;
 }
 
