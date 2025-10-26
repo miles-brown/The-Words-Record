@@ -363,7 +363,7 @@ async function enrichSingleCase(
               title: source.title,
               slug: slug,
               publication: publication,
-              publishDate: source.publishedDate ? new Date(source.publishedDate) : null,
+              publishDate: (source as any).publishedDate ? new Date((source as any).publishedDate) : null,
               sourceType: 'NEWS_ARTICLE',
               caseId: caseRecord.id
             }
