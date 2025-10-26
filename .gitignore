@@ -66,4 +66,4 @@ supabase/
 !supabase/migrations/
 
 # Private conversation logs
-GOOGLE-GEMINI-DATABASE-AGENT-CONVERSATION.md
+GOOGLE-GEMINI-DATABASE-AGENT-CONVERSATION.md.env.backup*
