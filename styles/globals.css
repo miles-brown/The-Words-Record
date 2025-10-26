@@ -275,6 +275,7 @@ header {
   top: 0;
   z-index: 100;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 60px; /* Ensure header never collapses to nothing */
 }
 
 header.scrolled {
@@ -303,7 +304,6 @@ nav {
   gap: 0.3rem;
   justify-self: end;
   align-items: flex-end;
-  overflow: hidden;
 }
 
 /* Top row - utility buttons with icons */
