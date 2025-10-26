@@ -223,7 +223,7 @@ export default async function handler(
       sources: uniqueSources.map(s => ({
         url: s.url,
         title: s.title,
-        publicationName: s.publicationName,
+        publicationName: s.publication,
         publishDate: s.publishDate,
         author: s.author
       })),
