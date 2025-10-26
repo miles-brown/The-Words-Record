@@ -332,7 +332,7 @@ async function enrichSingleCase(
       ...enrichmentInput.webSearchResults.mainSources,
       ...enrichmentInput.webSearchResults.mediaCoverage,
       ...enrichmentInput.webSearchResults.recentUpdates,
-      ...enrichmentInput.webSearchResults.background.sources
+      ...(enrichmentInput.webSearchResults.background?.sources || [])
     ]
 
     let sourcesAdded = 0
