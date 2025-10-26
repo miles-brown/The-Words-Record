@@ -275,7 +275,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
-  transition: padding 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 header.scrolled {
@@ -310,9 +310,10 @@ nav {
 .nav-utility-row {
   display: flex;
   gap: 0.6rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 1;
   max-height: 50px;
+  transform: translateY(0);
 }
 
 .nav-utility-row.hidden {
@@ -320,6 +321,8 @@ nav {
   max-height: 0;
   overflow: hidden;
   margin: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
 }
 
 /* Bottom row - primary navigation buttons */
@@ -454,7 +457,7 @@ header.scrolled .nav-brand h1 {
   height: 120px;
   width: auto;
   display: block;
-  transition: height 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 
