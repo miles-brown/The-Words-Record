@@ -70,6 +70,12 @@ a {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 140px; /* Space for fixed header */
+}
+
+/* Adjust container padding when header is scrolled */
+body:has(header.scrolled) .container {
+  padding-top: 100px;
 }
 
 /* Page Transition Animations */
@@ -271,8 +277,10 @@ button:active, .button:active, input[type="submit"]:active {
 header {
   background: var(--background-primary);
   border-bottom: 1px solid var(--border-primary);
-  position: sticky;
+  position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
   z-index: 100;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   min-height: 60px; /* Ensure header never collapses to nothing */
@@ -919,6 +927,10 @@ footer {
   .utility-icon {
     width: 14px;
     height: 14px;
+  }
+
+  .container {
+    padding-top: 100px; /* Smaller header on mobile */
   }
 
   nav {
