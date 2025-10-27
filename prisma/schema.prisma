@@ -767,6 +767,7 @@ model Statement {
   socialMediaUrl                                       String?
   socialMediaId                                        String?
   isDeleted                                            Boolean?           @default(false)
+  status                                               DraftStatus        @default(PUBLISHED)
   deletedDate                                          DateTime?
   venue                                                String?
   event                                                String?
