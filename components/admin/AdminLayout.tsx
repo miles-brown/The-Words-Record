@@ -362,7 +362,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         .sidebar {
           width: 240px;
-          background: #2c3e50;
+          background: var(--accent-primary, #4a708b);
           color: white;
           position: fixed;
           left: 0;
@@ -374,6 +374,7 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           transition: transform 0.3s ease;
           z-index: 1000;
           overflow: hidden;
+          box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .sidebar-open {
@@ -457,26 +458,26 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
 
         /* Light blue-grey background for dashboard group */
         .nav-section-box.dashboard-box {
-          background: #3a4d63;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.15);
+          border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Mid blue-grey background for content group */
         .nav-section-box.content-box {
-          background: #324155;
-          border: 1px solid rgba(255, 255, 255, 0.06);
+          background: rgba(255, 255, 255, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         /* Data tools background */
         .nav-section-box.datatools-box {
-          background: #2e3d4f;
-          border: 1px solid rgba(255, 255, 255, 0.05);
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.12);
         }
 
         /* Dark blue-grey background for admin group */
         .nav-section-box.admin-box {
-          background: #273444;
-          border: 1px solid rgba(255, 255, 255, 0.04);
+          background: rgba(0, 0, 0, 0.1);
+          border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .nav-divider {
@@ -624,8 +625,8 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
           display: flex;
           flex-direction: column;
           min-width: 0;
-          max-height: 100vh;
-          overflow: hidden;
+          min-height: 100vh;
+          background: var(--background-primary, #f8f9fa);
         }
 
         .top-bar {
@@ -732,8 +733,10 @@ export default function AdminLayout({ children, title = 'Admin Dashboard' }: Adm
         .page-content {
           flex: 1;
           padding: 1rem 2rem 2rem;
-          overflow-y: auto;
-          overflow-x: hidden;
+          overflow-y: visible;
+          overflow-x: visible;
+          background: var(--background-primary, #f8f9fa);
+          min-height: calc(100vh - 60px);
         }
 
         @media (min-width: 768px) {
