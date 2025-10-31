@@ -205,10 +205,12 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           background: var(--background-primary);
           border-bottom: 1px solid var(--border-primary);
           color: var(--text-primary);
-          padding: 3rem 2rem;
+          padding: 3rem 2rem 4rem;
           margin: 0;
           position: relative;
           overflow: hidden;
+          /* Fixed height to prevent layout shift */
+          min-height: 420px;
         }
 
         .featured-carousel::before {
@@ -223,23 +225,26 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
         }
 
         .carousel-container {
-          max-width: 1000px;
+          max-width: 1200px;
           margin: 0 auto;
           position: relative;
           z-index: 1;
+          height: 100%;
         }
 
         .carousel-content {
           position: relative;
-          min-height: 320px;
+          min-height: 340px;
           display: flex;
-          align-items: center;
-          justify-content: flex-start;
+          align-items: flex-start;
+          justify-content: center;
+          padding: 0 80px; /* Space for arrows on sides */
         }
 
         .carousel-main {
           text-align: left;
-          max-width: 900px;
+          max-width: 800px;
+          width: 100%;
           animation: fadeIn 0.5s ease-out;
         }
 
@@ -269,28 +274,40 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
         }
 
         .case-title {
-          font-size: 2.25rem;
+          font-size: 2rem;
           margin-bottom: 0.75rem;
           line-height: 1.3;
           font-weight: 600;
           color: var(--text-primary);
           letter-spacing: -0.01em;
+          /* Limit title to 2 lines to maintain consistent height */
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          min-height: 2.6em;
         }
 
         .case-date {
           font-size: 0.9rem;
           color: var(--text-secondary);
-          margin-bottom: 1.25rem;
+          margin-bottom: 1rem;
           font-weight: 500;
           letter-spacing: 0.01em;
         }
 
         .case-summary {
-          font-size: 1.05rem;
-          line-height: 1.7;
-          margin-bottom: 1.75rem;
+          font-size: 1rem;
+          line-height: 1.6;
+          margin-bottom: 1.5rem;
           color: var(--text-secondary);
           max-width: 700px;
+          /* Limit summary to 3 lines to maintain consistent height */
+          overflow: hidden;
+          display: -webkit-box;
+          -webkit-line-clamp: 3;
+          -webkit-box-orient: vertical;
+          min-height: 4.8em;
         }
 
         .read-more {
@@ -408,58 +425,61 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          background: rgba(255, 255, 255, 0.95);
-          border: 2px solid var(--accent-primary, #4a708b);
-          width: 48px;
-          height: 48px;
+          background: rgba(255, 255, 255, 0.98);
+          border: 1px solid var(--border-primary);
+          width: 44px;
+          height: 44px;
           border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          color: var(--accent-primary, #4a708b);
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-          z-index: 2;
+          color: var(--text-secondary);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+          z-index: 10;
+          opacity: 0.8;
         }
 
         .carousel-button:hover {
-          background: var(--accent-primary, #4a708b);
+          background: var(--text-primary);
           color: white;
-          transform: translateY(-50%) scale(1.1);
-          box-shadow: 0 4px 12px rgba(74, 112, 139, 0.3);
+          transform: translateY(-50%) scale(1.05);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          opacity: 1;
+          border-color: var(--text-primary);
         }
 
         .dark-mode .carousel-button {
           background: rgba(30, 30, 30, 0.95);
-          border-color: var(--accent-primary, #4a708b);
-          color: var(--accent-primary, #4a708b);
+          border-color: var(--border-primary);
+          color: var(--text-secondary);
         }
 
         .dark-mode .carousel-button:hover {
-          background: var(--accent-primary, #4a708b);
+          background: var(--text-primary);
           color: white;
         }
 
         .carousel-button svg {
-          width: 24px;
-          height: 24px;
+          width: 20px;
+          height: 20px;
         }
 
         .carousel-prev {
-          left: 20px;
+          left: 15px;
         }
 
         .carousel-prev:hover {
-          transform: translateY(-50%) translateX(-3px) scale(1.1);
+          transform: translateY(-50%) translateX(-2px) scale(1.05);
         }
 
         .carousel-next {
-          right: 20px;
+          right: 15px;
         }
 
         .carousel-next:hover {
-          transform: translateY(-50%) translateX(3px) scale(1.1);
+          transform: translateY(-50%) translateX(2px) scale(1.05);
         }
 
         .carousel-controls {
@@ -526,11 +546,13 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
         @media (max-width: 768px) {
           .featured-carousel {
-            padding: 2.5rem 1.5rem;
+            padding: 2.5rem 1.5rem 3.5rem;
+            min-height: 380px;
           }
 
           .carousel-content {
-            min-height: 280px;
+            min-height: 300px;
+            padding: 0 60px; /* Less space needed for smaller arrows */
           }
 
           .carousel-main {
@@ -538,11 +560,13 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           }
 
           .case-title {
-            font-size: 1.75rem;
+            font-size: 1.5rem;
+            min-height: 2.4em;
           }
 
           .case-summary {
             font-size: 0.95rem;
+            min-height: 4.5em;
           }
 
           .case-meta {
@@ -586,15 +610,23 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
 
         @media (max-width: 480px) {
           .featured-carousel {
-            padding: 2rem 1rem;
+            padding: 2rem 1rem 3rem;
+            min-height: 360px;
+          }
+
+          .carousel-content {
+            padding: 0 50px; /* Even less space on small screens */
+            min-height: 280px;
           }
 
           .case-title {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+            min-height: 2.2em;
           }
 
           .case-summary {
             font-size: 0.9rem;
+            min-height: 4.3em;
           }
 
           .btn-explore {
