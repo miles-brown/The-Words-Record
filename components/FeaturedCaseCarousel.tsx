@@ -27,16 +27,16 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
 
-  // Auto-advance carousel every 5 seconds
+  // Auto-advance carousel every 6 seconds
   useEffect(() => {
     if (!isAutoPlaying || featuredCases.length <= 1) return
 
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % featuredCases.length)
-    }, 5000)
+    }, 6000)
 
     return () => clearInterval(timer)
-  }, [isAutoPlaying, featuredCases.length])
+  }, [isAutoPlaying, featuredCases.length, currentIndex])
 
   if (!featuredCases || featuredCases.length === 0) {
     return null
@@ -46,19 +46,43 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
   const displaySummary = currentCase.summary || currentCase.excerpt || 'No summary available'
   const displayDate = currentCase.caseDate || currentCase.date || new Date().toISOString()
 
+  // Create a preview version of the text that's more enticing
+  const createPreviewText = (text: string, maxLength: number = 200) => {
+    if (text.length <= maxLength) return text
+
+    // Find the last complete sentence within maxLength
+    const truncated = text.substring(0, maxLength)
+    const lastSentenceEnd = Math.max(
+      truncated.lastIndexOf('.'),
+      truncated.lastIndexOf('!'),
+      truncated.lastIndexOf('?')
+    )
+
+    if (lastSentenceEnd > 0) {
+      return truncated.substring(0, lastSentenceEnd + 1) + '..'
+    }
+
+    // If no sentence end found, truncate at last word
+    const lastSpace = truncated.lastIndexOf(' ')
+    return truncated.substring(0, lastSpace) + '...'
+  }
+
+  const previewText = createPreviewText(displaySummary, 180)
+
   const handlePrevious = () => {
-    setIsAutoPlaying(false)
     setCurrentIndex((prev) => (prev - 1 + featuredCases.length) % featuredCases.length)
   }
 
   const handleNext = () => {
-    setIsAutoPlaying(false)
     setCurrentIndex((prev) => (prev + 1) % featuredCases.length)
   }
 
   const handleDotClick = (index: number) => {
-    setIsAutoPlaying(false)
     setCurrentIndex(index)
+  }
+
+  const toggleAutoPlay = () => {
+    setIsAutoPlaying(!isAutoPlaying)
   }
 
   return (
@@ -74,7 +98,12 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
               {format(new Date(displayDate), 'MMMM d, yyyy')}
             </p>
 
-            <p className="case-summary">{displaySummary}</p>
+            <p className="case-summary">
+              {previewText}
+              {displaySummary.length > 180 && (
+                <span className="read-more"> Read more →</span>
+              )}
+            </p>
 
             <div className="case-meta">
               <span className="meta-item">
@@ -136,18 +165,35 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
                 </svg>
               </button>
 
-              <div className="carousel-dots" role="tablist">
-                {featuredCases.map((_, index) => (
-                  <button
-                    key={index}
-                    type="button"
-                    role="tab"
-                    aria-label={`View case ${index + 1}`}
-                    aria-selected={index === currentIndex}
-                    className={`carousel-dot ${index === currentIndex ? 'active' : ''}`}
-                    onClick={() => handleDotClick(index)}
-                  />
-                ))}
+              <div className="carousel-controls">
+                <button
+                  type="button"
+                  className="play-pause-button"
+                  onClick={toggleAutoPlay}
+                  aria-label={isAutoPlaying ? 'Pause carousel' : 'Play carousel'}
+                >
+                  {isAutoPlaying ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                    </svg>
+                  )}
+                </button>
+                <div className="carousel-dots" role="group">
+                  {featuredCases.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      aria-label={`View case ${index + 1}`}
+                      aria-current={index === currentIndex ? 'true' : 'false'}
+                      className={`carousel-dot ${index === currentIndex ? 'active' : ''}`}
+                      onClick={() => handleDotClick(index)}
+                    />
+                  ))}
+                </div>
               </div>
             </>
           )}
@@ -245,6 +291,19 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           margin-bottom: 1.75rem;
           color: var(--text-secondary);
           max-width: 700px;
+        }
+
+        .read-more {
+          color: var(--accent-primary, #4a708b);
+          font-weight: 500;
+          font-style: italic;
+          opacity: 0.9;
+          transition: opacity 0.2s;
+          cursor: pointer;
+        }
+
+        .read-more:hover {
+          opacity: 1;
         }
 
         .case-meta {
@@ -349,55 +408,96 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           position: absolute;
           top: 50%;
           transform: translateY(-50%);
-          background: transparent;
-          border: 1px solid var(--border-primary);
-          width: 40px;
-          height: 40px;
-          border-radius: 2px;
+          background: rgba(255, 255, 255, 0.95);
+          border: 2px solid var(--accent-primary, #4a708b);
+          width: 48px;
+          height: 48px;
+          border-radius: 50%;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          color: var(--text-primary);
+          color: var(--accent-primary, #4a708b);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+          z-index: 2;
         }
 
         .carousel-button:hover {
-          background: rgba(0, 0, 0, 0.02);
-          border-color: rgba(0, 0, 0, 0.25);
-          transform: translateY(-50%) translateX(0);
+          background: var(--accent-primary, #4a708b);
+          color: white;
+          transform: translateY(-50%) scale(1.1);
+          box-shadow: 0 4px 12px rgba(74, 112, 139, 0.3);
+        }
+
+        .dark-mode .carousel-button {
+          background: rgba(30, 30, 30, 0.95);
+          border-color: var(--accent-primary, #4a708b);
+          color: var(--accent-primary, #4a708b);
         }
 
         .dark-mode .carousel-button:hover {
-          background: rgba(255, 255, 255, 0.03);
-          border-color: rgba(255, 255, 255, 0.3);
+          background: var(--accent-primary, #4a708b);
+          color: white;
         }
 
         .carousel-button svg {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
         }
 
         .carousel-prev {
-          left: -60px;
+          left: 20px;
         }
 
         .carousel-prev:hover {
-          transform: translateY(-50%) translateX(-2px);
+          transform: translateY(-50%) translateX(-3px) scale(1.1);
         }
 
         .carousel-next {
-          right: -60px;
+          right: 20px;
         }
 
         .carousel-next:hover {
-          transform: translateY(-50%) translateX(2px);
+          transform: translateY(-50%) translateX(3px) scale(1.1);
+        }
+
+        .carousel-controls {
+          position: absolute;
+          bottom: -2rem;
+          left: 0;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .play-pause-button {
+          width: 32px;
+          height: 32px;
+          border: none;
+          background: transparent;
+          color: var(--text-secondary);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: all 0.2s;
+          opacity: 0.6;
+          padding: 0;
+        }
+
+        .play-pause-button:hover {
+          opacity: 1;
+          transform: scale(1.1);
+          color: var(--accent-primary, #4a708b);
+        }
+
+        .play-pause-button svg {
+          width: 24px;
+          height: 24px;
         }
 
         .carousel-dots {
-          position: absolute;
-          bottom: -1.5rem;
-          left: 0;
           display: flex;
           gap: 0.5rem;
         }
@@ -416,6 +516,8 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
         .carousel-dot.active {
           background: var(--text-primary);
           border-color: var(--text-primary);
+          width: 24px;
+          border-radius: 4px;
         }
 
         .carousel-dot:hover {
@@ -450,21 +552,35 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
           }
 
           .carousel-button {
-            width: 36px;
-            height: 36px;
+            width: 42px;
+            height: 42px;
           }
 
           .carousel-button svg {
-            width: 18px;
-            height: 18px;
+            width: 20px;
+            height: 20px;
           }
 
           .carousel-prev {
-            left: -45px;
+            left: 10px;
           }
 
           .carousel-next {
-            right: -45px;
+            right: 10px;
+          }
+
+          .carousel-controls {
+            bottom: -1.5rem;
+          }
+
+          .play-pause-button {
+            width: 28px;
+            height: 28px;
+          }
+
+          .play-pause-button svg {
+            width: 20px;
+            height: 20px;
           }
         }
 
@@ -486,12 +602,22 @@ export default function FeaturedCaseCarousel({ featuredCases }: FeaturedCaseCaro
             font-size: 0.9rem;
           }
 
+          .carousel-button {
+            width: 38px;
+            height: 38px;
+          }
+
+          .carousel-button svg {
+            width: 18px;
+            height: 18px;
+          }
+
           .carousel-prev {
-            left: 0;
+            left: 5px;
           }
 
           .carousel-next {
-            right: 0;
+            right: 5px;
           }
         }
       `}</style>
