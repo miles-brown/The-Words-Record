@@ -28,12 +28,7 @@ export default function AdSlot({ position, className = '', lazy = true }: AdSlot
   const [isVisible, setIsVisible] = useState(!lazy)
   const [isMobile, setIsMobile] = useState(false)
 
-  // Don't show ads on admin pages
-  if (router.pathname.startsWith('/admin')) {
-    return null
-  }
-
-  // Hide sidebar ads on mobile
+  // Check if mobile on mount and resize
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 1024)
@@ -43,11 +38,6 @@ export default function AdSlot({ position, className = '', lazy = true }: AdSlot
     window.addEventListener('resize', checkMobile)
     return () => window.removeEventListener('resize', checkMobile)
   }, [])
-
-  // Don't render sidebar ads on mobile
-  if (isMobile && (position === 'left-sidebar' || position === 'right-sidebar')) {
-    return null
-  }
 
   // Lazy loading with Intersection Observer
   useEffect(() => {
@@ -87,6 +77,16 @@ export default function AdSlot({ position, className = '', lazy = true }: AdSlot
       console.error('AdSense initialization error:', error)
     }
   }, [isVisible])
+
+  // Don't show ads on admin pages
+  if (router.pathname.startsWith('/admin')) {
+    return null
+  }
+
+  // Don't render sidebar ads on mobile
+  if (isMobile && (position === 'left-sidebar' || position === 'right-sidebar')) {
+    return null
+  }
 
   const dimensions = AD_DIMENSIONS[position]
   const width = isMobile && dimensions.mobileWidth ? dimensions.mobileWidth : dimensions.width

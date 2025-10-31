@@ -63,11 +63,6 @@ export default function HomeRedesigned({ allCases, featuredCase }: HomeProps) {
         <title>The Words Record - Documentation of Public Statements</title>
         <meta name="description" content="Comprehensive documentation of public statements, allegations, and responses. Neutral, factual, and thoroughly sourced." />
         <meta name="keywords" content="public statements, fact checking, documentation, news archive, accountability, transparency" />
-
-        {/* Font Preloading for performance */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
       </Head>
 
       {/* Structured Data for SEO */}
