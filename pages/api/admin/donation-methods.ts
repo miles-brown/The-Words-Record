@@ -139,7 +139,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         await prisma.auditLog.create({
           data: {
             userId: adminUser.id,
-            action: 'UPDATE_DONATION_METHODS',
+            action: 'UPDATE',
             entityType: 'Settings',
             entityId: 'donation_methods',
             changes: JSON.stringify({ methods }),

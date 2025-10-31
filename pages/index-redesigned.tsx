@@ -330,9 +330,9 @@ export default function HomeRedesigned({ allCases, featuredCase }: HomeProps) {
         /* Main Layout Grid */
         .layout-grid {
           display: grid;
-          grid-template-columns: 200px 1fr 200px;
-          gap: 30px;
-          max-width: 1600px;
+          grid-template-columns: 160px 1fr 160px;
+          gap: 20px;
+          max-width: 1240px;
           margin: 0 auto;
           padding: 2rem 1rem;
           background: var(--bg-primary);
@@ -347,7 +347,7 @@ export default function HomeRedesigned({ allCases, featuredCase }: HomeProps) {
 
         /* Main Content Area */
         .main-content {
-          max-width: 750px;
+          max-width: 680px;
           margin: 0 auto;
           width: 100%;
         }
@@ -363,7 +363,7 @@ export default function HomeRedesigned({ allCases, featuredCase }: HomeProps) {
         }
 
         .hero-inner {
-          max-width: 650px;
+          max-width: 580px;
           margin: 0 auto;
         }
 
@@ -784,17 +784,19 @@ export default function HomeRedesigned({ allCases, featuredCase }: HomeProps) {
         }
 
         /* Responsive Design */
-        @media (max-width: 1400px) {
+        @media (max-width: 1300px) {
           .layout-grid {
-            grid-template-columns: 160px 1fr 160px;
-            gap: 24px;
+            grid-template-columns: 140px 1fr 140px;
+            gap: 16px;
+            max-width: 1100px;
           }
         }
 
-        @media (max-width: 1200px) {
+        @media (max-width: 1100px) {
           .layout-grid {
             grid-template-columns: 1fr;
             padding: 1rem;
+            max-width: 750px;
           }
 
           .ad-left, .ad-right {

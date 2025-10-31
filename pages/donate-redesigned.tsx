@@ -280,7 +280,7 @@ export default function DonatePageRedesigned() {
         }
 
         .container {
-          max-width: 1200px;
+          max-width: 900px;
           margin: 0 auto;
           padding: 0 2rem;
         }
@@ -405,7 +405,7 @@ export default function DonatePageRedesigned() {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
           gap: 2rem;
-          max-width: 1000px;
+          max-width: 900px;
           margin: 0 auto;
         }
 
@@ -456,7 +456,7 @@ export default function DonatePageRedesigned() {
           display: grid;
           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
           gap: 2rem;
-          max-width: 1000px;
+          max-width: 900px;
           margin: 0 auto;
         }
 

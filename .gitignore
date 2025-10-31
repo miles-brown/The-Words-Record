@@ -81,3 +81,6 @@ pages/**/*.backup
 # Private documentation
 GOOGLE-GEMINI-DATABASE-AGENT-CONVERSATION.md
 COMPREHENSIVE-TECHNICAL-DOCUMENTATION.md
+
+# Database backups (keep local only)
+/backups/

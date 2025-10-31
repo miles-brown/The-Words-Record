@@ -21,28 +21,27 @@ model User {
   avatar                  String?
   mfaSecret               String?
   mfaEnabled              Boolean           @default(false)
-  mfaRecoveryCodes        String[]          @default([])
   isActive                Boolean           @default(true)
   emailVerified           Boolean           @default(false)
   lastLogin               DateTime?
-  lastLoginIp             String?
-  lastLoginUserAgent      String?
   loginAttempts           Int               @default(0)
   lockedUntil             DateTime?
   preferences             Json?
-  emailVerificationSentAt DateTime?
-  passwordResetSentAt     DateTime?
   createdAt               DateTime          @default(now())
   updatedAt               DateTime          @updatedAt
-  sessions                Session[]
+  emailVerificationSentAt DateTime?
+  lastLoginIp             String?
+  lastLoginUserAgent      String?
+  mfaRecoveryCodes        String[]          @default([])
+  passwordResetSentAt     DateTime?
   apiKeys                 ApiKey[]
-  contentDrafts           ContentDraft[]
-  approvals               ContentApproval[] @relation("ReviewerApprovals")
-  harvestJobs             HarvestJob[]      @relation("JobCreator")
   auditLogs               AuditLog[]        @relation("AuditUser")
-  tokens                  UserToken[]
+  approvals               ContentApproval[] @relation("ReviewerApprovals")
+  contentDrafts           ContentDraft[]
+  harvestJobs             HarvestJob[]      @relation("JobCreator")
+  sessions                Session[]
   groups                  UserGroup[]
-  importJobs              ImportJob[]
+  tokens                  UserToken[]
 
   @@index([role])
   @@index([isActive])
@@ -56,15 +55,14 @@ model Session {
   refreshToken  String?   @unique
   ipAddress     String?
   userAgent     String?
-  issuedAt      DateTime  @default(now())
   expiresAt     DateTime
-  rotatedAt     DateTime?
-  revokedAt     DateTime?
-  invalidatedAt DateTime?
   createdAt     DateTime  @default(now())
-
-  user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  apiKey ApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  invalidatedAt DateTime?
+  issuedAt      DateTime  @default(now())
+  revokedAt     DateTime?
+  rotatedAt     DateTime?
+  apiKey        ApiKey?   @relation(fields: [apiKeyId], references: [id], onDelete: Cascade)
+  user          User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([apiKeyId])
@@ -74,26 +72,25 @@ model Session {
 }
 
 model ApiKey {
-  id                String    @id @default(cuid())
+  id                String     @id @default(cuid())
   userId            String?
   name              String
-  key               String    @unique
+  key               String     @unique
   secretHash        String
-  permissions       String[]  @default([])
-  rateLimit         Int       @default(100)
+  permissions       String[]   @default([])
+  rateLimit         Int        @default(100)
   lastUsed          DateTime?
   lastUsedIp        String?
   lastUsedUserAgent String?
   expiresAt         DateTime?
-  isActive          Boolean   @default(true)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  revokedAt         DateTime?
+  isActive          Boolean    @default(true)
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
   lastRotatedAt     DateTime?
-
-  user      User?      @relation(fields: [userId], references: [id], onDelete: SetNull)
-  sessions  Session[]
-  auditLogs AuditLog[]
+  revokedAt         DateTime?
+  user              User?      @relation(fields: [userId], references: [id])
+  auditLogs         AuditLog[]
+  sessions          Session[]
 
   @@index([userId])
   @@index([isActive])
@@ -105,7 +102,6 @@ model AuditLog {
   actorId     String?
   actorType   AuditActorType @default(ANONYMOUS)
   userId      String?
-  apiKeyId    String?
   entityType  String?
   entityId    String?
   description String?
@@ -116,9 +112,9 @@ model AuditLog {
   status      AuditStatus    @default(SUCCESS)
   occuredAt   DateTime       @default(now())
   createdAt   DateTime       @default(now())
-
-  user   User?   @relation("AuditUser", fields: [userId], references: [id], onDelete: SetNull)
-  apiKey ApiKey? @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  apiKeyId    String?
+  apiKey      ApiKey?        @relation(fields: [apiKeyId], references: [id])
+  user        User?          @relation("AuditUser", fields: [userId], references: [id])
 
   @@index([actorType, actorId])
   @@index([entityType, entityId])
@@ -128,20 +124,19 @@ model AuditLog {
 }
 
 model ContentDraft {
-  id           String           @id @default(cuid())
+  id           String            @id @default(cuid())
   userId       String
   contentType  AdminContentType
   contentId    String?
   data         Json
-  status       DraftStatus      @default(DRAFT)
+  status       DraftStatus       @default(DRAFT)
   notes        String?
   submittedAt  DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
   lastDiffHash String?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-
-  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  approvals ContentApproval[]
+  approvals    ContentApproval[]
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([contentType, status])
@@ -155,9 +150,8 @@ model ContentApproval {
   status     ApprovalStatus @default(PENDING)
   comments   String?
   reviewedAt DateTime       @default(now())
-
-  draft    ContentDraft @relation(fields: [draftId], references: [id], onDelete: Cascade)
-  reviewer User         @relation("ReviewerApprovals", fields: [reviewerId], references: [id], onDelete: Cascade)
+  draft      ContentDraft   @relation(fields: [draftId], references: [id], onDelete: Cascade)
+  reviewer   User           @relation("ReviewerApprovals", fields: [reviewerId], references: [id], onDelete: Cascade)
 
   @@index([draftId])
   @@index([reviewerId])
@@ -178,8 +172,7 @@ model HarvestJob {
   completedAt DateTime?
   createdBy   String?
   createdAt   DateTime    @default(now())
-
-  creator User? @relation("JobCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  creator     User?       @relation("JobCreator", fields: [createdBy], references: [id])
 
   @@index([status, type])
   @@index([scheduledAt])
@@ -195,8 +188,7 @@ model UserToken {
   consumedAt DateTime?
   metadata   Json?
   createdAt  DateTime      @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, tokenType])
   @@index([expiresAt])
@@ -219,9 +211,8 @@ model UserGroup {
   userId    String
   groupId   String
   createdAt DateTime @default(now())
-
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
-  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, groupId])
   @@index([groupId])
@@ -273,8 +264,6 @@ model Person {
   dateOfBirth              DateTime?
   age                      Int?
   gender                   Gender?
-  nationality_primary_code String?                  @db.VarChar(2) // Computed cache from PersonNationality
-  nationality_codes_cached String[]                 @default([]) // Computed cache from PersonNationality
   ethnicity                String[]
   professionArray          Profession[]
   primaryProfession        Profession?
@@ -386,14 +375,16 @@ model Person {
   deathCause               String?
   lastDeathCheck           DateTime?
   caseCount                Int?                     @default(0)
+  nationality_primary_code String?                  @db.VarChar(2)
+  nationality_codes_cached String[]                 @default([])
   affiliations             Affiliation[]
   journalistProfile        Journalist?
+  nationalities            PersonNationality[]
   repercussions            Repercussion[]           @relation("PersonRepercussions")
   statements               Statement[]              @relation("PersonStatements")
   StatementAuthor          StatementAuthor[]
   cases                    Case[]                   @relation("PersonCases")
   groupStatements          Statement[]              @relation("PersonGroupStatements")
-  nationalities            PersonNationality[]
 
   @@index([slug])
   @@index([verificationLevel])
@@ -402,25 +393,23 @@ model Person {
   @@index([nationality_primary_code])
 }
 
-// ISO 3166-1 Country lookup table
+/// This model contains an expression index which requires additional setup for migrations. Visit https://pris.ly/d/expression-indexes for more info.
 model Country {
-  code       String   @id @db.VarChar(2) // ISO 3166-1 alpha-2
-  name_en    String
-  iso3       String?  @db.VarChar(3) // ISO 3166-1 alpha-3
-  m49        Int? // UN M49 numeric code
-  flag_emoji String?
-  active     Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  personNationalities           PersonNationality[]
+  code                          String                           @id @db.VarChar(2)
+  name_en                       String
+  iso3                          String?                          @db.VarChar(3)
+  m49                           Int?
+  flag_emoji                    String?
+  active                        Boolean                          @default(true)
+  createdAt                     DateTime                         @default(now())
+  updatedAt                     DateTime                         @updatedAt
   historicalNationalityMappings HistoricalNationalityToCountry[]
+  personNationalities           PersonNationality[]
 
   @@index([active])
   @@index([name_en])
 }
 
-// Junction table for Person-Country nationality facts
 model PersonNationality {
   id           String             @id @default(cuid())
   personId     String
@@ -436,9 +425,8 @@ model PersonNationality {
   note         String?
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
-
-  person  Person  @relation(fields: [personId], references: [id], onDelete: Cascade)
-  country Country @relation(fields: [countryCode], references: [code])
+  country      Country            @relation(fields: [countryCode], references: [code])
+  person       Person             @relation(fields: [personId], references: [id], onDelete: Cascade)
 
   @@unique([personId, countryCode, type, startDate, endDate])
   @@index([personId])
@@ -448,33 +436,27 @@ model PersonNationality {
   @@index([endDate])
 }
 
-// Historical nationality reference data
-// For nationalities that no longer exist (e.g., Prussian, Austro-Hungarian, Soviet)
 model HistoricalNationality {
-  id            String   @id @default(cuid())
-  name          String   @unique
-  earliest_year Int?     @map("earliest_year")
-  latest_year   Int?     @map("latest_year")
-  note          String?
-  createdAt     DateTime @default(now()) @map("createdat")
-
+  id              String                           @id @default(cuid())
+  name            String                           @unique
+  earliest_year   Int?                             @map("earliest_year")
+  latest_year     Int?                             @map("latest_year")
+  note            String?
+  createdAt       DateTime                         @default(now()) @map("createdat")
   countryMappings HistoricalNationalityToCountry[]
 
   @@index([name])
 }
 
-// Maps historical nationalities to modern country codes
-// Allows for multiple mappings when historical states split into multiple countries
 model HistoricalNationalityToCountry {
-  id           String   @id @default(cuid())
-  historicalId String   @map("historicalid")
-  countryCode  String?  @map("countrycode") @db.VarChar(2)
-  confidence   Int? // 0-100 confidence score for the mapping
+  id           String                @id @default(cuid())
+  historicalId String                @map("historicalid")
+  countryCode  String?               @map("countrycode") @db.VarChar(2)
+  confidence   Int?
   note         String?
-  createdAt    DateTime @default(now()) @map("createdat")
-
-  historical HistoricalNationality @relation(fields: [historicalId], references: [id], onDelete: Cascade)
-  country    Country?              @relation(fields: [countryCode], references: [code])
+  createdAt    DateTime              @default(now()) @map("createdat")
+  country      Country?              @relation(fields: [countryCode], references: [code])
+  historical   HistoricalNationality @relation(fields: [historicalId], references: [id], onDelete: Cascade)
 
   @@index([historicalId])
   @@index([countryCode])
@@ -656,48 +638,40 @@ model Topic {
 }
 
 model Case {
-  id                     String        @id(map: "Incident_pkey") @default(cuid())
-  slug                   String        @unique(map: "Incident_slug_key")
-  title                  String
-  summary                String
-  description            String
-  caseDate               DateTime
-  publicationDate        DateTime      @default(now())
-  status                 CaseStatus    @default(DOCUMENTED)
-  severity               CaseSeverity?
-  severityScore          Int?
-  locationCity           String?
-  locationState          String?
-  locationCountry        String?
-  locationDetail         String?
-  mediaFraming           String?
-  triggeringEvent        String?
-  outcome                String?
-  isVerified             Boolean       @default(false)
-  verifiedBy             String?
-  verifiedAt             DateTime?
-  viewCount              Int           @default(0)
-  shareCount             Int           @default(0)
-  createdAt              DateTime      @default(now())
-  updatedAt              DateTime      @updatedAt
-  originatingStatementId String?
-
-  // Classification & Promotion
-  isRealIncident      Boolean   @default(false) // True = multi-statement case
-  wasAutoImported     Boolean   @default(true) // True = imported statement page
-  promotedAt          DateTime?
-  promotedBy          String?
-  promotionReason     String?
-  wasManuallyPromoted Boolean?  @default(false)
-
-  // Qualification & Metrics
-  qualificationScore Int?     @default(0) // 0-100 promotion eligibility
-  responseCount      Int?     @default(0)
-  mediaOutletCount   Int?     @default(0)
-  hasPublicReaction  Boolean? @default(false)
-  hasRepercussion    Boolean? @default(false)
-
-  // Display & Management
+  id                                 String          @id(map: "Incident_pkey") @default(cuid())
+  slug                               String          @unique(map: "Incident_slug_key")
+  title                              String
+  summary                            String
+  description                        String
+  caseDate                           DateTime
+  publicationDate                    DateTime        @default(now())
+  status                             CaseStatus      @default(DOCUMENTED)
+  severity                           CaseSeverity?
+  severityScore                      Int?
+  locationCity                       String?
+  locationState                      String?
+  locationCountry                    String?
+  locationDetail                     String?
+  mediaFraming                       String?
+  triggeringEvent                    String?
+  outcome                            String?
+  isVerified                         Boolean         @default(false)
+  verifiedBy                         String?
+  verifiedAt                         DateTime?
+  viewCount                          Int             @default(0)
+  shareCount                         Int             @default(0)
+  createdAt                          DateTime        @default(now())
+  updatedAt                          DateTime        @updatedAt
+  originatingStatementId             String?
+  promotedAt                         DateTime?
+  promotedBy                         String?
+  promotionReason                    String?
+  qualificationScore                 Int?            @default(0)
+  responseCount                      Int?            @default(0)
+  mediaOutletCount                   Int?            @default(0)
+  hasPublicReaction                  Boolean?        @default(false)
+  hasRepercussion                    Boolean?        @default(false)
+  wasManuallyPromoted                Boolean?        @default(false)
   visibility                         CaseVisibility? @default(PUBLIC)
   isFeatured                         Boolean?        @default(false)
   isArchived                         Boolean?        @default(false)
@@ -708,7 +682,10 @@ model Case {
   lastReviewedAt                     DateTime?
   lastReviewedBy                     String?
   internalNotes                      String?
+  isRealIncident                     Boolean         @default(false)
+  wasAutoImported                    Boolean         @default(true)
   originatingStatement               Statement?      @relation("OriginatingStatement", fields: [originatingStatementId], references: [id])
+  history                            CaseHistory[]
   repercussions                      Repercussion[]
   sources                            Source[]
   statements                         Statement[]
@@ -717,7 +694,6 @@ model Case {
   organizations                      Organization[]  @relation("CaseToOrganization")
   Organization_OrganizationIncidents Organization[]  @relation("OrganizationIncidents")
   people                             Person[]        @relation("PersonCases")
-  history                            CaseHistory[]
 
   @@index([originatingStatementId])
   @@index([qualificationScore])
@@ -767,7 +743,6 @@ model Statement {
   socialMediaUrl                                       String?
   socialMediaId                                        String?
   isDeleted                                            Boolean?           @default(false)
-  status                                               DraftStatus        @default(PUBLISHED)
   deletedDate                                          DateTime?
   venue                                                String?
   event                                                String?
@@ -794,6 +769,7 @@ model Statement {
   originalResponseId                                   String?
   createdBy                                            String?
   lastEditedBy                                         String?
+  status                                               DraftStatus?       @default(PUBLISHED)
   promotedToCases                                      Case[]             @relation("OriginatingStatement")
   repercussionsAbout                                   Repercussion[]     @relation("ResponseStatement")
   repercussionsCaused                                  Repercussion[]     @relation("TriggeringStatement")
@@ -821,6 +797,7 @@ model Statement {
   @@index([statementType, organizationId])
   @@index([statementType, personId])
   @@index([caseId], map: "Statement_incidentId_idx")
+  @@index([status])
 }
 
 model Repercussion {
@@ -866,7 +843,6 @@ model Repercussion {
 
 model Source {
   id                   String               @id @default(cuid())
-  slug                 String?              @unique
   title                String
   url                  String?
   publication          String?
@@ -936,6 +912,7 @@ model Source {
   topicId              String?
   createdBy            String?
   lastEditedBy         String?
+  slug                 String?
   AffiliationSources   AffiliationSources[]
   case                 Case?                @relation(fields: [caseId], references: [id], map: "Source_incidentId_fkey")
   journalist           Journalist?          @relation(fields: [journalistId], references: [id])
@@ -1028,6 +1005,7 @@ model Affiliation {
   @@index([personId, isCurrent], map: "idx_affiliation_person_current")
   @@index([roleCategory, roleLevel], map: "idx_affiliation_role")
   @@index([isVerified], map: "idx_affiliation_verified")
+  @@index([organizationId], map: "idx_affiliation_organizationid")
 }
 
 model Tag {
@@ -1183,12 +1161,199 @@ model CaseHistory {
   previousValue String?
   newValue      String?
   metadata      Json?
-
-  case Case @relation(fields: [caseId], references: [id], onDelete: Cascade)
+  case          Case              @relation(fields: [caseId], references: [id], onDelete: Cascade)
 
   @@index([caseId])
   @@index([actionAt])
   @@index([actionType])
+}
+
+model Integration {
+  id          String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  provider    String    @unique
+  name        String
+  description String?
+  status      String    @default("disconnected")
+  logo        String?
+  config      Json?     @default("{}")
+  lastPing    Int?
+  lastPingAt  DateTime? @db.Timestamp(6)
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy   String?
+
+  @@index([status])
+  @@index([provider])
+}
+
+model Webhook {
+  id          String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  direction   String
+  name        String
+  url         String
+  secretHash  String?
+  secretLast4 String?
+  enabled     Boolean   @default(true)
+  lastStatus  String?
+  lastFiredAt DateTime? @db.Timestamp(6)
+  lastPayload Json?
+  headers     Json?     @default("{}")
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy   String?
+
+  @@index([direction])
+  @@index([enabled])
+  @@index([lastFiredAt(sort: Desc)])
+}
+
+model Script {
+  id              String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name            String
+  description     String?
+  schedule        String?
+  codeRef         String
+  enabled         Boolean   @default(true)
+  lastRunAt       DateTime? @db.Timestamp(6)
+  lastRunStatus   String?
+  lastRunDuration Int?
+  nextRunAt       DateTime? @db.Timestamp(6)
+  runCount        Int?      @default(0)
+  errorCount      Int?      @default(0)
+  createdAt       DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy       String?
+
+  @@index([enabled])
+}
+
+model ScriptLog {
+  id        String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  scriptId  String
+  level     String
+  message   String
+  metadata  Json?
+  timestamp DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([scriptId])
+}
+
+model Automation {
+  id            String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name          String
+  description   String?
+  trigger       String
+  actions       Json      @default("[]")
+  enabled       Boolean   @default(true)
+  lastRunAt     DateTime? @db.Timestamp(6)
+  lastRunStatus String?
+  runCount      Int?      @default(0)
+  createdAt     DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt     DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy     String?
+
+  @@index([enabled])
+}
+
+model BackgroundJob {
+  id          String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  queue       String
+  status      String
+  payload     Json
+  result      Json?
+  error       String?
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  priority    Int?      @default(0)
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  startedAt   DateTime? @db.Timestamp(6)
+  completedAt DateTime? @db.Timestamp(6)
+  failedAt    DateTime? @db.Timestamp(6)
+
+  @@index([status])
+  @@index([priority(sort: Desc)])
+}
+
+model Task {
+  id          String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name        String
+  description String?
+  type        String
+  status      String
+  schedule    String?
+  lastRunAt   DateTime? @db.Timestamp(6)
+  nextRunAt   DateTime? @db.Timestamp(6)
+  runCount    Int?      @default(0)
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy   String?
+
+  @@index([status])
+  @@index([type])
+}
+
+model HealthCheck {
+  id        String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  provider  String
+  status    String
+  latencyMs Int
+  message   String?
+  metadata  Json?
+  checkedAt DateTime @default(now()) @db.Timestamp(6)
+
+  @@index([status])
+}
+
+model UsageQuota {
+  id            String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  provider      String
+  unit          String
+  used          Decimal  @default(0) @db.Decimal(15, 2)
+  limit         Decimal  @db.Decimal(15, 2)
+  period        String
+  resetAt       DateTime @db.Timestamp(6)
+  lastUpdatedAt DateTime @default(now()) @db.Timestamp(6)
+  createdAt     DateTime @default(now()) @db.Timestamp(6)
+
+  @@unique([provider, period])
+  @@index([resetAt])
+}
+
+model UsageHistory {
+  id        String   @id @default(dbgenerated("(gen_random_uuid())::text"))
+  quotaId   String
+  amount    Decimal  @db.Decimal(15, 2)
+  timestamp DateTime @default(now()) @db.Timestamp(6)
+  metadata  Json?
+
+  @@index([timestamp(sort: Desc)])
+}
+
+model CustomApp {
+  id          String    @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name        String
+  description String?
+  icon        String?
+  inputs      Json      @default("[]")
+  code        String?
+  enabled     Boolean   @default(true)
+  lastRunAt   DateTime? @db.Timestamp(6)
+  runCount    Int?      @default(0)
+  createdAt   DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt   DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  createdBy   String?
+
+  @@index([enabled])
+}
+
+model Settings {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+
+  @@index([key])
 }
 
 enum ProfessionType {
@@ -2180,13 +2345,13 @@ enum AuditAction {
   EXPORT
   IMPORT
   LOGIN
-  LOGIN_FAILED
   LOGOUT
   VERIFY
   APPROVE
   REJECT
   ARCHIVE
   RESTORE
+  LOGIN_FAILED
   AUTHZ_DENIED
 }
 
@@ -2257,267 +2422,6 @@ enum UserTokenType {
   MFA_RECOVERY
 }
 
-// ========================================
-// APPS & INTEGRATIONS MODULE
-// ========================================
-
-model Integration {
-  id          String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  provider    String    @unique
-  name        String
-  description String?
-  status      String    @default("disconnected")
-  logo        String?
-  config      Json?     @default("{}")
-  lastPing    Int?
-  lastPingAt  DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  createdBy   String?
-
-  @@index([status])
-  @@index([provider])
-}
-
-model Webhook {
-  id           String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  direction    String    // 'incoming' or 'outgoing'
-  name         String
-  url          String
-  secretHash   String?
-  secretLast4  String?
-  enabled      Boolean   @default(true)
-  lastStatus   String?
-  lastFiredAt  DateTime?
-  lastPayload  Json?
-  headers      Json?     @default("{}")
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  createdBy    String?
-
-  @@index([direction])
-  @@index([enabled])
-  @@index([lastFiredAt(sort: Desc)])
-}
-
-model Script {
-  id             String       @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  name           String
-  description    String?
-  code           String
-  language       String       @default("javascript")
-  schedule       String?      // Cron expression
-  enabled        Boolean      @default(true)
-  lastRun        DateTime?
-  lastStatus     String?
-  lastDuration   Int?
-  nextRun        DateTime?
-  env            Json?        @default("{}")
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
-  createdBy      String?
-  logs           ScriptLog[]
-
-  @@index([enabled])
-  @@index([nextRun])
-}
-
-model ScriptLog {
-  id         String   @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  scriptId   String
-  status     String   // 'success', 'error', 'timeout'
-  output     String?
-  error      String?
-  duration   Int?     // milliseconds
-  executedAt DateTime @default(now())
-  script     Script   @relation(fields: [scriptId], references: [id], onDelete: Cascade)
-
-  @@index([scriptId])
-  @@index([executedAt(sort: Desc)])
-  @@index([status])
-}
-
-model Automation {
-  id          String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  name        String
-  description String?
-  enabled     Boolean   @default(true)
-  trigger     Json      // {type: 'schedule'|'event'|'webhook', config: {...}}
-  actions     Json      // Array of actions
-  lastRun     DateTime?
-  lastStatus  String?
-  runCount    Int       @default(0)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  createdBy   String?
-
-  @@index([enabled])
-  @@index([lastRun(sort: Desc)])
-}
-
-model BackgroundJob {
-  id          String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  type        String
-  status      String    @default("pending") // 'pending', 'running', 'completed', 'failed'
-  priority    Int       @default(0)
-  data        Json?
-  result      Json?
-  error       String?
-  progress    Int       @default(0) // 0-100
-  startedAt   DateTime?
-  completedAt DateTime?
-  retryCount  Int       @default(0)
-  maxRetries  Int       @default(3)
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@index([status])
-  @@index([type])
-  @@index([priority(sort: Desc)])
-  @@index([createdAt])
-}
-
-model Task {
-  id          String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  title       String
-  description String?
-  type        String    // 'manual', 'scheduled', 'automated'
-  status      String    @default("pending") // 'pending', 'in_progress', 'completed', 'cancelled'
-  priority    Int       @default(0) // 0=low, 1=medium, 2=high, 3=urgent
-  assigneeId  String?
-  dueDate     DateTime?
-  completedAt DateTime?
-  tags        String[]  @default([])
-  metadata    Json?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  createdBy   String?
-
-  @@index([status])
-  @@index([type])
-  @@index([priority(sort: Desc)])
-  @@index([dueDate])
-  @@index([assigneeId])
-}
-
-model HealthCheck {
-  id            String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  service       String
-  endpoint      String?
-  status        String    // 'healthy', 'degraded', 'down'
-  responseTime  Int?      // milliseconds
-  lastChecked   DateTime  @default(now())
-  errorMessage  String?
-  metadata      Json?
-  uptime7d      Float?    // Percentage
-  uptime30d     Float?
-  uptime90d     Float?
-
-  @@index([service])
-  @@index([status])
-  @@index([lastChecked(sort: Desc)])
-}
-
-model UsageQuota {
-  id          String   @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  resource    String   @unique // 'api_calls', 'storage', 'bandwidth', etc.
-  used        BigInt   @default(0)
-  limit       BigInt
-  resetAt     DateTime
-  warningAt   BigInt?  // Threshold for warnings (e.g., 80% of limit)
-  unit        String   // 'requests', 'bytes', 'minutes', etc.
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@index([resource])
-  @@index([resetAt])
-}
-
-model UsageHistory {
-  id         String   @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  resource   String
-  amount     BigInt
-  timestamp  DateTime @default(now())
-  metadata   Json?
-
-  @@index([resource])
-  @@index([timestamp(sort: Desc)])
-}
-
-model CustomApp {
-  id          String    @id @default(dbgenerated("gen_random_uuid()::TEXT"))
-  name        String
-  description String?
-  enabled     Boolean   @default(true)
-  config      Json      // UI schema, endpoints, logic
-  version     String    @default("1.0.0")
-  published   Boolean   @default(false)
-  publishedAt DateTime?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  createdBy   String?
-
-  @@index([enabled])
-  @@index([published])
-}
-
-// ========================================
-// DATA IMPORT & QUARANTINE MODULE
-// ========================================
-
-model ImportJob {
-  id            String              @id @default(cuid())
-  userId        String
-  fileName      String
-  fileSize      Int
-  fileType      String
-  totalRows     Int
-  processedRows Int                 @default(0)
-  approvedRows  Int                 @default(0)
-  rejectedRows  Int                 @default(0)
-  status        ImportStatus        @default(PENDING)
-  notes         String?
-  errorLog      Json?
-  metadata      Json?
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  reviewedAt    DateTime?
-  importedAt    DateTime?
-
-  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quarantine ImportQuarantine[]
-
-  @@index([userId])
-  @@index([status])
-  @@index([createdAt])
-}
-
-model ImportQuarantine {
-  id                String            @id @default(cuid())
-  importJobId       String
-  entityType        ImportEntityType
-  rowNumber         Int
-  rawData           Json
-  parsedData        Json?
-  fieldMapping      Json?
-  validationErrors  Json?
-  status            ImportStatus      @default(PENDING)
-  confidence        Float?
-  suggestedMatches  Json?
-  finalEntityId     String?
-  reviewNotes       String?
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-  reviewedAt        DateTime?
-  importedAt        DateTime?
-
-  importJob ImportJob @relation(fields: [importJobId], references: [id], onDelete: Cascade)
-
-  @@index([importJobId])
-  @@index([entityType])
-  @@index([status])
-}
-
 enum ImportStatus {
   PENDING
   REVIEWING
@@ -2533,14 +2437,4 @@ enum ImportEntityType {
   CASE
   SOURCE
   TOPIC
-}
-
-model Settings {
-  id        String   @id @default(cuid())
-  key       String   @unique
-  value     Json?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([key])
 }

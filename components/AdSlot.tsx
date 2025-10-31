@@ -12,8 +12,8 @@ interface AdSlotProps {
 // Ad dimensions configuration
 const AD_DIMENSIONS: Record<AdPosition, { width: number | string; height: number | string; mobileWidth?: string; mobileHeight?: string | number }> = {
   'top-banner': { width: 728, height: 90, mobileWidth: '100%', mobileHeight: '50' },
-  'left-sidebar': { width: 200, height: 600 },
-  'right-sidebar': { width: 200, height: 600 },
+  'left-sidebar': { width: 150, height: 600 },
+  'right-sidebar': { width: 150, height: 600 },
   'mid-content': { width: '100%', height: 250, mobileWidth: '100%', mobileHeight: '200' },
   'footer-banner': { width: 728, height: 90, mobileWidth: '100%', mobileHeight: '50' },
   'mobile-inline': { width: '100%', height: 250 }
